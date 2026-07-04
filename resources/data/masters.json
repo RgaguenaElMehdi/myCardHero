@@ -22,7 +22,7 @@
       "passive_id": "summon_hp_plus",
       "passive_desc": "Ses monstres gagnent +1 PV max à l'invocation.",
       "power_name": "Sève",
-      "power_cost": 2,
+      "power_cost": 3,
       "power_effect": [ { "op": "heal", "amount": 3, "target": "ally_monster" } ],
       "power_desc": "Soigne 3 PV à un monstre allié."
     },
