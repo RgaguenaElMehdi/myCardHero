@@ -22,6 +22,17 @@ var dialogue_phase := "pre"
 func _ready() -> void:
 	load_profile()
 	_fit_window()
+	# Test instrumentation (automated verification):
+	#   --screenshot=<path>  capture the scene after 2.5s and quit
+	#   --probe              report which Control receives each button's click
+	#   --clickflow=A|B|C    synthesize real clicks on a button sequence
+	for arg in OS.get_cmdline_user_args():
+		if String(arg).begins_with("--screenshot="):
+			_schedule_screenshot(String(arg).split("=", true, 1)[1])
+		elif String(arg) == "--probe":
+			_schedule_input_probe()
+		elif String(arg).begins_with("--clickflow="):
+			_schedule_clickflow(String(arg).split("=", true, 1)[1].split("|"))
 
 
 ## A 1920x1080 window does not fit on most screens once the taskbar and window
@@ -43,15 +54,6 @@ func _fit_window() -> void:
 		if win.size.x >= usable.size.x or win.size.y >= usable.size.y:
 			win.mode = Window.MODE_MAXIMIZED
 	win.grab_focus()
-	# Test instrumentation: --screenshot=<path> captures the running scene
-	# after 2.5s and quits (used by automated visual verification).
-	for arg in OS.get_cmdline_user_args():
-		if String(arg).begins_with("--screenshot="):
-			_schedule_screenshot(String(arg).split("=", true, 1)[1])
-		elif String(arg) == "--probe":
-			_schedule_input_probe()
-		elif String(arg).begins_with("--clickflow="):
-			_schedule_clickflow(String(arg).split("=", true, 1)[1].split("|"))
 
 
 ## Debug: synthesizes real mouse clicks on a sequence of buttons ("A|B|C"),
