@@ -35,6 +35,28 @@ func _ready() -> void:
 			_schedule_clickflow(String(arg).split("=", true, 1)[1].split("|"))
 
 
+## Global shortcut: F11 or Alt+Enter toggles fullscreen from any screen.
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		var k := event as InputEventKey
+		if k.keycode == KEY_F11 or (k.keycode == KEY_ENTER and k.alt_pressed):
+			set_fullscreen(get_window().mode != Window.MODE_FULLSCREEN)
+			get_viewport().set_input_as_handled()
+
+
+func set_fullscreen(on: bool) -> void:
+	profile.settings.fullscreen = on
+	if on:
+		get_window().mode = Window.MODE_FULLSCREEN
+	else:
+		get_window().mode = Window.MODE_WINDOWED
+		var usable := DisplayServer.screen_get_usable_rect(get_window().current_screen)
+		if get_window().size.x >= usable.size.x or get_window().size.y >= usable.size.y:
+			get_window().mode = Window.MODE_MAXIMIZED
+	save_profile()
+	profile_changed.emit()
+
+
 ## A 1920x1080 window does not fit on most screens once the taskbar and window
 ## decorations are counted: the bottom of the game (the hand!) ends up
 ## off-screen and clicks feel broken. Maximize whenever the window would not
@@ -63,8 +85,13 @@ func _schedule_clickflow(steps: PackedStringArray) -> void:
 	for step in steps:
 		var b := _find_button(get_tree().root, String(step))
 		if b == null:
-			print("[clickflow] ÉCHEC : bouton '%s' introuvable dans %s"
-					% [step, get_tree().current_scene.name])
+			var all_buttons: Array = []
+			_collect_buttons(get_tree().root, all_buttons)
+			var texts: Array = []
+			for btn in all_buttons:
+				texts.append((btn as Button).text)
+			print("[clickflow] ÉCHEC : bouton '%s' introuvable dans %s — visibles : %s"
+					% [step, get_tree().current_scene.name, texts])
 			get_tree().quit(1)
 			return
 		var center: Vector2 = b.get_global_rect().get_center()
@@ -80,6 +107,9 @@ func _schedule_clickflow(steps: PackedStringArray) -> void:
 				% [scene.name, st.turn, st.phase])
 	else:
 		print("[clickflow] état final : scène=%s" % (scene.name if scene else "?"))
+	print("[clickflow] fenêtre : mode=%d taille=%s fullscreen_setting=%s"
+			% [get_window().mode, get_window().size,
+			profile.get("settings", {}).get("fullscreen", "?")])
 	print("[clickflow] terminé")
 	get_tree().quit(0)
 

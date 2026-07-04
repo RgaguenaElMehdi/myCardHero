@@ -37,15 +37,13 @@ func _ready() -> void:
 		Audio.play_sfx("hit")))
 
 	var fs := CheckButton.new()
-	fs.text = "Plein écran"
+	fs.text = "Plein écran   (F11 ou Alt+Entrée partout dans le jeu)"
 	fs.button_pressed = bool(settings.get("fullscreen", false))
 	fs.add_theme_font_size_override("font_size", 18)
-	fs.toggled.connect(func(on: bool) -> void:
-		Game.profile.settings.fullscreen = on
-		DisplayServer.window_set_mode(
-				DisplayServer.WINDOW_MODE_FULLSCREEN if on
-				else DisplayServer.WINDOW_MODE_WINDOWED)
-		Game.save_profile())
+	fs.toggled.connect(func(on: bool) -> void: Game.set_fullscreen(on))
+	Game.profile_changed.connect(func() -> void:
+		if is_instance_valid(fs):
+			fs.set_pressed_no_signal(bool(Game.profile.settings.get("fullscreen", false))))
 	vbox.add_child(fs)
 
 	reset_btn = Button.new()
