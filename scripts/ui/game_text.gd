@@ -23,6 +23,21 @@ const TARGET_NAMES := {
 	"any_monster": "un monstre",
 }
 
+const KEYWORD_DEFS := {
+	"haste": "peut agir dès le tour où il est invoqué",
+	"flying": "ciblable uniquement à Distance/Magie ; sa mêlée ignore les blocages",
+	"armor": "réduit chaque dégât subi (sauf Magie)",
+	"riposte": "renvoie des dégâts à l'attaquant en mêlée",
+	"regen": "se soigne au début du tour de son propriétaire",
+	"shield": "annule la première source de dégâts subie (sauf Magie)",
+}
+
+const ATTACK_TYPE_DEFS := {
+	GameConst.AttackType.MELEE: "frappe le premier monstre non-volant de sa colonne",
+	GameConst.AttackType.RANGED: "peut viser n'importe quel monstre ennemi",
+	GameConst.AttackType.MAGIC: "vise n'importe quelle cible et ignore Armure et Bouclier",
+}
+
 
 static func keywords_line(keywords: Dictionary) -> String:
 	var parts: PackedStringArray = []
@@ -71,12 +86,48 @@ static func describe_effect(ops: Array) -> String:
 
 
 static func monster_summary(def: CardDef) -> String:
-	var lv1: Dictionary = def.levels[0]
-	var text := "%s — %d/%d" % [ATTACK_TYPE_NAMES[def.attack_type],
-			int(lv1.atk), int(lv1.hp)]
+	var text := "%s — %s" % [ATTACK_TYPE_NAMES[def.attack_type], level_progression(def)]
 	var kw := keywords_line(def.keywords)
 	if kw != "":
 		text += "\n" + kw
 	if def.evolves_to != &"":
 		text += "\nÉvolue (%d pierres)" % def.evolve_cost
 	return text
+
+
+## "2/2 › 3/3 › 4/4" (ATK/PV per level).
+static func level_progression(def: CardDef) -> String:
+	var parts: PackedStringArray = []
+	for lv in def.levels:
+		parts.append("%d/%d" % [int(lv.atk), int(lv.hp)])
+	return " › ".join(parts)
+
+
+## Full rules text of a card, for tooltips and detail panels.
+## evo_name: display name of the evolved form ("" if none/unknown).
+static func card_tooltip(def: CardDef, evo_name: String = "") -> String:
+	var lines: PackedStringArray = []
+	lines.append("%s — %d pierre(s)" % [def.display_name, def.cost])
+	if def.is_monster():
+		lines.append("%s : %s." % [ATTACK_TYPE_NAMES[def.attack_type],
+				ATTACK_TYPE_DEFS[def.attack_type]])
+		for i in def.levels.size():
+			var lv: Dictionary = def.levels[i]
+			var seuil := "" if i == 0 else " (%d XP)" % int(lv.xp)
+			lines.append("Niveau %d%s : %d ATQ / %d PV" % [i + 1, seuil,
+					int(lv.atk), int(lv.hp)])
+		lines.append("Gagne 1 XP en blessant, 2 XP en tuant. Monter de niveau soigne entièrement.")
+		for kw in def.keywords:
+			var kw_name: String = KEYWORD_NAMES.get(String(kw), String(kw))
+			var value = def.keywords[kw]
+			var shown := kw_name if value is bool else "%s %d" % [kw_name, int(value)]
+			lines.append("%s : %s." % [shown, KEYWORD_DEFS.get(String(kw), "")])
+		if def.evolves_to != &"":
+			var target := evo_name if evo_name != "" else "sa forme évoluée"
+			lines.append("Au niveau max, peut évoluer en %s pour %d pierres (PV restaurés)."
+					% [target, def.evolve_cost])
+	else:
+		lines.append("Sort : " + describe_effect(def.effect))
+	if def.description != "":
+		lines.append("« %s »" % def.description)
+	return "\n".join(lines)

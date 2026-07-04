@@ -42,6 +42,7 @@ func _ready() -> void:
 	_menu_btn(vbox, "Campagne", func() -> void: Game.goto("campaign"))
 	_menu_btn(vbox, "Partie libre", _show_free_setup)
 	_menu_btn(vbox, "Deck builder", func() -> void: Game.goto("deck_builder"))
+	_menu_btn(vbox, "Guide du jeu", func() -> void: Game.goto("guide"))
 	_menu_btn(vbox, "Options", func() -> void: Game.goto("settings"))
 	_menu_btn(vbox, "Quitter", func() -> void: get_tree().quit())
 

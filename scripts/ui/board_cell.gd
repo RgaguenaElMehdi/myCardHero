@@ -67,10 +67,12 @@ func render(state: GameState) -> void:
 	var p := state.players[side]
 	if Board.master_cell(side, p.master_col) == cell:
 		_render_master(state, p)
-		return
-	var m := state.board.at(cell)
-	if m != null:
-		_render_monster(m)
+	else:
+		var m := state.board.at(cell)
+		if m != null:
+			_render_monster(m)
+	# Clicks must reach the cell itself in one click, never its decorations.
+	UiTheme.pass_through(self)
 
 
 func _render_master(_state: GameState, p: PlayerState) -> void:

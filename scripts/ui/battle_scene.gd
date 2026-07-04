@@ -124,11 +124,14 @@ func _show_mulligan() -> void:
 
 func _on_mulligan_choice(redraw: bool) -> void:
 	Rules.apply(state, { "type": "mulligan", "redraw": redraw })
-	Rules.apply(state, ai.choose_action(state))  # AI mulligan → starts turn 1
+	var res := Rules.apply(state, ai.choose_action(state))  # AI mulligan → starts turn 1
 	mulligan_overlay.queue_free()
 	mulligan_overlay = null
-	_log("La partie commence ! À vous de jouer.")
-	Audio.play_sfx("turn")
+	_log("La partie commence !")
+	_refresh_all()
+	busy = true
+	await _play_events(res.events)
+	busy = false
 	_refresh_all()
 
 
@@ -323,11 +326,21 @@ func _refresh_hand() -> void:
 	for i in count:
 		var w := CardWidget.create(state.card(hand[i]), HAND_CARD_W)
 		w.position = Vector2(start + i * overlap, 20)
+		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
 		w.mouse_entered.connect(_on_hand_hover.bind(w, i))
 		w.set_selected(i == sel_hand)
 		if i == sel_hand:
 			w.position.y -= 24
+		# Hovered cards rise above their neighbours.
+		w.mouse_entered.connect(func() -> void:
+			w.z_index = 10
+			if not w.selected:
+				create_tween().tween_property(w, "position:y", base_y - 22, 0.09))
+		w.mouse_exited.connect(func() -> void:
+			w.z_index = 0
+			if not w.selected:
+				create_tween().tween_property(w, "position:y", base_y, 0.12))
 		hand_area.add_child(w)
 		hand_widgets.append(w)
 
@@ -572,6 +585,10 @@ func _ai_turn() -> void:
 
 # --- Event animation --------------------------------------------------------
 
+func _cell_center(cell: Vector2i) -> Vector2:
+	return _cell_pos(cell) + Vector2(BoardCell.SIZE, BoardCell.SIZE) / 2.0
+
+
 func _play_events(events: Array) -> void:
 	for ev in events:
 		match String(ev.e):
@@ -581,76 +598,125 @@ func _play_events(events: Array) -> void:
 				for cell in cells:
 					cells[cell].render(state)
 				_pop(cells[ev.cell])
-				await _wait(0.2)
+				BattleFx.burst(fx_layer, _cell_center(ev.cell) + Vector2(0, 46),
+						Color(0.75, 0.7, 0.6), 12, 130.0, 220.0, 0.4)
+				BattleFx.ring(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 70.0, 0.35)
+				await _wait(0.25)
 			"attack":
 				Audio.play_sfx("attack")
-				_flash(cells[ev.from], Color.WHITE)
-				await _wait(0.15)
+				var attacker := state.board.at(ev.from)
+				var from_c := _cell_center(ev.from)
+				var to_c := _cell_center(ev.to)
+				if attacker != null:
+					match attacker.def.attack_type:
+						GameConst.AttackType.MELEE:
+							BattleFx.lunge(fx_layer, from_c, to_c,
+									UiTheme.tex(Db.card_art_path(attacker.def.id)))
+							await _wait(0.14)  # impact lands mid-lunge
+						GameConst.AttackType.RANGED:
+							BattleFx.projectile(fx_layer, from_c, to_c, Color("ffd27d"))
+							await _wait(0.24)
+						GameConst.AttackType.MAGIC:
+							BattleFx.projectile(fx_layer, from_c, to_c, Color("c09aff"))
+							await _wait(0.24)
+				else:
+					await _wait(0.1)
 			"damage":
 				Audio.play_sfx("hit")
-				_float_text(ev.cell, "-%d" % int(ev.amount), Color("ff6b5e"))
-				await _wait(0.3)
+				BattleFx.burst(fx_layer, _cell_center(ev.cell), Color("ff6b5e"), 16, 220.0)
+				_float_text(ev.cell, "-%d" % int(ev.amount), Color("ff6b5e"), 28)
+				_shake(4.0)
+				await _wait(0.32)
 			"master_damage":
 				Audio.play_sfx("master_hit")
 				var mcell := Board.master_cell(int(ev.player),
 						state.players[int(ev.player)].master_col)
-				_float_text(mcell, "-%d" % int(ev.amount), Color("ff3b30"), 26)
-				_shake()
+				BattleFx.vignette(fx_layer, Color("d1341f"))
+				BattleFx.burst(fx_layer, _cell_center(mcell), Color("ff3b30"), 26, 300.0)
+				_float_text(mcell, "-%d" % int(ev.amount), Color("ff3b30"), 34)
+				_shake(12.0)
 				_refresh_panels()
-				await _wait(0.4)
+				await _wait(0.45)
 			"master_heal":
+				var my_cell := Board.master_cell(int(ev.player),
+						state.players[int(ev.player)].master_col)
+				BattleFx.sparkles(fx_layer, _cell_center(my_cell), Color("7de07d"))
 				_refresh_panels()
-				await _wait(0.2)
+				await _wait(0.25)
 			"heal":
 				Audio.play_sfx("heal")
 				if state.board.at(ev.cell) != null:
+					BattleFx.sparkles(fx_layer, _cell_center(ev.cell), Color("7de07d"))
 					_float_text(ev.cell, "+%d" % int(ev.amount), Color("7de07d"))
-				await _wait(0.25)
+				await _wait(0.28)
 			"death":
 				Audio.play_sfx("death")
 				_log("%s est détruit." % _cname(ev.card_id))
-				_flash(cells[ev.cell], Color(1, 0.2, 0.2))
-				await _wait(0.3)
+				BattleFx.death(fx_layer, _cell_center(ev.cell),
+						UiTheme.tex(Db.card_art_path(StringName(String(ev.card_id)))))
+				await _wait(0.15)
 				for cell in cells:
 					cells[cell].render(state)
+				await _wait(0.3)
 			"shield_break":
 				Audio.play_sfx("shield")
-				_float_text(ev.cell, "Bouclier brisé !", Color("7dd8ff"), 18)
-				await _wait(0.3)
+				BattleFx.ring(fx_layer, _cell_center(ev.cell), Color("7dd8ff"), 95.0, 0.4)
+				BattleFx.burst(fx_layer, _cell_center(ev.cell), Color("7dd8ff"), 14, 190.0)
+				_float_text(ev.cell, "Bouclier brisé !", Color("7dd8ff"), 19)
+				await _wait(0.32)
 			"shield":
 				Audio.play_sfx("shield")
-				_float_text(ev.cell, "Bouclier", Color("7dd8ff"), 18)
-				await _wait(0.2)
+				BattleFx.ring(fx_layer, _cell_center(ev.cell), Color("7dd8ff"), 80.0, 0.45)
+				_float_text(ev.cell, "Bouclier", Color("7dd8ff"), 19)
+				await _wait(0.25)
 			"riposte":
-				_float_text(ev.to, "Riposte !", Color("ffb27d"), 18)
-				await _wait(0.2)
+				BattleFx.burst(fx_layer, _cell_center(ev.to), Color("ffb27d"), 12, 170.0)
+				_float_text(ev.to, "Riposte !", Color("ffb27d"), 19)
+				await _wait(0.22)
 			"xp":
 				if bool(ev.leveled):
 					Audio.play_sfx("levelup")
-					_float_text(ev.cell, "NIVEAU %d !" % int(ev.level), UiTheme.GOLD, 22)
+					BattleFx.ring(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 100.0, 0.5)
+					BattleFx.sparkles(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 20)
+					_float_text(ev.cell, "NIVEAU %d !" % int(ev.level), UiTheme.GOLD, 26)
 					_log("%s passe niveau %d !" % [_cell_cname(ev.cell), int(ev.level)])
-					await _wait(0.35)
+					for cell in cells:
+						cells[cell].render(state)
+					_pop(cells[ev.cell])
+					await _wait(0.4)
 			"evolve":
 				Audio.play_sfx("evolve")
 				_log("%s évolue en %s !" % [_cname(ev.from_id), _cname(ev.to_id)])
+				BattleFx.flash_cell(fx_layer, _cell_center(ev.cell), Color(1, 1, 1, 0.9),
+						Vector2(148, 148), 0.5)
+				BattleFx.ring(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 130.0, 0.55)
+				BattleFx.sparkles(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 26)
+				await _wait(0.25)
 				for cell in cells:
 					cells[cell].render(state)
-				_flash(cells[ev.cell], Color.WHITE)
-				_float_text(ev.cell, "ÉVOLUTION !", UiTheme.GOLD, 24)
-				await _wait(0.5)
+				_pop(cells[ev.cell])
+				_float_text(ev.cell, "ÉVOLUTION !", UiTheme.GOLD, 28)
+				await _wait(0.45)
 			"cast":
 				Audio.play_sfx("cast")
 				_log("%s lance %s." % [_pname(ev.player), _cname(ev.card_id)])
+				var target = ev.get("target")
+				if target is Vector2i:
+					BattleFx.sparkles(fx_layer, _cell_center(target), Color("c09aff"), 18)
 				await _show_spell_preview(ev.card_id)
 			"power":
 				Audio.play_sfx("cast")
 				_log("%s utilise son pouvoir." % _pname(ev.player))
+				var ptarget = ev.get("target")
+				if ptarget is Vector2i:
+					BattleFx.sparkles(fx_layer, _cell_center(ptarget), UiTheme.ACCENT, 18)
 				await _wait(0.3)
 			"move":
 				Audio.play_sfx("move")
 				for cell in cells:
 					cells[cell].render(state)
-				await _wait(0.15)
+				_pop(cells[ev.to])
+				await _wait(0.16)
 			"master_move":
 				Audio.play_sfx("move")
 				for cell in cells:
@@ -662,6 +728,10 @@ func _play_events(events: Array) -> void:
 				_refresh_panels()
 				if int(ev.player) == 0:
 					Audio.play_sfx("turn")
+					BattleFx.banner(fx_layer, "À vous de jouer !", UiTheme.GOLD)
+				else:
+					BattleFx.banner(fx_layer, "Tour de %s" % _pname(1), UiTheme.DANGER)
+				await _wait(0.45)
 			"deck_out":
 				_log("%s n'a plus de cartes !" % _pname(ev.player))
 			"win":
@@ -689,25 +759,29 @@ func _flash(node: Control, color: Color) -> void:
 	tw.tween_property(node, "modulate", prev, 0.3)
 
 
-func _shake() -> void:
+func _shake(intensity: float = 6.0) -> void:
 	var tw := create_tween()
 	var origin := position
-	for i in 4:
-		tw.tween_property(self, "position", origin + Vector2(randf_range(-8, 8),
-				randf_range(-6, 6)), 0.04)
+	for i in 5:
+		tw.tween_property(self, "position", origin + Vector2(
+				randf_range(-intensity, intensity),
+				randf_range(-intensity * 0.75, intensity * 0.75)), 0.04)
 	tw.tween_property(self, "position", origin, 0.05)
 
 
 func _float_text(cell: Vector2i, text: String, color: Color, size: int = 22) -> void:
 	var l := UiTheme.label(text, size, color)
 	l.add_theme_color_override("font_outline_color", Color.BLACK)
-	l.add_theme_constant_override("outline_size", 8)
-	l.position = _cell_pos(cell) + Vector2(30, 40)
+	l.add_theme_constant_override("outline_size", 10)
+	l.position = _cell_pos(cell) + Vector2(24, 42)
+	l.pivot_offset = Vector2(50, 12)
+	l.scale = Vector2(1.7, 1.7)
 	fx_layer.add_child(l)
 	var tw := create_tween()
-	tw.set_parallel(true)
-	tw.tween_property(l, "position:y", l.position.y - 60, 0.8)
-	tw.tween_property(l, "modulate:a", 0.0, 0.8).set_delay(0.2)
+	tw.tween_property(l, "scale", Vector2.ONE, 0.12) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tw.tween_property(l, "position:y", l.position.y - 66, 0.7)
+	tw.parallel().tween_property(l, "modulate:a", 0.0, 0.55).set_delay(0.15)
 	tw.chain().tween_callback(l.queue_free)
 
 
@@ -719,8 +793,9 @@ func _show_spell_preview(card_id) -> void:
 	w.position = Vector2(850, 300)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx_layer.add_child(w)
+	UiTheme.pass_through(w)
 	_pop(w)
-	await _wait(0.7)
+	await _wait(0.55)
 	var tw := create_tween()
 	tw.tween_property(w, "modulate:a", 0.0, 0.25)
 	await tw.finished
@@ -734,6 +809,7 @@ func _show_detail_card(def: CardDef) -> void:
 	var w := CardWidget.create(def, 230)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
+	_add_detail_text(_keyword_explanations(def))
 
 
 func _show_detail_monster(m: MonsterInst) -> void:
@@ -748,6 +824,27 @@ func _show_detail_monster(m: MonsterInst) -> void:
 		status += "\nBouclier actif"
 	var l := UiTheme.label(status, 15, UiTheme.TEXT)
 	detail_holder.add_child(l)
+	_add_detail_text(_keyword_explanations(m.def))
+
+
+func _keyword_explanations(def: CardDef) -> String:
+	var lines: PackedStringArray = []
+	if def.is_monster():
+		lines.append("%s : %s." % [GameText.ATTACK_TYPE_NAMES[def.attack_type],
+				GameText.ATTACK_TYPE_DEFS[def.attack_type]])
+		for kw in def.keywords:
+			lines.append("%s : %s." % [GameText.KEYWORD_NAMES.get(String(kw), String(kw)),
+					GameText.KEYWORD_DEFS.get(String(kw), "")])
+	return "\n".join(lines)
+
+
+func _add_detail_text(text: String) -> void:
+	if text == "":
+		return
+	var info := UiTheme.label(text, 13, UiTheme.TEXT_DIM)
+	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	info.custom_minimum_size = Vector2(240, 0)
+	detail_holder.add_child(info)
 
 
 func _clear_detail() -> void:

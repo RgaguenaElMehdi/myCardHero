@@ -66,7 +66,17 @@ static func label(text: String, size: int = 18, color: Color = TEXT) -> Label:
 	l.text = text
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", color)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
+
+
+## Makes every Control in a subtree ignore the mouse, so clicks always reach
+## the interactive ancestor (card, cell...) in one click.
+static func pass_through(node: Node) -> void:
+	for child in node.get_children():
+		if child is Control:
+			(child as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pass_through(child)
 
 
 ## Loads a texture, returning null (not an error) when the asset is absent.

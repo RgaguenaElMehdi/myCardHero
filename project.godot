@@ -1,6 +1,10 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
 ; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -9,8 +13,8 @@ config_version=5
 config/name="Stonebound"
 config/description="Tactical card battler inspired by Trade & Battle: Card Hero — place monsters on a grid, manage stones, evolve your creatures and take down the enemy Master."
 config/version="0.1.0"
-config/features=PackedStringArray("4.6")
 run/main_scene="res://scenes/main_menu.tscn"
+config/features=PackedStringArray("4.5")
 config/icon="res://assets/sprites/ui/app_icon.png"
 
 [autoload]
@@ -24,7 +28,10 @@ Audio="*res://scripts/autoload/audio.gd"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
+
+[dotnet]
+
+project/assembly_name="Stonebound"
 
 [rendering]
 

@@ -7,6 +7,7 @@ signal pressed(widget: CardWidget)
 
 var def: CardDef
 var selected := false
+var hovering := false
 var _count_label: Label
 
 
@@ -21,7 +22,19 @@ static func create(p_def: CardDef, width: float = 190.0) -> CardWidget:
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_apply_style()
-	tooltip_text = def.description
+	var evo_name := ""
+	if def.evolves_to != &"":
+		var tree := Engine.get_main_loop() as SceneTree
+		var db = tree.root.get_node_or_null("Db") if tree != null else null
+		if db != null and db.card(def.evolves_to) != null:
+			evo_name = db.card(def.evolves_to).display_name
+	tooltip_text = GameText.card_tooltip(def, evo_name)
+	mouse_entered.connect(func() -> void:
+		hovering = true
+		_apply_style())
+	mouse_exited.connect(func() -> void:
+		hovering = false
+		_apply_style())
 
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 4)
@@ -45,7 +58,10 @@ func _build() -> void:
 	cost_panel.add_child(cost)
 	top.add_child(cost_panel)
 
-	var name_l := UiTheme.label(def.display_name, 16)
+	var name_size := 16
+	if def.display_name.length() > 13:
+		name_size = 13
+	var name_l := UiTheme.label(def.display_name, name_size)
 	name_l.clip_text = true
 	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -78,11 +94,18 @@ func _build() -> void:
 	_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_count_label.visible = false
 	vbox.add_child(_count_label)
+	# Decorative children must never eat the click.
+	UiTheme.pass_through(self)
 
 
 func _apply_style() -> void:
 	var border := Color.WHITE if selected else UiTheme.guild_color(def.guild)
-	var sb := UiTheme.panel(UiTheme.PANEL.darkened(0.2), 10, border, 4 if selected else 2)
+	if hovering and not selected:
+		border = border.lightened(0.35)
+	var bg := UiTheme.PANEL.darkened(0.2)
+	if hovering:
+		bg = bg.lightened(0.08)
+	var sb := UiTheme.panel(bg, 10, border, 4 if selected or hovering else 2)
 	sb.content_margin_left = 8
 	sb.content_margin_right = 8
 	sb.content_margin_top = 6
