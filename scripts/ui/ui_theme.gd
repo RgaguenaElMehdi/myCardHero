@@ -152,6 +152,9 @@ static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int 
 		btn.add_theme_font_override("font", f)
 		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
 		btn.add_theme_constant_override("outline_size", 4)
+	# Fire on press (not release): far more forgiving when the mouse moves
+	# slightly during the click, and the whole UI feels snappier.
+	btn.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 	if not btn.pressed.is_connected(_click_sfx):
 		btn.pressed.connect(_click_sfx)
 

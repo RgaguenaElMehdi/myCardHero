@@ -21,6 +21,28 @@ var dialogue_phase := "pre"
 
 func _ready() -> void:
 	load_profile()
+	_fit_window()
+
+
+## A 1920x1080 window does not fit on most screens once the taskbar and window
+## decorations are counted: the bottom of the game (the hand!) ends up
+## off-screen and clicks feel broken. Maximize whenever the window would not
+## fully fit, and take focus so the first click is never eaten.
+func _fit_window() -> void:
+	# Test harnesses need window coords == canvas coords: skip any resizing.
+	for arg in OS.get_cmdline_user_args():
+		if String(arg).begins_with("--clickflow") or String(arg) == "--probe" \
+				or String(arg).begins_with("--screenshot") \
+				or String(arg).begins_with("--end-shot") or String(arg) == "--autoplay":
+			return
+	var win := get_window()
+	if bool(profile.get("settings", {}).get("fullscreen", false)):
+		win.mode = Window.MODE_FULLSCREEN
+	else:
+		var usable := DisplayServer.screen_get_usable_rect(win.current_screen)
+		if win.size.x >= usable.size.x or win.size.y >= usable.size.y:
+			win.mode = Window.MODE_MAXIMIZED
+	win.grab_focus()
 	# Test instrumentation: --screenshot=<path> captures the running scene
 	# after 2.5s and quits (used by automated visual verification).
 	for arg in OS.get_cmdline_user_args():
