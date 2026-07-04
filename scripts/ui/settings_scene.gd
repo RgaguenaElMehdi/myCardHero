@@ -23,7 +23,7 @@ func _ready() -> void:
 	vbox.add_theme_constant_override("separation", 20)
 	panel.add_child(vbox)
 
-	vbox.add_child(UiTheme.label("Options", 36, UiTheme.GOLD))
+	vbox.add_child(UiTheme.title_label("Options", 36))
 
 	var settings: Dictionary = Game.profile.settings
 	vbox.add_child(UiTheme.label("Volume de la musique", 18))

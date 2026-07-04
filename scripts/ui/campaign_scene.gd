@@ -12,10 +12,10 @@ func _ready() -> void:
 	bg.modulate = Color(0.55, 0.55, 0.6)
 	add_child(bg)
 
-	var title := UiTheme.label("Le Circuit de Petraheim", 44, UiTheme.GOLD)
-	title.add_theme_color_override("font_outline_color", Color.BLACK)
-	title.add_theme_constant_override("outline_size", 10)
-	title.position = Vector2(700, 40)
+	var title := UiTheme.title_label("Le Circuit de Petraheim", 44)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	title.offset_top = 40
 	add_child(title)
 
 	var scroll := ScrollContainer.new()

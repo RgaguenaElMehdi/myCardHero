@@ -9,7 +9,7 @@ func _ready() -> void:
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 
-	var title := UiTheme.label("Guide du jeu", 44, UiTheme.GOLD)
+	var title := UiTheme.title_label("Guide du jeu", 44)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
 	title.offset_top = 30

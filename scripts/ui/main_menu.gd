@@ -14,25 +14,33 @@ func _ready() -> void:
 	bg.texture = UiTheme.tex(Db.background_path("main_menu"))
 	add_child(bg)
 
-	var title := UiTheme.label("STONEBOUND", 84, UiTheme.GOLD)
-	title.add_theme_color_override("font_outline_color", Color.BLACK)
-	title.add_theme_constant_override("outline_size", 14)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	title.offset_top = 90
-	add_child(title)
+	var logo_tex := UiTheme.tex(UiTheme.TEX_LOGO)
+	if logo_tex != null:
+		var logo := TextureRect.new()
+		logo.texture = logo_tex
+		logo.set_anchors_preset(Control.PRESET_TOP_WIDE)
+		logo.offset_top = 24
+		logo.custom_minimum_size = Vector2(0, 330)
+		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(logo)
+	else:
+		var title := UiTheme.title_label("STONEBOUND", 84)
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		title.set_anchors_preset(Control.PRESET_TOP_WIDE)
+		title.offset_top = 90
+		add_child(title)
 
-	var subtitle := UiTheme.label("Le Circuit de Petraheim", 26, UiTheme.TEXT)
-	subtitle.add_theme_color_override("font_outline_color", Color.BLACK)
-	subtitle.add_theme_constant_override("outline_size", 8)
+	var subtitle := UiTheme.title_label("Le Circuit de Petraheim", 26, UiTheme.TEXT)
 	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	subtitle.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	subtitle.offset_top = 215
+	subtitle.offset_top = 352
 	add_child(subtitle)
 
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", UiTheme.panel(Color(0, 0, 0, 0.55), 16))
-	panel.position = Vector2(760, 380)
+	panel.position = Vector2(760, 425)
 	panel.custom_minimum_size = Vector2(400, 0)
 	add_child(panel)
 	var vbox := VBoxContainer.new()

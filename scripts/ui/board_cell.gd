@@ -12,6 +12,7 @@ var side: int  ## player index owning this row
 var highlight := ""  ## "", "summon", "move", "attack", "selected", "target"
 
 var _content: Control
+var _ring: Panel
 
 
 static func create(p_cell: Vector2i) -> BoardCell:
@@ -21,6 +22,10 @@ static func create(p_cell: Vector2i) -> BoardCell:
 	c.custom_minimum_size = Vector2(SIZE, SIZE)
 	c.size = c.custom_minimum_size
 	c.mouse_filter = Control.MOUSE_FILTER_STOP
+	c._ring = Panel.new()
+	c._ring.set_anchors_preset(Control.PRESET_FULL_RECT)
+	c._ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	c.add_child(c._ring)
 	c._apply_style()
 	return c
 
@@ -31,28 +36,44 @@ func set_highlight(mode: String) -> void:
 
 
 func _apply_style() -> void:
-	var base := UiTheme.PANEL if side == 0 else UiTheme.PANEL.darkened(0.25)
-	var border := Color(1, 1, 1, 0.08)
-	var width := 1
+	# Base: generated stone tile, warm-tinted for the player side, cool for the enemy.
+	var tile := UiTheme.tex(UiTheme.TEX_CELL_TILE)
+	if tile != null:
+		var sb := StyleBoxTexture.new()
+		sb.texture = tile
+		var tint := Color(1.0, 0.96, 0.9) if side == 0 else Color(0.72, 0.78, 0.92)
+		if highlight != "":
+			tint = tint.lightened(0.15)
+		sb.modulate_color = tint
+		add_theme_stylebox_override("panel", sb)
+	else:
+		var base := UiTheme.PANEL if side == 0 else UiTheme.PANEL.darkened(0.25)
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = base.lightened(0.06) if highlight != "" else base
+		sb.set_corner_radius_all(8)
+		add_theme_stylebox_override("panel", sb)
+	# Highlight ring above the content.
+	var border := Color(0, 0, 0, 0.35)
+	var width := 2
 	match highlight:
 		"summon":
 			border = UiTheme.GOLD
-			width = 3
+			width = 4
 		"move":
 			border = UiTheme.ACCENT
-			width = 3
+			width = 4
 		"attack", "target":
 			border = UiTheme.DANGER
-			width = 4
+			width = 5
 		"selected":
 			border = Color.WHITE
-			width = 3
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = base.lightened(0.06) if highlight != "" else base
-	sb.set_corner_radius_all(8)
-	sb.border_color = border
-	sb.set_border_width_all(width)
-	add_theme_stylebox_override("panel", sb)
+			width = 4
+	var ring_sb := StyleBoxFlat.new()
+	ring_sb.bg_color = Color.TRANSPARENT
+	ring_sb.set_corner_radius_all(8)
+	ring_sb.border_color = border
+	ring_sb.set_border_width_all(width)
+	_ring.add_theme_stylebox_override("panel", ring_sb)
 
 
 ## Rebuilds the cell content from state.
@@ -71,6 +92,8 @@ func render(state: GameState) -> void:
 		var m := state.board.at(cell)
 		if m != null:
 			_render_monster(m)
+	# Highlight ring stays above the occupant art.
+	move_child(_ring, get_child_count() - 1)
 	# Clicks must reach the cell itself in one click, never its decorations.
 	UiTheme.pass_through(self)
 

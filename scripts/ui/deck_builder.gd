@@ -21,7 +21,7 @@ func _ready() -> void:
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(bg)
 
-	var title := UiTheme.label("Deck builder", 40, UiTheme.GOLD)
+	var title := UiTheme.title_label("Deck builder", 40)
 	title.position = Vector2(60, 30)
 	add_child(title)
 

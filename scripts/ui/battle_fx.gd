@@ -164,27 +164,48 @@ static func vignette(layer: Control, color: Color, duration: float = 0.4) -> voi
 	tw.tween_callback(rect.queue_free)
 
 
-## Sliding turn banner ("À vous de jouer !").
+## Sliding turn banner ("À vous de jouer !") on the generated golden ribbon.
 static func banner(layer: Control, text: String, color: Color) -> void:
-	var panel := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, 0.72)
-	sb.set_corner_radius_all(14)
-	sb.border_color = color
-	sb.set_border_width_all(2)
-	sb.content_margin_left = 46
-	sb.content_margin_right = 46
-	sb.content_margin_top = 14
-	sb.content_margin_bottom = 14
-	panel.add_theme_stylebox_override("panel", sb)
+	var panel: Control
+	var ribbon := UiTheme.tex(UiTheme.TEX_BANNER)
+	if ribbon != null:
+		panel = Control.new()
+		panel.size = Vector2(680, 390)
+		var img := TextureRect.new()
+		img.texture = ribbon
+		img.set_anchors_preset(Control.PRESET_FULL_RECT)
+		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		panel.add_child(img)
+		var l := UiTheme.title_label(text, 34, color)
+		l.set_anchors_preset(Control.PRESET_FULL_RECT)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		l.offset_top = -26  # optical center of the ribbon strip
+		panel.add_child(l)
+	else:
+		var pc := PanelContainer.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0, 0, 0, 0.72)
+		sb.set_corner_radius_all(14)
+		sb.border_color = color
+		sb.set_border_width_all(2)
+		sb.content_margin_left = 46
+		sb.content_margin_right = 46
+		sb.content_margin_top = 14
+		sb.content_margin_bottom = 14
+		pc.add_theme_stylebox_override("panel", sb)
+		var l := UiTheme.label(text, 40, color)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		pc.add_child(l)
+		panel = pc
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var l := UiTheme.label(text, 40, color)
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	panel.add_child(l)
+	UiTheme.pass_through(panel)
 	panel.modulate.a = 0.0  # hidden until positioned (avoids a 1-frame flash at 0,0)
 	layer.add_child(panel)
 	await layer.get_tree().process_frame  # let the panel compute its size
-	panel.position = Vector2((layer.size.x - panel.size.x) / 2.0 - 46.0, 430)
+	panel.position = Vector2((layer.size.x - panel.size.x) / 2.0 - 46.0,
+			330 if ribbon != null else 430)
 	var tw := layer.create_tween()
 	tw.set_parallel(true)
 	tw.tween_property(panel, "modulate:a", 1.0, 0.16)

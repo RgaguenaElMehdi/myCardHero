@@ -62,7 +62,7 @@ func _ready() -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 10)
 	box.add_child(vbox)
-	name_label = UiTheme.label("", 26, UiTheme.GOLD)
+	name_label = UiTheme.title_label("", 26)
 	vbox.add_child(name_label)
 	text_label = UiTheme.label("", 22)
 	text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

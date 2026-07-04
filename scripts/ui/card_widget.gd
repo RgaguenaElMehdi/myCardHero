@@ -1,7 +1,8 @@
 class_name CardWidget
 extends PanelContainer
 ## Visual card (hand, deck builder, rewards, detail preview).
-## Built entirely in code; art comes from assets/sprites/cards/<id>.png.
+## HQ look: art under an ornate generated golden frame, cost gem, Cinzel name.
+## Falls back to the flat style when the frame texture is missing.
 
 signal pressed(widget: CardWidget)
 
@@ -36,39 +37,48 @@ func _build() -> void:
 		hovering = false
 		_apply_style())
 
+	var w := custom_minimum_size.x
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 4)
+	vbox.add_theme_constant_override("separation", 3)
 	add_child(vbox)
 
+	# Name strip on a dark backing so it reads over the frame and art.
+	var strip := PanelContainer.new()
+	var strip_sb := StyleBoxFlat.new()
+	strip_sb.bg_color = Color(0, 0, 0, 0.55)
+	strip_sb.set_corner_radius_all(6)
+	strip_sb.content_margin_left = 4
+	strip_sb.content_margin_right = 4
+	strip.add_theme_stylebox_override("panel", strip_sb)
+	vbox.add_child(strip)
 	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation", 6)
-	vbox.add_child(top)
+	top.add_theme_constant_override("separation", 5)
+	strip.add_child(top)
+	top.add_child(_cost_chip(w))
 
-	var cost := UiTheme.label(str(def.cost), 20, Color.WHITE)
-	cost.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	cost.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	cost.custom_minimum_size = Vector2(30, 30)
-	var gem := StyleBoxFlat.new()
-	gem.bg_color = UiTheme.ACCENT.darkened(0.3)
-	gem.set_corner_radius_all(15)
-	gem.border_color = UiTheme.ACCENT
-	gem.set_border_width_all(2)
-	var cost_panel := PanelContainer.new()
-	cost_panel.add_theme_stylebox_override("panel", gem)
-	cost_panel.add_child(cost)
-	top.add_child(cost_panel)
-
-	var name_size := 16
+	var name_size := int(w * 0.085)
 	if def.display_name.length() > 13:
-		name_size = 13
-	var name_l := UiTheme.label(def.display_name, name_size)
+		name_size = int(w * 0.068)
+	var name_l := UiTheme.title_label(def.display_name, name_size, Color.WHITE)
 	name_l.clip_text = true
 	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	name_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	top.add_child(name_l)
 
+	# guild pip
+	var pip := Panel.new()
+	var pip_sb := StyleBoxFlat.new()
+	pip_sb.bg_color = UiTheme.guild_color(def.guild)
+	pip_sb.set_corner_radius_all(99)
+	pip_sb.border_color = Color(0, 0, 0, 0.5)
+	pip_sb.set_border_width_all(1)
+	pip.add_theme_stylebox_override("panel", pip_sb)
+	pip.custom_minimum_size = Vector2(w * 0.07, w * 0.07)
+	pip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(pip)
+
 	var art := TextureRect.new()
-	art.custom_minimum_size = Vector2(0, custom_minimum_size.x * 0.62)
+	art.custom_minimum_size = Vector2(0, w * 0.72)
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	art.texture = UiTheme.tex(def.art)
@@ -85,31 +95,84 @@ func _build() -> void:
 		info_text = GameText.monster_summary(def)
 	else:
 		info_text = GameText.describe_effect(def.effect)
-	var info := UiTheme.label(info_text, 13, UiTheme.TEXT)
+	var info := UiTheme.label(info_text, int(w * 0.068), UiTheme.TEXT)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	info.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	vbox.add_child(info)
 
-	_count_label = UiTheme.label("", 15, UiTheme.GOLD)
+	_count_label = UiTheme.label("", int(w * 0.08), UiTheme.GOLD)
 	_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_count_label.visible = false
 	vbox.add_child(_count_label)
+
+	# ornate frame on top of everything
+	var frame_tex := UiTheme.tex(UiTheme.TEX_CARD_FRAME)
+	if frame_tex != null:
+		var frame := TextureRect.new()
+		frame.texture = frame_tex
+		frame.set_anchors_preset(Control.PRESET_FULL_RECT)
+		frame.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		frame.stretch_mode = TextureRect.STRETCH_SCALE
+		add_child(frame)
+
 	# Decorative children must never eat the click.
 	UiTheme.pass_through(self)
 
 
+func _cost_chip(w: float) -> Control:
+	var chip := Control.new()
+	var d := w * 0.19
+	chip.custom_minimum_size = Vector2(d, d)
+	var icon_tex := UiTheme.tex(UiTheme.ICON_STONE)
+	if icon_tex != null:
+		var icon := TextureRect.new()
+		icon.texture = icon_tex
+		icon.set_anchors_preset(Control.PRESET_FULL_RECT)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		chip.add_child(icon)
+	else:
+		var gem := Panel.new()
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = UiTheme.ACCENT.darkened(0.3)
+		sb.set_corner_radius_all(99)
+		sb.border_color = UiTheme.ACCENT
+		sb.set_border_width_all(2)
+		gem.add_theme_stylebox_override("panel", sb)
+		gem.set_anchors_preset(Control.PRESET_FULL_RECT)
+		chip.add_child(gem)
+	var num := UiTheme.title_label(str(def.cost), int(d * 0.62), Color.WHITE)
+	num.set_anchors_preset(Control.PRESET_FULL_RECT)
+	num.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	num.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	chip.add_child(num)
+	return chip
+
+
 func _apply_style() -> void:
-	var border := Color.WHITE if selected else UiTheme.guild_color(def.guild)
-	if hovering and not selected:
-		border = border.lightened(0.35)
-	var bg := UiTheme.PANEL.darkened(0.2)
+	var has_frame := UiTheme.tex(UiTheme.TEX_CARD_FRAME) != null
+	var w := custom_minimum_size.x
+	var border := Color.TRANSPARENT
+	var border_w := 0
+	if selected:
+		border = Color.WHITE
+		border_w = 4
+	elif hovering:
+		border = UiTheme.GOLD if has_frame else UiTheme.guild_color(def.guild).lightened(0.35)
+		border_w = 3
+	elif not has_frame:
+		border = UiTheme.guild_color(def.guild)
+		border_w = 2
+	var bg := Color("141824") if has_frame else UiTheme.PANEL.darkened(0.2)
 	if hovering:
-		bg = bg.lightened(0.08)
-	var sb := UiTheme.panel(bg, 10, border, 4 if selected or hovering else 2)
-	sb.content_margin_left = 8
-	sb.content_margin_right = 8
-	sb.content_margin_top = 6
-	sb.content_margin_bottom = 6
+		bg = bg.lightened(0.07)
+	var sb := UiTheme.panel(bg, 12, border, border_w)
+	var mx := w * 0.085 if has_frame else 8.0
+	var my := w * 0.08 if has_frame else 6.0
+	sb.content_margin_left = mx
+	sb.content_margin_right = mx
+	sb.content_margin_top = my
+	sb.content_margin_bottom = my
 	add_theme_stylebox_override("panel", sb)
 
 

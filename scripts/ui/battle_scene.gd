@@ -23,6 +23,8 @@ var sel_power := false
 
 var cells := {}            ## Vector2i -> BoardCell
 var hand_widgets: Array[CardWidget] = []
+## Monsters destroyed [by player 0, by player 1] (end-screen stats).
+var kills := [0, 0]
 
 var board_area: Control
 var hand_area: Control
@@ -117,11 +119,11 @@ func _setup_match() -> void:
 func _show_mulligan() -> void:
 	mulligan_overlay = _overlay()
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel(UiTheme.PANEL, 14))
+	panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 16)
 	panel.add_child(vbox)
-	var title := UiTheme.label("Main de départ", 30, UiTheme.GOLD)
+	var title := UiTheme.title_label("Main de départ", 30)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(title)
 	var row := HBoxContainer.new()
@@ -166,18 +168,40 @@ func _on_mulligan_choice(redraw: bool) -> void:
 
 func _build_ui() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	# Arena backdrop: the current chapter's scenery, darkened, with a vignette.
 	var bg := TextureRect.new()
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
 	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bg.texture = UiTheme.tex(Db.background_path("battle_table"))
-	bg.modulate = Color(0.75, 0.75, 0.8)
+	bg.texture = UiTheme.tex(Db.background_path(
+			String(Game.battle_config.get("background", "battle_table"))))
+	if bg.texture == null:
+		bg.texture = UiTheme.tex(Db.background_path("battle_table"))
+	bg.modulate = Color(0.5, 0.5, 0.58)
 	add_child(bg)
 	if bg.texture == null:
 		var solid := ColorRect.new()
 		solid.color = UiTheme.BG
 		solid.set_anchors_preset(Control.PRESET_FULL_RECT)
 		add_child(solid)
+	_add_vignette(self, 0.55)
+	# Slow ambient dust motes drifting upward.
+	var dust := CPUParticles2D.new()
+	dust.position = Vector2(960, 1100)
+	dust.amount = 24
+	dust.lifetime = 9.0
+	dust.preprocess = 9.0
+	dust.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+	dust.emission_rect_extents = Vector2(960, 40)
+	dust.direction = Vector2.UP
+	dust.spread = 12.0
+	dust.gravity = Vector2.ZERO
+	dust.initial_velocity_min = 18.0
+	dust.initial_velocity_max = 55.0
+	dust.scale_amount_min = 1.0
+	dust.scale_amount_max = 2.6
+	dust.color = Color(1.0, 0.95, 0.8, 0.16)
+	add_child(dust)
 
 	board_area = Control.new()
 	board_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -220,15 +244,22 @@ func _build_ui() -> void:
 	add_child(end_turn_btn)
 
 	var log_panel := PanelContainer.new()
-	log_panel.add_theme_stylebox_override("panel", UiTheme.panel(Color(0, 0, 0, 0.45), 10))
+	log_panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate(Color(1, 1, 1, 0.92)))
 	log_panel.position = Vector2(1560, 84)
 	log_panel.custom_minimum_size = Vector2(330, 360)
 	add_child(log_panel)
+	var log_vbox := VBoxContainer.new()
+	log_vbox.add_theme_constant_override("separation", 4)
+	log_panel.add_child(log_vbox)
+	var log_title := UiTheme.title_label("Journal", 18, UiTheme.GOLD)
+	log_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	log_vbox.add_child(log_title)
 	log_box = RichTextLabel.new()
 	log_box.scroll_following = true
+	log_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	log_box.add_theme_font_size_override("normal_font_size", 14)
 	log_box.add_theme_color_override("default_color", UiTheme.TEXT_DIM)
-	log_panel.add_child(log_box)
+	log_vbox.add_child(log_box)
 
 	detail_holder = VBoxContainer.new()
 	detail_holder.position = Vector2(1620, 560)
@@ -262,22 +293,37 @@ func _build_ui() -> void:
 
 func _master_panel(side: int) -> PanelContainer:
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel(Color(0, 0, 0, 0.5), 12))
-	panel.custom_minimum_size = Vector2(300, 0)
+	panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
+	panel.custom_minimum_size = Vector2(310, 0)
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 6)
 	panel.add_child(vbox)
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", 10)
 	vbox.add_child(top)
+	var pwrap := Control.new()
+	pwrap.custom_minimum_size = Vector2(76, 76)
+	top.add_child(pwrap)
 	var portrait := TextureRect.new()
-	portrait.custom_minimum_size = Vector2(72, 72)
+	portrait.set_anchors_preset(Control.PRESET_FULL_RECT)
+	portrait.offset_left = 6
+	portrait.offset_top = 6
+	portrait.offset_right = -6
+	portrait.offset_bottom = -6
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	top.add_child(portrait)
+	pwrap.add_child(portrait)
+	var ring_tex := UiTheme.tex(UiTheme.TEX_PORTRAIT_RING)
+	if ring_tex != null:
+		var ring := TextureRect.new()
+		ring.texture = ring_tex
+		ring.set_anchors_preset(Control.PRESET_FULL_RECT)
+		ring.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		ring.stretch_mode = TextureRect.STRETCH_SCALE
+		pwrap.add_child(ring)
 	var names := VBoxContainer.new()
 	top.add_child(names)
-	var name_l := UiTheme.label("", 20, UiTheme.GOLD)
+	var name_l := UiTheme.title_label("", 20, UiTheme.GOLD)
 	names.add_child(name_l)
 	var master_l := UiTheme.label("", 15, UiTheme.TEXT_DIM)
 	names.add_child(master_l)
@@ -314,6 +360,28 @@ func _cell_pos(cell: Vector2i) -> Vector2:
 	# Enemy rows on top (board row 3 first), player rows at the bottom.
 	var screen_row := 3 - cell.y
 	return BOARD_ORIGIN + Vector2(cell.x * CELL_PITCH, screen_row * CELL_PITCH)
+
+
+## Radial darkness toward the screen edges (depth + focus).
+func _add_vignette(parent: Control, strength: float) -> void:
+	var grad := Gradient.new()
+	grad.set_color(0, Color(0, 0, 0, 0))
+	grad.set_color(1, Color(0, 0, 0, strength))
+	grad.add_point(0.62, Color(0, 0, 0, 0))
+	var gt := GradientTexture2D.new()
+	gt.gradient = grad
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.5)
+	gt.fill_to = Vector2(0.5, -0.15)
+	gt.width = 512
+	gt.height = 288
+	var rect := TextureRect.new()
+	rect.texture = gt
+	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rect.stretch_mode = TextureRect.STRETCH_SCALE
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(rect)
 
 
 func _overlay() -> Control:
@@ -702,6 +770,7 @@ func _play_events(events: Array) -> void:
 				await _wait(0.28)
 			"death":
 				Audio.play_sfx("death")
+				kills[1 - int(ev.owner)] += 1
 				_log("%s est détruit." % _cname(ev.card_id))
 				BattleFx.death(fx_layer, _cell_center(ev.cell),
 						UiTheme.tex(Db.card_art_path(StringName(String(ev.card_id)))))
@@ -935,41 +1004,102 @@ func _toast(text: String) -> void:
 func _show_game_over() -> void:
 	var won := state.winner == 0
 	Game.last_battle_won = won
-	if autoplay:
+	var end_shot := ""
+	for arg in OS.get_cmdline_user_args():
+		if String(arg).begins_with("--end-shot="):
+			end_shot = String(arg).split("=", true, 1)[1]
+	if autoplay and end_shot == "":
 		print("[autoplay] partie terminée — vainqueur : joueur %d, demi-tours : %d"
 				% [state.winner, state.turn])
 		get_tree().quit(0)
 		return
+	if autoplay:
+		Engine.time_scale = 1.0
 	Audio.play_sfx("win" if won else "lose")
+	Audio.stop_music()
 	var overlay := _overlay()
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
-	overlay.add_child(center)
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel",
-			UiTheme.panel(UiTheme.PANEL, 16, UiTheme.GOLD if won else UiTheme.DANGER, 3))
-	center.add_child(panel)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 18)
-	panel.add_child(vbox)
-	var title := UiTheme.label("Victoire !" if won else "Défaite…", 42,
-			UiTheme.GOLD if won else UiTheme.DANGER)
+	# Full-screen illustrated backdrop, fading in.
+	var art := TextureRect.new()
+	art.texture = UiTheme.tex(UiTheme.TEX_VICTORY if won else UiTheme.TEX_DEFEAT)
+	art.set_anchors_preset(Control.PRESET_FULL_RECT)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	art.modulate.a = 0.0
+	overlay.add_child(art)
+	create_tween().tween_property(art, "modulate:a", 1.0, 0.8)
+	_add_vignette(overlay, 0.6)
+	if won:
+		# Golden confetti raining from the top.
+		var confetti := CPUParticles2D.new()
+		confetti.position = Vector2(960, -30)
+		confetti.amount = 90
+		confetti.lifetime = 5.0
+		confetti.preprocess = 2.0
+		confetti.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
+		confetti.emission_rect_extents = Vector2(980, 10)
+		confetti.direction = Vector2.DOWN
+		confetti.spread = 20.0
+		confetti.gravity = Vector2(0, 140)
+		confetti.initial_velocity_min = 60.0
+		confetti.initial_velocity_max = 190.0
+		confetti.scale_amount_min = 2.5
+		confetti.scale_amount_max = 6.0
+		confetti.color = UiTheme.GOLD
+		confetti.hue_variation_min = -0.12
+		confetti.hue_variation_max = 0.12
+		overlay.add_child(confetti)
+	# Big display title with a punch-in.
+	var title := UiTheme.title_label("VICTOIRE" if won else "DÉFAITE", 120,
+			UiTheme.GOLD if won else Color("d96a6a"))
+	var display := UiTheme.display_font()
+	if display != null:
+		title.add_theme_font_override("font", display)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(title)
+	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	title.offset_top = 260
+	title.pivot_offset = Vector2(960, 80)
+	title.scale = Vector2(1.8, 1.8)
+	title.modulate.a = 0.0
+	overlay.add_child(title)
+	var tw := create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(title, "scale", Vector2.ONE, 0.45) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.3)
+	tw.tween_property(title, "modulate:a", 1.0, 0.3).set_delay(0.3)
+	# Sub-line + battle stats.
 	var sub := ""
 	if state.winner == -2:
 		sub = "Égalité — limite de tours atteinte."
 	elif won:
-		sub = "Le Maître adverse est vaincu."
+		sub = "Le Maître adverse est vaincu !"
 	else:
-		sub = "Votre Maître est tombé."
-	var sub_l := UiTheme.label(sub, 18, UiTheme.TEXT_DIM)
+		sub = "Votre Maître est tombé…"
+	sub += "\nTours joués : %d      Monstres vaincus : %d      Monstres perdus : %d" \
+			% [state.player_turn_count(), int(kills[0]), int(kills[1])]
+	var sub_l := UiTheme.label(sub, 20, UiTheme.TEXT)
+	sub_l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	sub_l.add_theme_constant_override("outline_size", 8)
 	sub_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(sub_l)
+	sub_l.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	sub_l.offset_top = 460
+	sub_l.modulate.a = 0.0
+	overlay.add_child(sub_l)
+	create_tween().tween_property(sub_l, "modulate:a", 1.0, 0.4).set_delay(0.7)
+	# Actions.
 	var buttons := HBoxContainer.new()
 	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
-	buttons.add_theme_constant_override("separation", 16)
-	vbox.add_child(buttons)
+	buttons.add_theme_constant_override("separation", 20)
+	buttons.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	buttons.offset_top = 620
+	overlay.add_child(buttons)
+	if autoplay and end_shot != "":
+		await _wait(1.8)
+		var img := get_viewport().get_texture().get_image()
+		img.save_png(end_shot)
+		print("[end-shot] %s" % end_shot)
+		get_tree().quit(0)
+		return
 	var is_campaign: bool = String(Game.battle_config.get("mode", "free")) == "campaign"
 	if is_campaign:
 		if won:
