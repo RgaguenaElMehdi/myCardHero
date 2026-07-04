@@ -1,0 +1,18 @@
+# Secrets
+.env
+
+# Godot
+.godot/
+*.import
+export.cfg
+export_credentials.cfg
+*.translation
+
+# OS / editors
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Asset pipeline intermediates
+tools/__pycache__/
+tools/.cache/

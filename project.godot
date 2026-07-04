@@ -1,0 +1,24 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+
+config_version=5
+
+[application]
+
+config/name="Stonebound"
+config/description="Tactical card battler inspired by Trade & Battle: Card Hero — place monsters on a grid, manage stones, evolve your creatures and take down the enemy Master."
+config/version="0.1.0"
+config/features=PackedStringArray("4.6")
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
