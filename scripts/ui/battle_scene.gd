@@ -41,6 +41,8 @@ var enemy_info: Dictionary = {}
 var player_info: Dictionary = {}
 var mulligan_overlay: Control
 var toast_label: Label
+var turn_info: Label
+var legend_panel: PanelContainer
 
 
 func _ready() -> void:
@@ -232,6 +234,49 @@ func _build_ui() -> void:
 	player_panel = _master_panel(0)
 	player_panel.position = Vector2(30, 560)
 	add_child(player_panel)
+
+	# "Ce tour" : ce qu'il vous reste à jouer.
+	var ti_panel := PanelContainer.new()
+	ti_panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate(Color(1, 1, 1, 0.92)))
+	ti_panel.position = Vector2(30, 856)
+	ti_panel.custom_minimum_size = Vector2(310, 0)
+	add_child(ti_panel)
+	var ti_box := VBoxContainer.new()
+	ti_box.add_theme_constant_override("separation", 4)
+	ti_panel.add_child(ti_box)
+	var ti_title := UiTheme.title_label("Ce tour", 18)
+	ti_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ti_box.add_child(ti_title)
+	turn_info = UiTheme.label("", 15, UiTheme.TEXT)
+	ti_box.add_child(turn_info)
+	var legend_btn := Button.new()
+	legend_btn.text = "Mots-clés  ▸"
+	UiTheme.style_button(legend_btn, UiTheme.PANEL_LIGHT, 15)
+	legend_btn.pressed.connect(func() -> void:
+		legend_panel.visible = not legend_panel.visible
+		legend_btn.text = "Mots-clés  ▾" if legend_panel.visible else "Mots-clés  ▸")
+	ti_box.add_child(legend_btn)
+
+	# Repliable : rappel des mots-clés.
+	legend_panel = PanelContainer.new()
+	legend_panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
+	legend_panel.position = Vector2(360, 560)
+	legend_panel.custom_minimum_size = Vector2(430, 0)
+	legend_panel.visible = false
+	legend_panel.z_index = 20
+	add_child(legend_panel)
+	var lg_box := VBoxContainer.new()
+	lg_box.add_theme_constant_override("separation", 3)
+	legend_panel.add_child(lg_box)
+	lg_box.add_child(UiTheme.title_label("Mots-clés", 18))
+	for kw in GameText.KEYWORD_NAMES:
+		var line := UiTheme.label("%s : %s." % [GameText.KEYWORD_NAMES[kw],
+				GameText.KEYWORD_DEFS.get(kw, "")], 14, UiTheme.TEXT_DIM)
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lg_box.add_child(line)
+	lg_box.add_child(UiTheme.label(
+			"Mêlée : sa colonne · Distance : partout · Magie : ignore Armure/Bouclier",
+			14, UiTheme.GOLD.lightened(0.15)))
 
 	turn_label = UiTheme.label("", 26, UiTheme.GOLD)
 	turn_label.position = Vector2(760, 24)
@@ -430,7 +475,7 @@ func _refresh_hand() -> void:
 	var total := overlap * (count - 1) + HAND_CARD_W
 	var start := (hand_area.size.x - total) / 2.0
 	for i in count:
-		var w := CardWidget.create(state.card(hand[i]), HAND_CARD_W)
+		var w := CardWidget.create_mini(state.card(hand[i]), HAND_CARD_W)
 		w.position = Vector2(start + i * overlap, 20)
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
@@ -488,6 +533,21 @@ func _refresh_buttons() -> void:
 	if state.phase == GameState.Phase.MAIN:
 		turn_label.text = "Tour %d — %s" % [state.player_turn_count(),
 				"à vous de jouer" if state.current == 0 else "l'adversaire réfléchit…"]
+	# « Ce tour » : actions restantes du joueur
+	if turn_info != null:
+		var actable := 0
+		for cell in state.board.monster_cells_of(0):
+			if Rules._check_can_act(state, state.board.at(cell)) == "":
+				actable += 1
+		var playable := 0
+		for id in p0.hand:
+			var d := state.card(id)
+			if d != null and d.cost <= p0.stones:
+				playable += 1
+		turn_info.text = "Monstres pouvant agir : %d\nCartes jouables : %d\nPouvoir : %s\nDéplacement du Maître : %s" % [
+			actable, playable,
+			"utilisé ✔" if p0.power_used else "disponible",
+			"fait ✔" if p0.master_moved else "disponible"]
 	_refresh_evolve_button()
 
 

@@ -27,6 +27,16 @@ static func create(p_def: CardDef, width: float = 190.0) -> CardWidget:
 	return w
 
 
+## Compact hand format: cost gem, name, big art, ATQ/PV badges, keyword line.
+## The full composed card stays one right-click away.
+static func create_mini(p_def: CardDef, width: float = 156.0) -> CardWidget:
+	var w := CardWidget.new()
+	w.def = p_def
+	w.custom_minimum_size = Vector2(width, width * 1.34)
+	w._build_mini()
+	return w
+
+
 func _build() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	var evo_name := ""
@@ -75,6 +85,101 @@ func _build_full(tex: Texture2D) -> void:
 	_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_count_label.visible = false
 	overlay.add_child(_count_label)
+
+
+# --- Mini hand format ------------------------------------------------------
+
+func _build_mini() -> void:
+	mouse_filter = Control.MOUSE_FILTER_STOP
+	_full = false
+	var evo_name := ""
+	if def.evolves_to != &"":
+		var tree := Engine.get_main_loop() as SceneTree
+		var db = tree.root.get_node_or_null("Db") if tree != null else null
+		if db != null and db.card(def.evolves_to) != null:
+			evo_name = db.card(def.evolves_to).display_name
+	tooltip_text = GameText.card_tooltip(def, evo_name)
+	mouse_entered.connect(func() -> void:
+		hovering = true
+		_apply_style())
+	mouse_exited.connect(func() -> void:
+		hovering = false
+		_apply_style())
+	_apply_style()
+
+	var w := custom_minimum_size.x
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 3)
+	add_child(vbox)
+
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 4)
+	vbox.add_child(top)
+	var gem := _stat_chip(str(def.cost), UiTheme.ICON_STONE, UiTheme.ACCENT, w * 0.16)
+	top.add_child(gem)
+	var name_size := int(w * 0.092)
+	if def.display_name.length() > 12:
+		name_size = int(w * 0.072)
+	var name_l := UiTheme.title_label(def.display_name, name_size, Color.WHITE)
+	name_l.clip_text = true
+	name_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	name_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	top.add_child(name_l)
+
+	var art := TextureRect.new()
+	art.custom_minimum_size = Vector2(0, w * 0.68)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.texture = UiTheme.tex(def.art)
+	vbox.add_child(art)
+
+	if def.is_monster():
+		var badges := HBoxContainer.new()
+		badges.add_theme_constant_override("separation", 6)
+		vbox.add_child(badges)
+		badges.add_child(_stat_chip(str(def.levels[0].atk), UiTheme.ICON_ATK,
+				Color("e2884c"), w * 0.17))
+		badges.add_child(_stat_chip(str(def.levels[0].hp), UiTheme.ICON_HP,
+				Color("cf5757"), w * 0.17))
+		var type_l := UiTheme.label(GameText.ATTACK_TYPE_NAMES[def.attack_type],
+				int(w * 0.070), UiTheme.TEXT_DIM)
+		type_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		type_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		type_l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		badges.add_child(type_l)
+		var kw := GameText.keywords_line(def.keywords)
+		if def.evolves_to != &"":
+			kw = ("%s · Évolue" % kw) if kw != "" else "Évolue"
+		if kw != "":
+			var kw_l := UiTheme.label(kw, int(w * 0.066), UiTheme.GOLD.lightened(0.2))
+			kw_l.clip_text = true
+			vbox.add_child(kw_l)
+	else:
+		var eff := UiTheme.label(GameText.describe_effect(def.effect), int(w * 0.070),
+				UiTheme.TEXT)
+		eff.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		eff.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		vbox.add_child(eff)
+
+	_count_label = UiTheme.label("", int(w * 0.08), UiTheme.GOLD)
+	_count_label.visible = false
+	vbox.add_child(_count_label)
+	UiTheme.pass_through(self)
+
+
+func _stat_chip(value: String, icon_path: String, color: Color, size: float) -> Control:
+	var chip := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.55)
+	sb.set_corner_radius_all(int(size * 0.3))
+	sb.border_color = color
+	sb.set_border_width_all(2)
+	sb.content_margin_left = 5
+	sb.content_margin_right = 6
+	chip.add_theme_stylebox_override("panel", sb)
+	chip.add_child(UiTheme.icon_label(icon_path, value, int(size * 0.62),
+			Color.WHITE.lerp(color, 0.25)))
+	return chip
 
 
 # --- Fallback: in-engine composite ---------------------------------------

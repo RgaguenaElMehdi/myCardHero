@@ -148,25 +148,14 @@ func _render_monster(m: MonsterInst) -> void:
 	else:
 		_content.add_child(art)
 
-	# stat bar
-	var bar := PanelContainer.new()
-	bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	bar.offset_top = -26
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, 0.65)
-	sb.set_corner_radius_all(6)
-	sb.content_margin_left = 6
-	sb.content_margin_right = 6
-	bar.add_theme_stylebox_override("panel", sb)
-	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_content.add_child(bar)
-	var stats := HBoxContainer.new()
-	stats.alignment = BoxContainer.ALIGNMENT_CENTER
-	stats.add_theme_constant_override("separation", 10)
-	bar.add_child(stats)
-	stats.add_child(UiTheme.icon_label(UiTheme.ICON_ATK, str(m.atk()), 15, Color("ffb27d")))
-	stats.add_child(UiTheme.icon_label(UiTheme.ICON_HP, str(m.hp), 15,
-			Color("8fe08f") if m.hp >= m.max_hp() else Color("ff9d9d")))
+	# corner stat badges (ATQ bottom-left, PV bottom-right)
+	var atk_badge := _stat_badge(str(m.atk()), UiTheme.ICON_ATK, Color("e2884c"))
+	atk_badge.position = Vector2(3, SIZE - 31)
+	_content.add_child(atk_badge)
+	var hp_color := Color("5aa864") if m.hp >= m.max_hp() else Color("cf5757")
+	var hp_badge := _stat_badge(str(m.hp), UiTheme.ICON_HP, hp_color)
+	_content.add_child(hp_badge)
+	hp_badge.position = Vector2(SIZE - hp_badge.get_minimum_size().x - 3, SIZE - 31)
 
 	# level badge
 	if m.def.max_level() > 1 or m.level > 1:
@@ -187,6 +176,22 @@ func _render_monster(m: MonsterInst) -> void:
 	# acted = dimmed
 	if m.acted:
 		_content.modulate = Color(0.6, 0.6, 0.65)
+
+
+## Rounded stat chip with icon + value and a colored border.
+func _stat_badge(value: String, icon_path: String, color: Color) -> Control:
+	var chip := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0, 0, 0, 0.7)
+	sb.set_corner_radius_all(9)
+	sb.border_color = color
+	sb.set_border_width_all(2)
+	sb.content_margin_left = 4
+	sb.content_margin_right = 5
+	chip.add_theme_stylebox_override("panel", sb)
+	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	chip.add_child(UiTheme.icon_label(icon_path, value, 15, Color.WHITE.lerp(color, 0.2)))
+	return chip
 
 
 func _badge(text: String, bg: Color, pos: Vector2, fg: Color = Color.WHITE) -> Control:
