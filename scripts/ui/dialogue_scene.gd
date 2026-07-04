@@ -11,6 +11,7 @@ var revealed := 0.0
 var typing := false
 
 var portrait: TextureRect
+var portrait_frame: Panel
 var name_label: Label
 var text_label: Label
 var hint_label: Label
@@ -51,6 +52,7 @@ func _ready() -> void:
 	fsb.set_corner_radius_all(10)
 	frame.add_theme_stylebox_override("panel", fsb)
 	add_child(frame)
+	portrait_frame = frame
 
 	var box := PanelContainer.new()
 	box.add_theme_stylebox_override("panel", UiTheme.panel(Color(0, 0, 0, 0.75), 14))
@@ -109,6 +111,8 @@ func _show_line() -> void:
 		name_label.text = _speaker_name(speaker)
 		portrait.texture = UiTheme.tex(Db.portrait_path(speaker))
 		text_label.add_theme_color_override("font_color", UiTheme.TEXT)
+	portrait.visible = portrait.texture != null
+	portrait_frame.visible = portrait.texture != null
 
 
 func _speaker_name(speaker: String) -> String:

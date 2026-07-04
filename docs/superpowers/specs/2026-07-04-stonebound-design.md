@@ -54,7 +54,7 @@ Clone spirituel de *Trade & Battle: Card Hero* (GBC, 2000) — un jeu de cartes 
 | Maître | Guilde | Passif | Actif (1×/tour) |
 |---|---|---|---|
 | **Kiran** | Flamme | Ses sorts de dégâts +1 | *Boule de feu* (3🪨) : 2 dégâts à un monstre |
-| **Willow** | Sylve | Ses monstres +1 PV max à l'invocation | *Sève* (2🪨) : soigne 3 PV à un monstre allié |
+| **Willow** | Sylve | Ses monstres +1 PV max à l'invocation | *Sève* (3🪨) : soigne 3 PV à un monstre allié |
 | **Grim** | Ombre | Récompense de kill +1 pierre | *Pacte* (1🪨) : sacrifie un allié, pioche 2 |
 | **Aria** | Lumière | Subit −1 dégât des attaques Distance | *Égide* (2🪨) : donne Bouclier à un allié |
 
@@ -88,8 +88,8 @@ Hors campagne : **Partie libre** (vs IA, tout niveau) et **deck builder** avec l
 
 ### 5.1 Principe : cœur de règles pur, données déclaratives, assets externes
 - `scripts/core/` : **logique pure sans nœuds de scène** (RefCounted). Déterministe, RNG seedé. Testable en headless.
-- Cartes/Maîtres/Campagne = **Resources `.tres`** (`CardDef`, `MasterDef`, `ChapterDef`) dans `resources/` — zéro donnée de gameplay codée en dur dans les scripts.
-- Tous les visuels/sons dans `assets/` (générés par Gemini / procéduraux), référencés par les Resources.
+- Cartes/Maîtres/Campagne = **JSON déclaratif** (`resources/data/*.json`) chargé par l'autoload `Db` en defs typées (`CardDef`, `MasterDef`) avec validation d'intégrité au chargement — zéro donnée de gameplay codée en dur dans les scripts. *(Décision révisée : le JSON remplace les `.tres` prévus initialement — plus sûr à écrire hors éditeur, diffable, et la validation runtime de `Db` compense l'absence de typage inspecteur.)*
+- Tous les visuels/sons dans `assets/` (générés par Gemini / procéduraux), chemins résolus par convention (`Db.card_art_path()` etc.).
 
 ### 5.2 Arborescence
 ```
@@ -132,7 +132,10 @@ SFX : synthèse procédurale (`gen_sfx.py`, WAV). Musique : boucles simples proc
 - **Données en JSON pur** : portable, mais les Resources Godot typées donnent validation, inspecteur et chargement natif — mieux pour la maintenabilité.
 - **GUT comme framework de test** : standard mais dépendance externe ; un runner maison de ~100 lignes suffit et reste sous contrôle en headless.
 
-## 7. Critères de fin (Definition of Done)
+## 7. Équilibrage (validé par simulation)
+Le test `test_campaign_sim.gd` simule chaque chapitre (10 parties seedées, joueur = IA Maître avec deck construit depuis la collection du moment). Cible : chaque chapitre gagnable, courbe en dents de scie avec pics aux ch. 4 et 8. Nerfs appliqués après la première passe (le contrôle défensif était invincible) : Régénérescence 4→3 PV, Sève coût 2→3, Tortue de mousse Armure 2→1 (PV 4→5), Tréant PV 8→7. Résultat : 3–10 victoires/10 par chapitre.
+
+## 8. Critères de fin (Definition of Done)
 1. Campagne 10 chapitres jouable de bout en bout, dialogues et récompenses inclus.
 2. Partie libre + deck builder fonctionnels.
 3. Tous les tests unitaires et le soak IA vs IA passent sans erreur console.
