@@ -44,7 +44,7 @@ static func button_style(base: Color) -> Dictionary:
 		"normal": panel(base, 8),
 		"hover": panel(base.lightened(0.12), 8),
 		"pressed": panel(base.darkened(0.15), 8),
-		"disabled": panel(base.darkened(0.4), 8),
+		"disabled": panel(Color(base.darkened(0.55), 0.55), 8),
 	}
 
 
@@ -59,6 +59,13 @@ static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int 
 	btn.add_theme_color_override("font_hover_color", Color.WHITE)
 	btn.add_theme_color_override("font_disabled_color", TEXT.darkened(0.5))
 	btn.add_theme_font_size_override("font_size", font_size)
+
+
+## Toggle buttons: the pressed (selected) state gets a bright gold border.
+static func style_toggle(btn: Button, base: Color = PANEL_LIGHT, font_size: int = 20) -> void:
+	style_button(btn, base, font_size)
+	btn.add_theme_stylebox_override("pressed", panel(base.lightened(0.18), 8, GOLD, 3))
+	btn.add_theme_color_override("font_pressed_color", GOLD)
 
 
 static func label(text: String, size: int = 18, color: Color = TEXT) -> Label:

@@ -14,6 +14,9 @@ var ai: AiPlayer
 var autoplay := false
 var autoplay_ai: AiPlayer
 var busy := false          ## input locked (animations / AI turn)
+## Watchdog: if an animation chain ever fails and leaves `busy` stuck during
+## the player's turn, input is force-unlocked after a few seconds.
+var _busy_since_ms := 0
 var sel_hand := -1
 var sel_cell := Vector2i(-1, -1)
 var sel_power := false
@@ -56,6 +59,30 @@ func _ready() -> void:
 		Engine.time_scale = 20.0
 		autoplay_ai = AiPlayer.new(AiPlayer.Level.ADEPT, 42)
 		_run_autoplay()
+
+
+func _process(_delta: float) -> void:
+	if not busy:
+		_busy_since_ms = 0
+		return
+	if _busy_since_ms == 0:
+		_busy_since_ms = Time.get_ticks_msec()
+		return
+	var stuck_ms := Time.get_ticks_msec() - _busy_since_ms
+	if state == null or state.phase != GameState.Phase.MAIN:
+		return
+	if state.current == 0 and stuck_ms > 8000:
+		push_warning("Watchdog : déblocage forcé de l'interface (tour du joueur).")
+		busy = false
+		_busy_since_ms = 0
+		_refresh_all()
+	elif state.current == 1 and stuck_ms > 20000:
+		# The AI coroutine died mid-turn: recover by force-ending its turn.
+		push_warning("Watchdog : tour IA interrompu, fin de tour forcée.")
+		Rules.apply(state, { "type": "end_turn" })
+		busy = false
+		_busy_since_ms = 0
+		_refresh_all()
 
 
 func _run_autoplay() -> void:
@@ -369,6 +396,13 @@ func _refresh_buttons() -> void:
 	end_turn_btn.disabled = not my_turn
 	var p0 := state.players[0]
 	power_btn.disabled = not my_turn or p0.power_used or p0.stones < p0.master.power_cost
+	if p0.power_used:
+		power_btn.tooltip_text = "Pouvoir déjà utilisé ce tour."
+	elif p0.stones < p0.master.power_cost:
+		power_btn.tooltip_text = "Il vous faut %d pierres (vous en avez %d)." \
+				% [p0.master.power_cost, p0.stones]
+	else:
+		power_btn.tooltip_text = "%s\nPassif : %s" % [p0.master.power_desc, p0.master.passive_desc]
 	turn_label.text = ""
 	if state.phase == GameState.Phase.MAIN:
 		turn_label.text = "Tour %d — %s" % [state.player_turn_count(),
@@ -447,8 +481,25 @@ func _on_hand_hover(w: CardWidget, _i: int) -> void:
 	_show_detail_card(w.def)
 
 
+## True when player input is locked right now; shows the reason as a toast so
+## ignored clicks never feel like a dead mouse.
+func _input_locked() -> bool:
+	if state == null or state.is_over():
+		return true
+	if state.phase == GameState.Phase.MULLIGAN:
+		return true
+	if busy:
+		_toast("Un instant — résolution en cours…" if state.current == 0
+				else "C'est le tour de l'adversaire.")
+		return true
+	if state.current != 0:
+		_toast("C'est le tour de l'adversaire.")
+		return true
+	return false
+
+
 func _on_hand_card_pressed(_w: CardWidget, i: int) -> void:
-	if busy or state.phase != GameState.Phase.MAIN or state.current != 0:
+	if _input_locked():
 		return
 	var def := state.card(state.players[0].hand[i])
 	_show_detail_card(def)
@@ -470,7 +521,7 @@ func _on_hand_card_pressed(_w: CardWidget, i: int) -> void:
 
 
 func _on_cell_clicked(cell: Vector2i) -> void:
-	if busy or state.phase != GameState.Phase.MAIN or state.current != 0:
+	if _input_locked():
 		return
 	var mode: String = cells[cell].highlight
 	# 1) Complete a pending action on a highlighted cell.
@@ -519,7 +570,7 @@ func _on_cell_clicked(cell: Vector2i) -> void:
 
 
 func _on_power_pressed() -> void:
-	if busy or state.current != 0:
+	if _input_locked():
 		return
 	var kind := state.players[0].master.power_target_kind()
 	if kind == "":

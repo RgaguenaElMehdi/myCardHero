@@ -99,37 +99,58 @@ func _show_free_setup() -> void:
 		var b := Button.new()
 		b.text = m.display_name
 		b.toggle_mode = true
+		b.custom_minimum_size = Vector2(130, 52)
 		b.button_pressed = String(mid) == selected_master[0]
-		UiTheme.style_button(b, UiTheme.guild_color(m.guild).darkened(0.5), 18)
+		b.tooltip_text = "%s\nPouvoir : %s" % [m.passive_desc, m.power_desc]
+		UiTheme.style_toggle(b, UiTheme.guild_color(m.guild).darkened(0.5), 18)
 		masters_row.add_child(b)
 		master_buttons.append(b)
 		b.pressed.connect(func() -> void:
 			selected_master[0] = String(mid)
 			for other in master_buttons:
-				other.button_pressed = other == b)
+				other.set_pressed_no_signal(other == b))
 
 	vbox.add_child(UiTheme.label("Difficulté :", 18, UiTheme.TEXT_DIM))
 	var diff_row := HBoxContainer.new()
 	diff_row.add_theme_constant_override("separation", 10)
 	vbox.add_child(diff_row)
+	var selected_diff: Array = [int(AiPlayer.Level.ADEPT)]
+	var diff_buttons: Array[Button] = []
 	var diffs := [["Novice", AiPlayer.Level.NOVICE], ["Adepte", AiPlayer.Level.ADEPT],
 			["Maître", AiPlayer.Level.MASTER]]
 	for d in diffs:
 		var b := Button.new()
 		b.text = d[0]
+		b.toggle_mode = true
+		b.button_pressed = int(d[1]) == selected_diff[0]
 		b.custom_minimum_size = Vector2(140, 50)
-		UiTheme.style_button(b, UiTheme.OK.darkened(0.3), 20)
+		UiTheme.style_toggle(b, UiTheme.PANEL_LIGHT, 20)
 		diff_row.add_child(b)
+		diff_buttons.append(b)
 		b.pressed.connect(func() -> void:
-			Game.profile.active_master = selected_master[0]
-			Game.save_profile()
-			_launch_free(int(d[1])))
+			selected_diff[0] = int(d[1])
+			for other in diff_buttons:
+				other.set_pressed_no_signal(other == b))
 
+	var actions := HBoxContainer.new()
+	actions.alignment = BoxContainer.ALIGNMENT_CENTER
+	actions.add_theme_constant_override("separation", 16)
+	vbox.add_child(actions)
+	var launch := Button.new()
+	launch.text = "⚔  Lancer la partie"
+	launch.custom_minimum_size = Vector2(280, 60)
+	UiTheme.style_button(launch, UiTheme.OK.darkened(0.2), 22)
+	launch.pressed.connect(func() -> void:
+		Game.profile.active_master = selected_master[0]
+		Game.save_profile()
+		_launch_free(selected_diff[0]))
+	actions.add_child(launch)
 	var cancel := Button.new()
 	cancel.text = "Annuler"
+	cancel.custom_minimum_size = Vector2(140, 60)
 	UiTheme.style_button(cancel, UiTheme.PANEL_LIGHT, 18)
 	cancel.pressed.connect(func() -> void: free_overlay.queue_free())
-	vbox.add_child(cancel)
+	actions.add_child(cancel)
 
 
 func _launch_free(level: int) -> void:
