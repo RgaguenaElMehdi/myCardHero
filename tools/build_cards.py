@@ -246,9 +246,9 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
         gem_box = (max(0, min(gxs) - m), max(0, min(gys) - m),
                    min(W, max(gxs) + m), min(H, max(gys) + m))
         gem_patch = img.crop(gem_box)
-    # 2) art into the magenta window (cover fit, slightly under the gold border
-    # so no anti-aliased magenta edge survives)
-    pad = 6
+    # 2) art into the magenta window (cover fit, barely under the gold border
+    # so no anti-aliased magenta edge survives but the frame stays visible)
+    pad = 3
     bx0, by0, bx1, by1 = bx0 - pad, by0 - pad, bx1 + pad, by1 + pad
     bw, bh = bx1 - bx0, by1 - by0
     art_path = ART / f"{card['id']}.png"
@@ -285,12 +285,12 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
     # 3) name centered in the title banner (measured per template kind)
     name = card["name"]
     banner_y = int(H * (0.072 if is_monster else 0.092))
-    name_font = fit_text(draw, name, F_TITLE, int(W * 0.52), int(W * 0.058))
-    outlined(draw, (int(W * 0.52), banner_y), name, name_font, (70, 50, 25),
+    name_font = fit_text(draw, name, F_TITLE, int(W * 0.44), int(W * 0.058))
+    outlined(draw, (int(W * 0.51), banner_y), name, name_font, (70, 50, 25),
              outline=(240, 228, 200), width=2, anchor="mm")
     # 4) guild diamond at the right end of the banner
-    pr = int(W * 0.020)
-    pc = (int(W * 0.78), banner_y)
+    pr = int(W * 0.018)
+    pc = (int(W * 0.795), banner_y)
     draw.polygon([(pc[0], pc[1] - pr), (pc[0] + pr, pc[1]),
                   (pc[0], pc[1] + pr), (pc[0] - pr, pc[1])],
                  fill=gc, outline=(60, 45, 25))
