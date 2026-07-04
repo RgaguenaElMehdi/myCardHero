@@ -37,6 +37,9 @@ func _base() -> HBoxContainer:
 	return row
 
 
+var _armed := false
+
+
 func _finish(row: HBoxContainer) -> void:
 	UiTheme.pass_through(self)
 	pivot_offset = get_viewport_rect().size / 2.0
@@ -47,11 +50,31 @@ func _finish(row: HBoxContainer) -> void:
 	tw.tween_property(self, "scale", Vector2.ONE, 0.18) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tw.tween_property(self, "modulate:a", 1.0, 0.14)
-	var hint := UiTheme.label("Cliquez pour fermer", 15, UiTheme.TEXT_DIM)
+	var hint := UiTheme.label("Cliquez n'importe où pour fermer  ·  Échap", 15, UiTheme.TEXT_DIM)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	hint.offset_top = -44
 	add_child(hint)
+	var close := Button.new()
+	close.text = "✕  Fermer"
+	close.custom_minimum_size = Vector2(150, 48)
+	UiTheme.style_button(close, UiTheme.DANGER.darkened(0.35), 18)
+	close.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	close.offset_left = -190
+	close.offset_top = 30
+	close.offset_right = -40
+	close.pressed.connect(queue_free)
+	add_child(close)
+	# Ignore the very click that opened the popup, then close on any press.
+	get_tree().create_timer(0.2).timeout.connect(func() -> void: _armed = true)
+
+
+## Global catch: any mouse press anywhere closes the popup, even if another
+## control would normally swallow the click.
+func _input(event: InputEvent) -> void:
+	if _armed and event is InputEventMouseButton and event.pressed:
+		get_viewport().set_input_as_handled()
+		queue_free()
 
 
 func _card_image(path: String, fallback_def: CardDef) -> Control:
