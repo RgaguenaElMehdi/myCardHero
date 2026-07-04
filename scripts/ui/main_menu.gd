@@ -89,12 +89,29 @@ func _show_free_setup() -> void:
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	free_overlay.add_child(center)
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel(UiTheme.PANEL, 14))
+	panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
 	center.add_child(panel)
+	var main_row := HBoxContainer.new()
+	main_row.add_theme_constant_override("separation", 24)
+	panel.add_child(main_row)
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
-	vbox.add_child(UiTheme.label("Partie libre", 30, UiTheme.GOLD))
+	main_row.add_child(vbox)
+	# live preview of the selected master's card
+	var preview_box := VBoxContainer.new()
+	preview_box.add_theme_constant_override("separation", 6)
+	main_row.add_child(preview_box)
+	var preview := TextureRect.new()
+	preview.custom_minimum_size = Vector2(300, 430)
+	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview_box.add_child(preview)
+	var hint := UiTheme.label("Clic droit sur un Maître : voir sa carte", 13, UiTheme.TEXT_DIM)
+	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	preview_box.add_child(hint)
+	var update_preview := func(mid: String) -> void:
+		preview.texture = UiTheme.tex("res://assets/sprites/cards_full/master_%s.png" % mid)
+	vbox.add_child(UiTheme.title_label("Partie libre", 30))
 
 	vbox.add_child(UiTheme.label("Votre Maître :", 18, UiTheme.TEXT_DIM))
 	var masters_row := HBoxContainer.new()
@@ -115,8 +132,14 @@ func _show_free_setup() -> void:
 		master_buttons.append(b)
 		b.pressed.connect(func() -> void:
 			selected_master[0] = String(mid)
+			update_preview.call(String(mid))
 			for other in master_buttons:
 				other.set_pressed_no_signal(other == b))
+		b.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed \
+					and ev.button_index == MOUSE_BUTTON_RIGHT:
+				b.accept_event()
+				CardPopup.open_master(self, m))
 
 	vbox.add_child(UiTheme.label("Difficulté :", 18, UiTheme.TEXT_DIM))
 	var diff_row := HBoxContainer.new()
@@ -159,6 +182,7 @@ func _show_free_setup() -> void:
 	UiTheme.style_button(cancel, UiTheme.PANEL_LIGHT, 18)
 	cancel.pressed.connect(func() -> void: free_overlay.queue_free())
 	actions.add_child(cancel)
+	update_preview.call(selected_master[0])
 
 
 func _launch_free(level: int) -> void:

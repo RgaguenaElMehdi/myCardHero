@@ -13,7 +13,7 @@ Usage:
 
 import json
 import sys
-from pathlib import Path
+from pathlib import Path  # noqa: F401 — used for _art overrides
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -250,7 +250,7 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
     pad = 3
     ax0, ay0, ax1, ay1 = bx0 - pad, by0 - pad, bx1 + pad, by1 + pad
     bw, bh = ax1 - ax0, ay1 - ay0
-    art_path = ART / f"{card['id']}.png"
+    art_path = Path(card["_art"]) if "_art" in card else ART / f"{card['id']}.png"
     if art_path.exists():
         art = Image.open(art_path).convert("RGBA")
         scale = max(bw / art.width, bh / art.height)
@@ -282,8 +282,12 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
                       int(gc[1] * (0.35 + 0.55 * lum)),
                       int(gc[2] * (0.35 + 0.55 * lum)), 255)
     draw = ImageDraw.Draw(img)
-    outlined(draw, gem_c, str(card.get("cost", 0)),
-             font(F_TITLE, int(W * 0.088)), (255, 255, 255), width=6)
+    gem_text = card.get("_gem", str(card.get("cost", 0)))
+    gem_size = int(W * 0.088) if len(gem_text) <= 1 else int(W * 0.066)
+    outlined(draw, gem_c, gem_text, font(F_TITLE, gem_size), (255, 255, 255), width=6)
+    if card.get("_gem_label"):
+        outlined(draw, (gem_c[0], gem_c[1] + int(W * 0.055)), card["_gem_label"],
+                 font(F_TITLE, int(W * 0.022)), (255, 245, 225), width=3)
 
     # 4) leftover template magenta (safety): recolor to dark neutral — but never
     # touch the pasted art, whose own pinks are legitimate
@@ -308,7 +312,7 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
     sub_kind = "Sort"
     if is_monster:
         sub_kind = "Ascendant" if card.get("token") else "Écho"
-    subtitle = "%s — %s" % (sub_kind, GUILD_NAMES.get(guild, ""))
+    subtitle = card.get("_subtitle", "%s — %s" % (sub_kind, GUILD_NAMES.get(guild, "")))
     outlined(draw, (int(W * a["subtitle"][0]), int(H * a["subtitle"][1])), subtitle,
              font(F_TITLE, int(W * 0.0245)), (218, 200, 165), width=2)
 
@@ -331,7 +335,9 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
 
     # 7) rules text with an ornamental divider between sections
     sections = []
-    if is_monster:
+    if "_sections" in card:
+        sections = [list(b) for b in card["_sections"]]
+    elif is_monster:
         block = []
         kws = []
         for kw, val in card.get("keywords", {}).items():
@@ -351,7 +357,7 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
             block2.append("Évolue au niveau max (%d pierres)." % card.get("evolve_cost", 0))
         if block2:
             sections.append(block2)
-    else:
+    elif not sections:
         sections.append([describe_effect(card.get("effect", []))])
     if card.get("flavor"):
         sections.append(["« %s »" % card["flavor"]])
@@ -388,7 +394,8 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
         y += lh
 
     # 8) rarity banner
-    outlined(draw, (int(W * a["rarity"][0]), int(H * a["rarity"][1])), rarity_of(card),
+    outlined(draw, (int(W * a["rarity"][0]), int(H * a["rarity"][1])),
+             card.get("_rarity", rarity_of(card)),
              font(F_TITLE, int(W * 0.026)), (232, 216, 180), width=3)
     return img
 
@@ -406,6 +413,23 @@ def main() -> int:
             tpl = Image.open(path)
             win = magenta_window(tpl)
             tpls[(kind, fac)] = (tpl, win, gem_region(tpl, win))
+    # The four Masters get their own cards on the spell frame of their faction.
+    masters = json.loads((ROOT / "resources/data/masters.json").read_text(encoding="utf-8"))["masters"]
+    for m in masters:
+        cards.append({
+            "id": "master_%s" % m["id"], "name": m["name"], "guild": m["guild"],
+            "kind": "spell", "cost": 0,
+            "_art": str(ROOT / "assets" / "portraits" / ("%s.png" % m["id"])),
+            "_gem": str(m["hp"]), "_gem_label": "PV",
+            "_subtitle": "Maître — %s" % GUILD_NAMES.get(m["guild"], ""),
+            "_sections": [
+                ["Passif : %s" % m["passive_desc"]],
+                ["Pouvoir — %s (%d pierres, 1 fois par tour) : %s"
+                 % (m["power_name"], m["power_cost"], m["power_desc"])],
+            ],
+            "_rarity": "MAÎTRE",
+            "flavor": m.get("lore", ""),
+        })
     for card in cards:
         if only and card["id"] != only:
             continue

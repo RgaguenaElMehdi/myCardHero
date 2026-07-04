@@ -12,7 +12,7 @@ const START_STONES := 3
 const STONES_PER_TURN := 2
 const MAX_STONES := 12
 
-const DECK_SIZE := 20
+const DECK_SIZE := 25
 const MAX_COPIES := 2
 const START_HAND := 5
 const HAND_LIMIT := 7

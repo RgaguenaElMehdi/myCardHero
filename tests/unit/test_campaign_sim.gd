@@ -78,11 +78,11 @@ func _build_deck(cards: Dictionary, collection: Dictionary) -> Array:
 		buckets[key].sort_custom(func(a: CardDef, b: CardDef) -> bool:
 			return _monster_score(a) > _monster_score(b))
 	var deck: Array = []
-	_take(deck, collection, buckets.cheap, 4)
-	_take(deck, collection, buckets.mid, 13 - mini(deck.size(), 4) - 3)
-	_take(deck, collection, buckets.big, 13 - deck.size())
-	_take(deck, collection, buckets.mid, 13 - deck.size())
-	_take(deck, collection, buckets.cheap, 13 - deck.size())
+	_take(deck, collection, buckets.cheap, 5)
+	_take(deck, collection, buckets.mid, 16 - mini(deck.size(), 5) - 4)
+	_take(deck, collection, buckets.big, 16 - deck.size())
+	_take(deck, collection, buckets.mid, 16 - deck.size())
+	_take(deck, collection, buckets.cheap, 16 - deck.size())
 	dmg_spells.sort_custom(func(a: CardDef, b: CardDef) -> bool: return a.cost < b.cost)
 	_take(deck, collection, dmg_spells, GameConst.DECK_SIZE - deck.size())
 	_take(deck, collection, other_spells, GameConst.DECK_SIZE - deck.size())

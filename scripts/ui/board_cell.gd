@@ -4,6 +4,7 @@ extends Panel
 ## and shows action highlights. Emits clicked(cell) for the battle controller.
 
 signal clicked(cell: Vector2i)
+signal inspect_requested(cell: Vector2i)
 
 const SIZE := 148.0
 
@@ -203,7 +204,16 @@ func _badge(text: String, bg: Color, pos: Vector2, fg: Color = Color.WHITE) -> C
 
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed \
-			and event.button_index == MOUSE_BUTTON_LEFT:
-		accept_event()
-		clicked.emit(cell)
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			accept_event()
+			clicked.emit(cell)
+		elif event.button_index == MOUSE_BUTTON_RIGHT and (state_has_content()):
+			accept_event()
+			inspect_requested.emit(cell)
+
+
+## True when the cell currently shows a monster or a master (worth inspecting);
+## empty cells let right-click fall through to "cancel selection".
+func state_has_content() -> bool:
+	return _content != null and _content.get_child_count() > 0

@@ -180,9 +180,9 @@ func _sections() -> Array:
 	var danger := UiTheme.DANGER.to_html(false)
 	var sections: Array = []
 	sections.append(["But du jeu",
-		"Réduisez à zéro les PV du [b]Maître adverse[/b] — une pièce posée sur sa rangée arrière. Si votre deck est vide quand vous devez piocher, vous perdez."])
+		"Réduisez à zéro les PV du [b]Maître adverse[/b] — une pièce posée sur sa rangée arrière. Deck vide ? Chaque pioche manquée inflige une [b]fatigue croissante[/b] à votre Maître (1, puis 2, puis 3…)."])
 	sections.append(["Mise en place",
-		"Deck de [b]20 cartes[/b] (max 2 exemplaires). Main de départ : 5 cartes, un [b]mulligan[/b] possible. Vous commencez avec [color=#%s]3 pierres[/color] ; le premier joueur ne pioche pas au tour 1." % accent])
+		"Deck de [b]25 cartes[/b] (max 2 exemplaires). Main de départ : 5 cartes, un [b]mulligan[/b] possible. Vous commencez avec [color=#%s]3 pierres[/color] ; le premier joueur ne pioche pas au tour 1.\n[i]Astuce : clic droit sur n'importe quelle carte pour l'inspecter en grand.[/i]" % accent])
 	sections.append(["Le plateau",
 		"Deux rangées de 3 cases par joueur : [b]avant[/b] (vers l'ennemi) et [b]arrière[/b]. Le Maître occupe une case arrière et peut se décaler d'une colonne par tour. Les monstres s'invoquent sur vos cases libres."])
 	sections.append(["Le tour de jeu",

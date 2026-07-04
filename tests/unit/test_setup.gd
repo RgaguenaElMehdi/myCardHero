@@ -4,11 +4,13 @@ extends TestCase
 
 func _valid_deck() -> Array:
 	var ids := ["grunt", "archer", "mage", "tank", "shieldy", "flyer", "spiky", "healer",
-			"hasty", "bolt"]
+			"hasty", "bolt", "nova", "mend"]
 	var deck := []
 	for id in ids:
 		deck.append(id)
 		deck.append(id)
+	deck.append("gem")
+	assert(deck.size() == GameConst.DECK_SIZE)
 	return deck
 
 

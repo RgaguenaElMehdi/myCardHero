@@ -130,7 +130,10 @@ func _show_mulligan() -> void:
 	row.add_theme_constant_override("separation", 10)
 	vbox.add_child(row)
 	for id in state.players[0].hand:
-		row.add_child(CardWidget.create(state.card(id), 170))
+		var cw := CardWidget.create(state.card(id), 170)
+		cw.inspect_requested.connect(func(w2: CardWidget) -> void:
+			CardPopup.open(self, w2.def))
+		row.add_child(cw)
 	var buttons := HBoxContainer.new()
 	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
 	buttons.add_theme_constant_override("separation", 20)
@@ -212,6 +215,7 @@ func _build_ui() -> void:
 			var widget := BoardCell.create(cell)
 			widget.position = _cell_pos(cell)
 			widget.clicked.connect(_on_cell_clicked)
+			widget.inspect_requested.connect(_on_cell_inspect)
 			board_area.add_child(widget)
 			cells[cell] = widget
 	# median line
@@ -301,10 +305,16 @@ func _master_panel(side: int) -> PanelContainer:
 	var top := HBoxContainer.new()
 	top.add_theme_constant_override("separation", 10)
 	vbox.add_child(top)
+	panel.gui_input.connect(func(ev: InputEvent) -> void:
+		if ev is InputEventMouseButton and ev.pressed \
+				and ev.button_index == MOUSE_BUTTON_RIGHT and state != null:
+			panel.accept_event()
+			CardPopup.open_master(self, state.players[side].master))
 	var pwrap := Control.new()
 	pwrap.custom_minimum_size = Vector2(76, 76)
 	top.add_child(pwrap)
 	var portrait := TextureRect.new()
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	portrait.set_anchors_preset(Control.PRESET_FULL_RECT)
 	portrait.offset_left = 6
 	portrait.offset_top = 6
@@ -328,6 +338,7 @@ func _master_panel(side: int) -> PanelContainer:
 	var master_l := UiTheme.label("", 15, UiTheme.TEXT_DIM)
 	names.add_child(master_l)
 	var hp_bar := ProgressBar.new()
+	hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hp_bar.custom_minimum_size = Vector2(0, 22)
 	hp_bar.show_percentage = false
 	var fill := StyleBoxFlat.new()
@@ -423,6 +434,8 @@ func _refresh_hand() -> void:
 		w.position = Vector2(start + i * overlap, 20)
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
+		w.inspect_requested.connect(func(w2: CardWidget) -> void:
+			CardPopup.open(self, w2.def))
 		w.mouse_entered.connect(_on_hand_hover.bind(w, i))
 		w.set_selected(i == sel_hand)
 		if i == sel_hand:
@@ -586,6 +599,19 @@ func _on_hand_card_pressed(_w: CardWidget, i: int) -> void:
 			_submit({ "type": "cast", "hand_index": idx })
 			return
 	_refresh_all()
+
+
+## Right-click inspection: works at any moment, even during the enemy turn.
+func _on_cell_inspect(cell: Vector2i) -> void:
+	if state == null:
+		return
+	for side in 2:
+		if Board.master_cell(side, state.players[side].master_col) == cell:
+			CardPopup.open_master(self, state.players[side].master)
+			return
+	var m := state.board.at(cell)
+	if m != null:
+		CardPopup.open(self, m.def, m)
 
 
 func _on_cell_clicked(cell: Vector2i) -> void:
@@ -852,6 +878,13 @@ func _play_events(events: Array) -> void:
 				else:
 					BattleFx.banner(fx_layer, "Tour de %s" % _pname(1), UiTheme.DANGER)
 				await _wait(0.45)
+			"fatigue":
+				Audio.play_sfx("master_hit")
+				var fcell := Board.master_cell(int(ev.player),
+						state.players[int(ev.player)].master_col)
+				_float_text(fcell, "FATIGUE %d" % int(ev.amount), Color("c9a0ff"), 24)
+				_log("%s n'a plus de cartes : fatigue %d !" % [_pname(ev.player), int(ev.amount)])
+				await _wait(0.35)
 			"deck_out":
 				_log("%s n'a plus de cartes !" % _pname(ev.player))
 			"win":

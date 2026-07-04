@@ -80,16 +80,18 @@ static func apply_ops(state: GameState, caster: int, ops: Array, target,
 				push_error("Unknown effect op: %s" % [op])
 
 
-## Draws up to `count` cards. If lose_on_empty (turn-start draw), an empty deck
-## loses the game; effect draws simply fizzle. A full hand skips the draw.
+## Draws up to `count` cards. On the turn-start draw (turn_draw), an empty deck
+## inflicts ramping FATIGUE damage to the player's master (1, then 2, then 3…)
+## instead of a card; effect draws simply fizzle. A full hand skips the draw.
 static func draw_cards(state: GameState, player_idx: int, count: int,
-		lose_on_empty: bool, events: Array) -> void:
+		turn_draw: bool, events: Array) -> void:
 	var p := state.players[player_idx]
 	for i in count:
 		if p.deck.is_empty():
-			if lose_on_empty:
-				events.append({ "e": "deck_out", "player": player_idx })
-				Combat.end_game(state, 1 - player_idx, "deck_out", events)
+			if turn_draw:
+				p.fatigue += 1
+				events.append({ "e": "fatigue", "player": player_idx, "amount": p.fatigue })
+				Combat.damage_master(state, player_idx, p.fatigue, -1, events)
 			return
 		if p.hand.size() >= GameConst.HAND_LIMIT:
 			return

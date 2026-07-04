@@ -14,6 +14,8 @@ var discard: Array[StringName] = []
 var power_used: bool = false
 var master_moved: bool = false
 var mulligan_done: bool = false
+## Consecutive turn-start draws missed on an empty deck (fatigue damage ramps).
+var fatigue: int = 0
 
 
 static func create(p_master: MasterDef, p_deck: Array[StringName]) -> PlayerState:

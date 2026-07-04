@@ -5,12 +5,14 @@
     "masters": [ "kiran" ],
     "collection": {
       "flame_imp": 2, "ember_fox": 2, "fire_archer": 2, "salamander": 2, "lava_golem": 2,
-      "phoenix": 1, "fireball": 2, "inferno": 1, "squire": 2, "temple_archer": 2, "blessing": 2
+      "phoenix": 1, "fireball": 2, "inferno": 1, "squire": 2, "temple_archer": 2, "blessing": 2,
+      "moss_turtle": 2, "gloom_rat": 2, "forest_wolf": 1
     },
     "deck": [
       "flame_imp", "flame_imp", "ember_fox", "ember_fox", "fire_archer", "fire_archer",
       "salamander", "salamander", "lava_golem", "lava_golem", "phoenix", "fireball", "fireball",
-      "inferno", "squire", "squire", "temple_archer", "temple_archer", "blessing", "blessing"
+      "inferno", "squire", "squire", "temple_archer", "temple_archer", "blessing", "blessing",
+      "moss_turtle", "moss_turtle", "gloom_rat", "gloom_rat", "forest_wolf"
     ]
   },
   "chapters": [
@@ -22,7 +24,8 @@
         "deck": [
           "sprout", "sprout", "forest_wolf", "forest_wolf", "moss_turtle", "moss_turtle",
           "sylph", "sylph", "druid", "druid", "rejuvenate", "rejuvenate", "wild_growth",
-          "wild_growth", "treant", "treant", "squire", "squire", "temple_archer", "temple_archer"
+          "wild_growth", "treant", "treant", "squire", "squire", "temple_archer", "temple_archer",
+          "cleric", "cleric", "blessing", "blessing", "shield_bearer"
         ]
       },
       "pre_dialogue": [
@@ -37,7 +40,7 @@
         { "speaker": "milo", "text": "C'est Kiran qui m'a offert mon premier deck. J'assume l'héritage." },
         { "speaker": "maro", "text": "Alors va t'inscrire. Et méfie-toi du champion masqué. Personne ne l'a jamais vu perdre... ni sourire." }
       ],
-      "rewards": { "cards": { "moss_turtle": 2, "gloom_rat": 2 } }
+      "rewards": { "cards": { "forest_wolf": 1, "rejuvenate": 2 } }
     },
     {
       "id": "ch2",
@@ -48,7 +51,7 @@
           "flame_imp", "flame_imp", "ember_fox", "ember_fox", "gloom_rat", "gloom_rat",
           "fire_archer", "fire_archer", "salamander", "salamander", "moss_turtle", "moss_turtle",
           "fireball", "fireball", "squire", "squire", "temple_archer", "temple_archer",
-          "blessing", "blessing"
+          "blessing", "blessing", "sprout", "sprout", "lava_golem", "rejuvenate", "rejuvenate"
         ]
       },
       "pre_dialogue": [
@@ -62,7 +65,7 @@
         { "speaker": "milo", "text": "Dis-lui que tu as perdu contre le futur champion, ça passera mieux." },
         { "speaker": "narrator", "text": "Dans les gradins, une silhouette masquée observe. Puis s'en va, sans un mot." }
       ],
-      "rewards": { "cards": { "forest_wolf": 2, "rejuvenate": 2 } }
+      "rewards": { "cards": { "sprout": 2, "wild_growth": 2 } }
     },
     {
       "id": "ch3",
@@ -73,7 +76,7 @@
           "flame_imp", "flame_imp", "ember_fox", "ember_fox", "fire_archer", "fire_archer",
           "salamander", "salamander", "lava_golem", "lava_golem", "fireball", "fireball",
           "squire", "squire", "holy_charge", "holy_charge", "temple_archer", "temple_archer",
-          "phoenix", "inferno"
+          "phoenix", "inferno", "gloom_rat", "gloom_rat", "moss_turtle", "moss_turtle", "sprout"
         ]
       },
       "pre_dialogue": [
@@ -88,7 +91,7 @@
         { "speaker": "jasper", "text": "La demi-finale sera différente, Milo. Entraîne-toi. Je refuse de perdre deux fois contre toi." },
         { "speaker": "narrator", "text": "Willow, qui a tout regardé depuis le comptoir, glisse son emblème dans la main de Milo. « Tu joues avec le cœur. Essaie ma méthode, un jour. »" }
       ],
-      "rewards": { "cards": { "sprout": 2, "wild_growth": 2 }, "masters": [ "willow" ] }
+      "rewards": { "cards": { "druid": 2, "sylph": 2 }, "masters": [ "willow" ] }
     },
     {
       "id": "ch4",
@@ -99,7 +102,7 @@
           "moss_turtle", "moss_turtle", "sprout", "sprout", "treant", "treant",
           "shield_bearer", "shield_bearer", "forest_wolf", "forest_wolf", "druid", "druid",
           "rejuvenate", "rejuvenate", "wild_growth", "wild_growth", "cleric", "cleric",
-          "blessing", "blessing"
+          "blessing", "blessing", "sylph", "sylph", "squire", "squire", "temple_archer"
         ]
       },
       "pre_dialogue": [
@@ -124,7 +127,8 @@
           "shade", "shade", "gloom_rat", "gloom_rat", "bat_swarm", "bat_swarm",
           "cultist", "cultist", "wraith", "wraith", "bone_knight", "bone_knight",
           "dark_pact", "dark_pact", "life_drain", "life_drain", "lantern_sprite",
-          "lantern_sprite", "fireball", "fireball"
+          "lantern_sprite", "fireball", "fireball", "inferno", "inferno",
+          "flame_imp", "flame_imp", "ember_fox"
         ]
       },
       "pre_dialogue": [
@@ -151,7 +155,8 @@
           "squire", "squire", "lantern_sprite", "lantern_sprite", "temple_archer",
           "temple_archer", "shield_bearer", "shield_bearer", "cleric", "cleric",
           "archangel", "archangel", "blessing", "blessing", "holy_charge", "holy_charge",
-          "sylph", "sylph", "moss_turtle", "moss_turtle"
+          "sylph", "sylph", "moss_turtle", "moss_turtle", "sprout", "sprout",
+          "forest_wolf", "forest_wolf", "gloom_rat"
         ]
       },
       "pre_dialogue": [
@@ -165,7 +170,7 @@
         { "speaker": "milo", "text": "J'ai lu le chapitre 12 par-dessus votre épaule avant le match." },
         { "speaker": "edda", "text": "Ha ! Va en finale, tricheur adorable. Et prends garde : le chapitre sur Nox... je n'ai jamais réussi à l'écrire." }
       ],
-      "rewards": { "cards": { "druid": 2, "sylph": 2, "treant": 1 } }
+      "rewards": { "cards": { "treant": 1, "cleric": 2 } }
     },
     {
       "id": "ch7",
@@ -176,7 +181,8 @@
           "flame_imp", "flame_imp", "ember_fox", "ember_fox", "fire_archer", "fire_archer",
           "lava_golem", "lava_golem", "phoenix", "phoenix", "fireball", "fireball",
           "inferno", "inferno", "salamander", "salamander", "holy_charge", "holy_charge",
-          "squire", "squire"
+          "squire", "squire", "gloom_rat", "gloom_rat", "temple_archer", "temple_archer",
+          "blessing"
         ]
       },
       "pre_dialogue": [
@@ -191,7 +197,7 @@
         { "speaker": "jasper", "text": "Évidemment. Maintenant va dormir. Et si tu perds demain, je dirai à tout Petraheim que je t'ai battu deux fois." },
         { "speaker": "narrator", "text": "Aria, de passage sur les toits comme à la grande époque de la garde, salue Milo : « Un cœur qui protège frappe deux fois plus fort. »" }
       ],
-      "rewards": { "cards": { "shield_bearer": 2, "holy_charge": 2, "cleric": 2 }, "masters": [ "aria" ] }
+      "rewards": { "cards": { "shield_bearer": 2, "holy_charge": 2 }, "masters": [ "aria" ] }
     },
     {
       "id": "ch8",
@@ -201,7 +207,8 @@
         "deck": [
           "treant", "treant", "druid", "druid", "sylph", "sylph", "forest_wolf", "forest_wolf",
           "rejuvenate", "rejuvenate", "wild_growth", "wild_growth", "archangel", "archangel",
-          "cleric", "cleric", "shield_bearer", "shield_bearer", "blessing", "blessing"
+          "cleric", "cleric", "shield_bearer", "shield_bearer", "blessing", "blessing",
+          "squire", "squire", "temple_archer", "temple_archer", "moss_turtle"
         ]
       },
       "pre_dialogue": [
@@ -227,7 +234,8 @@
         "deck": [
           "shade", "shade", "bat_swarm", "bat_swarm", "cultist", "cultist", "wraith", "wraith",
           "bone_knight", "bone_knight", "gloom_rat", "gloom_rat", "dark_pact", "dark_pact",
-          "life_drain", "life_drain", "fireball", "fireball", "inferno", "inferno"
+          "life_drain", "life_drain", "fireball", "fireball", "inferno", "inferno",
+          "lantern_sprite", "lantern_sprite", "phoenix", "salamander", "salamander"
         ]
       },
       "pre_dialogue": [
@@ -254,7 +262,8 @@
           "wraith", "wraith", "bone_knight", "bone_knight", "shade", "shade",
           "bat_swarm", "bat_swarm", "phoenix", "phoenix", "archangel", "archangel",
           "dark_pact", "dark_pact", "life_drain", "life_drain", "inferno", "inferno",
-          "fireball", "fireball"
+          "fireball", "fireball", "cultist", "cultist", "gloom_rat", "gloom_rat",
+          "lantern_sprite"
         ]
       },
       "pre_dialogue": [

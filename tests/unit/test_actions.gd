@@ -100,12 +100,22 @@ func test_end_turn_flow() -> void:
 	eq(mine.acted, false, "action réinitialisée")
 
 
-func test_deck_out_loss() -> void:
+func test_empty_deck_fatigue() -> void:
 	var state := TestUtil.fresh_game()
 	state.players[1].deck.clear()
 	var res := Rules.apply(state, { "type": "end_turn" })
-	ok(has_event(res.events, "deck_out"), "événement deck_out")
-	eq(state.winner, 0, "j1 perd par deck vide")
+	ok(has_event(res.events, "fatigue"), "événement fatigue")
+	eq(state.players[1].master_hp, GameConst.MASTER_HP - 1, "fatigue 1 : -1 PV")
+	eq(state.winner, -1, "la partie continue")
+	Rules.apply(state, { "type": "end_turn" })  # back to p0 (draws normally)
+	Rules.apply(state, { "type": "end_turn" })  # p1 again: fatigue 2
+	eq(state.players[1].master_hp, GameConst.MASTER_HP - 3, "fatigue cumulative (1+2)")
+	# fatigue can kill: ramp it to lethal
+	state.players[1].master_hp = 3
+	Rules.apply(state, { "type": "end_turn" })
+	var res2 := Rules.apply(state, { "type": "end_turn" })  # fatigue 3 -> 0 PV
+	eq(state.winner, 0, "la fatigue finit par tuer le Maître")
+	ok(has_event(res2.events, "win"), "événement win")
 
 
 func test_hand_limit_skips_draw() -> void:

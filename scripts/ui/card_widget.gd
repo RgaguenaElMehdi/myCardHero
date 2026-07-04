@@ -6,6 +6,7 @@ extends PanelContainer
 ## overlap). Falls back to an in-engine composite when the image is missing.
 
 signal pressed(widget: CardWidget)
+signal inspect_requested(widget: CardWidget)
 
 var def: CardDef
 var selected := false
@@ -165,7 +166,10 @@ func set_count(n: int) -> void:
 
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed \
-			and event.button_index == MOUSE_BUTTON_LEFT:
-		accept_event()
-		pressed.emit(self)
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			accept_event()
+			pressed.emit(self)
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			accept_event()
+			inspect_requested.emit(self)

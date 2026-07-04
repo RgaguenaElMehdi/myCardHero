@@ -115,6 +115,8 @@ func _refresh() -> void:
 		if used >= owned:
 			w.modulate = Color(0.5, 0.5, 0.55)
 		w.pressed.connect(_on_collection_card.bind(id))
+		w.inspect_requested.connect(func(w2: CardWidget) -> void:
+			CardPopup.open(self, w2.def))
 		collection_grid.add_child(w)
 	_refresh_deck()
 

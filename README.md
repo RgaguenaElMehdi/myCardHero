@@ -17,7 +17,8 @@ Un jeu de cartes tactique sur plateau inspiré de *Trade & Battle: Card Hero* (G
 - **Clic sur votre Maître** → déplacement le long de la rangée arrière. Son pouvoir a un bouton dédié.
 - Les monstres gagnent de l'XP en combattant, montent de niveau (soin complet) et certains **évoluent** (bouton doré sur le monstre sélectionné).
 - Mêlée : frappe le premier monstre non-volant de sa colonne. Distance/Magie : n'importe quelle cible ; la Magie ignore Armure et Bouclier. Un Maître n'est attaquable que si sa colonne est exposée.
-- Clic droit / Échap : annuler la sélection.
+- Deck de **25 cartes** (max 2 exemplaires). Deck vide : chaque pioche manquée inflige une **fatigue croissante** au Maître (1, 2, 3…).
+- **Clic droit sur une carte ou un Maître** : inspection en grand. Clic droit dans le vide / Échap : annuler la sélection. **F11** : plein écran.
 
 ## Structure
 
