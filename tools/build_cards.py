@@ -261,6 +261,20 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
         ay = max(0, (art.height - bh) // 3)  # favour the upper part of the art
         art = art.crop((ax, ay, ax + bw, ay + bh))
         img.paste(art, (bx0, by0))
+    # 2b) engraved golden frame around the art window: the monster template's
+    # own window trim is too thin, which made the art look pasted on top of
+    # the card. A drawn double gold fillet seats the art into the frame.
+    if is_monster:
+        d2 = ImageDraw.Draw(img)
+        rect = (bx0, by0, bx1 - 1, by1 - 1)
+
+        def _inset(r, k):
+            return (r[0] + k, r[1] + k, r[2] - k, r[3] - k)
+
+        d2.rectangle(rect, outline=(28, 20, 12), width=3)
+        d2.rectangle(_inset(rect, 3), outline=(214, 182, 122), width=5)
+        d2.rectangle(_inset(rect, 8), outline=(120, 92, 52), width=2)
+        d2.rectangle(_inset(rect, 10), outline=(28, 20, 12), width=2)
     # 3) restore the gem zone above the art: everything from the template except
     # leftover window magenta, then tint the socket interior and draw the cost
     if gem_patch is not None:
