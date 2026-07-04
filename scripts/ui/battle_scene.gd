@@ -9,6 +9,10 @@ const HAND_CARD_W := 176.0
 
 var state: GameState
 var ai: AiPlayer
+## --autoplay: both sides AI-driven through the normal UI action path
+## (integration smoke test of the full battle scene).
+var autoplay := false
+var autoplay_ai: AiPlayer
 var busy := false          ## input locked (animations / AI turn)
 var sel_hand := -1
 var sel_cell := Vector2i(-1, -1)
@@ -44,9 +48,30 @@ func _ready() -> void:
 			"opponent_name": "Bruna", "opponent_portrait": "bruna",
 			"background": "arena_day",
 		}
+	autoplay = OS.get_cmdline_user_args().has("--autoplay")
 	_build_ui()
 	_setup_match()
 	Audio.play_music("battle")
+	if autoplay:
+		Engine.time_scale = 20.0
+		autoplay_ai = AiPlayer.new(AiPlayer.Level.ADEPT, 42)
+		_run_autoplay()
+
+
+func _run_autoplay() -> void:
+	await get_tree().process_frame
+	if mulligan_overlay != null:
+		_on_mulligan_choice(false)
+	var guard := 0
+	while not state.is_over() and guard < 600:
+		guard += 1
+		if busy or state.phase != GameState.Phase.MAIN or state.current != 0:
+			await get_tree().create_timer(0.2).timeout
+			continue
+		await _submit(autoplay_ai.choose_action(state))
+	if not state.is_over():
+		push_error("[autoplay] la partie ne s'est pas terminée (garde-fou %d)" % guard)
+		get_tree().quit(1)
 
 
 # --- Match setup ---------------------------------------------------------
@@ -762,6 +787,11 @@ func _toast(text: String) -> void:
 func _show_game_over() -> void:
 	var won := state.winner == 0
 	Game.last_battle_won = won
+	if autoplay:
+		print("[autoplay] partie terminée — vainqueur : joueur %d, demi-tours : %d"
+				% [state.winner, state.turn])
+		get_tree().quit(0)
+		return
 	Audio.play_sfx("win" if won else "lose")
 	var overlay := _overlay()
 	var center := CenterContainer.new()

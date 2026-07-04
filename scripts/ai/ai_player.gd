@@ -199,21 +199,23 @@ func _score_ops(state: GameState, ops: Array, target, spell_bonus: bool) -> floa
 
 
 func _score_move(state: GameState, a: Dictionary) -> float:
-	var m := state.board.at(a.from)
+	var from: Vector2i = a.from
+	var to: Vector2i = a.to
+	var m := state.board.at(from)
 	var score := 0.0
-	var had_targets := not Rules.legal_attack_targets(state, a.from).is_empty()
+	var had_targets := not Rules.legal_attack_targets(state, from).is_empty()
 	# Cheap lookahead: would this cell open up targets next turn?
-	state.board.move(a.from, a.to)
-	var gains_targets := not Rules.legal_attack_targets(state, a.to).is_empty()
-	var covers_master := a.to.x == state.me().master_col \
+	state.board.move(from, to)
+	var gains_targets := not Rules.legal_attack_targets(state, to).is_empty()
+	var covers_master: bool = to.x == state.me().master_col \
 			and state.board.column_cover(state.current, state.me().master_col, false) == 1
-	state.board.move(a.to, a.from)
+	state.board.move(to, from)
 	if not had_targets and gains_targets:
 		score += 4.0
-	if covers_master and a.from.x != state.me().master_col:
+	if covers_master and from.x != state.me().master_col:
 		score += 5.0
 	# Pull a wounded blocker back home.
-	if m.hp <= 2 and a.to.y == Board.back_row(state.current):
+	if m.hp <= 2 and to.y == Board.back_row(state.current):
 		score += 1.5
 	return score
 

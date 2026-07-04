@@ -21,6 +21,22 @@ var dialogue_phase := "pre"
 
 func _ready() -> void:
 	load_profile()
+	# Test instrumentation: --screenshot=<path> captures the running scene
+	# after 2.5s and quits (used by automated visual verification).
+	for arg in OS.get_cmdline_user_args():
+		if String(arg).begins_with("--screenshot="):
+			_schedule_screenshot(String(arg).split("=", true, 1)[1])
+
+
+func _schedule_screenshot(path: String) -> void:
+	await get_tree().create_timer(2.5, true, false, true).timeout  # real time
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var img := get_viewport().get_texture().get_image()
+	var err := img.save_png(path)
+	print("[screenshot] %s -> %s" % [path, error_string(err)])
+	await get_tree().create_timer(0.2).timeout
+	get_tree().quit()
 
 
 # --- Profile ------------------------------------------------------------
