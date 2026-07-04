@@ -296,17 +296,17 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
                  fill=gc, outline=(60, 45, 25))
     # 5) stat plates row (monsters) — measured on the template
     if is_monster:
+        # One centered line per plate — the template plates (~60px tall, starting
+        # right under the art window) cannot fit stacked label + value.
         levels = card["levels"]
-        labels = ["ATQ", "PV", "TYPE", "NIV MAX"]
         atk_type = ATTACK_NAMES.get(card.get("attack_type", "melee"), "?")
-        values = [str(levels[0]["atk"]), str(levels[0]["hp"]), atk_type, str(len(levels))]
+        values = ["ATQ %d" % levels[0]["atk"], "PV %d" % levels[0]["hp"],
+                  atk_type, "Niv %d" % len(levels)]
         centers = [0.206, 0.408, 0.612, 0.812]
         for i in range(4):
             cx = int(W * centers[i])
-            outlined(draw, (cx, int(H * 0.602)), labels[i],
-                     font(F_TITLE, int(W * 0.0225)), (210, 195, 160), width=2, anchor="mm")
-            vf = font(F_TITLE, int(W * 0.042) if len(values[i]) <= 2 else int(W * 0.027))
-            outlined(draw, (cx, int(H * 0.631)), values[i], vf,
+            vf = font(F_TITLE, int(W * 0.032) if len(values[i]) <= 6 else int(W * 0.027))
+            outlined(draw, (cx, int(H * 0.629)), values[i], vf,
                      (255, 250, 235), width=4, anchor="mm")
     # 6) rules text in the parchment box
     text_lines: list[str] = []
