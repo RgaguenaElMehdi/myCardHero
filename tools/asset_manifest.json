@@ -75,7 +75,8 @@
     "maro_home": "a cluttered cozy study at night, candlelight, shelves of trophies and old cards",
     "arena_night": "a stone arena at night lit by hundreds of paper lanterns under a starry sky",
     "main_menu": "a panoramic fantasy village at golden hour with giant glowing blue rune stones floating above it",
-    "battle_table": "a worn dark stone game table seen from above with faint glowing carved runes at the edges, subtle texture, dim ambient light"
+    "battle_table": "a worn dark stone game table seen from above with faint glowing carved runes at the edges, subtle texture, dim ambient light",
+    "battle_env_dungeon": "[derive locale, pas d'IA] blur+darken de sprites/ui/pixel/board_arena.png via tools/make_arena_env.py - couche Environment de scenes/arenas/arena_dungeon.tscn"
   },
   "ui": {
     "icon_stone": "a glowing blue hexagonal rune stone gem",
