@@ -349,7 +349,7 @@ theme_override_font_sizes/font_size = 16
 
 [node name="PlayerPanel" type="PanelContainer" parent="." unique_id=414071347]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 0)
+custom_minimum_size = Vector2(266, 0)
 layout_mode = 0
 offset_left = 1330.0
 offset_top = 70.0
@@ -523,9 +523,9 @@ theme_override_font_sizes/font_size = 17
 
 [node name="InfoPanel" type="PanelContainer" parent="." unique_id=1272779032]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(324, 0)
+custom_minimum_size = Vector2(288, 0)
 layout_mode = 0
-offset_left = 1586.0
+offset_left = 1612.0
 offset_top = 70.0
 offset_right = 1900.0
 offset_bottom = 430.0
@@ -577,9 +577,9 @@ theme_override_font_sizes/font_size = 15
 
 [node name="LogPanel" type="PanelContainer" parent="." unique_id=1405430135]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(314, 0)
+custom_minimum_size = Vector2(288, 0)
 layout_mode = 0
-offset_left = 1586.0
+offset_left = 1612.0
 offset_top = 444.0
 offset_right = 1900.0
 offset_bottom = 930.0

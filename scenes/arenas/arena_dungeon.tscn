@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1arenadungeon"]
+[gd_scene load_steps=4 format=3 uid="uid://c1arenadungeon"]
 
 [ext_resource type="Script" path="res://scripts/ui/arena.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/battle_bg.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/battle_env_dungeon.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/board_arena.png" id="3"]
 
 [node name="Arena" type="Control"]
 layout_mode = 3
@@ -12,6 +13,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1")
+board_pos = Vector2(160, -46)
+board_scale = 0.92
 
 [node name="Environment" type="TextureRect" parent="."]
 layout_mode = 1
@@ -24,3 +27,14 @@ mouse_filter = 2
 texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 6
+
+[node name="BoardPlate" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 160.0
+offset_top = -46.0
+offset_right = 1475.6
+offset_bottom = 920.0
+mouse_filter = 2
+texture = ExtResource("3")
+expand_mode = 1
+stretch_mode = 5
