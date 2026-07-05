@@ -302,6 +302,25 @@ func _refresh_resources() -> void:
 	_fill_pips(%EnemyPips, state.players[1].stones)
 	(%PlayerDeckCount as Label).text = str(state.players[0].deck.size())
 	(%EnemyDeckCount as Label).text = str(state.players[1].deck.size())
+	_fill_enemy_hand()
+
+
+## Main adverse en dos de cartes (haut), jamais la face.
+func _fill_enemy_hand() -> void:
+	var row: HBoxContainer = %EnemyHandRow2
+	for c in row.get_children():
+		c.queue_free()
+	var back := UiTheme.tex("res://assets/sprites/ui/card_back.png")
+	if back == null:
+		return
+	for i in state.players[1].hand.size():
+		var b := TextureRect.new()
+		b.texture = back
+		b.custom_minimum_size = Vector2(46, 66)
+		b.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		b.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(b)
 
 
 func _fill_pips(box: HBoxContainer, stones: int) -> void:
