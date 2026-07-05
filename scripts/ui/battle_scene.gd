@@ -194,11 +194,9 @@ func _init_ui() -> void:
 			board_area.add_child(widget)
 			cells[cell] = widget
 
-	# Numéros de rangée alignés sur la grille du thème courant.
+	# Numéros de rangée masqués (look épuré).
 	for r in GameConst.BOARD_ROWS:
-		var marker: TextureRect = get_node("RowMarker%d" % r)
-		var rect := _cell_rect(Vector2i(0, r))
-		marker.position = Vector2(rect.position.x - 44, rect.get_center().y - 17)
+		get_node("RowMarker%d" % r).visible = false
 
 	# Buttons.
 	end_turn_btn.pressed.connect(func() -> void: _submit({ "type": "end_turn" }))
