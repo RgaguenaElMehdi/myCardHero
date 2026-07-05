@@ -8,7 +8,19 @@ Statut : design validé, en attente de plan d'implémentation
 
 Le HUD de bataille actuel occupe trop d'espace (gros panneaux Joueur/Adversaire, panneau Infos, journal texte). Objectif : **agrandir l'arène** et **réduire le HUD au strict minimum posé sur les bords**, dans l'esprit de *Legend of Runeterra* — l'arène est la star, le chrome s'efface.
 
-Ce lot est **UI/HUD uniquement** : réagencement de `scenes/battle.tscn` et de sa logique d'affichage. Il ne touche **pas** à la police (Cinzel), au filtre de texture, ni au système de rendu des cartes (`CardWidget.create`) — ces sujets sont hors périmètre (annulés précédemment).
+Ce lot est **UI/HUD uniquement** : réagencement de `scenes/battle.tscn` et de sa logique d'affichage. Il ne touche **pas** au système de rendu des cartes (`CardWidget.create`).
+
+## Direction visuelle (verrouillée 2026-07-05)
+
+**Anime propre et pro, PAS dark-fantasy.** On abandonne le décor de donjon peint/généré et l'ambiance lugubre.
+
+- **Base** : bleu-nuit doux (navy), pas noir. Fond simple (dégradé/vignette), zéro décor chargé — le plateau et les cartes sont les stars (esprit *Legend of Runeterra*, en plus lumineux/anime).
+- **Panneaux** : plats, **coins arrondis**, **liseré doré** fin, ombres douces. Faits en `StyleBoxFlat` (aucune texture lourde nécessaire).
+- **Accents de faction lumineux** : les 4 couleurs (`GameConst.GUILD_COLORS` : flamme/sylve/ombre/lumière) ressortent/glow sur la base navy — gemmes, bordures de cartes, effets.
+- **Plateau** : grille 3×4 **régulière et plate** (tuiles arrondies semi-transparentes), rectangle centré — pas de plateau peint trapézoïdal.
+- Réf. de style validée : mockup « sombre douce + or » généré via Leonardo.
+
+Conséquence : la police par défaut peut évoluer vers quelque chose de plus lisible/anime (à décider), mais ce n'est pas bloquant pour le layout.
 
 ## Rappel de règles du jeu (contraintes)
 
