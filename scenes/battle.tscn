@@ -626,9 +626,9 @@ scroll_following = true
 
 [node name="HandTray" type="Panel" parent="." unique_id=118488090]
 layout_mode = 0
-offset_left = 300.0
+offset_left = 380.0
 offset_top = 900.0
-offset_right = 1620.0
+offset_right = 1540.0
 offset_bottom = 1080.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("hand_tray")
@@ -636,9 +636,9 @@ theme_override_styles/panel = SubResource("hand_tray")
 [node name="HandArea" type="Control" parent="." unique_id=118488092]
 unique_name_in_owner = true
 anchors_preset = 0
-offset_left = 300.0
+offset_left = 380.0
 offset_top = 900.0
-offset_right = 1620.0
+offset_right = 1540.0
 offset_bottom = 1080.0
 
 [node name="DetailHolder" type="VBoxContainer" parent="." unique_id=1298083378]
