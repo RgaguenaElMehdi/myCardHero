@@ -811,10 +811,17 @@ func _play_events(events: Array) -> void:
 			"power":
 				Audio.play_sfx("cast")
 				_log("%s utilise son pouvoir." % _pname(ev.player), _side_color(ev.player))
+				var pm := state.players[int(ev.player)]
+				var pcell := Board.master_cell(int(ev.player), pm.master_col)
+				var gcol: Color = GameConst.GUILD_COLORS.get(pm.master.guild, UiTheme.ACCENT)
+				BattleFx.flash_cell(fx_layer, _cell_center(pcell),
+						Color(gcol.r, gcol.g, gcol.b, 0.5), cells[pcell].size, 0.45)
+				BattleFx.ring(fx_layer, _cell_center(pcell), gcol, 125.0, 0.5)
+				BattleFx.sparkles(fx_layer, _cell_center(pcell), gcol, 22)
 				var ptarget = ev.get("target")
 				if ptarget is Vector2i:
 					BattleFx.sparkles(fx_layer, _cell_center(ptarget), UiTheme.ACCENT, 18)
-				await _wait(0.3)
+				await _wait(0.35)
 			"move":
 				Audio.play_sfx("move")
 				for cell in cells:
@@ -828,6 +835,9 @@ func _play_events(events: Array) -> void:
 				await _wait(0.2)
 			"kill_reward":
 				_log("%s gagne %d pierre(s) (kill)." % [_pname(ev.player), int(ev.amount)])
+			"draw":
+				_draw_anim(int(ev.player))
+				await _wait(0.16)
 			"turn_start":
 				_refresh_panels()
 				if int(ev.player) == 0:
@@ -911,6 +921,31 @@ func _show_spell_preview(card_id) -> void:
 	tw.tween_property(w, "modulate:a", 0.0, 0.25)
 	await tw.finished
 	w.queue_free()
+
+
+## Carte (dos) qui jaillit du deck vers la main (joueur bas / adversaire haut).
+func _draw_anim(player: int) -> void:
+	var back := UiTheme.tex("res://assets/sprites/ui/card_back.png")
+	if back == null:
+		return
+	var deck: Control = %PlayerDeck if player == 0 else %EnemyDeck
+	var from: Vector2 = deck.global_position + deck.size / 2.0
+	var to := Vector2(960, 980) if player == 0 else Vector2(960, 70)
+	var card := TextureRect.new()
+	card.texture = back
+	card.size = Vector2(72, 104)
+	card.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	card.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+	card.pivot_offset = card.size / 2.0
+	card.position = from - card.size / 2.0
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fx_layer.add_child(card)
+	var tw := create_tween()
+	tw.tween_property(card, "position", to - card.size / 2.0, 0.34) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.parallel().tween_property(card, "scale", Vector2(1.15, 1.15), 0.34)
+	tw.tween_property(card, "modulate:a", 0.0, 0.12)
+	tw.tween_callback(card.queue_free)
 
 
 # --- Detail panel / log / toast ---------------------------------------------
