@@ -950,17 +950,27 @@ func _draw_anim(player: int) -> void:
 		face = UiTheme.tex(CardWidget.full_card_path(id))
 		if face == null:
 			face = UiTheme.tex(Db.card_art_path(StringName(String(id))))
-	# Glisse du deck vers la main, puis se retourne (tranche → révèle), puis s'efface.
 	var tw := create_tween()
-	tw.tween_property(card, "position", to - card.size / 2.0, 0.45) \
-			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	tw.tween_property(card, "scale:x", 0.0, 0.16)
-	if face != null:
+	if player == 0 and face != null:
+		# Monte au centre → se retourne pour révéler → marque un temps → descend dans la main.
+		var center := Vector2(960, 470)
+		tw.tween_property(card, "position", center - csize / 2.0, 0.4) \
+				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tw.tween_property(card, "scale:x", 0.0, 0.16)
 		tw.tween_callback(func() -> void: card.texture = face)
-	tw.tween_property(card, "scale:x", 1.0, 0.16)
-	tw.tween_interval(0.45)
-	tw.tween_property(card, "modulate:a", 0.0, 0.22)
-	tw.tween_callback(card.queue_free)
+		tw.tween_property(card, "scale:x", 1.0, 0.16)
+		tw.tween_interval(0.55)
+		tw.tween_property(card, "position", to - csize / 2.0, 0.4) \
+				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+		tw.parallel().tween_property(card, "scale", Vector2(0.5, 0.5), 0.4)
+		tw.parallel().tween_property(card, "modulate:a", 0.0, 0.4)
+		tw.tween_callback(card.queue_free)
+	else:
+		# Adversaire : simple montée du deck vers sa main, en dos.
+		tw.tween_property(card, "position", to - csize / 2.0, 0.4) \
+				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		tw.tween_property(card, "modulate:a", 0.0, 0.18)
+		tw.tween_callback(card.queue_free)
 
 
 # --- Detail panel / log / toast ---------------------------------------------
