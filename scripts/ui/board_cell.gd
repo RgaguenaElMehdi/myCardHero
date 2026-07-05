@@ -13,6 +13,7 @@ var side: int  ## player index owning this row
 var highlight := ""  ## "", "summon", "move", "attack", "selected", "target"
 
 var _content: Control
+var _pulse: Tween
 
 @onready var _ring: Panel = $Ring
 
@@ -26,11 +27,34 @@ func setup(p_cell: Vector2i) -> void:
 
 func _ready() -> void:
 	_apply_style()
+	mouse_entered.connect(_on_hover.bind(true))
+	mouse_exited.connect(_on_hover.bind(false))
+
+
+## Survol : la case s'éclaire doucement (feedback même sans highlight).
+func _on_hover(on: bool) -> void:
+	var target := Color(1.18, 1.18, 1.12) if on else Color.WHITE
+	create_tween().tween_property(self, "modulate", target, 0.12)
 
 
 func set_highlight(mode: String) -> void:
 	highlight = mode
 	_apply_style()
+	if _pulse != null:
+		_pulse.kill()
+		_pulse = null
+		_ring.modulate.a = 1.0
+	# Cases jouables : pulsation douce qui attire l'œil ; sélection plus vive.
+	if mode in ["summon", "move", "attack", "target"]:
+		_pulse = create_tween().set_loops()
+		_pulse.tween_property(_ring, "modulate:a", 0.45, 0.65)\
+				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_pulse.tween_property(_ring, "modulate:a", 1.0, 0.65)\
+				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	elif mode == "selected":
+		_pulse = create_tween().set_loops()
+		_pulse.tween_property(_ring, "modulate:a", 0.7, 0.4)
+		_pulse.tween_property(_ring, "modulate:a", 1.0, 0.4)
 
 
 func _apply_style() -> void:

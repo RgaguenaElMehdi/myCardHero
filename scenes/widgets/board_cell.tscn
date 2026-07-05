@@ -6,6 +6,7 @@
 
 [node name="BoardCell" type="Panel"]
 custom_minimum_size = Vector2(120, 120)
+mouse_default_cursor_shape = 2
 theme_override_styles/panel = SubResource("empty")
 script = ExtResource("1")
 
