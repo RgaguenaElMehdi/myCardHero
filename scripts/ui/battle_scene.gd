@@ -389,7 +389,7 @@ func _refresh_panels() -> void:
 		info.hp.text = "%d / %d" % [maxi(p.master_hp, 0), p.master.hp]
 		info.stones.text = "Pierres  %d / %d" % [p.stones, GameConst.MAX_STONES]
 		info.hand.text = "Main  %d carte%s" % [p.hand.size(), "s" if p.hand.size() > 1 else ""]
-		info.deck.text = "Deck  %d cartes" % p.deck.size()
+		# (compteur de deck désormais géré par _refresh_resources ; %*Deck = piles TextureRect)
 		var row: HBoxContainer = info.hand_row
 		for child in row.get_children():
 			child.queue_free()
@@ -931,7 +931,7 @@ func _draw_anim(player: int) -> void:
 	var deck: Control = %PlayerDeck if player == 0 else %EnemyDeck
 	var from: Vector2 = deck.global_position + deck.size / 2.0
 	var to := Vector2(960, 980) if player == 0 else Vector2(960, 70)
-	var csize := Vector2(132, 184)
+	var csize := Vector2(154, 216)
 	var card := TextureRect.new()
 	card.texture = back
 	card.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
