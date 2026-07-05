@@ -931,15 +931,18 @@ func _draw_anim(player: int) -> void:
 	var deck: Control = %PlayerDeck if player == 0 else %EnemyDeck
 	var from: Vector2 = deck.global_position + deck.size / 2.0
 	var to := Vector2(960, 980) if player == 0 else Vector2(960, 70)
+	var csize := Vector2(84, 118)
 	var card := TextureRect.new()
 	card.texture = back
-	card.size = Vector2(92, 128)
 	card.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	card.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
-	card.pivot_offset = card.size / 2.0
-	card.position = from - card.size / 2.0
+	card.custom_minimum_size = csize
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx_layer.add_child(card)
+	# Forcer la taille APRÈS l'ajout (sinon la TextureRect prend la taille native de la texture).
+	card.size = csize
+	card.pivot_offset = csize / 2.0
+	card.position = from - csize / 2.0
 	# Face révélée (joueur seulement ; l'adversaire garde le dos).
 	var face: Texture2D = null
 	if player == 0 and not state.players[0].hand.is_empty():
