@@ -18,6 +18,22 @@
 [ext_resource type="Texture2D" uid="uid://bw44plj2npvs4" path="res://assets/sprites/ui/pixel/row_marker_2.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://qkar6fm5ku8y" path="res://assets/sprites/ui/pixel/row_marker_3.png" id="18"]
 
+[sub_resource type="StyleBoxFlat" id="panel_navy"]
+bg_color = Color(0.098, 0.118, 0.196, 0.92)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.79, 0.65, 0.31, 0.55)
+content_margin_left = 14.0
+content_margin_top = 12.0
+content_margin_right = 14.0
+content_margin_bottom = 12.0
+
 [sub_resource type="Gradient" id="vignette_grad"]
 offsets = PackedFloat32Array(0, 0.62, 1)
 colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.38)
@@ -101,6 +117,7 @@ anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
 mouse_filter = 2
+visible = false
 theme_override_styles/panel = SubResource("header_bar")
 
 [node name="HeaderTitle" type="Label" parent="HeaderBar" unique_id=1692195359]
@@ -510,6 +527,7 @@ theme_override_font_sizes/font_size = 17
 
 [node name="InfoPanel" type="PanelContainer" parent="." unique_id=1272779032]
 unique_name_in_owner = true
+theme_override_styles/panel = SubResource("panel_navy")
 custom_minimum_size = Vector2(288, 0)
 layout_mode = 0
 offset_left = 1612.0
@@ -527,6 +545,7 @@ custom_minimum_size = Vector2(0, 42)
 layout_mode = 2
 
 [node name="Tab" type="TextureRect" parent="InfoPanel/InfoBox/TabWrap" unique_id=1792345320]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -564,6 +583,7 @@ theme_override_font_sizes/font_size = 15
 
 [node name="LogPanel" type="PanelContainer" parent="." unique_id=1405430135]
 unique_name_in_owner = true
+theme_override_styles/panel = SubResource("panel_navy")
 custom_minimum_size = Vector2(288, 0)
 layout_mode = 0
 offset_left = 1612.0
