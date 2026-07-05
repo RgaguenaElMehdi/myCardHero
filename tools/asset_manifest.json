@@ -1,4 +1,5 @@
 {
+  "pipeline": "pixel art dessine directement via ChatGPT (navigateur) ; conversion peint->pixel abandonnee 2026-07-05 (pixelize.py, gen_pixel_assets.py, compose_battle_bg.py, generate_ui_assets.py supprimes). Les prompts style_* ci-dessous decrivent l'ancien style peint et seront remplaces par des prompts pixel lors de la phase de generation.",
   "style_card": "Painterly gouache fantasy trading-card illustration, vibrant colors, soft confident brush strokes, dramatic rim light, simple dark vignetted background, centered composition, no text, no letters, no watermark, no border, no frame.",
   "style_portrait": "Storybook fantasy character portrait, bust framing, facing slightly toward viewer, warm painterly gouache style, soft light, plain textured parchment background, no text, no border.",
   "style_background": "Painterly fantasy environment concept art, gouache style, rich atmosphere, soft light, no characters, no text, no border.",

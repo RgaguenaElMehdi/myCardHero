@@ -6,7 +6,7 @@ Un jeu de cartes tactique sur plateau inspiré de *Trade & Battle: Card Hero* (G
 - **Lancer le jeu** : ouvrir le projet dans Godot 4.6+ et lancer, ou `godot --path .`
 - **Tests** (40) : `godot --headless --path . -s res://tests/run_tests.gd`
 - **Smoke test UI** : `godot --headless --path . res://scenes/battle.tscn -- --autoplay`
-- **Régénérer les assets** : `python tools/generate_assets.py` (illustrations, nécessite `GEMINI_API_KEY` dans `.env`), `python tools/generate_ui_assets.py` (chrome UI), `python tools/build_cards.py` (cartes complètes composées — à relancer après tout changement d'équilibrage dans `cards.json`) et `python tools/gen_sfx.py` (audio)
+- **Régénérer les assets** : `python tools/generate_assets.py` (illustrations, nécessite `GEMINI_API_KEY` dans `.env`), `python tools/build_cards.py` (cartes complètes composées — à relancer après tout changement d'équilibrage dans `cards.json`) et `python tools/gen_sfx.py` (audio). Le chrome UI passe désormais en pixel art dessiné directement (voir `tools/asset_manifest.json`) ; la conversion peint→pixel (`pixelize.py` & co) a été retirée.
 
 ## Comment jouer
 
