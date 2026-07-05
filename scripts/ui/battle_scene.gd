@@ -11,20 +11,7 @@ const HAND_CARD_W := 140.0
 ## Horizontal center of the board (hand, toasts and banners align on it).
 const BOARD_CENTER_X := 960.0
 
-# Painted-arena geometry. The composed background (battle_bg.png, built by
-# tools/compose_battle_bg.py) embeds the arena at this position/scale; the
-# playfield is a slight trapezoid. Values below are texture pixels of the
-# 1432x1050 arena image; cells are laid over the painted tiles.
-const ARENA_POS := Vector2(312, 60)
-const ARENA_SCALE := 950.0 / 1050.0
-const GRID_SEPS_Y: Array[float] = [145.0, 340.0, 540.0, 745.0, 955.0]
-const GRID_XL_TOP := 270.0
-const GRID_XL_BOT := 190.0
-const GRID_XR_TOP := 1165.0
-const GRID_XR_BOT := 1245.0
-
-@onready var background: TextureRect = %Background
-@onready var bg_fallback: ColorRect = %BackgroundFallback
+@onready var arena: BattleArena = %Arena
 @onready var board_area: Control = %BoardArea
 @onready var hand_area: Control = %HandArea
 @onready var fx_layer: Control = %FxLayer
@@ -192,11 +179,6 @@ func _on_mulligan_choice(redraw: bool) -> void:
 # --- UI wiring (structure lives in battle.tscn) -----------------------------
 
 func _init_ui() -> void:
-	# The composed battlefield (battle_bg.png) is the only backdrop: the arena
-	# is embedded in it (mockup reference), never floating over another scene.
-	if background.texture == null:
-		bg_fallback.visible = true
-
 	# Board cells laid over the painted arena tiles.
 	for row in GameConst.BOARD_ROWS:
 		for col in GameConst.BOARD_COLS:
@@ -257,18 +239,9 @@ func _init_ui() -> void:
 	move_child(fx_layer, -1)
 
 
-## Screen rectangle of one board cell over the painted (slightly trapezoid) grid.
+## Screen rectangle of one board cell (délégué à la scène d'arène du thème).
 func _cell_rect(cell: Vector2i) -> Rect2:
-	# Enemy rows on top (board row 3 first), player rows at the bottom.
-	var screen_row := 3 - cell.y
-	var y0: float = GRID_SEPS_Y[screen_row]
-	var y1: float = GRID_SEPS_Y[screen_row + 1]
-	var t := ((y0 + y1) / 2.0 - GRID_SEPS_Y[0]) / (GRID_SEPS_Y[4] - GRID_SEPS_Y[0])
-	var xl := lerpf(GRID_XL_TOP, GRID_XL_BOT, t)
-	var xr := lerpf(GRID_XR_TOP, GRID_XR_BOT, t)
-	var pitch := (xr - xl) / 3.0
-	return Rect2(ARENA_POS + Vector2(xl + cell.x * pitch, y0) * ARENA_SCALE,
-			Vector2(pitch, y1 - y0) * ARENA_SCALE)
+	return arena.cell_rect(cell)
 
 
 ## Radial darkness for full-screen overlays (game over).
