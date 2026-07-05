@@ -7,7 +7,7 @@ extends Control
 
 const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/widgets/board_cell.tscn")
 
-const HAND_CARD_W := 150.0
+const HAND_CARD_W := 140.0
 ## Horizontal center of the board (hand, toasts and banners align on it).
 const BOARD_CENTER_X := 960.0
 
@@ -896,7 +896,7 @@ func _show_spell_preview(card_id) -> void:
 
 func _show_detail_card(def: CardDef) -> void:
 	_clear_detail()
-	var w := CardWidget.create(def, 230)
+	var w := CardWidget.create(def, 210)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	_add_detail_text(_keyword_explanations(def))
@@ -904,7 +904,7 @@ func _show_detail_card(def: CardDef) -> void:
 
 func _show_detail_monster(m: MonsterInst) -> void:
 	_clear_detail()
-	var w := CardWidget.create(m.def, 230)
+	var w := CardWidget.create(m.def, 210)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	var status := "Niv %d — ATQ %d, PV %d/%d" % [m.level, m.atk(), m.hp, m.max_hp()]

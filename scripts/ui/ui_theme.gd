@@ -30,14 +30,14 @@ const GUILD_ICONS := {
 # generated (assets/sprites/ui). Everything falls back to the flat style when
 # a texture is missing.
 const TEX_CARD_FRAME := "res://assets/sprites/ui/card_frame.png"
-const TEX_PORTRAIT_RING := "res://assets/sprites/ui/mockup/ind_select_gold.png"
+const TEX_PORTRAIT_RING := "res://assets/sprites/ui/pixel/ind_select_gold.png"
 const TEX_BANNER := "res://assets/sprites/ui/banner_ribbon.png"
 const TEX_LOGO := "res://assets/sprites/ui/logo.png"
 const TEX_CELL_TILE := "res://assets/sprites/ui/cell_tile.png"
-const TEX_PANEL := "res://assets/sprites/ui/mockup/panel_stone.png"
-const TEX_BUTTON := "res://assets/sprites/ui/mockup/btn_primary.png"
-const TEX_BUTTON_SECONDARY := "res://assets/sprites/ui/mockup/btn_secondary.png"
-const TEX_BUTTON_DISABLED := "res://assets/sprites/ui/mockup/btn_disabled.png"
+const TEX_PANEL := "res://assets/sprites/ui/pixel/panel_stone.png"
+const TEX_BUTTON := "res://assets/sprites/ui/pixel/btn_primary.png"
+const TEX_BUTTON_SECONDARY := "res://assets/sprites/ui/pixel/btn_secondary.png"
+const TEX_BUTTON_DISABLED := "res://assets/sprites/ui/pixel/btn_disabled.png"
 const TEX_VICTORY := "res://assets/sprites/ui/victory_bg.png"
 const TEX_DEFEAT := "res://assets/sprites/ui/defeat_bg.png"
 const TEX_PANEL_HUD := "res://assets/sprites/ui/panel_hud.png"
@@ -286,7 +286,7 @@ static func icon_label(icon_path: String, text: String, size: int, color: Color)
 	box.add_child(label(text, size, color))
 	return box
 
-const ICON_ATK := "res://assets/sprites/ui/mockup/icon_stat_attack.png"
-const ICON_HP := "res://assets/sprites/ui/mockup/res_heart.png"
-const ICON_STONE := "res://assets/sprites/ui/mockup/res_crystal.png"
+const ICON_ATK := "res://assets/sprites/ui/pixel/icon_stat_attack.png"
+const ICON_HP := "res://assets/sprites/ui/pixel/res_heart.png"
+const ICON_STONE := "res://assets/sprites/ui/pixel/res_crystal.png"
 const ICON_XP := "res://assets/sprites/ui/icon_xp.png"

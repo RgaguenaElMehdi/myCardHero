@@ -168,7 +168,7 @@ func _build_mini() -> void:
 
 ## Cost gem sliced from the mockup sheet (digit baked in), golden disc fallback.
 func _cost_disc(value: String, size: float) -> Control:
-	var gem := UiTheme.tex("res://assets/sprites/ui/mockup/gem_cost_%d.png"
+	var gem := UiTheme.tex("res://assets/sprites/ui/pixel/gem_cost_%d.png"
 			% mini(int(value), 7))
 	if gem != null:
 		var rect := TextureRect.new()
