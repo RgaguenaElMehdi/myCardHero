@@ -58,9 +58,10 @@ func set_highlight(mode: String) -> void:
 
 
 func _apply_style() -> void:
-	# Clean flat tile (anime navy+gold look) drawn by the cell itself.
+	# Clean flat tile (anime navy+gold look) drawn by the cell itself,
+	# teintée par camp : rangées hautes (adversaire) chaudes, basses (joueur) froides.
 	var base := StyleBoxFlat.new()
-	base.bg_color = Color(0.16, 0.19, 0.30, 0.55)
+	base.bg_color = Color(0.24, 0.16, 0.22, 0.55) if cell.y >= 2 else Color(0.14, 0.19, 0.33, 0.55)
 	base.set_corner_radius_all(12)
 	base.border_color = Color(0.79, 0.65, 0.31, 0.30)
 	base.set_border_width_all(2)
