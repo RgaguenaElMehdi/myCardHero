@@ -36,19 +36,20 @@ F_BODY = "C:/Windows/Fonts/georgia.ttf"
 
 # Text anchors as (x, y) fractions of the template size, measured once on the
 # masters (faction variants keep the same layout by construction).
+# Measured on the pixel-art masters (1024x1536).
 ANCHORS = {
     "monster": {
-        "name": (0.50, 0.093), "name_w": 0.44,
-        "subtitle": (0.50, 0.169),
-        "stat_xs": [0.199, 0.401, 0.604, 0.800], "stat_y": 0.583,
-        "text_top": 0.660, "text_bottom": 0.880,
-        "rarity": (0.50, 0.920),
+        "name": (0.494, 0.065), "name_w": 0.42,
+        "subtitle": (0.494, 0.125),
+        "stat_xs": [0.166, 0.390, 0.605, 0.832], "stat_y": 0.612,
+        "text_top": 0.695, "text_bottom": 0.855,
+        "rarity": (0.494, 0.901),
     },
     "spell": {
-        "name": (0.49, 0.091), "name_w": 0.44,
-        "subtitle": (0.50, 0.150),
-        "text_top": 0.690, "text_bottom": 0.880,
-        "rarity": (0.50, 0.921),
+        "name": (0.496, 0.068), "name_w": 0.44,
+        "subtitle": (0.496, 0.133),
+        "text_top": 0.618, "text_bottom": 0.845,
+        "rarity": (0.496, 0.906),
     },
 }
 
@@ -105,16 +106,34 @@ def _is_magenta(rgb) -> bool:
     return r > 120 and r - g > 45 and b - g > 20 and r >= b - 15
 
 
+def _longest_run(values: list, step: int) -> tuple:
+    """Longest contiguous run in a sorted list sampled every `step`."""
+    best = (values[0], values[0])
+    start = prev = values[0]
+    for v in values[1:]:
+        if v - prev > step:
+            if prev - start > best[1] - best[0]:
+                best = (start, prev)
+            start = v
+        prev = v
+    if prev - start > best[1] - best[0]:
+        best = (start, prev)
+    return best
+
+
 def magenta_window(img: Image.Image) -> tuple:
-    """Bounding box of the LARGE art window (scanned through the card center)."""
+    """Bounding box of the LARGE art window: longest contiguous magenta run on
+    the center column/row (robust against stray pink elements elsewhere)."""
     px = img.convert("RGB").load()
     w, h = img.size
     ys = [y for y in range(0, h, 3) if _is_magenta(px[w // 2, y])]
     if not ys:
         sys.exit("fenêtre magenta introuvable dans le gabarit")
-    y_mid = (min(ys) + max(ys)) // 2
+    y0, y1 = _longest_run(ys, 3)
+    y_mid = (y0 + y1) // 2
     xs = [x for x in range(0, w, 3) if _is_magenta(px[x, y_mid])]
-    return (min(xs), min(ys), max(xs) + 3, max(ys) + 3)
+    x0, x1 = _longest_run(xs, 3)
+    return (x0, y0, x1 + 3, y1 + 3)
 
 
 def gem_region(img: Image.Image, window: tuple) -> tuple:
@@ -301,20 +320,31 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
                 continue
             r, g, b, a4 = px[xx, yy]
             if _is_magenta((r, g, b)):
-                px[xx, yy] = (70, 30, 34, a4)
+                px[xx, yy] = (gc[0] // 4 + 12, gc[1] // 4 + 8, gc[2] // 4 + 12, a4)
 
-    # 5) name + subtitle
+    # 5) name + subtitle (colors adapt to the banner's brightness — the Light
+    # faction has pale plates)
+    def _adaptive(pos) -> tuple:
+        sr, sg, sb2, _sa2 = px[pos[0], pos[1]]
+        if (sr + sg + sb2) / 3 > 150:
+            return (62, 44, 24), (242, 232, 208)
+        return (238, 226, 200), (20, 14, 8)
+
+    name_pos = (int(W * a["name"][0]), int(H * a["name"][1]))
+    name_fill, name_edge = _adaptive(name_pos)
     name_font = fit_text(draw, card["name"], F_TITLE, int(W * a["name_w"]),
                          int(W * 0.056))
-    outlined(draw, (int(W * a["name"][0]), int(H * a["name"][1])), card["name"],
-             name_font, (238, 226, 200), width=4)
+    outlined(draw, name_pos, card["name"], name_font, name_fill,
+             outline=name_edge, width=4)
     is_monster = kind == "monster"
     sub_kind = "Sort"
     if is_monster:
         sub_kind = "Ascendant" if card.get("token") else "Écho"
     subtitle = card.get("_subtitle", "%s — %s" % (sub_kind, GUILD_NAMES.get(guild, "")))
-    outlined(draw, (int(W * a["subtitle"][0]), int(H * a["subtitle"][1])), subtitle,
-             font(F_TITLE, int(W * 0.0245)), (218, 200, 165), width=2)
+    sub_pos = (int(W * a["subtitle"][0]), int(H * a["subtitle"][1]))
+    sub_fill, sub_edge = _adaptive(sub_pos)
+    outlined(draw, sub_pos, subtitle, font(F_TITLE, int(W * 0.0245)),
+             sub_fill, outline=sub_edge, width=2)
 
     # 6) stat values inside the plate bodies (color adapts to plate brightness,
     # e.g. the Light faction's ivory plates need dark text)
@@ -394,9 +424,10 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
         y += lh
 
     # 8) rarity banner
-    outlined(draw, (int(W * a["rarity"][0]), int(H * a["rarity"][1])),
-             card.get("_rarity", rarity_of(card)),
-             font(F_TITLE, int(W * 0.026)), (232, 216, 180), width=3)
+    rar_pos = (int(W * a["rarity"][0]), int(H * a["rarity"][1]))
+    rar_fill, rar_edge = _adaptive(rar_pos)
+    outlined(draw, rar_pos, card.get("_rarity", rarity_of(card)),
+             font(F_TITLE, int(W * 0.026)), rar_fill, outline=rar_edge, width=3)
     return img
 
 
@@ -409,7 +440,7 @@ def main() -> int:
         for fac in GUILD_NAMES:
             path = UI / f"card_v2_{kind}_{fac}.png"
             if not path.exists():
-                sys.exit("gabarit manquant : %s" % path.name)
+                path = UI / f"card_v2_{kind}_flame.png"  # variant not generated yet
             tpl = Image.open(path)
             win = magenta_window(tpl)
             tpls[(kind, fac)] = (tpl, win, gem_region(tpl, win))

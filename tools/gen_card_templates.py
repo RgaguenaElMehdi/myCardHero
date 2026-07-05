@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "assets" / "sprites" / "ui"
-MODEL = "gemini-2.5-flash-image"
+MODEL = "gemini-3-pro-image"
 URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
 
 LAYOUT_MONSTER = (
@@ -128,10 +128,11 @@ def make_variants() -> None:
                 print(f"déjà là: {path.name}")
                 continue
             prompt = (
-                "Recolor this trading card frame template to a %s color scheme. Replace "
-                "the flame emblem inside the top-right hexagonal medallion with %s. Keep "
-                "EVERYTHING else strictly identical: same exact layout, same positions "
-                "and sizes of every element, keep the magenta #FF00FF areas exactly as "
+                "Recolor this PIXEL ART trading card frame template to a %s color "
+                "scheme. Replace the flame emblem inside the top-right hexagonal "
+                "medallion with %s. Keep EVERYTHING else strictly identical and keep "
+                "the crisp pixel-art style: same exact layout, same positions and "
+                "sizes of every element, keep the magenta #FF00FF areas exactly as "
                 "they are (same shape and position), keep the engraved labels and the "
                 "bottom word unchanged." % (palette, emblem))
             path.write_bytes(edit(prompt, master))
