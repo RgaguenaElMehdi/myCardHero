@@ -933,21 +933,30 @@ func _draw_anim(player: int) -> void:
 	var to := Vector2(960, 980) if player == 0 else Vector2(960, 70)
 	var card := TextureRect.new()
 	card.texture = back
-	card.size = Vector2(40, 58)
+	card.size = Vector2(92, 128)
 	card.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	card.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 	card.pivot_offset = card.size / 2.0
 	card.position = from - card.size / 2.0
-	card.modulate.a = 0.0
 	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx_layer.add_child(card)
-	# Petit dos qui file du deck vers la main : apparaît, glisse, se fond.
+	# Face révélée (joueur seulement ; l'adversaire garde le dos).
+	var face: Texture2D = null
+	if player == 0 and not state.players[0].hand.is_empty():
+		var id = state.players[0].hand[-1]
+		face = UiTheme.tex(CardWidget.full_card_path(id))
+		if face == null:
+			face = UiTheme.tex(Db.card_art_path(StringName(String(id))))
+	# Glisse du deck vers la main, puis se retourne (tranche → révèle), puis s'efface.
 	var tw := create_tween()
-	tw.tween_property(card, "modulate:a", 1.0, 0.08)
-	tw.parallel().tween_property(card, "position", to - card.size / 2.0, 0.26) \
-			.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-	tw.parallel().tween_property(card, "scale", Vector2(0.72, 0.72), 0.26)
-	tw.tween_property(card, "modulate:a", 0.0, 0.1)
+	tw.tween_property(card, "position", to - card.size / 2.0, 0.26) \
+			.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(card, "scale:x", 0.0, 0.09)
+	if face != null:
+		tw.tween_callback(func() -> void: card.texture = face)
+	tw.tween_property(card, "scale:x", 1.0, 0.09)
+	tw.tween_interval(0.12)
+	tw.tween_property(card, "modulate:a", 0.0, 0.14)
 	tw.tween_callback(card.queue_free)
 
 
