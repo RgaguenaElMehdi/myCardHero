@@ -36,3 +36,11 @@ const GUILD_NAMES := {
 	Guild.SHADOW: "Ombre",
 	Guild.LIGHT: "Lumière",
 }
+
+## Couleurs de faction — source unique de vérité (l'UI délègue ici).
+const GUILD_COLORS := {
+	Guild.FLAME: Color("e2603c"),
+	Guild.SYLVAN: Color("5aa864"),
+	Guild.SHADOW: Color("8b6bc7"),
+	Guild.LIGHT: Color("e6c35a"),
+}

@@ -12,12 +12,8 @@ const GOLD := Color("e6c35a")
 const DANGER := Color("e2603c")
 const OK := Color("5aa864")
 
-const GUILD_COLORS := {
-	GameConst.Guild.FLAME: Color("e2603c"),
-	GameConst.Guild.SYLVAN: Color("5aa864"),
-	GameConst.Guild.SHADOW: Color("8b6bc7"),
-	GameConst.Guild.LIGHT: Color("e6c35a"),
-}
+# Palette de faction : source unique dans GameConst (Règle des couleurs).
+const GUILD_COLORS := GameConst.GUILD_COLORS
 
 const GUILD_ICONS := {
 	GameConst.Guild.FLAME: "res://assets/sprites/ui/icon_flame.png",
