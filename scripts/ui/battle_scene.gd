@@ -931,7 +931,7 @@ func _draw_anim(player: int) -> void:
 	var deck: Control = %PlayerDeck if player == 0 else %EnemyDeck
 	var from: Vector2 = deck.global_position + deck.size / 2.0
 	var to := Vector2(960, 980) if player == 0 else Vector2(960, 70)
-	var csize := Vector2(84, 118)
+	var csize := Vector2(132, 184)
 	var card := TextureRect.new()
 	card.texture = back
 	card.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
