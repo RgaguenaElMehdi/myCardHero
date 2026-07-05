@@ -86,7 +86,7 @@ func _card_image(path: String, fallback_def: CardDef) -> Control:
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		return img
-	return CardWidget.create(fallback_def, 480) if fallback_def != null else Control.new()
+	return CardWidget.spawn(fallback_def, 480) if fallback_def != null else Control.new()
 
 
 func _side_panel(title: String, body: String, width: float = 470.0) -> Control:

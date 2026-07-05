@@ -138,7 +138,7 @@ func _show_mulligan() -> void:
 	row.add_theme_constant_override("separation", 10)
 	vbox.add_child(row)
 	for id in state.players[0].hand:
-		var cw := CardWidget.create(state.card(id), 170)
+		var cw := CardWidget.spawn(state.card(id), 170)
 		cw.inspect_requested.connect(func(w2: CardWidget) -> void:
 			CardPopup.open(self, w2.def))
 		row.add_child(cw)
@@ -308,7 +308,7 @@ func _refresh_hand() -> void:
 	var start := (hand_area.size.x - total) / 2.0
 	for i in count:
 		# Full composed cards in hand, like the mockup reference screen.
-		var w := CardWidget.create(state.card(hand[i]), HAND_CARD_W)
+		var w := CardWidget.spawn(state.card(hand[i]), HAND_CARD_W)
 		w.position = Vector2(start + i * overlap, 24)
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
@@ -858,7 +858,7 @@ func _show_spell_preview(card_id) -> void:
 	var def := state.card(card_id)
 	if def == null:
 		return
-	var w := CardWidget.create(def, 220)
+	var w := CardWidget.spawn(def, 220)
 	w.position = Vector2(850, 300)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx_layer.add_child(w)
@@ -875,7 +875,7 @@ func _show_spell_preview(card_id) -> void:
 
 func _show_detail_card(def: CardDef) -> void:
 	_clear_detail()
-	var w := CardWidget.create(def, 210)
+	var w := CardWidget.spawn(def, 210)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	_add_detail_text(_keyword_explanations(def))
@@ -883,7 +883,7 @@ func _show_detail_card(def: CardDef) -> void:
 
 func _show_detail_monster(m: MonsterInst) -> void:
 	_clear_detail()
-	var w := CardWidget.create(m.def, 210)
+	var w := CardWidget.spawn(m.def, 210)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	var status := "Niv %d — ATQ %d, PV %d/%d" % [m.level, m.atk(), m.hp, m.max_hp()]

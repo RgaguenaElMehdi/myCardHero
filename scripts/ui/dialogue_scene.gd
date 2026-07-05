@@ -144,7 +144,7 @@ func _show_rewards(granted: Dictionary) -> void:
 			var def := Db.card(StringName(String(id)))
 			if def == null:
 				continue
-			var w := CardWidget.create(def, 160)
+			var w := CardWidget.spawn(def, 160)
 			w.set_count(int(cards[id]))
 			row.add_child(w)
 	for mid in masters:
