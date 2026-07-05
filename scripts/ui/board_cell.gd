@@ -177,14 +177,15 @@ func _render_monster(m: MonsterInst) -> void:
 		else:
 			_content.add_child(art)
 
-	# corner stat badges (ATQ bottom-left, PV bottom-right)
-	var atk_badge := _stat_badge(str(m.atk()), UiTheme.ICON_ATK, Color("e2884c"))
-	atk_badge.position = Vector2(3, size.y - 31)
+	# Stat plates flanking the unit's feet, mockup style: green ATQ / red PV.
+	var atk_badge := _stat_badge(str(m.atk()), Color("2f5a1e"), Color("7fae4a"))
+	atk_badge.position = Vector2(size.x * 0.16, size.y - 38)
 	_content.add_child(atk_badge)
-	var hp_color := Color("5aa864") if m.hp >= m.max_hp() else Color("cf5757")
-	var hp_badge := _stat_badge(str(m.hp), UiTheme.ICON_HP, hp_color)
+	var hp_border := Color("c04b3a") if m.hp >= m.max_hp() else Color("e88a3a")
+	var hp_badge := _stat_badge(str(m.hp), Color("5a1f1a"), hp_border)
 	_content.add_child(hp_badge)
-	hp_badge.position = Vector2(size.x - hp_badge.get_minimum_size().x - 3, size.y - 31)
+	hp_badge.position = Vector2(size.x * 0.84 - hp_badge.get_minimum_size().x,
+			size.y - 38)
 
 	# level badge
 	if m.def.max_level() > 1 or m.level > 1:
@@ -207,19 +208,22 @@ func _render_monster(m: MonsterInst) -> void:
 		_content.modulate = Color(0.6, 0.6, 0.65)
 
 
-## Rounded stat chip with icon + value and a colored border.
-func _stat_badge(value: String, icon_path: String, color: Color) -> Control:
+## Small colored stat plate (mockup style: green ATQ shield / red PV shield).
+func _stat_badge(value: String, bg: Color, border: Color) -> Control:
 	var chip := PanelContainer.new()
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0, 0, 0, 0.7)
-	sb.set_corner_radius_all(9)
-	sb.border_color = color
+	sb.bg_color = Color(bg, 0.92)
+	sb.set_corner_radius_all(6)
+	sb.border_color = border
 	sb.set_border_width_all(2)
-	sb.content_margin_left = 4
-	sb.content_margin_right = 5
+	sb.content_margin_left = 8
+	sb.content_margin_right = 8
 	chip.add_theme_stylebox_override("panel", sb)
 	chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	chip.add_child(UiTheme.icon_label(icon_path, value, 15, Color.WHITE.lerp(color, 0.2)))
+	var l := UiTheme.label(value, 17, Color.WHITE)
+	l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
+	l.add_theme_constant_override("outline_size", 5)
+	chip.add_child(l)
 	return chip
 
 

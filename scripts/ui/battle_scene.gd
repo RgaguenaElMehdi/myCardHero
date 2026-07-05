@@ -7,15 +7,16 @@ extends Control
 
 const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/widgets/board_cell.tscn")
 
-const HAND_CARD_W := 176.0
+const HAND_CARD_W := 150.0
 ## Horizontal center of the board (hand, toasts and banners align on it).
-const BOARD_CENTER_X := 790.0
+const BOARD_CENTER_X := 960.0
 
-# Painted-arena geometry. The board texture (board_arena.png) has a slight
-# perspective: the playfield is a trapezoid. Values are texture pixels,
-# measured once on the 1432x1050 image; cells are laid over the painted tiles.
-const ARENA_POS := Vector2(340, 50)
-const ARENA_SCALE := 660.0 / 1050.0
+# Painted-arena geometry. The composed background (battle_bg.png, built by
+# tools/compose_battle_bg.py) embeds the arena at this position/scale; the
+# playfield is a slight trapezoid. Values below are texture pixels of the
+# 1432x1050 arena image; cells are laid over the painted tiles.
+const ARENA_POS := Vector2(312, 60)
+const ARENA_SCALE := 950.0 / 1050.0
 const GRID_SEPS_Y: Array[float] = [145.0, 340.0, 540.0, 745.0, 955.0]
 const GRID_XL_TOP := 270.0
 const GRID_XL_BOT := 190.0
@@ -191,11 +192,8 @@ func _on_mulligan_choice(redraw: bool) -> void:
 # --- UI wiring (structure lives in battle.tscn) -----------------------------
 
 func _init_ui() -> void:
-	# Arena backdrop: battle_config background when available.
-	var cfg_bg := UiTheme.tex(Db.background_path(
-			String(Game.battle_config.get("background", "battle_table"))))
-	if cfg_bg != null:
-		background.texture = cfg_bg
+	# The composed battlefield (battle_bg.png) is the only backdrop: the arena
+	# is embedded in it (mockup reference), never floating over another scene.
 	if background.texture == null:
 		bg_fallback.visible = true
 
@@ -330,8 +328,9 @@ func _refresh_hand() -> void:
 	var total := overlap * (count - 1) + HAND_CARD_W
 	var start := (hand_area.size.x - total) / 2.0
 	for i in count:
-		var w := CardWidget.create_mini(state.card(hand[i]), HAND_CARD_W)
-		w.position = Vector2(start + i * overlap, 20)
+		# Full composed cards in hand, like the mockup reference screen.
+		var w := CardWidget.create(state.card(hand[i]), HAND_CARD_W)
+		w.position = Vector2(start + i * overlap, 24)
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
 		w.inspect_requested.connect(func(w2: CardWidget) -> void:
@@ -881,7 +880,7 @@ func _show_spell_preview(card_id) -> void:
 	if def == null:
 		return
 	var w := CardWidget.create(def, 220)
-	w.position = Vector2(680, 240)
+	w.position = Vector2(850, 300)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx_layer.add_child(w)
 	UiTheme.pass_through(w)
