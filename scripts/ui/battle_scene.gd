@@ -15,7 +15,7 @@ const BOARD_CENTER_X := 960.0
 @onready var board_area: Control = %BoardArea
 @onready var hand_area: Control = %HandArea
 @onready var fx_layer: Control = %FxLayer
-@onready var log_box: RichTextLabel = %LogText
+@onready var log_box: VBoxContainer = %LogList
 @onready var detail_holder: VBoxContainer = %DetailHolder
 @onready var toast_label: Label = %ToastLabel
 @onready var turn_label: Label = %TurnLabel
@@ -966,7 +966,49 @@ func _clear_detail() -> void:
 ## Colored battle-log line. Default: dim; pass a side (0/1) tinted color or
 ## a semantic color (gold for level-ups, etc.) from the call site.
 func _log(text: String, color: Color = UiTheme.TEXT_DIM) -> void:
-	log_box.append_text("[color=#%s]%s[/color]\n" % [color.to_html(false), text])
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	row.mouse_filter = Control.MOUSE_FILTER_STOP
+	row.tooltip_text = text
+	var icon_path := _log_icon(text)
+	if icon_path != "":
+		var ic := TextureRect.new()
+		ic.texture = UiTheme.tex(icon_path)
+		ic.custom_minimum_size = Vector2(20, 20)
+		ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		row.add_child(ic)
+	var l := UiTheme.label(text, 14, color)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(l)
+	log_box.add_child(row)
+	while log_box.get_child_count() > 16:
+		log_box.get_child(0).free()
+	var scroll := log_box.get_parent() as ScrollContainer
+	if scroll != null:
+		scroll.set_deferred("scroll_vertical", 100000)
+
+
+## Icône de type déduite du texte (jeu d'icônes limité → best-effort).
+func _log_icon(text: String) -> String:
+	const P := "res://assets/sprites/ui/pixel/"
+	if "invoque" in text:
+		return P + "icon_stat_shield.png"
+	if "détruit" in text or "fatigue" in text:
+		return P + "res_shadow.png"
+	if "niveau" in text or "évolue" in text or "pouvoir" in text:
+		return P + "ind_light.png"
+	if "lance" in text:
+		return P + "ind_shadow.png"
+	if "pierre" in text:
+		return P + "res_crystal.png"
+	if "attaque" in text or "inflige" in text:
+		return P + "ind_attack.png"
+	if "soigne" in text or "PV" in text:
+		return P + "ind_heal.png"
+	return ""
 
 
 ## Log color for actions of one side: green for the player, red for the enemy.

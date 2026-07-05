@@ -658,14 +658,16 @@ layout_mode = 2
 mouse_filter = 2
 color = Color(0.4, 0.36, 0.27, 1)
 
-[node name="LogText" type="RichTextLabel" parent="LogPanel/LogBox" unique_id=283917913]
-unique_name_in_owner = true
+[node name="LogScroll" type="ScrollContainer" parent="LogPanel/LogBox" unique_id=283917913]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/default_color = Color(0.663, 0.69, 0.761, 1)
-theme_override_font_sizes/normal_font_size = 14
-bbcode_enabled = true
-scroll_following = true
+horizontal_scroll_mode = 0
+
+[node name="LogList" type="VBoxContainer" parent="LogPanel/LogBox/LogScroll" unique_id=283917914]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
 
 [node name="HandTray" type="Panel" parent="." unique_id=118488090]
 layout_mode = 0
