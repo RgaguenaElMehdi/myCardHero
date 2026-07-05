@@ -7,7 +7,7 @@ extends Control
 
 const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/widgets/board_cell.tscn")
 
-const HAND_CARD_W := 118.0
+const HAND_CARD_W := 140.0
 ## Horizontal center of the board (hand, toasts and banners align on it).
 const BOARD_CENTER_X := 960.0
 
@@ -353,7 +353,7 @@ func _refresh_hand() -> void:
 	for i in count:
 		# Full composed cards in hand, like the mockup reference screen.
 		var w := CardWidget.create(state.card(hand[i]), HAND_CARD_W)
-		w.position = Vector2(start + i * overlap, 8)
+		w.position = Vector2(start + i * overlap, 6)
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
 		w.inspect_requested.connect(func(w2: CardWidget) -> void:
@@ -919,7 +919,7 @@ func _show_spell_preview(card_id) -> void:
 
 func _show_detail_card(def: CardDef) -> void:
 	_clear_detail()
-	var w := CardWidget.create(def, 210)
+	var w := CardWidget.create(def, 250)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	_add_detail_text(_keyword_explanations(def))
@@ -927,7 +927,7 @@ func _show_detail_card(def: CardDef) -> void:
 
 func _show_detail_monster(m: MonsterInst) -> void:
 	_clear_detail()
-	var w := CardWidget.create(m.def, 210)
+	var w := CardWidget.create(m.def, 250)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	var status := "Niv %d — ATQ %d, PV %d/%d" % [m.level, m.atk(), m.hp, m.max_hp()]
@@ -935,7 +935,7 @@ func _show_detail_monster(m: MonsterInst) -> void:
 		status += "\nXP %d / %d" % [m.xp, m.next_level_xp()]
 	if m.shield:
 		status += "\nBouclier actif"
-	var l := UiTheme.label(status, 15, UiTheme.TEXT)
+	var l := UiTheme.label(status, 17, UiTheme.TEXT)
 	detail_holder.add_child(l)
 	_add_detail_text(_keyword_explanations(m.def))
 
@@ -954,9 +954,9 @@ func _keyword_explanations(def: CardDef) -> String:
 func _add_detail_text(text: String) -> void:
 	if text == "":
 		return
-	var info := UiTheme.label(text, 13, UiTheme.TEXT_DIM)
+	var info := UiTheme.label(text, 16, UiTheme.TEXT_DIM)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	info.custom_minimum_size = Vector2(240, 0)
+	info.custom_minimum_size = Vector2(260, 0)
 	detail_holder.add_child(info)
 
 
