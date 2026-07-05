@@ -167,6 +167,7 @@ mouse_filter = 2
 [node name="EnemyPanel" type="PanelContainer" parent="." unique_id=702796478]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(300, 0)
+visible = false
 layout_mode = 0
 offset_left = 20.0
 offset_top = 70.0
@@ -335,6 +336,7 @@ theme_override_font_sizes/font_size = 16
 [node name="PlayerPanel" type="PanelContainer" parent="." unique_id=414071347]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(266, 0)
+visible = false
 layout_mode = 0
 offset_left = 1330.0
 offset_top = 70.0

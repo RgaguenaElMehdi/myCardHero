@@ -29,8 +29,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1")
-board_pos = Vector2(188, 10)
-board_scale = 0.88
+board_pos = Vector2(130, 30)
+board_scale = 0.962
 
 [node name="Environment" type="TextureRect" parent="."]
 layout_mode = 1
@@ -46,10 +46,10 @@ stretch_mode = 6
 
 [node name="BoardPlate" type="TextureRect" parent="."]
 layout_mode = 0
-offset_left = 188.0
-offset_top = 10.0
-offset_right = 1446.4
-offset_bottom = 934.0
+offset_left = 130.0
+offset_top = 30.0
+offset_right = 1505.7
+offset_bottom = 1040.0
 mouse_filter = 2
 texture = ExtResource("3")
 expand_mode = 1
