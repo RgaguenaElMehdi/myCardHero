@@ -58,7 +58,7 @@ func _refresh() -> void:
 			continue
 		if filter_guild >= 0 and def.guild != filter_guild:
 			continue
-		var w := CardWidget.spawn(def, 178)
+		var w := CardWidget.create(def, 178)
 		var used := _deck_count(id)
 		w.set_count(owned - used)
 		if used >= owned:
