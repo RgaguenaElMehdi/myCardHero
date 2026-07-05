@@ -7,7 +7,7 @@ extends Control
 
 const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/widgets/board_cell.tscn")
 
-const HAND_CARD_W := 140.0
+const HAND_CARD_W := 118.0
 ## Horizontal center of the board (hand, toasts and banners align on it).
 const BOARD_CENTER_X := 960.0
 
@@ -309,7 +309,7 @@ func _refresh_hand() -> void:
 	for i in count:
 		# Full composed cards in hand, like the mockup reference screen.
 		var w := CardWidget.create(state.card(hand[i]), HAND_CARD_W)
-		w.position = Vector2(start + i * overlap, 24)
+		w.position = Vector2(start + i * overlap, 8)
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
 		w.inspect_requested.connect(func(w2: CardWidget) -> void:

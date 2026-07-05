@@ -34,6 +34,13 @@ content_margin_top = 12.0
 content_margin_right = 14.0
 content_margin_bottom = 12.0
 
+[sub_resource type="StyleBoxFlat" id="hand_tray"]
+bg_color = Color(0.078, 0.094, 0.157, 0.85)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+border_width_top = 2
+border_color = Color(0.79, 0.65, 0.31, 0.5)
+
 [sub_resource type="Gradient" id="vignette_grad"]
 offsets = PackedFloat32Array(0, 0.62, 1)
 colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.38)
@@ -617,12 +624,21 @@ theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 scroll_following = true
 
+[node name="HandTray" type="Panel" parent="." unique_id=118488090]
+layout_mode = 0
+offset_left = 300.0
+offset_top = 900.0
+offset_right = 1620.0
+offset_bottom = 1080.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("hand_tray")
+
 [node name="HandArea" type="Control" parent="." unique_id=118488092]
 unique_name_in_owner = true
 anchors_preset = 0
-offset_left = 340.0
-offset_top = 856.0
-offset_right = 1580.0
+offset_left = 300.0
+offset_top = 900.0
+offset_right = 1620.0
 offset_bottom = 1080.0
 
 [node name="DetailHolder" type="VBoxContainer" parent="." unique_id=1298083378]
