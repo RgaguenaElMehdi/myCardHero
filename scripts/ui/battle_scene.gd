@@ -290,9 +290,34 @@ func _refresh_all() -> void:
 		cells[cell].render(state)
 	_refresh_hand()
 	_refresh_panels()
+	_refresh_resources()
 	_refresh_buttons()
 	_clear_highlights()
 	_apply_selection_highlights()
+
+
+## Pierres en pips de gemmes + compteurs de deck (les deux joueurs).
+func _refresh_resources() -> void:
+	_fill_pips(%PlayerPips, state.players[0].stones)
+	_fill_pips(%EnemyPips, state.players[1].stones)
+	(%PlayerDeckCount as Label).text = str(state.players[0].deck.size())
+	(%EnemyDeckCount as Label).text = str(state.players[1].deck.size())
+
+
+func _fill_pips(box: HBoxContainer, stones: int) -> void:
+	for c in box.get_children():
+		c.queue_free()
+	var gem := UiTheme.tex(UiTheme.ICON_STONE)
+	for i in GameConst.MAX_STONES:
+		var pip := TextureRect.new()
+		pip.texture = gem
+		pip.custom_minimum_size = Vector2(18, 18)
+		pip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		pip.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pip.modulate = Color(1, 1, 1, 1) if i < stones else Color(0.28, 0.31, 0.42, 0.5)
+		box.add_child(pip)
+	box.tooltip_text = "Pierres : %d / %d" % [stones, GameConst.MAX_STONES]
 
 
 func _refresh_hand() -> void:
