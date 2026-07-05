@@ -1,0 +1,71 @@
+[gd_scene load_steps=8 format=3 uid="uid://c1arentorch00"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/torch_wall.png" id="1"]
+[ext_resource type="Script" path="res://scripts/ui/torch_light.gd" id="2"]
+
+[sub_resource type="Gradient" id="flame_grad"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 0.87, 0.54, 0.9, 1, 0.55, 0.18, 0.7, 0.5, 0.13, 0.06, 0)
+
+[sub_resource type="Gradient" id="ember_grad"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 0.7, 0.28, 0.85, 1, 0.4, 0.1, 0)
+
+[sub_resource type="Gradient" id="light_grad"]
+offsets = PackedFloat32Array(0, 0.7, 1)
+colors = PackedColorArray(1, 1, 1, 0.85, 1, 1, 1, 0.25, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="light_tex"]
+gradient = SubResource("light_grad")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="Curve" id="flame_scale_curve"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="Torch" type="Node2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1")
+
+[node name="Flame" type="CPUParticles2D" parent="."]
+position = Vector2(0, -44)
+amount = 14
+lifetime = 0.55
+emission_shape = 1
+emission_sphere_radius = 4.0
+direction = Vector2(0, -1)
+spread = 14.0
+gravity = Vector2(0, -160)
+initial_velocity_min = 10.0
+initial_velocity_max = 26.0
+scale_amount_min = 1.6
+scale_amount_max = 3.2
+scale_amount_curve = SubResource("flame_scale_curve")
+color_ramp = SubResource("flame_grad")
+
+[node name="Embers" type="CPUParticles2D" parent="."]
+position = Vector2(0, -46)
+amount = 6
+lifetime = 2.4
+emission_shape = 1
+emission_sphere_radius = 3.0
+direction = Vector2(0, -1)
+spread = 26.0
+gravity = Vector2(0, -55)
+initial_velocity_min = 8.0
+initial_velocity_max = 20.0
+scale_amount_min = 1.0
+scale_amount_max = 1.8
+color_ramp = SubResource("ember_grad")
+
+[node name="Light" type="PointLight2D" parent="."]
+position = Vector2(0, -44)
+color = Color(1, 0.68, 0.37, 1)
+texture = SubResource("light_tex")
+texture_scale = 3.2
+script = ExtResource("2")
