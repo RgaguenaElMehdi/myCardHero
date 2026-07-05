@@ -2,78 +2,54 @@ extends Control
 ## Main menu: campaign, free play (master + difficulty picker), deck builder,
 ## settings, quit.
 
+@onready var background: TextureRect = %Background
+@onready var logo: TextureRect = %Logo
+@onready var title_fallback: Label = %TitleFallback
+@onready var campaign_btn: Button = %CampaignBtn
+@onready var free_play_btn: Button = %FreePlayBtn
+@onready var deck_builder_btn: Button = %DeckBuilderBtn
+@onready var guide_btn: Button = %GuideBtn
+@onready var options_btn: Button = %OptionsBtn
+@onready var quit_btn: Button = %QuitBtn
+@onready var status_label: Label = %StatusLabel
+
 var free_overlay: Control
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	var bg := TextureRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bg.texture = UiTheme.tex(Db.background_path("main_menu"))
-	add_child(bg)
+	# Background texture: override with runtime path if different from scene default
+	var bg_tex := UiTheme.tex(Db.background_path("main_menu"))
+	if bg_tex != null:
+		background.texture = bg_tex
 
+	# Logo: show texture if available, otherwise fallback title
 	var logo_tex := UiTheme.tex(UiTheme.TEX_LOGO)
 	if logo_tex != null:
-		var logo := TextureRect.new()
 		logo.texture = logo_tex
-		logo.set_anchors_preset(Control.PRESET_TOP_WIDE)
-		logo.offset_top = 24
-		logo.custom_minimum_size = Vector2(0, 330)
-		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(logo)
+		title_fallback.visible = false
 	else:
-		var title := UiTheme.title_label("STONEBOUND", 84)
-		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		title.set_anchors_preset(Control.PRESET_TOP_WIDE)
-		title.offset_top = 90
-		add_child(title)
+		logo.visible = false
+		title_fallback.visible = true
 
-	var subtitle := UiTheme.title_label("Le Circuit de Petraheim", 26, UiTheme.TEXT)
-	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	subtitle.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	subtitle.offset_top = 352
-	add_child(subtitle)
+	# Style all buttons
+	for btn in [campaign_btn, free_play_btn, deck_builder_btn, guide_btn, options_btn, quit_btn]:
+		UiTheme.style_button(btn, UiTheme.PANEL_LIGHT, 24)
 
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel(Color(0, 0, 0, 0.55), 16))
-	panel.position = Vector2(760, 425)
-	panel.custom_minimum_size = Vector2(400, 0)
-	add_child(panel)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 14)
-	panel.add_child(vbox)
+	# Connect button signals
+	campaign_btn.pressed.connect(func() -> void: Game.goto("campaign"))
+	free_play_btn.pressed.connect(_show_free_setup)
+	deck_builder_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
+	guide_btn.pressed.connect(func() -> void: Game.goto("guide"))
+	options_btn.pressed.connect(func() -> void: Game.goto("settings"))
+	quit_btn.pressed.connect(func() -> void: get_tree().quit())
 
-	_menu_btn(vbox, "Campagne", func() -> void: Game.goto("campaign"))
-	_menu_btn(vbox, "Partie libre", _show_free_setup)
-	_menu_btn(vbox, "Deck builder", func() -> void: Game.goto("deck_builder"))
-	_menu_btn(vbox, "Guide du jeu", func() -> void: Game.goto("guide"))
-	_menu_btn(vbox, "Options", func() -> void: Game.goto("settings"))
-	_menu_btn(vbox, "Quitter", func() -> void: get_tree().quit())
-
+	# Campaign progress status
 	var progress := int(Game.profile.campaign_progress)
 	var status := "Progression : chapitre %d / %d" % [mini(progress + 1, 10), Db.chapters().size()] \
 			if progress < Db.chapters().size() else "Campagne terminée — Champion de Petraheim !"
-	var status_l := UiTheme.label(status, 17, UiTheme.TEXT_DIM)
-	status_l.add_theme_color_override("font_outline_color", Color.BLACK)
-	status_l.add_theme_constant_override("outline_size", 6)
-	status_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	status_l.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	status_l.offset_top = 880
-	add_child(status_l)
+	status_label.text = status
+
 	Audio.play_music("menu")
-
-
-func _menu_btn(parent: Control, text: String, action: Callable) -> void:
-	var b := Button.new()
-	b.text = text
-	b.custom_minimum_size = Vector2(0, 62)
-	UiTheme.style_button(b, UiTheme.PANEL_LIGHT, 24)
-	b.pressed.connect(action)
-	parent.add_child(b)
 
 
 func _show_free_setup() -> void:

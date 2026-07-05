@@ -16,3 +16,6 @@ Thumbs.db
 # Asset pipeline intermediates
 tools/__pycache__/
 tools/.cache/
+
+# Graphe de connaissance local (regenerable via /graphify)
+graphify-out/

@@ -1,59 +1,59 @@
 {
   "masters": [
-    {
-      "id": "kiran",
-      "name": "Kiran",
-      "guild": "flame",
-      "hp": 20,
-      "lore": "Forgeron de Petraheim au tempérament volcanique, Kiran joue comme il forge : vite, fort, et sans regarder les étincelles.",
-      "passive_id": "spell_damage_plus",
-      "passive_desc": "Ses sorts infligent +1 dégât.",
-      "power_name": "Boule de feu mineure",
-      "power_cost": 3,
-      "power_effect": [ { "op": "damage", "amount": 2, "target": "any_monster" } ],
-      "power_desc": "Inflige 2 dégâts à un monstre."
-    },
-    {
-      "id": "willow",
-      "name": "Willow",
-      "guild": "sylvan",
-      "hp": 20,
-      "lore": "Herboriste et gardienne du vieux chêne, Willow ne perd jamais : elle laisse simplement l'adversaire s'épuiser.",
-      "passive_id": "summon_hp_plus",
-      "passive_desc": "Ses monstres gagnent +1 PV max à l'invocation.",
-      "power_name": "Sève",
-      "power_cost": 3,
-      "power_effect": [ { "op": "heal", "amount": 3, "target": "ally_monster" } ],
-      "power_desc": "Soigne 3 PV à un monstre allié."
-    },
-    {
-      "id": "grim",
-      "name": "Grim",
-      "guild": "shadow",
-      "hp": 20,
-      "lore": "Fossoyeur du village et collectionneur de dettes, Grim considère chaque perte comme un investissement.",
-      "passive_id": "kill_bonus_stone",
-      "passive_desc": "+1 pierre quand il détruit un monstre ennemi.",
-      "power_name": "Pacte",
-      "power_cost": 1,
-      "power_effect": [
-        { "op": "sacrifice", "target": "ally_monster" },
-        { "op": "draw", "count": 2 }
-      ],
-      "power_desc": "Sacrifie un monstre allié, pioche 2 cartes."
-    },
-    {
-      "id": "aria",
-      "name": "Aria",
-      "guild": "light",
-      "hp": 20,
-      "lore": "Ancienne garde du temple, Aria protège d'abord et gagne ensuite. Personne ne l'a jamais vue reculer.",
-      "passive_id": "ranged_resist",
-      "passive_desc": "Subit -1 dégât des attaques à distance.",
-      "power_name": "Égide",
-      "power_cost": 2,
-      "power_effect": [ { "op": "shield", "target": "ally_monster" } ],
-      "power_desc": "Donne un Bouclier à un monstre allié."
-    }
+	{
+	  "id": "kiran",
+	  "name": "Kiran",
+	  "guild": "flame",
+	  "hp": 20,
+	  "lore": "Forgeron de Petraheim au tempérament volcanique, Kiran joue comme il forge : vite, fort, et sans regarder les étincelles.",
+	  "passive_id": "spell_damage_plus",
+	  "passive_desc": "Ses sorts infligent +1 dégât.",
+	  "power_name": "Boule de feu mineure",
+	  "power_cost": 3,
+	  "power_effect": [ { "op": "damage", "amount": 2, "target": "any_monster" } ],
+	  "power_desc": "Inflige 2 dégâts à un monstre."
+	},
+	{
+	  "id": "willow",
+	  "name": "Willow",
+	  "guild": "sylvan",
+	  "hp": 20,
+	  "lore": "Herboriste et gardienne du vieux chêne, Willow ne perd jamais : elle laisse simplement l'adversaire s'épuiser.",
+	  "passive_id": "summon_hp_plus",
+	  "passive_desc": "Ses monstres gagnent +1 PV max à l'invocation.",
+	  "power_name": "Sève",
+	  "power_cost": 3,
+	  "power_effect": [ { "op": "heal", "amount": 3, "target": "ally_monster" } ],
+	  "power_desc": "Soigne 3 PV à un monstre allié."
+	},
+	{
+	  "id": "grim",
+	  "name": "Grim",
+	  "guild": "shadow",
+	  "hp": 20,
+	  "lore": "Fossoyeur du village et collectionneur de dettes, Grim considère chaque perte comme un investissement.",
+	  "passive_id": "kill_bonus_stone",
+	  "passive_desc": "+1 pierre quand il détruit un monstre ennemi.",
+	  "power_name": "Pacte",
+	  "power_cost": 1,
+	  "power_effect": [
+		{ "op": "sacrifice", "target": "ally_monster" },
+		{ "op": "draw", "count": 2 }
+	  ],
+	  "power_desc": "Sacrifie un monstre allié, pioche 2 cartes."
+	},
+	{
+	  "id": "aria",
+	  "name": "Aria",
+	  "guild": "light",
+	  "hp": 20,
+	  "lore": "Ancienne garde du temple, Aria protège d'abord et gagne ensuite. Personne ne l'a jamais vue reculer.",
+	  "passive_id": "ranged_resist",
+	  "passive_desc": "Subit -1 dégât des attaques à distance.",
+	  "power_name": "Égide",
+	  "power_cost": 2,
+	  "power_effect": [ { "op": "shield", "target": "ally_monster" } ],
+	  "power_desc": "Donne un Bouclier à un monstre allié."
+	}
   ]
 }

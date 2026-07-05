@@ -113,10 +113,9 @@ func _build_mini() -> void:
 	add_child(vbox)
 
 	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation", 4)
+	top.add_theme_constant_override("separation", 5)
 	vbox.add_child(top)
-	var gem := _stat_chip(str(def.cost), UiTheme.ICON_STONE, UiTheme.ACCENT, w * 0.16)
-	top.add_child(gem)
+	top.add_child(_cost_disc(str(def.cost), w * 0.155))
 	var name_size := int(w * 0.092)
 	if def.display_name.length() > 12:
 		name_size = int(w * 0.072)
@@ -165,6 +164,32 @@ func _build_mini() -> void:
 	_count_label.visible = false
 	vbox.add_child(_count_label)
 	UiTheme.pass_through(self)
+
+
+## Cost gem sliced from the mockup sheet (digit baked in), golden disc fallback.
+func _cost_disc(value: String, size: float) -> Control:
+	var gem := UiTheme.tex("res://assets/sprites/ui/mockup/gem_cost_%d.png"
+			% mini(int(value), 7))
+	if gem != null:
+		var rect := TextureRect.new()
+		rect.texture = gem
+		rect.custom_minimum_size = Vector2(size, size)
+		rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		return rect
+	var disc := PanelContainer.new()
+	disc.custom_minimum_size = Vector2(size, size)
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = UiTheme.GOLD
+	sb.set_corner_radius_all(int(size / 2.0))
+	sb.border_color = Color("6b5320")
+	sb.set_border_width_all(2)
+	disc.add_theme_stylebox_override("panel", sb)
+	var l := UiTheme.title_label(value, int(size * 0.62), Color("241c08"))
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	disc.add_child(l)
+	return disc
 
 
 func _stat_chip(value: String, icon_path: String, color: Color, size: float) -> Control:
@@ -245,9 +270,10 @@ func _apply_style() -> void:
 		border = UiTheme.GOLD
 		border_w = 3
 	elif not _full:
-		border = UiTheme.guild_color(def.guild)
+		# Dark bronze frame (mockup style) — the guild shows through the art.
+		border = Color("554830")
 		border_w = 2
-	var bg := Color(0, 0, 0, 0.0) if _full else UiTheme.PANEL.darkened(0.2)
+	var bg := Color(0, 0, 0, 0.0) if _full else Color(0.09, 0.1, 0.12, 0.94)
 	if hovering and not _full:
 		bg = bg.lightened(0.07)
 	var sb := UiTheme.panel(bg, 12, border, border_w)

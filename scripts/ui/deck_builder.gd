@@ -2,84 +2,33 @@ extends Control
 ## Deck builder: browse the owned collection, assemble a legal 20-card deck,
 ## save it to the profile.
 
+@onready var filters: HBoxContainer = %Filters
+@onready var collection_grid: GridContainer = %CollectionGrid
+@onready var deck_list: VBoxContainer = %DeckList
+@onready var count_label: Label = %CountLabel
+@onready var status_label: Label = %StatusLabel
+@onready var save_btn: Button = %SaveBtn
+@onready var back_btn: Button = %BackBtn
+
 var working_deck: Array = []
 var filter_guild := -1
 
-var collection_grid: GridContainer
-var deck_list: VBoxContainer
-var count_label: Label
-var status_label: Label
-var save_btn: Button
-
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
 	working_deck = Game.profile.deck.duplicate()
 
-	var bg := ColorRect.new()
-	bg.color = UiTheme.BG
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(bg)
+	# Style buttons
+	UiTheme.style_button(save_btn, UiTheme.OK.darkened(0.25), 20)
+	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 18)
 
-	var title := UiTheme.title_label("Deck builder", 40)
-	title.position = Vector2(60, 30)
-	add_child(title)
-
-	# Guild filters
-	var filters := HBoxContainer.new()
-	filters.position = Vector2(60, 100)
-	filters.add_theme_constant_override("separation", 8)
-	add_child(filters)
+	# Build filter buttons (dynamic: depends on guild data)
 	_filter_btn(filters, "Toutes", -1)
 	for guild in GameConst.GUILD_NAMES:
 		_filter_btn(filters, GameConst.GUILD_NAMES[guild], guild)
 
-	# Collection grid
-	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(60, 160)
-	scroll.custom_minimum_size = Vector2(1180, 860)
-	add_child(scroll)
-	collection_grid = GridContainer.new()
-	collection_grid.columns = 6
-	collection_grid.add_theme_constant_override("h_separation", 10)
-	collection_grid.add_theme_constant_override("v_separation", 10)
-	scroll.add_child(collection_grid)
-
-	# Deck panel
-	var deck_panel := PanelContainer.new()
-	deck_panel.add_theme_stylebox_override("panel", UiTheme.panel(UiTheme.PANEL, 12))
-	deck_panel.position = Vector2(1300, 100)
-	deck_panel.custom_minimum_size = Vector2(560, 920)
-	add_child(deck_panel)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 8)
-	deck_panel.add_child(vbox)
-	count_label = UiTheme.label("", 26, UiTheme.GOLD)
-	vbox.add_child(count_label)
-	var deck_scroll := ScrollContainer.new()
-	deck_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	vbox.add_child(deck_scroll)
-	deck_list = VBoxContainer.new()
-	deck_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	deck_list.add_theme_constant_override("separation", 4)
-	deck_scroll.add_child(deck_list)
-	status_label = UiTheme.label("", 15, UiTheme.DANGER)
-	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(status_label)
-	save_btn = Button.new()
-	save_btn.text = "Enregistrer le deck"
-	save_btn.custom_minimum_size = Vector2(0, 54)
-	UiTheme.style_button(save_btn, UiTheme.OK.darkened(0.25), 20)
+	# Connect signals
 	save_btn.pressed.connect(_save)
-	vbox.add_child(save_btn)
-
-	var back := Button.new()
-	back.text = "← Menu"
-	back.position = Vector2(1700, 30)
-	back.custom_minimum_size = Vector2(160, 50)
-	UiTheme.style_button(back, UiTheme.PANEL_LIGHT, 18)
-	back.pressed.connect(func() -> void: Game.goto("main_menu"))
-	add_child(back)
+	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
 
 	_refresh()
 

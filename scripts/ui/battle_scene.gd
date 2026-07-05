@@ -1,11 +1,44 @@
 extends Control
-## Battle scene controller. Owns the match GameState, renders the board/hand/HUD,
-## translates clicks into Rules actions and animates the returned events.
+## Battle scene controller. The UI structure lives in battle.tscn (panels,
+## arena, buttons — see CLAUDE.md); this script only owns the match logic:
+## it renders GameState into the scene nodes, translates clicks into Rules
+## actions and animates the returned events.
 ## The human is always player 0; the AI is player 1.
 
-const CELL_PITCH := 158.0
-const BOARD_ORIGIN := Vector2(686, 84)
+const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/widgets/board_cell.tscn")
+
 const HAND_CARD_W := 176.0
+## Horizontal center of the board (hand, toasts and banners align on it).
+const BOARD_CENTER_X := 790.0
+
+# Painted-arena geometry. The board texture (board_arena.png) has a slight
+# perspective: the playfield is a trapezoid. Values are texture pixels,
+# measured once on the 1432x1050 image; cells are laid over the painted tiles.
+const ARENA_POS := Vector2(340, 50)
+const ARENA_SCALE := 660.0 / 1050.0
+const GRID_SEPS_Y: Array[float] = [145.0, 340.0, 540.0, 745.0, 955.0]
+const GRID_XL_TOP := 270.0
+const GRID_XL_BOT := 190.0
+const GRID_XR_TOP := 1165.0
+const GRID_XR_BOT := 1245.0
+
+@onready var background: TextureRect = %Background
+@onready var bg_fallback: ColorRect = %BackgroundFallback
+@onready var board_area: Control = %BoardArea
+@onready var hand_area: Control = %HandArea
+@onready var fx_layer: Control = %FxLayer
+@onready var log_box: RichTextLabel = %LogText
+@onready var detail_holder: VBoxContainer = %DetailHolder
+@onready var toast_label: Label = %ToastLabel
+@onready var turn_label: Label = %TurnLabel
+@onready var turn_info: Label = %TurnInfo
+@onready var end_turn_btn: Button = %EndTurnBtn
+@onready var power_btn: Button = %PowerBtn
+@onready var evolve_btn: Button = %EvolveBtn
+@onready var legend_panel: PanelContainer = %LegendPanel
+@onready var legend_box: VBoxContainer = %LegendBox
+@onready var enemy_panel: PanelContainer = %EnemyPanel
+@onready var player_panel: PanelContainer = %PlayerPanel
 
 var state: GameState
 var ai: AiPlayer
@@ -26,23 +59,9 @@ var hand_widgets: Array[CardWidget] = []
 ## Monsters destroyed [by player 0, by player 1] (end-screen stats).
 var kills := [0, 0]
 
-var board_area: Control
-var hand_area: Control
-var fx_layer: Control
-var log_box: RichTextLabel
-var turn_label: Label
-var end_turn_btn: Button
-var power_btn: Button
-var evolve_btn: Button
-var detail_holder: VBoxContainer
-var enemy_panel: PanelContainer
-var player_panel: PanelContainer
 var enemy_info: Dictionary = {}
 var player_info: Dictionary = {}
 var mulligan_overlay: Control
-var toast_label: Label
-var turn_info: Label
-var legend_panel: PanelContainer
 
 
 func _ready() -> void:
@@ -56,7 +75,7 @@ func _ready() -> void:
 			"background": "arena_day",
 		}
 	autoplay = OS.get_cmdline_user_args().has("--autoplay")
-	_build_ui()
+	_init_ui()
 	_setup_match()
 	Audio.play_music("battle")
 	if autoplay:
@@ -121,7 +140,6 @@ func _setup_match() -> void:
 func _show_mulligan() -> void:
 	mulligan_overlay = _overlay()
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 16)
 	panel.add_child(vbox)
@@ -142,12 +160,13 @@ func _show_mulligan() -> void:
 	vbox.add_child(buttons)
 	var keep := Button.new()
 	keep.text = "Garder"
-	UiTheme.style_button(keep, UiTheme.OK.darkened(0.3), 22)
+	keep.custom_minimum_size = Vector2(180, 48)
 	keep.pressed.connect(_on_mulligan_choice.bind(false))
 	buttons.add_child(keep)
 	var redraw := Button.new()
 	redraw.text = "Nouvelle main"
-	UiTheme.style_button(redraw, UiTheme.PANEL_LIGHT, 22)
+	redraw.theme_type_variation = &"ButtonSecondary"
+	redraw.custom_minimum_size = Vector2(180, 48)
 	redraw.pressed.connect(_on_mulligan_choice.bind(true))
 	buttons.add_child(redraw)
 	var center := CenterContainer.new()
@@ -169,256 +188,92 @@ func _on_mulligan_choice(redraw: bool) -> void:
 	_refresh_all()
 
 
-# --- UI construction ------------------------------------------------------
+# --- UI wiring (structure lives in battle.tscn) -----------------------------
 
-func _build_ui() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	# Arena backdrop: the current chapter's scenery, darkened, with a vignette.
-	var bg := TextureRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bg.texture = UiTheme.tex(Db.background_path(
+func _init_ui() -> void:
+	# Arena backdrop: battle_config background when available.
+	var cfg_bg := UiTheme.tex(Db.background_path(
 			String(Game.battle_config.get("background", "battle_table"))))
-	if bg.texture == null:
-		bg.texture = UiTheme.tex(Db.background_path("battle_table"))
-	bg.modulate = Color(0.5, 0.5, 0.58)
-	add_child(bg)
-	if bg.texture == null:
-		var solid := ColorRect.new()
-		solid.color = UiTheme.BG
-		solid.set_anchors_preset(Control.PRESET_FULL_RECT)
-		add_child(solid)
-	_add_vignette(self, 0.55)
-	# Slow ambient dust motes drifting upward.
-	var dust := CPUParticles2D.new()
-	dust.position = Vector2(960, 1100)
-	dust.amount = 24
-	dust.lifetime = 9.0
-	dust.preprocess = 9.0
-	dust.emission_shape = CPUParticles2D.EMISSION_SHAPE_RECTANGLE
-	dust.emission_rect_extents = Vector2(960, 40)
-	dust.direction = Vector2.UP
-	dust.spread = 12.0
-	dust.gravity = Vector2.ZERO
-	dust.initial_velocity_min = 18.0
-	dust.initial_velocity_max = 55.0
-	dust.scale_amount_min = 1.0
-	dust.scale_amount_max = 2.6
-	dust.color = Color(1.0, 0.95, 0.8, 0.16)
-	add_child(dust)
+	if cfg_bg != null:
+		background.texture = cfg_bg
+	if background.texture == null:
+		bg_fallback.visible = true
 
-	board_area = Control.new()
-	board_area.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(board_area)
+	# Board cells laid over the painted arena tiles.
 	for row in GameConst.BOARD_ROWS:
 		for col in GameConst.BOARD_COLS:
 			var cell := Vector2i(col, row)
-			var widget := BoardCell.create(cell)
-			widget.position = _cell_pos(cell)
+			var widget: BoardCell = BOARD_CELL_SCENE.instantiate()
+			widget.setup(cell)
+			var rect := _cell_rect(cell)
+			widget.position = rect.position
+			widget.custom_minimum_size = rect.size
+			widget.size = rect.size
 			widget.clicked.connect(_on_cell_clicked)
 			widget.inspect_requested.connect(_on_cell_inspect)
 			board_area.add_child(widget)
 			cells[cell] = widget
-	# median line
-	var median := ColorRect.new()
-	median.color = Color(1, 1, 1, 0.15)
-	median.position = BOARD_ORIGIN + Vector2(-10, 2 * CELL_PITCH - 7)
-	median.size = Vector2(3 * CELL_PITCH + 10, 4)
-	median.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(median)
 
-	enemy_panel = _master_panel(1)
-	enemy_panel.position = Vector2(30, 84)
-	add_child(enemy_panel)
-	player_panel = _master_panel(0)
-	player_panel.position = Vector2(30, 560)
-	add_child(player_panel)
+	# Buttons.
+	end_turn_btn.pressed.connect(func() -> void: _submit({ "type": "end_turn" }))
+	power_btn.pressed.connect(_on_power_pressed)
+	evolve_btn.pressed.connect(_on_evolve_pressed)
+	%BagBtn.pressed.connect(func() -> void:
+		if state != null:
+			CardPopup.open_master(self, state.players[0].master))
+	%BookBtn.pressed.connect(func() -> void:
+		legend_panel.visible = not legend_panel.visible)
+	%GearBtn.pressed.connect(func() -> void: Game.goto("main_menu"))
 
-	# "Ce tour" : ce qu'il vous reste à jouer.
-	var ti_panel := PanelContainer.new()
-	ti_panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate(Color(1, 1, 1, 0.92)))
-	ti_panel.position = Vector2(30, 856)
-	ti_panel.custom_minimum_size = Vector2(310, 0)
-	add_child(ti_panel)
-	var ti_box := VBoxContainer.new()
-	ti_box.add_theme_constant_override("separation", 4)
-	ti_panel.add_child(ti_box)
-	var ti_title := UiTheme.title_label("Ce tour", 18)
-	ti_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	ti_box.add_child(ti_title)
-	turn_info = UiTheme.label("", 15, UiTheme.TEXT)
-	ti_box.add_child(turn_info)
-	var legend_btn := Button.new()
-	legend_btn.text = "Mots-clés  ▸"
-	UiTheme.style_button(legend_btn, UiTheme.PANEL_LIGHT, 15)
-	legend_btn.pressed.connect(func() -> void:
-		legend_panel.visible = not legend_panel.visible
-		legend_btn.text = "Mots-clés  ▾" if legend_panel.visible else "Mots-clés  ▸")
-	ti_box.add_child(legend_btn)
+	# Right-click a side panel = inspect that master.
+	for side in 2:
+		var panel: PanelContainer = player_panel if side == 0 else enemy_panel
+		panel.gui_input.connect(func(ev: InputEvent) -> void:
+			if ev is InputEventMouseButton and ev.pressed \
+					and ev.button_index == MOUSE_BUTTON_RIGHT and state != null:
+				panel.accept_event()
+				CardPopup.open_master(self, state.players[side].master))
 
-	# Repliable : rappel des mots-clés.
-	legend_panel = PanelContainer.new()
-	legend_panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
-	legend_panel.position = Vector2(360, 560)
-	legend_panel.custom_minimum_size = Vector2(430, 0)
-	legend_panel.visible = false
-	legend_panel.z_index = 20
-	add_child(legend_panel)
-	var lg_box := VBoxContainer.new()
-	lg_box.add_theme_constant_override("separation", 3)
-	legend_panel.add_child(lg_box)
-	lg_box.add_child(UiTheme.title_label("Mots-clés", 18))
+	# Side-panel node references, one dictionary per side (used by _refresh_panels).
+	enemy_info = { "portrait": %EnemyPortrait, "name": %EnemyName,
+			"master": %EnemyMaster, "hp_bar": %EnemyHpBar, "hp": %EnemyHp,
+			"stones": %EnemyStones, "hand": %EnemyHand,
+			"hand_row": %EnemyHandRow, "deck": %EnemyDeck }
+	player_info = { "portrait": %PlayerPortrait, "name": %PlayerName,
+			"master": %PlayerMaster, "hp_bar": %PlayerHpBar, "hp": %PlayerHp,
+			"stones": %PlayerStones, "hand": %PlayerHand,
+			"hand_row": %PlayerHandRow, "deck": %PlayerDeck }
+
+	# Keyword legend content (data-driven from GameText).
+	legend_box.add_child(UiTheme.title_label("Mots-clés", 18))
 	for kw in GameText.KEYWORD_NAMES:
 		var line := UiTheme.label("%s : %s." % [GameText.KEYWORD_NAMES[kw],
 				GameText.KEYWORD_DEFS.get(kw, "")], 14, UiTheme.TEXT_DIM)
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		lg_box.add_child(line)
-	lg_box.add_child(UiTheme.label(
+		legend_box.add_child(line)
+	legend_box.add_child(UiTheme.label(
 			"Mêlée : sa colonne · Distance : partout · Magie : ignore Armure/Bouclier",
 			14, UiTheme.GOLD.lightened(0.15)))
 
-	turn_label = UiTheme.label("", 26, UiTheme.GOLD)
-	turn_label.position = Vector2(760, 24)
-	turn_label.custom_minimum_size = Vector2(400, 0)
-	turn_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	add_child(turn_label)
-
-	end_turn_btn = Button.new()
-	end_turn_btn.text = "Fin du tour"
-	UiTheme.style_button(end_turn_btn, UiTheme.OK.darkened(0.25), 24)
-	end_turn_btn.position = Vector2(1620, 480)
-	end_turn_btn.custom_minimum_size = Vector2(240, 60)
-	end_turn_btn.pressed.connect(func() -> void: _submit({ "type": "end_turn" }))
-	add_child(end_turn_btn)
-
-	var log_panel := PanelContainer.new()
-	log_panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate(Color(1, 1, 1, 0.92)))
-	log_panel.position = Vector2(1560, 84)
-	log_panel.custom_minimum_size = Vector2(330, 360)
-	add_child(log_panel)
-	var log_vbox := VBoxContainer.new()
-	log_vbox.add_theme_constant_override("separation", 4)
-	log_panel.add_child(log_vbox)
-	var log_title := UiTheme.title_label("Journal", 18, UiTheme.GOLD)
-	log_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	log_vbox.add_child(log_title)
-	log_box = RichTextLabel.new()
-	log_box.scroll_following = true
-	log_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	log_box.add_theme_font_size_override("normal_font_size", 14)
-	log_box.add_theme_color_override("default_color", UiTheme.TEXT_DIM)
-	log_vbox.add_child(log_box)
-
-	detail_holder = VBoxContainer.new()
-	detail_holder.position = Vector2(1620, 560)
-	detail_holder.add_theme_constant_override("separation", 8)
-	add_child(detail_holder)
-
-	evolve_btn = Button.new()
-	evolve_btn.text = "Évoluer"
-	UiTheme.style_button(evolve_btn, UiTheme.GOLD.darkened(0.45), 20)
-	evolve_btn.visible = false
-	evolve_btn.pressed.connect(_on_evolve_pressed)
-	add_child(evolve_btn)
-
-	hand_area = Control.new()
-	hand_area.position = Vector2(400, 790)
-	hand_area.size = Vector2(1120, 280)
-	add_child(hand_area)
-
-	fx_layer = Control.new()
-	fx_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	fx_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(fx_layer)
-
-	toast_label = UiTheme.label("", 22, Color("ffd2c0"))
-	toast_label.position = Vector2(660, 730)
-	toast_label.custom_minimum_size = Vector2(600, 0)
-	toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	toast_label.modulate.a = 0.0
-	add_child(toast_label)
+	# Fx above everything.
+	move_child(fx_layer, -1)
 
 
-func _master_panel(side: int) -> PanelContainer:
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
-	panel.custom_minimum_size = Vector2(310, 0)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 6)
-	panel.add_child(vbox)
-	var top := HBoxContainer.new()
-	top.add_theme_constant_override("separation", 10)
-	vbox.add_child(top)
-	panel.gui_input.connect(func(ev: InputEvent) -> void:
-		if ev is InputEventMouseButton and ev.pressed \
-				and ev.button_index == MOUSE_BUTTON_RIGHT and state != null:
-			panel.accept_event()
-			CardPopup.open_master(self, state.players[side].master))
-	var pwrap := Control.new()
-	pwrap.custom_minimum_size = Vector2(76, 76)
-	top.add_child(pwrap)
-	var portrait := TextureRect.new()
-	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	portrait.set_anchors_preset(Control.PRESET_FULL_RECT)
-	portrait.offset_left = 6
-	portrait.offset_top = 6
-	portrait.offset_right = -6
-	portrait.offset_bottom = -6
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	pwrap.add_child(portrait)
-	var ring_tex := UiTheme.tex(UiTheme.TEX_PORTRAIT_RING)
-	if ring_tex != null:
-		var ring := TextureRect.new()
-		ring.texture = ring_tex
-		ring.set_anchors_preset(Control.PRESET_FULL_RECT)
-		ring.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		ring.stretch_mode = TextureRect.STRETCH_SCALE
-		pwrap.add_child(ring)
-	var names := VBoxContainer.new()
-	top.add_child(names)
-	var name_l := UiTheme.title_label("", 20, UiTheme.GOLD)
-	names.add_child(name_l)
-	var master_l := UiTheme.label("", 15, UiTheme.TEXT_DIM)
-	names.add_child(master_l)
-	var hp_bar := ProgressBar.new()
-	hp_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	hp_bar.custom_minimum_size = Vector2(0, 22)
-	hp_bar.show_percentage = false
-	var fill := StyleBoxFlat.new()
-	fill.bg_color = UiTheme.DANGER if side == 1 else UiTheme.OK
-	fill.set_corner_radius_all(6)
-	var back := StyleBoxFlat.new()
-	back.bg_color = Color(0, 0, 0, 0.6)
-	back.set_corner_radius_all(6)
-	hp_bar.add_theme_stylebox_override("fill", fill)
-	hp_bar.add_theme_stylebox_override("background", back)
-	vbox.add_child(hp_bar)
-	var hp_l := UiTheme.label("", 16)
-	vbox.add_child(hp_l)
-	var res_l := UiTheme.label("", 16, UiTheme.ACCENT)
-	vbox.add_child(res_l)
-	var info := { "portrait": portrait, "name": name_l, "master": master_l,
-			"hp_bar": hp_bar, "hp": hp_l, "res": res_l }
-	if side == 0:
-		power_btn = Button.new()
-		UiTheme.style_button(power_btn, UiTheme.ACCENT.darkened(0.45), 18)
-		power_btn.pressed.connect(_on_power_pressed)
-		vbox.add_child(power_btn)
-		player_info = info
-	else:
-		enemy_info = info
-	return panel
-
-
-func _cell_pos(cell: Vector2i) -> Vector2:
+## Screen rectangle of one board cell over the painted (slightly trapezoid) grid.
+func _cell_rect(cell: Vector2i) -> Rect2:
 	# Enemy rows on top (board row 3 first), player rows at the bottom.
 	var screen_row := 3 - cell.y
-	return BOARD_ORIGIN + Vector2(cell.x * CELL_PITCH, screen_row * CELL_PITCH)
+	var y0: float = GRID_SEPS_Y[screen_row]
+	var y1: float = GRID_SEPS_Y[screen_row + 1]
+	var t := ((y0 + y1) / 2.0 - GRID_SEPS_Y[0]) / (GRID_SEPS_Y[4] - GRID_SEPS_Y[0])
+	var xl := lerpf(GRID_XL_TOP, GRID_XL_BOT, t)
+	var xr := lerpf(GRID_XR_TOP, GRID_XR_BOT, t)
+	var pitch := (xr - xl) / 3.0
+	return Rect2(ARENA_POS + Vector2(xl + cell.x * pitch, y0) * ARENA_SCALE,
+			Vector2(pitch, y1 - y0) * ARENA_SCALE)
 
 
-## Radial darkness toward the screen edges (depth + focus).
+## Radial darkness for full-screen overlays (game over).
 func _add_vignette(parent: Control, strength: float) -> void:
 	var grad := Gradient.new()
 	grad.set_color(0, Color(0, 0, 0, 0))
@@ -502,6 +357,7 @@ func _refresh_panels() -> void:
 	var cfg := Game.battle_config
 	var names := [Db.campaign.get("hero_name", "Vous"), String(cfg.opponent_name)]
 	var portraits := [Db.portrait_path("milo"), Db.portrait_path(String(cfg.opponent_portrait))]
+	var back_tex := UiTheme.tex("res://assets/sprites/ui/card_back.png")
 	for side in 2:
 		var info: Dictionary = player_info if side == 0 else enemy_info
 		var p := state.players[side]
@@ -510,8 +366,22 @@ func _refresh_panels() -> void:
 		info.master.text = "Maître : %s" % p.master.display_name
 		info.hp_bar.max_value = p.master.hp
 		info.hp_bar.value = maxi(p.master_hp, 0)
-		info.hp.text = "PV %d / %d" % [maxi(p.master_hp, 0), p.master.hp]
-		info.res.text = "Pierres %d   Deck %d   Main %d" % [p.stones, p.deck.size(), p.hand.size()]
+		info.hp.text = "%d / %d" % [maxi(p.master_hp, 0), p.master.hp]
+		info.stones.text = "Pierres  %d / %d" % [p.stones, GameConst.MAX_STONES]
+		info.hand.text = "Main  %d carte%s" % [p.hand.size(), "s" if p.hand.size() > 1 else ""]
+		info.deck.text = "Deck  %d cartes" % p.deck.size()
+		var row: HBoxContainer = info.hand_row
+		for child in row.get_children():
+			child.queue_free()
+		if back_tex != null:
+			for i in mini(p.hand.size(), GameConst.HAND_LIMIT):
+				var back := TextureRect.new()
+				back.texture = back_tex
+				back.custom_minimum_size = Vector2(26, 38)
+				back.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				back.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
+				back.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				row.add_child(back)
 	var p0 := state.players[0]
 	power_btn.text = "%s (%d)" % [p0.master.power_name, p0.master.power_cost]
 	power_btn.tooltip_text = "%s\nPassif : %s" % [p0.master.power_desc, p0.master.passive_desc]
@@ -532,8 +402,8 @@ func _refresh_buttons() -> void:
 	turn_label.text = ""
 	if state.phase == GameState.Phase.MAIN:
 		turn_label.text = "Tour %d — %s" % [state.player_turn_count(),
-				"à vous de jouer" if state.current == 0 else "l'adversaire réfléchit…"]
-	# « Ce tour » : actions restantes du joueur
+				"Votre tour" if state.current == 0 else "Tour adverse…"]
+	# « Actions restantes » : ce qu'il vous reste à jouer.
 	if turn_info != null:
 		var actable := 0
 		for cell in state.board.monster_cells_of(0):
@@ -544,10 +414,10 @@ func _refresh_buttons() -> void:
 			var d := state.card(id)
 			if d != null and d.cost <= p0.stones:
 				playable += 1
-		turn_info.text = "Monstres pouvant agir : %d\nCartes jouables : %d\nPouvoir : %s\nDéplacement du Maître : %s" % [
+		turn_info.text = "• Monstres pouvant agir : %d\n• Cartes jouables : %d\n• Pouvoir Maître : %s\n• Déplacer Maître : %s" % [
 			actable, playable,
-			"utilisé ✔" if p0.power_used else "disponible",
-			"fait ✔" if p0.master_moved else "disponible"]
+			"utilisé ✔" if p0.power_used else "1/1",
+			"fait ✔" if p0.master_moved else "1/1"]
 	_refresh_evolve_button()
 
 
@@ -561,7 +431,7 @@ func _refresh_evolve_button() -> void:
 		var evo := state.card(m.def.evolves_to)
 		evolve_btn.text = "Évoluer en %s (%d pierres)" % [evo.display_name, m.def.evolve_cost]
 		evolve_btn.visible = true
-		evolve_btn.position = _cell_pos(sel_cell) + Vector2(-40, -44)
+		evolve_btn.position = _cell_rect(sel_cell).position + Vector2(-30, -44)
 
 
 func _clear_highlights() -> void:
@@ -791,7 +661,7 @@ func _ai_turn() -> void:
 # --- Event animation --------------------------------------------------------
 
 func _cell_center(cell: Vector2i) -> Vector2:
-	return _cell_pos(cell) + Vector2(BoardCell.SIZE, BoardCell.SIZE) / 2.0
+	return _cell_rect(cell).get_center()
 
 
 func _play_events(events: Array) -> void:
@@ -799,11 +669,12 @@ func _play_events(events: Array) -> void:
 		match String(ev.e):
 			"summon":
 				Audio.play_sfx("summon")
-				_log("%s invoque %s." % [_pname(ev.player), _cname(ev.card_id)])
+				_log("%s invoque %s." % [_pname(ev.player), _cname(ev.card_id)],
+						_side_color(ev.player))
 				for cell in cells:
 					cells[cell].render(state)
 				_pop(cells[ev.cell])
-				BattleFx.burst(fx_layer, _cell_center(ev.cell) + Vector2(0, 46),
+				BattleFx.burst(fx_layer, _cell_center(ev.cell) + Vector2(0, 40),
 						Color(0.75, 0.7, 0.6), 12, 130.0, 220.0, 0.4)
 				BattleFx.ring(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 70.0, 0.35)
 				await _wait(0.25)
@@ -815,8 +686,10 @@ func _play_events(events: Array) -> void:
 				if attacker != null:
 					match attacker.def.attack_type:
 						GameConst.AttackType.MELEE:
-							BattleFx.lunge(fx_layer, from_c, to_c,
-									UiTheme.tex(Db.card_art_path(attacker.def.id)))
+							var lunge_tex := BoardCell.unit_tex(String(attacker.def.id))
+							if lunge_tex == null:
+								lunge_tex = UiTheme.tex(Db.card_art_path(attacker.def.id))
+							BattleFx.lunge(fx_layer, from_c, to_c, lunge_tex)
 							await _wait(0.14)  # impact lands mid-lunge
 						GameConst.AttackType.RANGED:
 							BattleFx.projectile(fx_layer, from_c, to_c, Color("ffd27d"))
@@ -857,9 +730,11 @@ func _play_events(events: Array) -> void:
 			"death":
 				Audio.play_sfx("death")
 				kills[1 - int(ev.owner)] += 1
-				_log("%s est détruit." % _cname(ev.card_id))
-				BattleFx.death(fx_layer, _cell_center(ev.cell),
-						UiTheme.tex(Db.card_art_path(StringName(String(ev.card_id)))))
+				_log("%s est détruit." % _cname(ev.card_id), Color("c9832f"))
+				var death_tex := BoardCell.unit_tex(String(ev.card_id))
+				if death_tex == null:
+					death_tex = UiTheme.tex(Db.card_art_path(StringName(String(ev.card_id))))
+				BattleFx.death(fx_layer, _cell_center(ev.cell), death_tex)
 				await _wait(0.15)
 				for cell in cells:
 					cells[cell].render(state)
@@ -885,16 +760,18 @@ func _play_events(events: Array) -> void:
 					BattleFx.ring(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 100.0, 0.5)
 					BattleFx.sparkles(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 20)
 					_float_text(ev.cell, "NIVEAU %d !" % int(ev.level), UiTheme.GOLD, 26)
-					_log("%s passe niveau %d !" % [_cell_cname(ev.cell), int(ev.level)])
+					_log("%s passe niveau %d !" % [_cell_cname(ev.cell), int(ev.level)],
+							UiTheme.GOLD)
 					for cell in cells:
 						cells[cell].render(state)
 					_pop(cells[ev.cell])
 					await _wait(0.4)
 			"evolve":
 				Audio.play_sfx("evolve")
-				_log("%s évolue en %s !" % [_cname(ev.from_id), _cname(ev.to_id)])
+				_log("%s évolue en %s !" % [_cname(ev.from_id), _cname(ev.to_id)],
+						UiTheme.GOLD)
 				BattleFx.flash_cell(fx_layer, _cell_center(ev.cell), Color(1, 1, 1, 0.9),
-						Vector2(148, 148), 0.5)
+						cells[ev.cell].size, 0.5)
 				BattleFx.ring(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 130.0, 0.55)
 				BattleFx.sparkles(fx_layer, _cell_center(ev.cell), UiTheme.GOLD, 26)
 				await _wait(0.25)
@@ -905,14 +782,15 @@ func _play_events(events: Array) -> void:
 				await _wait(0.45)
 			"cast":
 				Audio.play_sfx("cast")
-				_log("%s lance %s." % [_pname(ev.player), _cname(ev.card_id)])
+				_log("%s lance %s." % [_pname(ev.player), _cname(ev.card_id)],
+						_side_color(ev.player))
 				var target = ev.get("target")
 				if target is Vector2i:
 					BattleFx.sparkles(fx_layer, _cell_center(target), Color("c09aff"), 18)
 				await _show_spell_preview(ev.card_id)
 			"power":
 				Audio.play_sfx("cast")
-				_log("%s utilise son pouvoir." % _pname(ev.player))
+				_log("%s utilise son pouvoir." % _pname(ev.player), _side_color(ev.player))
 				var ptarget = ev.get("target")
 				if ptarget is Vector2i:
 					BattleFx.sparkles(fx_layer, _cell_center(ptarget), UiTheme.ACCENT, 18)
@@ -986,7 +864,7 @@ func _float_text(cell: Vector2i, text: String, color: Color, size: int = 22) -> 
 	var l := UiTheme.label(text, size, color)
 	l.add_theme_color_override("font_outline_color", Color.BLACK)
 	l.add_theme_constant_override("outline_size", 10)
-	l.position = _cell_pos(cell) + Vector2(24, 42)
+	l.position = _cell_center(cell) + Vector2(-40, -18)
 	l.pivot_offset = Vector2(50, 12)
 	l.scale = Vector2(1.7, 1.7)
 	fx_layer.add_child(l)
@@ -1003,7 +881,7 @@ func _show_spell_preview(card_id) -> void:
 	if def == null:
 		return
 	var w := CardWidget.create(def, 220)
-	w.position = Vector2(850, 300)
+	w.position = Vector2(680, 240)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	fx_layer.add_child(w)
 	UiTheme.pass_through(w)
@@ -1065,8 +943,15 @@ func _clear_detail() -> void:
 		child.queue_free()
 
 
-func _log(text: String) -> void:
-	log_box.append_text(text + "\n")
+## Colored battle-log line. Default: dim; pass a side (0/1) tinted color or
+## a semantic color (gold for level-ups, etc.) from the call site.
+func _log(text: String, color: Color = UiTheme.TEXT_DIM) -> void:
+	log_box.append_text("[color=#%s]%s[/color]\n" % [color.to_html(false), text])
+
+
+## Log color for actions of one side: green for the player, red for the enemy.
+func _side_color(player) -> Color:
+	return Color("9fd18a") if int(player) == 0 else Color("e0938a")
 
 
 func _pname(player) -> String:
@@ -1196,25 +1081,26 @@ func _show_game_over() -> void:
 	var is_campaign: bool = String(Game.battle_config.get("mode", "free")) == "campaign"
 	if is_campaign:
 		if won:
-			_add_btn(buttons, "Continuer", UiTheme.OK.darkened(0.25), func() -> void:
+			_add_btn(buttons, "Continuer", false, func() -> void:
 				Game.dialogue_phase = "post"
 				Game.goto("dialogue"))
 		else:
-			_add_btn(buttons, "Réessayer", UiTheme.OK.darkened(0.25), func() -> void:
+			_add_btn(buttons, "Réessayer", false, func() -> void:
 				Game.goto("battle"))
-			_add_btn(buttons, "Retour à la carte", UiTheme.PANEL_LIGHT, func() -> void:
+			_add_btn(buttons, "Retour à la carte", true, func() -> void:
 				Game.goto("campaign"))
 	else:
-		_add_btn(buttons, "Rejouer", UiTheme.OK.darkened(0.25), func() -> void:
+		_add_btn(buttons, "Rejouer", false, func() -> void:
 			Game.goto("battle"))
-		_add_btn(buttons, "Menu principal", UiTheme.PANEL_LIGHT, func() -> void:
+		_add_btn(buttons, "Menu principal", true, func() -> void:
 			Game.goto("main_menu"))
 
 
-func _add_btn(parent: Control, text: String, color: Color, action: Callable) -> void:
+func _add_btn(parent: Control, text: String, secondary: bool, action: Callable) -> void:
 	var b := Button.new()
 	b.text = text
 	b.custom_minimum_size = Vector2(220, 54)
-	UiTheme.style_button(b, color, 20)
+	if secondary:
+		b.theme_type_variation = &"ButtonSecondary"
 	b.pressed.connect(action)
 	parent.add_child(b)

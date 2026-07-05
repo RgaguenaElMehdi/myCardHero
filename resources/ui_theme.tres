@@ -1,0 +1,126 @@
+[gd_resource type="Theme" load_steps=13 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/mockup/panel_stone.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/mockup/btn_primary.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/mockup/btn_secondary.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/mockup/btn_disabled.png" id="5"]
+
+[sub_resource type="StyleBoxTexture" id="panel_stone"]
+texture = ExtResource("2")
+texture_margin_left = 14.0
+texture_margin_top = 14.0
+texture_margin_right = 14.0
+texture_margin_bottom = 14.0
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxTexture" id="btn_normal"]
+texture = ExtResource("3")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="btn_hover"]
+texture = ExtResource("3")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+modulate_color = Color(1.18, 1.18, 1.18, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_pressed"]
+texture = ExtResource("3")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+modulate_color = Color(0.78, 0.78, 0.78, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn_disabled"]
+texture = ExtResource("5")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="btn2_normal"]
+texture = ExtResource("4")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxTexture" id="btn2_hover"]
+texture = ExtResource("4")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+modulate_color = Color(1.18, 1.18, 1.18, 1)
+
+[sub_resource type="StyleBoxTexture" id="btn2_pressed"]
+texture = ExtResource("4")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+modulate_color = Color(0.78, 0.78, 0.78, 1)
+
+[resource]
+default_font = ExtResource("1")
+default_font_size = 18
+
+Button/colors/font_color = Color(0.91, 0.894, 0.847, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0.8, 0.78, 0.72, 1)
+Button/colors/font_disabled_color = Color(0.55, 0.53, 0.48, 1)
+Button/colors/font_outline_color = Color(0, 0, 0, 0.7)
+Button/constants/outline_size = 4
+Button/font_sizes/font_size = 20
+Button/styles/normal = SubResource("btn_normal")
+Button/styles/hover = SubResource("btn_hover")
+Button/styles/pressed = SubResource("btn_pressed")
+Button/styles/disabled = SubResource("btn_disabled")
+
+ButtonSecondary/base_type = &"Button"
+ButtonSecondary/styles/normal = SubResource("btn2_normal")
+ButtonSecondary/styles/hover = SubResource("btn2_hover")
+ButtonSecondary/styles/pressed = SubResource("btn2_pressed")
+ButtonSecondary/styles/disabled = SubResource("btn_disabled")
+
+PanelContainer/styles/panel = SubResource("panel_stone")
+
+Label/colors/font_color = Color(0.91, 0.894, 0.847, 1)
+Label/font_sizes/font_size = 18

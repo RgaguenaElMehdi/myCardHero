@@ -1,356 +1,356 @@
 {
   "cards": [
-    {
-      "id": "flame_imp", "name": "Diablotin", "guild": "flame", "kind": "monster", "cost": 1,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 2 },
-        { "xp": 2, "atk": 3, "hp": 3 },
-        { "xp": 5, "atk": 4, "hp": 4 }
-      ],
-      "evolves_to": "flame_fiend", "evolve_cost": 2,
-      "flavor": "Petit, cornu, et déjà pyromane."
-    },
-    {
-      "id": "flame_fiend", "name": "Démon des braises", "guild": "flame", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "melee",
-      "levels": [ { "xp": 0, "atk": 5, "hp": 6 } ],
-      "keywords": { "haste": true },
-      "flavor": "Le diablotin a bien grandi. Courez."
-    },
-    {
-      "id": "ember_fox", "name": "Renard de cendre", "guild": "flame", "kind": "monster", "cost": 2,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 3 },
-        { "xp": 3, "atk": 3, "hp": 4 }
-      ],
-      "keywords": { "haste": true },
-      "flavor": "Il laisse des empreintes fumantes."
-    },
-    {
-      "id": "fire_archer", "name": "Archère ardente", "guild": "flame", "kind": "monster", "cost": 3,
-      "attack_type": "ranged",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 3 },
-        { "xp": 2, "atk": 3, "hp": 4 },
-        { "xp": 6, "atk": 4, "hp": 5 }
-      ],
-      "flavor": "Chaque flèche est une comète miniature."
-    },
-    {
-      "id": "salamander", "name": "Salamandre", "guild": "flame", "kind": "monster", "cost": 3,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 5 },
-        { "xp": 3, "atk": 3, "hp": 6 }
-      ],
-      "keywords": { "riposte": 1 },
-      "flavor": "La toucher, c'est déjà se brûler."
-    },
-    {
-      "id": "lava_golem", "name": "Golem de lave", "guild": "flame", "kind": "monster", "cost": 4,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 3, "hp": 6 },
-        { "xp": 3, "atk": 4, "hp": 8 }
-      ],
-      "keywords": { "armor": 1 },
-      "flavor": "Une montagne qui a décidé de marcher."
-    },
-    {
-      "id": "phoenix", "name": "Phénix", "guild": "flame", "kind": "monster", "cost": 6,
-      "attack_type": "magic",
-      "levels": [
-        { "xp": 0, "atk": 3, "hp": 4 },
-        { "xp": 3, "atk": 4, "hp": 5 }
-      ],
-      "keywords": { "flying": true },
-      "evolves_to": "solar_phoenix", "evolve_cost": 3,
-      "flavor": "Sa mort n'est qu'une pause."
-    },
-    {
-      "id": "solar_phoenix", "name": "Phénix solaire", "guild": "flame", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "magic",
-      "levels": [ { "xp": 0, "atk": 5, "hp": 6 } ],
-      "keywords": { "flying": true, "regen": 2 },
-      "flavor": "Un deuxième soleil, en plus petit et plus fâché."
-    },
-    {
-      "id": "sprout", "name": "Germelin", "guild": "sylvan", "kind": "monster", "cost": 1,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 1, "hp": 3 },
-        { "xp": 2, "atk": 2, "hp": 4 },
-        { "xp": 5, "atk": 3, "hp": 6 }
-      ],
-      "keywords": { "regen": 1 },
-      "evolves_to": "thorn_beast", "evolve_cost": 2,
-      "flavor": "Arrosez-le et reculez."
-    },
-    {
-      "id": "thorn_beast", "name": "Bête d'épines", "guild": "sylvan", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "melee",
-      "levels": [ { "xp": 0, "atk": 4, "hp": 6 } ],
-      "keywords": { "riposte": 2 },
-      "flavor": "Chaque ronce est un avertissement."
-    },
-    {
-      "id": "forest_wolf", "name": "Loup sylvestre", "guild": "sylvan", "kind": "monster", "cost": 2,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 3, "hp": 2 },
-        { "xp": 3, "atk": 4, "hp": 3 }
-      ],
-      "flavor": "La forêt entière est sa meute."
-    },
-    {
-      "id": "moss_turtle", "name": "Tortue de mousse", "guild": "sylvan", "kind": "monster", "cost": 2,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 1, "hp": 5 },
-        { "xp": 4, "atk": 2, "hp": 7 }
-      ],
-      "keywords": { "armor": 1 },
-      "flavor": "Elle gagne tous ses combats en attendant."
-    },
-    {
-      "id": "druid", "name": "Druidesse", "guild": "sylvan", "kind": "monster", "cost": 3,
-      "attack_type": "magic",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 4 },
-        { "xp": 3, "atk": 3, "hp": 5 }
-      ],
-      "flavor": "Elle murmure, la forêt répond."
-    },
-    {
-      "id": "sylph", "name": "Sylphe", "guild": "sylvan", "kind": "monster", "cost": 3,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 3 },
-        { "xp": 2, "atk": 3, "hp": 4 },
-        { "xp": 5, "atk": 4, "hp": 5 }
-      ],
-      "keywords": { "flying": true },
-      "evolves_to": "gale_spirit", "evolve_cost": 2,
-      "flavor": "Une brise avec une opinion."
-    },
-    {
-      "id": "gale_spirit", "name": "Esprit des rafales", "guild": "sylvan", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "melee",
-      "levels": [ { "xp": 0, "atk": 5, "hp": 5 } ],
-      "keywords": { "flying": true, "haste": true },
-      "flavor": "L'ouragan a appris la précision."
-    },
-    {
-      "id": "treant", "name": "Tréant", "guild": "sylvan", "kind": "monster", "cost": 5,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 3, "hp": 7 },
-        { "xp": 4, "atk": 4, "hp": 9 }
-      ],
-      "keywords": { "armor": 1, "regen": 1 },
-      "flavor": "Il a vu naître le village. Il le défendra."
-    },
-    {
-      "id": "shade", "name": "Ombrelin", "guild": "shadow", "kind": "monster", "cost": 1,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 1 },
-        { "xp": 2, "atk": 3, "hp": 2 },
-        { "xp": 4, "atk": 4, "hp": 3 }
-      ],
-      "evolves_to": "nightmare", "evolve_cost": 2,
-      "flavor": "Il vit dans le coin de votre œil."
-    },
-    {
-      "id": "nightmare", "name": "Cauchemar", "guild": "shadow", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "melee",
-      "levels": [ { "xp": 0, "atk": 5, "hp": 4 } ],
-      "keywords": { "flying": true },
-      "flavor": "Il ne disparaît pas au réveil."
-    },
-    {
-      "id": "gloom_rat", "name": "Rat des ténèbres", "guild": "shadow", "kind": "monster", "cost": 1,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 1, "hp": 2 },
-        { "xp": 2, "atk": 2, "hp": 3 }
-      ],
-      "keywords": { "haste": true },
-      "flavor": "Toujours pressé d'apporter de mauvaises nouvelles."
-    },
-    {
-      "id": "bat_swarm", "name": "Nuée de chauves-souris", "guild": "shadow", "kind": "monster", "cost": 2,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 2 },
-        { "xp": 3, "atk": 3, "hp": 3 }
-      ],
-      "keywords": { "flying": true },
-      "flavor": "Un nuage avec des dents."
-    },
-    {
-      "id": "cultist", "name": "Cultiste", "guild": "shadow", "kind": "monster", "cost": 2,
-      "attack_type": "ranged",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 2 },
-        { "xp": 3, "atk": 3, "hp": 3 }
-      ],
-      "flavor": "Son étoile préférée n'existe pas sur les cartes."
-    },
-    {
-      "id": "wraith", "name": "Spectre", "guild": "shadow", "kind": "monster", "cost": 4,
-      "attack_type": "magic",
-      "levels": [
-        { "xp": 0, "atk": 3, "hp": 3 },
-        { "xp": 4, "atk": 4, "hp": 4 }
-      ],
-      "keywords": { "flying": true },
-      "flavor": "Le froid entre dans la pièce avant lui."
-    },
-    {
-      "id": "bone_knight", "name": "Chevalier d'os", "guild": "shadow", "kind": "monster", "cost": 4,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 3, "hp": 5 },
-        { "xp": 3, "atk": 4, "hp": 6 }
-      ],
-      "keywords": { "armor": 1 },
-      "evolves_to": "dread_lord", "evolve_cost": 3,
-      "flavor": "Son serment a survécu à sa chair."
-    },
-    {
-      "id": "dread_lord", "name": "Seigneur d'effroi", "guild": "shadow", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "melee",
-      "levels": [ { "xp": 0, "atk": 5, "hp": 8 } ],
-      "keywords": { "armor": 1, "riposte": 2 },
-      "flavor": "Les armées se rendent avant qu'il ne dégaine."
-    },
-    {
-      "id": "squire", "name": "Écuyer", "guild": "light", "kind": "monster", "cost": 1,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 1, "hp": 3 },
-        { "xp": 2, "atk": 2, "hp": 4 },
-        { "xp": 5, "atk": 3, "hp": 5 }
-      ],
-      "keywords": { "shield": true },
-      "evolves_to": "paladin", "evolve_cost": 2,
-      "flavor": "Un jour, dit-il, il aura une vraie épée."
-    },
-    {
-      "id": "paladin", "name": "Paladine", "guild": "light", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "melee",
-      "levels": [ { "xp": 0, "atk": 4, "hp": 6 } ],
-      "keywords": { "shield": true, "armor": 1 },
-      "flavor": "Le jour s'est levé et a pris les armes."
-    },
-    {
-      "id": "lantern_sprite", "name": "Esprit-lanterne", "guild": "light", "kind": "monster", "cost": 2,
-      "attack_type": "magic",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 2 },
-        { "xp": 3, "atk": 3, "hp": 3 }
-      ],
-      "keywords": { "flying": true },
-      "flavor": "Elle éclaire même les mauvaises idées."
-    },
-    {
-      "id": "temple_archer", "name": "Archer du temple", "guild": "light", "kind": "monster", "cost": 2,
-      "attack_type": "ranged",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 3 },
-        { "xp": 3, "atk": 3, "hp": 4 }
-      ],
-      "flavor": "Il ne rate jamais. Le temple l'interdit."
-    },
-    {
-      "id": "shield_bearer", "name": "Porte-bouclier", "guild": "light", "kind": "monster", "cost": 3,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 1, "hp": 6 },
-        { "xp": 4, "atk": 2, "hp": 8 }
-      ],
-      "keywords": { "armor": 1, "shield": true },
-      "flavor": "Son bouclier a un nom. Pas lui."
-    },
-    {
-      "id": "cleric", "name": "Clerc", "guild": "light", "kind": "monster", "cost": 3,
-      "attack_type": "ranged",
-      "levels": [
-        { "xp": 0, "atk": 2, "hp": 4 },
-        { "xp": 3, "atk": 3, "hp": 5 }
-      ],
-      "keywords": { "regen": 1 },
-      "flavor": "Ses prières ont un excellent taux de réponse."
-    },
-    {
-      "id": "archangel", "name": "Archange", "guild": "light", "kind": "monster", "cost": 6,
-      "attack_type": "melee",
-      "levels": [
-        { "xp": 0, "atk": 4, "hp": 5 },
-        { "xp": 4, "atk": 5, "hp": 7 }
-      ],
-      "keywords": { "flying": true, "shield": true },
-      "evolves_to": "seraph", "evolve_cost": 3,
-      "flavor": "Sa patience est infinie. Presque."
-    },
-    {
-      "id": "seraph", "name": "Séraphin", "guild": "light", "kind": "monster",
-      "cost": 0, "token": true, "attack_type": "melee",
-      "levels": [ { "xp": 0, "atk": 6, "hp": 8 } ],
-      "keywords": { "flying": true, "shield": true, "haste": true },
-      "flavor": "Six ailes, zéro négociation."
-    },
-    {
-      "id": "fireball", "name": "Boule de feu", "guild": "flame", "kind": "spell", "cost": 2,
-      "effect": [ { "op": "damage", "amount": 3, "target": "enemy_monster" } ],
-      "flavor": "Le classique. Indémodable. Inflammable."
-    },
-    {
-      "id": "inferno", "name": "Fournaise", "guild": "flame", "kind": "spell", "cost": 4,
-      "effect": [ { "op": "damage_all_enemies", "amount": 2 } ],
-      "flavor": "Pourquoi choisir une cible ?"
-    },
-    {
-      "id": "rejuvenate", "name": "Régénérescence", "guild": "sylvan", "kind": "spell", "cost": 1,
-      "effect": [ { "op": "heal", "amount": 3, "target": "ally_monster" } ],
-      "flavor": "La sève referme tout, même l'orgueil blessé."
-    },
-    {
-      "id": "wild_growth", "name": "Croissance sauvage", "guild": "sylvan", "kind": "spell", "cost": 2,
-      "effect": [ { "op": "buff", "atk": 1, "hp": 2, "target": "ally_monster" } ],
-      "flavor": "Les jardiniers détestent cette astuce."
-    },
-    {
-      "id": "dark_pact", "name": "Pacte noir", "guild": "shadow", "kind": "spell", "cost": 1,
-      "effect": [
-        { "op": "sacrifice", "target": "ally_monster" },
-        { "op": "draw", "count": 2 }
-      ],
-      "flavor": "Tout savoir a un prix. Lui, il est affiché."
-    },
-    {
-      "id": "life_drain", "name": "Drain de vie", "guild": "shadow", "kind": "spell", "cost": 3,
-      "effect": [
-        { "op": "damage", "amount": 2, "target": "enemy_monster" },
-        { "op": "heal_master", "amount": 2 }
-      ],
-      "flavor": "Ce qui vous quitte ne se perd pas pour tout le monde."
-    },
-    {
-      "id": "blessing", "name": "Bénédiction", "guild": "light", "kind": "spell", "cost": 1,
-      "effect": [ { "op": "shield", "target": "ally_monster" } ],
-      "flavor": "Une petite lumière qui dit non à votre place."
-    },
-    {
-      "id": "holy_charge", "name": "Élan sacré", "guild": "light", "kind": "spell", "cost": 2,
-      "effect": [
-        { "op": "buff", "atk": 2, "hp": 0, "target": "ally_monster" },
-        { "op": "shield", "target": "ally_monster" }
-      ],
-      "flavor": "En avant, et que la lumière suive."
-    }
+	{
+	  "id": "flame_imp", "name": "Diablotin", "guild": "flame", "kind": "monster", "cost": 1,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 2 },
+		{ "xp": 2, "atk": 3, "hp": 3 },
+		{ "xp": 5, "atk": 4, "hp": 4 }
+	  ],
+	  "evolves_to": "flame_fiend", "evolve_cost": 2,
+	  "flavor": "Petit, cornu, et déjà pyromane."
+	},
+	{
+	  "id": "flame_fiend", "name": "Démon des braises", "guild": "flame", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "melee",
+	  "levels": [ { "xp": 0, "atk": 5, "hp": 6 } ],
+	  "keywords": { "haste": true },
+	  "flavor": "Le diablotin a bien grandi. Courez."
+	},
+	{
+	  "id": "ember_fox", "name": "Renard de cendre", "guild": "flame", "kind": "monster", "cost": 2,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 3 },
+		{ "xp": 3, "atk": 3, "hp": 4 }
+	  ],
+	  "keywords": { "haste": true },
+	  "flavor": "Il laisse des empreintes fumantes."
+	},
+	{
+	  "id": "fire_archer", "name": "Archère ardente", "guild": "flame", "kind": "monster", "cost": 3,
+	  "attack_type": "ranged",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 3 },
+		{ "xp": 2, "atk": 3, "hp": 4 },
+		{ "xp": 6, "atk": 4, "hp": 5 }
+	  ],
+	  "flavor": "Chaque flèche est une comète miniature."
+	},
+	{
+	  "id": "salamander", "name": "Salamandre", "guild": "flame", "kind": "monster", "cost": 3,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 5 },
+		{ "xp": 3, "atk": 3, "hp": 6 }
+	  ],
+	  "keywords": { "riposte": 1 },
+	  "flavor": "La toucher, c'est déjà se brûler."
+	},
+	{
+	  "id": "lava_golem", "name": "Golem de lave", "guild": "flame", "kind": "monster", "cost": 4,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 3, "hp": 6 },
+		{ "xp": 3, "atk": 4, "hp": 8 }
+	  ],
+	  "keywords": { "armor": 1 },
+	  "flavor": "Une montagne qui a décidé de marcher."
+	},
+	{
+	  "id": "phoenix", "name": "Phénix", "guild": "flame", "kind": "monster", "cost": 6,
+	  "attack_type": "magic",
+	  "levels": [
+		{ "xp": 0, "atk": 3, "hp": 4 },
+		{ "xp": 3, "atk": 4, "hp": 5 }
+	  ],
+	  "keywords": { "flying": true },
+	  "evolves_to": "solar_phoenix", "evolve_cost": 3,
+	  "flavor": "Sa mort n'est qu'une pause."
+	},
+	{
+	  "id": "solar_phoenix", "name": "Phénix solaire", "guild": "flame", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "magic",
+	  "levels": [ { "xp": 0, "atk": 5, "hp": 6 } ],
+	  "keywords": { "flying": true, "regen": 2 },
+	  "flavor": "Un deuxième soleil, en plus petit et plus fâché."
+	},
+	{
+	  "id": "sprout", "name": "Germelin", "guild": "sylvan", "kind": "monster", "cost": 1,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 1, "hp": 3 },
+		{ "xp": 2, "atk": 2, "hp": 4 },
+		{ "xp": 5, "atk": 3, "hp": 6 }
+	  ],
+	  "keywords": { "regen": 1 },
+	  "evolves_to": "thorn_beast", "evolve_cost": 2,
+	  "flavor": "Arrosez-le et reculez."
+	},
+	{
+	  "id": "thorn_beast", "name": "Bête d'épines", "guild": "sylvan", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "melee",
+	  "levels": [ { "xp": 0, "atk": 4, "hp": 6 } ],
+	  "keywords": { "riposte": 2 },
+	  "flavor": "Chaque ronce est un avertissement."
+	},
+	{
+	  "id": "forest_wolf", "name": "Loup sylvestre", "guild": "sylvan", "kind": "monster", "cost": 2,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 3, "hp": 2 },
+		{ "xp": 3, "atk": 4, "hp": 3 }
+	  ],
+	  "flavor": "La forêt entière est sa meute."
+	},
+	{
+	  "id": "moss_turtle", "name": "Tortue de mousse", "guild": "sylvan", "kind": "monster", "cost": 2,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 1, "hp": 5 },
+		{ "xp": 4, "atk": 2, "hp": 7 }
+	  ],
+	  "keywords": { "armor": 1 },
+	  "flavor": "Elle gagne tous ses combats en attendant."
+	},
+	{
+	  "id": "druid", "name": "Druidesse", "guild": "sylvan", "kind": "monster", "cost": 3,
+	  "attack_type": "magic",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 4 },
+		{ "xp": 3, "atk": 3, "hp": 5 }
+	  ],
+	  "flavor": "Elle murmure, la forêt répond."
+	},
+	{
+	  "id": "sylph", "name": "Sylphe", "guild": "sylvan", "kind": "monster", "cost": 3,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 3 },
+		{ "xp": 2, "atk": 3, "hp": 4 },
+		{ "xp": 5, "atk": 4, "hp": 5 }
+	  ],
+	  "keywords": { "flying": true },
+	  "evolves_to": "gale_spirit", "evolve_cost": 2,
+	  "flavor": "Une brise avec une opinion."
+	},
+	{
+	  "id": "gale_spirit", "name": "Esprit des rafales", "guild": "sylvan", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "melee",
+	  "levels": [ { "xp": 0, "atk": 5, "hp": 5 } ],
+	  "keywords": { "flying": true, "haste": true },
+	  "flavor": "L'ouragan a appris la précision."
+	},
+	{
+	  "id": "treant", "name": "Tréant", "guild": "sylvan", "kind": "monster", "cost": 5,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 3, "hp": 7 },
+		{ "xp": 4, "atk": 4, "hp": 9 }
+	  ],
+	  "keywords": { "armor": 1, "regen": 1 },
+	  "flavor": "Il a vu naître le village. Il le défendra."
+	},
+	{
+	  "id": "shade", "name": "Ombrelin", "guild": "shadow", "kind": "monster", "cost": 1,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 1 },
+		{ "xp": 2, "atk": 3, "hp": 2 },
+		{ "xp": 4, "atk": 4, "hp": 3 }
+	  ],
+	  "evolves_to": "nightmare", "evolve_cost": 2,
+	  "flavor": "Il vit dans le coin de votre œil."
+	},
+	{
+	  "id": "nightmare", "name": "Cauchemar", "guild": "shadow", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "melee",
+	  "levels": [ { "xp": 0, "atk": 5, "hp": 4 } ],
+	  "keywords": { "flying": true },
+	  "flavor": "Il ne disparaît pas au réveil."
+	},
+	{
+	  "id": "gloom_rat", "name": "Rat des ténèbres", "guild": "shadow", "kind": "monster", "cost": 1,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 1, "hp": 2 },
+		{ "xp": 2, "atk": 2, "hp": 3 }
+	  ],
+	  "keywords": { "haste": true },
+	  "flavor": "Toujours pressé d'apporter de mauvaises nouvelles."
+	},
+	{
+	  "id": "bat_swarm", "name": "Nuée de chauves-souris", "guild": "shadow", "kind": "monster", "cost": 2,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 2 },
+		{ "xp": 3, "atk": 3, "hp": 3 }
+	  ],
+	  "keywords": { "flying": true },
+	  "flavor": "Un nuage avec des dents."
+	},
+	{
+	  "id": "cultist", "name": "Cultiste", "guild": "shadow", "kind": "monster", "cost": 2,
+	  "attack_type": "ranged",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 2 },
+		{ "xp": 3, "atk": 3, "hp": 3 }
+	  ],
+	  "flavor": "Son étoile préférée n'existe pas sur les cartes."
+	},
+	{
+	  "id": "wraith", "name": "Spectre", "guild": "shadow", "kind": "monster", "cost": 4,
+	  "attack_type": "magic",
+	  "levels": [
+		{ "xp": 0, "atk": 3, "hp": 3 },
+		{ "xp": 4, "atk": 4, "hp": 4 }
+	  ],
+	  "keywords": { "flying": true },
+	  "flavor": "Le froid entre dans la pièce avant lui."
+	},
+	{
+	  "id": "bone_knight", "name": "Chevalier d'os", "guild": "shadow", "kind": "monster", "cost": 4,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 3, "hp": 5 },
+		{ "xp": 3, "atk": 4, "hp": 6 }
+	  ],
+	  "keywords": { "armor": 1 },
+	  "evolves_to": "dread_lord", "evolve_cost": 3,
+	  "flavor": "Son serment a survécu à sa chair."
+	},
+	{
+	  "id": "dread_lord", "name": "Seigneur d'effroi", "guild": "shadow", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "melee",
+	  "levels": [ { "xp": 0, "atk": 5, "hp": 8 } ],
+	  "keywords": { "armor": 1, "riposte": 2 },
+	  "flavor": "Les armées se rendent avant qu'il ne dégaine."
+	},
+	{
+	  "id": "squire", "name": "Écuyer", "guild": "light", "kind": "monster", "cost": 1,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 1, "hp": 3 },
+		{ "xp": 2, "atk": 2, "hp": 4 },
+		{ "xp": 5, "atk": 3, "hp": 5 }
+	  ],
+	  "keywords": { "shield": true },
+	  "evolves_to": "paladin", "evolve_cost": 2,
+	  "flavor": "Un jour, dit-il, il aura une vraie épée."
+	},
+	{
+	  "id": "paladin", "name": "Paladine", "guild": "light", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "melee",
+	  "levels": [ { "xp": 0, "atk": 4, "hp": 6 } ],
+	  "keywords": { "shield": true, "armor": 1 },
+	  "flavor": "Le jour s'est levé et a pris les armes."
+	},
+	{
+	  "id": "lantern_sprite", "name": "Esprit-lanterne", "guild": "light", "kind": "monster", "cost": 2,
+	  "attack_type": "magic",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 2 },
+		{ "xp": 3, "atk": 3, "hp": 3 }
+	  ],
+	  "keywords": { "flying": true },
+	  "flavor": "Elle éclaire même les mauvaises idées."
+	},
+	{
+	  "id": "temple_archer", "name": "Archer du temple", "guild": "light", "kind": "monster", "cost": 2,
+	  "attack_type": "ranged",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 3 },
+		{ "xp": 3, "atk": 3, "hp": 4 }
+	  ],
+	  "flavor": "Il ne rate jamais. Le temple l'interdit."
+	},
+	{
+	  "id": "shield_bearer", "name": "Porte-bouclier", "guild": "light", "kind": "monster", "cost": 3,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 1, "hp": 6 },
+		{ "xp": 4, "atk": 2, "hp": 8 }
+	  ],
+	  "keywords": { "armor": 1, "shield": true },
+	  "flavor": "Son bouclier a un nom. Pas lui."
+	},
+	{
+	  "id": "cleric", "name": "Clerc", "guild": "light", "kind": "monster", "cost": 3,
+	  "attack_type": "ranged",
+	  "levels": [
+		{ "xp": 0, "atk": 2, "hp": 4 },
+		{ "xp": 3, "atk": 3, "hp": 5 }
+	  ],
+	  "keywords": { "regen": 1 },
+	  "flavor": "Ses prières ont un excellent taux de réponse."
+	},
+	{
+	  "id": "archangel", "name": "Archange", "guild": "light", "kind": "monster", "cost": 6,
+	  "attack_type": "melee",
+	  "levels": [
+		{ "xp": 0, "atk": 4, "hp": 5 },
+		{ "xp": 4, "atk": 5, "hp": 7 }
+	  ],
+	  "keywords": { "flying": true, "shield": true },
+	  "evolves_to": "seraph", "evolve_cost": 3,
+	  "flavor": "Sa patience est infinie. Presque."
+	},
+	{
+	  "id": "seraph", "name": "Séraphin", "guild": "light", "kind": "monster",
+	  "cost": 0, "token": true, "attack_type": "melee",
+	  "levels": [ { "xp": 0, "atk": 6, "hp": 8 } ],
+	  "keywords": { "flying": true, "shield": true, "haste": true },
+	  "flavor": "Six ailes, zéro négociation."
+	},
+	{
+	  "id": "fireball", "name": "Boule de feu", "guild": "flame", "kind": "spell", "cost": 2,
+	  "effect": [ { "op": "damage", "amount": 3, "target": "enemy_monster" } ],
+	  "flavor": "Le classique. Indémodable. Inflammable."
+	},
+	{
+	  "id": "inferno", "name": "Fournaise", "guild": "flame", "kind": "spell", "cost": 4,
+	  "effect": [ { "op": "damage_all_enemies", "amount": 2 } ],
+	  "flavor": "Pourquoi choisir une cible ?"
+	},
+	{
+	  "id": "rejuvenate", "name": "Régénérescence", "guild": "sylvan", "kind": "spell", "cost": 1,
+	  "effect": [ { "op": "heal", "amount": 3, "target": "ally_monster" } ],
+	  "flavor": "La sève referme tout, même l'orgueil blessé."
+	},
+	{
+	  "id": "wild_growth", "name": "Croissance sauvage", "guild": "sylvan", "kind": "spell", "cost": 2,
+	  "effect": [ { "op": "buff", "atk": 1, "hp": 2, "target": "ally_monster" } ],
+	  "flavor": "Les jardiniers détestent cette astuce."
+	},
+	{
+	  "id": "dark_pact", "name": "Pacte noir", "guild": "shadow", "kind": "spell", "cost": 1,
+	  "effect": [
+		{ "op": "sacrifice", "target": "ally_monster" },
+		{ "op": "draw", "count": 2 }
+	  ],
+	  "flavor": "Tout savoir a un prix. Lui, il est affiché."
+	},
+	{
+	  "id": "life_drain", "name": "Drain de vie", "guild": "shadow", "kind": "spell", "cost": 3,
+	  "effect": [
+		{ "op": "damage", "amount": 2, "target": "enemy_monster" },
+		{ "op": "heal_master", "amount": 2 }
+	  ],
+	  "flavor": "Ce qui vous quitte ne se perd pas pour tout le monde."
+	},
+	{
+	  "id": "blessing", "name": "Bénédiction", "guild": "light", "kind": "spell", "cost": 1,
+	  "effect": [ { "op": "shield", "target": "ally_monster" } ],
+	  "flavor": "Une petite lumière qui dit non à votre place."
+	},
+	{
+	  "id": "holy_charge", "name": "Élan sacré", "guild": "light", "kind": "spell", "cost": 2,
+	  "effect": [
+		{ "op": "buff", "atk": 2, "hp": 0, "target": "ally_monster" },
+		{ "op": "shield", "target": "ally_monster" }
+	  ],
+	  "flavor": "En avant, et que la lumière suive."
+	}
   ]
 }

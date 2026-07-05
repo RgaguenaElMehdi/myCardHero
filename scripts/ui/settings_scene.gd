@@ -1,74 +1,40 @@
 extends Control
 ## Settings: volumes, fullscreen, profile reset.
 
+@onready var music_slider: HSlider = %MusicSlider
+@onready var sfx_slider: HSlider = %SfxSlider
+@onready var fullscreen_check: CheckButton = %FullscreenCheck
+@onready var reset_btn: Button = %ResetBtn
+@onready var back_btn: Button = %BackBtn
+
 var reset_armed := false
-var reset_btn: Button
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	var bg := ColorRect.new()
-	bg.color = UiTheme.BG
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(bg)
+	# Apply dynamic styling
+	UiTheme.style_button(reset_btn, UiTheme.DANGER.darkened(0.4), 18)
+	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 20)
 
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(center)
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel(UiTheme.PANEL, 16))
-	panel.custom_minimum_size = Vector2(640, 0)
-	center.add_child(panel)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 20)
-	panel.add_child(vbox)
-
-	vbox.add_child(UiTheme.title_label("Options", 36))
-
+	# Load current settings
 	var settings: Dictionary = Game.profile.settings
-	vbox.add_child(UiTheme.label("Volume de la musique", 18))
-	vbox.add_child(_slider(float(settings.get("music_volume", 0.8)), func(v: float) -> void:
+	music_slider.value = float(settings.get("music_volume", 0.8))
+	sfx_slider.value = float(settings.get("sfx_volume", 0.9))
+	fullscreen_check.button_pressed = bool(settings.get("fullscreen", false))
+
+	# Connect signals
+	music_slider.value_changed.connect(func(v: float) -> void:
 		Game.profile.settings.music_volume = v
-		_apply()))
-	vbox.add_child(UiTheme.label("Volume des effets", 18))
-	vbox.add_child(_slider(float(settings.get("sfx_volume", 0.9)), func(v: float) -> void:
+		_apply())
+	sfx_slider.value_changed.connect(func(v: float) -> void:
 		Game.profile.settings.sfx_volume = v
 		_apply()
-		Audio.play_sfx("hit")))
-
-	var fs := CheckButton.new()
-	fs.text = "Plein écran   (F11 ou Alt+Entrée partout dans le jeu)"
-	fs.button_pressed = bool(settings.get("fullscreen", false))
-	fs.add_theme_font_size_override("font_size", 18)
-	fs.toggled.connect(func(on: bool) -> void: Game.set_fullscreen(on))
+		Audio.play_sfx("hit"))
+	fullscreen_check.toggled.connect(func(on: bool) -> void: Game.set_fullscreen(on))
 	Game.profile_changed.connect(func() -> void:
-		if is_instance_valid(fs):
-			fs.set_pressed_no_signal(bool(Game.profile.settings.get("fullscreen", false))))
-	vbox.add_child(fs)
-
-	reset_btn = Button.new()
-	reset_btn.text = "Réinitialiser la progression"
-	UiTheme.style_button(reset_btn, UiTheme.DANGER.darkened(0.4), 18)
+		if is_instance_valid(fullscreen_check):
+			fullscreen_check.set_pressed_no_signal(bool(Game.profile.settings.get("fullscreen", false))))
 	reset_btn.pressed.connect(_on_reset)
-	vbox.add_child(reset_btn)
-
-	var back := Button.new()
-	back.text = "← Retour au menu"
-	back.custom_minimum_size = Vector2(0, 54)
-	UiTheme.style_button(back, UiTheme.PANEL_LIGHT, 20)
-	back.pressed.connect(func() -> void: Game.goto("main_menu"))
-	vbox.add_child(back)
-
-
-func _slider(value: float, on_change: Callable) -> HSlider:
-	var s := HSlider.new()
-	s.min_value = 0.0
-	s.max_value = 1.0
-	s.step = 0.05
-	s.value = value
-	s.custom_minimum_size = Vector2(0, 30)
-	s.value_changed.connect(on_change)
-	return s
+	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
 
 
 func _apply() -> void:

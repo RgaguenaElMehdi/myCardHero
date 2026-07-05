@@ -63,6 +63,63 @@ ASSETS = {
         "Somber fantasy scene: a cracked stone shield and fading embers in a dark rainy "
         "arena, cold blue-grey palette, melancholic painterly mood, empty darker area in "
         "the middle for UI text, no text.", "16:9", False),
+    # --- Additional HUD/UI assets (from sprite sheet reference) ---
+    "panel_hud": (
+        "Dark fantasy game UI HUD panel texture: dark steel plate with ornate riveted "
+        "border, subtle golden inlay lines at edges, empty dark interior, flat front view, "
+        "fills the whole image edge to edge.", "4:3", False),
+    "bar_hp_frame": (
+        "Fantasy game UI health bar frame texture: ornate dark metal frame with a small "
+        "red heart gem on the left end, long rectangular slot in the center for a fill bar, "
+        "golden trim, flat front view, fills the whole image edge to edge.", "6:1", False),
+    "bar_hp_fill": (
+        "Solid gradient fill texture for a health bar: deep red on the left fading to "
+        "bright crimson on the right, slight glossy highlight on top half, clean edges, "
+        "flat front view, fills the whole image edge to edge.", "6:1", False),
+    "bar_mana_frame": (
+        "Fantasy game UI mana bar frame texture: ornate dark metal frame with a small "
+        "blue crystal gem on the left end, long rectangular slot in the center for a fill bar, "
+        "golden trim, flat front view, fills the whole image edge to edge.", "6:1", False),
+    "bar_mana_fill": (
+        "Solid gradient fill texture for a mana bar: deep blue on the left fading to "
+        "bright cyan on the right, slight glossy highlight on top half, clean edges, "
+        "flat front view, fills the whole image edge to edge.", "6:1", False),
+    "button_red": (
+        "Fantasy game UI button texture: dark red brushed metal plate with thin golden "
+        "beveled rim, darker center, flat front view, fills the whole image edge to edge.",
+        "3:2", False),
+    "button_blue": (
+        "Fantasy game UI button texture: dark blue brushed metal plate with thin golden "
+        "beveled rim, darker center, flat front view, fills the whole image edge to edge.",
+        "3:2", False),
+    "button_green": (
+        "Fantasy game UI button texture: dark green brushed metal plate with thin golden "
+        "beveled rim, darker center, flat front view, fills the whole image edge to edge.",
+        "3:2", False),
+    "panel_tooltip": (
+        "Fantasy game UI tooltip panel: small dark parchment rectangle with thin golden "
+        "border and a small pointed tab on the left edge, flat front view, "
+        "fills the whole image edge to edge.", "3:2", False),
+    "icon_flame": (
+        "Stylized fantasy game icon of a flame faction emblem: a red-orange fire symbol, "
+        "bold silhouette, centered on plain dark background, no text.",
+        "1:1", True),
+    "icon_sylvan": (
+        "Stylized fantasy game icon of a nature faction emblem: a green leaf/vine symbol, "
+        "bold silhouette, centered on plain dark background, no text.",
+        "1:1", True),
+    "icon_shadow": (
+        "Stylized fantasy game icon of a shadow faction emblem: a purple crescent/skull symbol, "
+        "bold silhouette, centered on plain dark background, no text.",
+        "1:1", True),
+    "icon_light": (
+        "Stylized fantasy game icon of a light faction emblem: a golden sun/star symbol, "
+        "bold silhouette, centered on plain dark background, no text.",
+        "1:1", True),
+    "torch_decoration": (
+        "Small fantasy torch wall sconce with a flickering orange flame, dark iron bracket, "
+        "flat front view, video game UI decoration element. " + MAGENTA_HINT,
+        "1:2", True),
 }
 
 

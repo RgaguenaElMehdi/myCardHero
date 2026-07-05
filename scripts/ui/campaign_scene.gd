@@ -1,43 +1,24 @@
 extends Control
 ## Campaign map: chapter list with locked / done / current states.
 
+@onready var background: TextureRect = %Background
+@onready var chapter_list: VBoxContainer = %ChapterList
+@onready var back_btn: Button = %BackBtn
+
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	var bg := TextureRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bg.texture = UiTheme.tex(Db.background_path("main_menu"))
-	bg.modulate = Color(0.55, 0.55, 0.6)
-	add_child(bg)
+	# Dynamic assets - override texture if path differs from scene default
+	var bg_tex := UiTheme.tex(Db.background_path("main_menu"))
+	if bg_tex != null:
+		background.texture = bg_tex
+	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 20)
+	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
 
-	var title := UiTheme.title_label("Le Circuit de Petraheim", 44)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	title.offset_top = 40
-	add_child(title)
-
-	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(560, 130)
-	scroll.custom_minimum_size = Vector2(800, 840)
-	add_child(scroll)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 12)
-	vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(vbox)
-
+	# Populate chapter rows (dynamic content from data)
 	var chapters := Db.chapters()
 	for i in chapters.size():
-		vbox.add_child(_chapter_row(i, chapters[i]))
+		chapter_list.add_child(_chapter_row(i, chapters[i]))
 
-	var back := Button.new()
-	back.text = "← Menu"
-	back.position = Vector2(40, 40)
-	back.custom_minimum_size = Vector2(160, 52)
-	UiTheme.style_button(back, UiTheme.PANEL_LIGHT, 20)
-	back.pressed.connect(func() -> void: Game.goto("main_menu"))
-	add_child(back)
 	Audio.play_music("menu")
 
 

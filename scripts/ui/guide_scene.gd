@@ -5,40 +5,15 @@ extends Control
 const ACCENT_CYCLE := [UiTheme.DANGER, UiTheme.OK, Color("8b6bc7"), UiTheme.GOLD,
 		UiTheme.ACCENT]
 
+@onready var back_btn: Button = %BackBtn
+@onready var content: VBoxContainer = %Content
+
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
-	var bg := ColorRect.new()
-	bg.color = UiTheme.BG
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(bg)
+	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 20)
+	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
 
-	var title := UiTheme.title_label("Guide du jeu", 46)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	title.offset_top = 26
-	add_child(title)
-
-	var back := Button.new()
-	back.text = "← Menu"
-	back.position = Vector2(40, 32)
-	back.custom_minimum_size = Vector2(160, 52)
-	UiTheme.style_button(back, UiTheme.PANEL_LIGHT, 20)
-	back.pressed.connect(func() -> void: Game.goto("main_menu"))
-	add_child(back)
-
-	var scroll := ScrollContainer.new()
-	scroll.set_anchors_preset(Control.PRESET_FULL_RECT)
-	scroll.offset_left = 240
-	scroll.offset_right = -240
-	scroll.offset_top = 104
-	scroll.offset_bottom = -20
-	add_child(scroll)
-	var content := VBoxContainer.new()
-	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	content.add_theme_constant_override("separation", 22)
-	scroll.add_child(content)
-
+	# Dynamic content (generated from game data)
 	content.add_child(_anatomy_section())
 	content.add_child(_rules_grid())
 

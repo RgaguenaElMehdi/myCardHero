@@ -1,34 +1,31 @@
 class_name BoardCell
 extends Panel
-## One board square. Renders its occupant (monster or master) from GameState
-## and shows action highlights. Emits clicked(cell) for the battle controller.
+## One board square, laid over the painted arena texture (the tiles are part
+## of the arena art, so the cell itself is transparent). Renders its occupant
+## (monster or master) from GameState and shows action highlights.
+## Instanced from scenes/widgets/board_cell.tscn; sized by the battle scene.
 
 signal clicked(cell: Vector2i)
 signal inspect_requested(cell: Vector2i)
-
-const SIZE := 148.0
 
 var cell: Vector2i
 var side: int  ## player index owning this row
 var highlight := ""  ## "", "summon", "move", "attack", "selected", "target"
 
 var _content: Control
-var _ring: Panel
+
+@onready var _ring: Panel = $Ring
 
 
-static func create(p_cell: Vector2i) -> BoardCell:
-	var c := BoardCell.new()
-	c.cell = p_cell
-	c.side = Board.row_owner(p_cell.y)
-	c.custom_minimum_size = Vector2(SIZE, SIZE)
-	c.size = c.custom_minimum_size
-	c.mouse_filter = Control.MOUSE_FILTER_STOP
-	c._ring = Panel.new()
-	c._ring.set_anchors_preset(Control.PRESET_FULL_RECT)
-	c._ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	c.add_child(c._ring)
-	c._apply_style()
-	return c
+## Called by the battle scene right after instantiating the widget.
+func setup(p_cell: Vector2i) -> void:
+	cell = p_cell
+	side = Board.row_owner(p_cell.y)
+	mouse_filter = Control.MOUSE_FILTER_STOP
+
+
+func _ready() -> void:
+	_apply_style()
 
 
 func set_highlight(mode: String) -> void:
@@ -37,40 +34,28 @@ func set_highlight(mode: String) -> void:
 
 
 func _apply_style() -> void:
-	# Base: generated stone tile, warm-tinted for the player side, cool for the enemy.
-	var tile := UiTheme.tex(UiTheme.TEX_CELL_TILE)
-	if tile != null:
-		var sb := StyleBoxTexture.new()
-		sb.texture = tile
-		var tint := Color(1.0, 0.96, 0.9) if side == 0 else Color(0.72, 0.78, 0.92)
-		if highlight != "":
-			tint = tint.lightened(0.15)
-		sb.modulate_color = tint
-		add_theme_stylebox_override("panel", sb)
-	else:
-		var base := UiTheme.PANEL if side == 0 else UiTheme.PANEL.darkened(0.25)
-		var sb := StyleBoxFlat.new()
-		sb.bg_color = base.lightened(0.06) if highlight != "" else base
-		sb.set_corner_radius_all(8)
-		add_theme_stylebox_override("panel", sb)
-	# Highlight ring above the content.
-	var border := Color(0, 0, 0, 0.35)
-	var width := 2
+	# The arena texture draws the tiles; the cell only paints feedback.
+	var fill := Color.TRANSPARENT
+	var border := Color.TRANSPARENT
+	var width := 0
 	match highlight:
 		"summon":
 			border = UiTheme.GOLD
+			fill = Color(UiTheme.GOLD, 0.14)
 			width = 4
 		"move":
 			border = UiTheme.ACCENT
+			fill = Color(UiTheme.ACCENT, 0.14)
 			width = 4
 		"attack", "target":
 			border = UiTheme.DANGER
+			fill = Color(UiTheme.DANGER, 0.16)
 			width = 5
 		"selected":
 			border = Color.WHITE
 			width = 4
 	var ring_sb := StyleBoxFlat.new()
-	ring_sb.bg_color = Color.TRANSPARENT
+	ring_sb.bg_color = fill
 	ring_sb.set_corner_radius_all(8)
 	ring_sb.border_color = border
 	ring_sb.set_border_width_all(width)
@@ -99,63 +84,107 @@ func render(state: GameState) -> void:
 	UiTheme.pass_through(self)
 
 
-func _render_master(_state: GameState, p: PlayerState) -> void:
-	var portrait := TextureRect.new()
-	portrait.set_anchors_preset(Control.PRESET_FULL_RECT)
-	portrait.offset_left = 8
-	portrait.offset_top = 8
-	portrait.offset_right = -8
-	portrait.offset_bottom = -8
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	portrait.texture = UiTheme.tex(p.master.portrait)
-	_content.add_child(portrait)
+## Detoured battle sprite for a unit, or null when not generated yet.
+static func unit_tex(id: String) -> Texture2D:
+	return UiTheme.tex("res://assets/sprites/units/%s.png" % id)
 
+
+func _render_master(_state: GameState, p: PlayerState) -> void:
+	# Camp-tinted halo under the master — red enemy, blue player (mockup style).
+	var tile := ColorRect.new()
+	tile.set_anchors_preset(Control.PRESET_FULL_RECT)
+	tile.offset_left = 4
+	tile.offset_top = 4
+	tile.offset_right = -4
+	tile.offset_bottom = -4
+	tile.color = Color("2f4a86", 0.4) if side == 0 else Color("8c2f26", 0.4)
+	tile.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_content.add_child(tile)
 	var ring := Panel.new()
 	ring.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color.TRANSPARENT
 	sb.set_corner_radius_all(8)
-	sb.border_color = UiTheme.GOLD
+	sb.border_color = Color("6e93e8") if side == 0 else Color("d95f4b")
 	sb.set_border_width_all(3)
 	ring.add_theme_stylebox_override("panel", sb)
 	_content.add_child(ring)
 
-	_content.add_child(_badge("%d" % p.master_hp, UiTheme.DANGER, Vector2(4, 4)))
+	var sprite := unit_tex("master_%s" % p.master.id)
+	if sprite != null:
+		var unit := TextureRect.new()
+		unit.set_anchors_preset(Control.PRESET_FULL_RECT)
+		unit.offset_left = 8
+		unit.offset_top = 4
+		unit.offset_right = -8
+		unit.offset_bottom = -12
+		unit.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		unit.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		unit.texture = sprite
+		_content.add_child(unit)
+	else:
+		var portrait := TextureRect.new()
+		portrait.set_anchors_preset(Control.PRESET_FULL_RECT)
+		portrait.offset_left = 8
+		portrait.offset_top = 8
+		portrait.offset_right = -8
+		portrait.offset_bottom = -8
+		portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		portrait.texture = UiTheme.tex(p.master.portrait)
+		_content.add_child(portrait)
+
+	var hp := _badge("%d" % p.master_hp, UiTheme.DANGER, Vector2.ZERO)
+	_content.add_child(hp)
+	hp.position = Vector2(size.x - hp.get_minimum_size().x - 4, size.y - 30)
 	var name_l := UiTheme.label(p.master.display_name, 13, UiTheme.GOLD)
-	name_l.position = Vector2(6, SIZE - 24)
+	name_l.position = Vector2(6, size.y - 24)
 	name_l.add_theme_color_override("font_outline_color", Color.BLACK)
 	name_l.add_theme_constant_override("outline_size", 6)
 	_content.add_child(name_l)
 
 
 func _render_monster(m: MonsterInst) -> void:
-	var art := TextureRect.new()
-	art.set_anchors_preset(Control.PRESET_FULL_RECT)
-	art.offset_left = 4
-	art.offset_top = 4
-	art.offset_right = -4
-	art.offset_bottom = -4
-	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	art.texture = UiTheme.tex(Db.card_art_path(m.def.id))
-	if art.texture == null:
-		var ph := ColorRect.new()
-		ph.set_anchors_preset(Control.PRESET_FULL_RECT)
-		ph.color = UiTheme.guild_color(m.def.guild).darkened(0.5)
-		_content.add_child(ph)
+	# Preferred: detoured sprite standing on the tile (mockup style).
+	var sprite := unit_tex(String(m.def.id))
+	if sprite != null:
+		var unit := TextureRect.new()
+		unit.set_anchors_preset(Control.PRESET_FULL_RECT)
+		unit.offset_left = 6
+		unit.offset_top = 2
+		unit.offset_right = -6
+		unit.offset_bottom = -10
+		unit.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		unit.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		unit.texture = sprite
+		_content.add_child(unit)
 	else:
-		_content.add_child(art)
+		var art := TextureRect.new()
+		art.set_anchors_preset(Control.PRESET_FULL_RECT)
+		art.offset_left = 4
+		art.offset_top = 4
+		art.offset_right = -4
+		art.offset_bottom = -4
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.texture = UiTheme.tex(Db.card_art_path(m.def.id))
+		if art.texture == null:
+			var ph := ColorRect.new()
+			ph.set_anchors_preset(Control.PRESET_FULL_RECT)
+			ph.color = UiTheme.guild_color(m.def.guild).darkened(0.5)
+			_content.add_child(ph)
+		else:
+			_content.add_child(art)
 
 	# corner stat badges (ATQ bottom-left, PV bottom-right)
 	var atk_badge := _stat_badge(str(m.atk()), UiTheme.ICON_ATK, Color("e2884c"))
-	atk_badge.position = Vector2(3, SIZE - 31)
+	atk_badge.position = Vector2(3, size.y - 31)
 	_content.add_child(atk_badge)
 	var hp_color := Color("5aa864") if m.hp >= m.max_hp() else Color("cf5757")
 	var hp_badge := _stat_badge(str(m.hp), UiTheme.ICON_HP, hp_color)
 	_content.add_child(hp_badge)
-	hp_badge.position = Vector2(SIZE - hp_badge.get_minimum_size().x - 3, SIZE - 31)
+	hp_badge.position = Vector2(size.x - hp_badge.get_minimum_size().x - 3, size.y - 31)
 
 	# level badge
 	if m.def.max_level() > 1 or m.level > 1:

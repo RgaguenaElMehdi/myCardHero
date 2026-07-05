@@ -5,20 +5,21 @@ extends Control
 
 const CHARS_PER_SEC := 40.0
 
+@onready var background: TextureRect = %Background
+@onready var portrait: TextureRect = %Portrait
+@onready var portrait_frame: Panel = %PortraitFrame
+@onready var name_label: Label = %NameLabel
+@onready var text_label: Label = %TextLabel
+@onready var hint_label: Label = %HintLabel
+@onready var skip_btn: Button = %SkipBtn
+
 var lines: Array = []
 var line_index := 0
 var revealed := 0.0
 var typing := false
 
-var portrait: TextureRect
-var portrait_frame: Panel
-var name_label: Label
-var text_label: Label
-var hint_label: Label
-
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
 	if Game.battle_config.is_empty():
 		# Direct launch (debug): play chapter 1's intro.
 		Game.start_chapter(0)
@@ -27,57 +28,10 @@ func _ready() -> void:
 	var phase := Game.dialogue_phase
 	lines = chapter.get("pre_dialogue" if phase == "pre" else "post_dialogue", [])
 
-	var bg := TextureRect.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	bg.texture = UiTheme.tex(Db.background_path(String(Game.battle_config.background)))
-	add_child(bg)
-
-	portrait = TextureRect.new()
-	portrait.custom_minimum_size = Vector2(280, 280)
-	portrait.position = Vector2(120, 520)
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	add_child(portrait)
-	var frame := Panel.new()
-	frame.position = portrait.position
-	frame.custom_minimum_size = portrait.custom_minimum_size
-	frame.size = portrait.custom_minimum_size
-	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var fsb := StyleBoxFlat.new()
-	fsb.bg_color = Color.TRANSPARENT
-	fsb.border_color = UiTheme.GOLD
-	fsb.set_border_width_all(3)
-	fsb.set_corner_radius_all(10)
-	frame.add_theme_stylebox_override("panel", fsb)
-	add_child(frame)
-	portrait_frame = frame
-
-	var box := PanelContainer.new()
-	box.add_theme_stylebox_override("panel", UiTheme.panel(Color(0, 0, 0, 0.75), 14))
-	box.position = Vector2(440, 700)
-	box.custom_minimum_size = Vector2(1360, 300)
-	add_child(box)
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 10)
-	box.add_child(vbox)
-	name_label = UiTheme.title_label("", 26)
-	vbox.add_child(name_label)
-	text_label = UiTheme.label("", 22)
-	text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	text_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	vbox.add_child(text_label)
-	hint_label = UiTheme.label("Cliquez pour continuer…", 15, UiTheme.TEXT_DIM)
-	hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	vbox.add_child(hint_label)
-
-	var skip := Button.new()
-	skip.text = "Passer ⏭"
-	skip.position = Vector2(1740, 30)
-	UiTheme.style_button(skip, UiTheme.PANEL_LIGHT, 16)
-	skip.pressed.connect(_finish)
-	add_child(skip)
+	# Dynamic assets
+	background.texture = UiTheme.tex(Db.background_path(String(Game.battle_config.background)))
+	UiTheme.style_button(skip_btn, UiTheme.PANEL_LIGHT, 16)
+	skip_btn.pressed.connect(_finish)
 
 	Audio.play_music("story")
 	_show_line()

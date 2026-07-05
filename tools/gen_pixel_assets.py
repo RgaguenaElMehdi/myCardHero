@@ -134,6 +134,31 @@ def gen_cards(only: str | None = None) -> None:
         time.sleep(1)
 
 
+def gen_units(only: str | None = None) -> None:
+    """Detoured full-body battle sprites placed directly on board tiles."""
+    man = manifest()
+    guild_of = {c["id"]: c["guild"] for c in cards_data()}
+    monsters = [c["id"] for c in cards_data() if c["kind"] == "monster"]
+    jobs = [(mid, man["cards"][mid], GUILD_HINT.get(guild_of.get(mid, ""), ""))
+            for mid in monsters]
+    jobs += [(f"master_{pid}", man["portraits"][pid],
+              "regal palette with gold accents") for pid in
+             ("kiran", "willow", "grim", "aria")]
+    for uid, subject, mood in jobs:
+        if only and uid != only:
+            continue
+        path = ROOT / "assets/sprites/units" / f"{uid}.png"
+        if path.exists():
+            print("déjà là:", path.name)
+            continue
+        prompt = ("%s Subject: ONE single full-body creature battle sprite seen "
+                  "from a slight three-quarter top-down angle, standing pose "
+                  "facing the viewer, feet at the bottom — %s. Color mood: %s. "
+                  "Soft shadow ellipse under the feet.") % (PX, subject, mood)
+        out(path, generate(prompt, "1024x1024", "medium", transparent=True))
+        time.sleep(1)
+
+
 def gen_portraits() -> None:
     man = manifest()
     for pid, subject in man["portraits"].items():
@@ -169,7 +194,7 @@ def gen_ui() -> None:
         ("card_back", "an ornate trading card back with a central glowing blue rune stone and symmetrical dark blue filigree", False, "1024x1536", "high"),
         ("portrait_ring", "a round ornate golden frame ring, empty center, for a character portrait", True, "1024x1024", "high"),
         ("banner_ribbon", "a wide ornate golden ribbon banner with curled ends and an empty dark navy center strip", True, "1536x1024", "high"),
-        ("cell_tile", "a single square stone floor tile with a subtle carved rune circle, top-down, muted grey-blue, fills the whole image edge to edge seamlessly", False, "1024x1024", "medium"),
+        ("cell_tile", "a single square arena floor plate of packed earth and dirt with a chiseled dark stone rim along all four edges, seen top-down, warm brown tones with small pebbles and grass wisps in the corners, fills the whole image edge to edge", False, "1024x1024", "medium"),
         ("panel_ornate", "a dark navy leather game UI panel with fine golden ornamental border along all four edges and corner flourishes, empty center, fills the whole image", False, "1024x1024", "high"),
         ("button_plate", "a dark bronze metal game UI button plate with a thin golden beveled rim along the edges, empty center, fills the whole image", False, "1536x1024", "high"),
         ("victory_bg", "triumphant golden laurel wreath and radiant rays over a cheering pixel-art arena crowd at night, golden confetti, warm glorious palette, darker empty area in the middle for UI text", False, "1536x1024", "high"),
@@ -237,6 +262,8 @@ def main() -> int:
         gen_test()
     if mode in ("cards", "all"):
         gen_cards(only)
+    if mode == "units":
+        gen_units(only)
     if mode in ("portraits", "all"):
         gen_portraits()
     if mode in ("backgrounds", "all"):

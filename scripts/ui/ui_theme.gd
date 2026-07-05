@@ -19,17 +19,41 @@ const GUILD_COLORS := {
 	GameConst.Guild.LIGHT: Color("e6c35a"),
 }
 
-# Generated HQ chrome (assets/sprites/ui). Everything falls back to the flat
-# style when a texture is missing.
+const GUILD_ICONS := {
+	GameConst.Guild.FLAME: "res://assets/sprites/ui/icon_flame.png",
+	GameConst.Guild.SYLVAN: "res://assets/sprites/ui/icon_sylvan.png",
+	GameConst.Guild.SHADOW: "res://assets/sprites/ui/icon_shadow.png",
+	GameConst.Guild.LIGHT: "res://assets/sprites/ui/icon_light.png",
+}
+
+# UI chrome sliced from the mockup sheets (assets/sprites/ui/mockup) or
+# generated (assets/sprites/ui). Everything falls back to the flat style when
+# a texture is missing.
 const TEX_CARD_FRAME := "res://assets/sprites/ui/card_frame.png"
-const TEX_PORTRAIT_RING := "res://assets/sprites/ui/portrait_ring.png"
+const TEX_PORTRAIT_RING := "res://assets/sprites/ui/mockup/ind_select_gold.png"
 const TEX_BANNER := "res://assets/sprites/ui/banner_ribbon.png"
 const TEX_LOGO := "res://assets/sprites/ui/logo.png"
 const TEX_CELL_TILE := "res://assets/sprites/ui/cell_tile.png"
-const TEX_PANEL := "res://assets/sprites/ui/panel_ornate.png"
-const TEX_BUTTON := "res://assets/sprites/ui/button_plate.png"
+const TEX_PANEL := "res://assets/sprites/ui/mockup/panel_stone.png"
+const TEX_BUTTON := "res://assets/sprites/ui/mockup/btn_primary.png"
+const TEX_BUTTON_SECONDARY := "res://assets/sprites/ui/mockup/btn_secondary.png"
+const TEX_BUTTON_DISABLED := "res://assets/sprites/ui/mockup/btn_disabled.png"
 const TEX_VICTORY := "res://assets/sprites/ui/victory_bg.png"
 const TEX_DEFEAT := "res://assets/sprites/ui/defeat_bg.png"
+const TEX_PANEL_HUD := "res://assets/sprites/ui/panel_hud.png"
+const TEX_BUTTON_RED := "res://assets/sprites/ui/button_red.png"
+const TEX_BUTTON_BLUE := "res://assets/sprites/ui/button_blue.png"
+const TEX_BUTTON_GREEN := "res://assets/sprites/ui/button_green.png"
+const TEX_BAR_HP_FRAME := "res://assets/sprites/ui/bar_hp_frame.png"
+const TEX_BAR_HP_FILL := "res://assets/sprites/ui/bar_hp_fill.png"
+const TEX_BAR_MANA_FRAME := "res://assets/sprites/ui/bar_mana_frame.png"
+const TEX_BAR_MANA_FILL := "res://assets/sprites/ui/bar_mana_fill.png"
+const TEX_TOOLTIP := "res://assets/sprites/ui/panel_tooltip.png"
+const TEX_TORCH := "res://assets/sprites/ui/torch_decoration.png"
+const TEX_ICON_FLAME := "res://assets/sprites/ui/icon_flame.png"
+const TEX_ICON_SYLVAN := "res://assets/sprites/ui/icon_sylvan.png"
+const TEX_ICON_SHADOW := "res://assets/sprites/ui/icon_shadow.png"
+const TEX_ICON_LIGHT := "res://assets/sprites/ui/icon_light.png"
 
 const FONT_TITLE := "res://assets/fonts/Cinzel.ttf"
 const FONT_DISPLAY := "res://assets/fonts/CinzelDecorative-Bold.ttf"
@@ -54,14 +78,14 @@ static func title_label(text: String, size: int = 32, color: Color = GOLD) -> La
 	return l
 
 
-## Ornate 9-slice panel (generated texture), tinted by `tint`.
+## Ornate 9-slice stone panel (sliced from the mockup), tinted by `tint`.
 static func panel_ornate(tint: Color = Color.WHITE) -> StyleBox:
 	var tex := UiTheme.tex(TEX_PANEL)
 	if tex == null:
 		return panel(PANEL, 12)
 	var sb := StyleBoxTexture.new()
 	sb.texture = tex
-	var m := tex.get_width() * 0.09
+	var m := tex.get_width() * 0.06
 	sb.texture_margin_left = m
 	sb.texture_margin_right = m
 	sb.texture_margin_top = m
@@ -74,11 +98,11 @@ static func panel_ornate(tint: Color = Color.WHITE) -> StyleBox:
 	return sb
 
 
-static func _button_tex_style(tint: Color) -> StyleBoxTexture:
+static func _button_tex_style(tex_path: String, tint: Color) -> StyleBoxTexture:
 	var sb := StyleBoxTexture.new()
-	sb.texture = UiTheme.tex(TEX_BUTTON)
+	sb.texture = UiTheme.tex(tex_path)
 	# The gold rim sits at the very edge after cropping; thin 9-slice border.
-	var m := sb.texture.get_width() * 0.035
+	var m := sb.texture.get_width() * 0.06
 	sb.texture_margin_left = m
 	sb.texture_margin_right = m
 	sb.texture_margin_top = m
@@ -119,6 +143,51 @@ static func panel(color: Color = PANEL, radius: int = 10, border: Color = Color.
 	return sb
 
 
+## Flat HUD panel (mockup style): clean dark panel for HUD elements.
+static func panel_flat(alpha: float = 0.94) -> StyleBox:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.125, 0.14, 0.17, alpha)
+	sb.set_corner_radius_all(6)
+	sb.border_color = Color(0.36, 0.39, 0.45)
+	sb.set_border_width_all(1)
+	sb.content_margin_left = 14
+	sb.content_margin_right = 14
+	sb.content_margin_top = 10
+	sb.content_margin_bottom = 12
+	return sb
+
+
+## Flat HUD button (mockup style): clean dark button with colored tint.
+static func style_button_flat(btn: Button, base: Color, font_size: int = 18) -> void:
+	var mk := func(bg: Color, border: Color) -> StyleBoxFlat:
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = bg
+		sb.set_corner_radius_all(6)
+		sb.border_color = border
+		sb.set_border_width_all(1)
+		sb.content_margin_left = 12
+		sb.content_margin_right = 12
+		sb.content_margin_top = 6
+		sb.content_margin_bottom = 6
+		return sb
+	btn.add_theme_stylebox_override("normal", mk.call(base, Color(0.55, 0.6, 0.7)))
+	btn.add_theme_stylebox_override("hover", mk.call(base.lightened(0.12), Color(0.75, 0.8, 0.9)))
+	btn.add_theme_stylebox_override("pressed", mk.call(base.darkened(0.2), Color(0.5, 0.55, 0.65)))
+	btn.add_theme_stylebox_override("disabled",
+			mk.call(Color(base.darkened(0.45), 0.6), Color(0.35, 0.38, 0.44)))
+	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	btn.add_theme_color_override("font_color", TEXT)
+	btn.add_theme_color_override("font_hover_color", Color.WHITE)
+	btn.add_theme_color_override("font_disabled_color", TEXT.darkened(0.45))
+	btn.add_theme_font_size_override("font_size", font_size)
+	var f := title_font()
+	if f != null:
+		btn.add_theme_font_override("font", f)
+	btn.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
+	if not btn.pressed.is_connected(_click_sfx):
+		btn.pressed.connect(_click_sfx)
+
+
 static func button_style(base: Color) -> Dictionary:
 	return {
 		"normal": panel(base, 8),
@@ -130,12 +199,17 @@ static func button_style(base: Color) -> Dictionary:
 
 static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int = 20) -> void:
 	if UiTheme.tex(TEX_BUTTON) != null:
-		var tint := base.lerp(Color.WHITE, 0.62)
-		btn.add_theme_stylebox_override("normal", _button_tex_style(tint))
-		btn.add_theme_stylebox_override("hover", _button_tex_style(tint.lightened(0.22)))
-		btn.add_theme_stylebox_override("pressed", _button_tex_style(tint.darkened(0.22)))
+		# The mockup buttons carry their own paint; the caller's base color only
+		# picks the plate: reddish/danger -> secondary, anything else -> primary.
+		var tex := TEX_BUTTON_SECONDARY \
+				if (base.r > base.g + 0.06 and base.r > base.b + 0.06) else TEX_BUTTON
+		btn.add_theme_stylebox_override("normal", _button_tex_style(tex, Color.WHITE))
+		btn.add_theme_stylebox_override("hover",
+				_button_tex_style(tex, Color(1.18, 1.18, 1.18)))
+		btn.add_theme_stylebox_override("pressed",
+				_button_tex_style(tex, Color(0.78, 0.78, 0.78)))
 		btn.add_theme_stylebox_override("disabled",
-				_button_tex_style(Color(tint.darkened(0.55), 0.5)))
+				_button_tex_style(TEX_BUTTON_DISABLED, Color.WHITE))
 	else:
 		var styles := button_style(base)
 		btn.add_theme_stylebox_override("normal", styles.normal)
@@ -163,10 +237,12 @@ static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int 
 static func style_toggle(btn: Button, base: Color = PANEL_LIGHT, font_size: int = 20) -> void:
 	style_button(btn, base, font_size)
 	if UiTheme.tex(TEX_BUTTON) != null:
-		btn.add_theme_stylebox_override("pressed", _button_tex_style(GOLD.lerp(Color.WHITE, 0.25)))
+		btn.add_theme_stylebox_override("pressed",
+				_button_tex_style(TEX_BUTTON, GOLD.lerp(Color.WHITE, 0.6)))
+		btn.add_theme_color_override("font_pressed_color", Color.WHITE)
 	else:
 		btn.add_theme_stylebox_override("pressed", panel(base.lightened(0.18), 8, GOLD, 3))
-	btn.add_theme_color_override("font_pressed_color", Color("2a2410"))
+		btn.add_theme_color_override("font_pressed_color", Color("2a2410"))
 
 
 static func label(text: String, size: int = 18, color: Color = TEXT) -> Label:
@@ -210,7 +286,7 @@ static func icon_label(icon_path: String, text: String, size: int, color: Color)
 	box.add_child(label(text, size, color))
 	return box
 
-const ICON_ATK := "res://assets/sprites/ui/icon_atk.png"
-const ICON_HP := "res://assets/sprites/ui/icon_hp.png"
-const ICON_STONE := "res://assets/sprites/ui/icon_stone.png"
+const ICON_ATK := "res://assets/sprites/ui/mockup/icon_stat_attack.png"
+const ICON_HP := "res://assets/sprites/ui/mockup/res_heart.png"
+const ICON_STONE := "res://assets/sprites/ui/mockup/res_crystal.png"
 const ICON_XP := "res://assets/sprites/ui/icon_xp.png"
