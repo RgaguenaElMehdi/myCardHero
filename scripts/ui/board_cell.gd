@@ -65,6 +65,9 @@ func _apply_style() -> void:
 	base.set_corner_radius_all(12)
 	base.border_color = Color(0.79, 0.65, 0.31, 0.30)
 	base.set_border_width_all(2)
+	base.shadow_color = Color(0, 0, 0, 0.35)
+	base.shadow_size = 6
+	base.shadow_offset = Vector2(0, 3)
 	add_theme_stylebox_override("panel", base)
 
 	var fill := Color.TRANSPARENT

@@ -29,6 +29,9 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.79, 0.65, 0.31, 0.55)
+shadow_color = Color(0, 0, 0, 0.38)
+shadow_size = 8
+shadow_offset = Vector2(0, 4)
 content_margin_left = 14.0
 content_margin_top = 12.0
 content_margin_right = 14.0
@@ -40,6 +43,8 @@ corner_radius_top_left = 18
 corner_radius_top_right = 18
 border_width_top = 2
 border_color = Color(0.79, 0.65, 0.31, 0.5)
+shadow_color = Color(0, 0, 0, 0.33)
+shadow_size = 7
 
 [sub_resource type="StyleBoxFlat" id="btn_navy"]
 bg_color = Color(0.145, 0.173, 0.278, 1)
@@ -79,6 +84,8 @@ corner_radius_bottom_right = 18
 corner_radius_bottom_left = 18
 border_width_bottom = 2
 border_color = Color(0.79, 0.65, 0.31, 0.5)
+shadow_color = Color(0, 0, 0, 0.33)
+shadow_size = 7
 
 [sub_resource type="Gradient" id="vignette_grad"]
 offsets = PackedFloat32Array(0, 0.62, 1)
