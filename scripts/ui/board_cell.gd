@@ -58,7 +58,14 @@ func set_highlight(mode: String) -> void:
 
 
 func _apply_style() -> void:
-	# The arena texture draws the tiles; the cell only paints feedback.
+	# Clean flat tile (anime navy+gold look) drawn by the cell itself.
+	var base := StyleBoxFlat.new()
+	base.bg_color = Color(0.16, 0.19, 0.30, 0.55)
+	base.set_corner_radius_all(12)
+	base.border_color = Color(0.79, 0.65, 0.31, 0.30)
+	base.set_border_width_all(2)
+	add_theme_stylebox_override("panel", base)
+
 	var fill := Color.TRANSPARENT
 	var border := Color.TRANSPARENT
 	var width := 0
