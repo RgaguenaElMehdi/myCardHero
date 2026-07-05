@@ -688,10 +688,10 @@ theme_override_constants/separation = 8
 
 [node name="UtilRow" type="HBoxContainer" parent="." unique_id=1172199121]
 layout_mode = 0
-offset_left = 1600.0
-offset_top = 984.0
-offset_right = 1896.0
-offset_bottom = 1054.0
+offset_left = 30.0
+offset_top = 16.0
+offset_right = 326.0
+offset_bottom = 86.0
 theme_override_constants/separation = 12
 
 [node name="BagBtn" type="TextureButton" parent="UtilRow" unique_id=2112401026]
@@ -769,10 +769,10 @@ theme_override_constants/separation = 2
 
 [node name="EnemyDeck" type="TextureRect" parent="." unique_id=770002]
 unique_name_in_owner = true
-offset_left = 1120.0
-offset_top = 14.0
-offset_right = 1190.0
-offset_bottom = 114.0
+offset_left = 1400.0
+offset_top = 8.0
+offset_right = 1550.0
+offset_bottom = 148.0
 mouse_filter = 2
 texture = ExtResource("10")
 expand_mode = 1
@@ -787,7 +787,7 @@ anchor_bottom = 1.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -802,10 +802,10 @@ theme_override_constants/separation = 2
 
 [node name="PlayerDeck" type="TextureRect" parent="." unique_id=770005]
 unique_name_in_owner = true
-offset_left = 1440.0
-offset_top = 916.0
-offset_right = 1516.0
-offset_bottom = 1024.0
+offset_left = 1560.0
+offset_top = 935.0
+offset_right = 1710.0
+offset_bottom = 1075.0
 mouse_filter = 2
 texture = ExtResource("10")
 expand_mode = 1
@@ -820,7 +820,7 @@ anchor_bottom = 1.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 vertical_alignment = 1
 
