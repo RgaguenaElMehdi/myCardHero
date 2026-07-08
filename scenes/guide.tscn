@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/guide_scene.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/BoldPixels.ttf" id="2"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
 
 [node name="Guide" type="Control"]
@@ -21,7 +21,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.106, 0.129, 0.188, 1)
+color = Color(0.082, 0.071, 0.102, 1)
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 1

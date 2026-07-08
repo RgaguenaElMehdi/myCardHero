@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://badyqaiwb6pqq"]
 
 [ext_resource type="Theme" uid="uid://b8exa286p0qed" path="res://resources/ui_theme.tres" id="1"]
-[ext_resource type="FontFile" uid="uid://c0hobbp5871o7" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/BoldPixels.ttf" id="2"]
 
 [node name="MulliganOverlay" type="Control"]
 layout_mode = 1

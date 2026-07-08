@@ -1,27 +1,30 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
-[ext_resource type="FontFile" path="res://assets/fonts/CinzelDecorative-Bold.ttf" id="3"]
+[ext_resource type="FontFile" path="res://assets/fonts/BoldPixels.ttf" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/BoldPixels.ttf" id="3"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/main_menu.png" id="4"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="5"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/logo.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/panel_stone.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/ind_attack.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_stat_attack.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_bag.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_book.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_gear.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_exit.png" id="13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/res_crystal.png" id="14"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btnpanel"]
-bg_color = Color(0, 0, 0, 0.6)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
-border_color = Color(0.36, 0.39, 0.45, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-content_margin_left = 12.0
-content_margin_top = 10.0
-content_margin_right = 12.0
-content_margin_bottom = 10.0
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_progress"]
+content_margin_left = 26.0
+content_margin_top = 22.0
+content_margin_right = 26.0
+content_margin_bottom = 24.0
+texture = ExtResource("7")
+texture_margin_left = 14.0
+texture_margin_top = 14.0
+texture_margin_right = 14.0
+texture_margin_bottom = 14.0
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -87,70 +90,127 @@ theme_override_font_sizes/font_size = 26
 theme_override_fonts/font = ExtResource("2")
 text = "Le Circuit de Petraheim"
 horizontal_alignment = 1
+mouse_filter = 2
 
-[node name="ButtonPanel" type="PanelContainer" parent="."]
+[node name="MenuColumn" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 760.0
-offset_top = 425.0
-offset_right = 1160.0
-offset_bottom = 905.0
-custom_minimum_size = Vector2(400, 0)
-theme_override_styles/panel = SubResource("StyleBoxFlat_btnpanel")
+anchors_preset = 0
+offset_left = 96.0
+offset_top = 430.0
+offset_right = 570.0
+offset_bottom = 990.0
+theme_override_constants/separation = 14
 
-[node name="VBox" type="VBoxContainer" parent="ButtonPanel"]
+[node name="CampaignBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 76)
+theme_override_constants/icon_max_width = 44
+theme_override_constants/h_separation = 16
+alignment = 0
+text = "Campagne"
+icon = ExtResource("8")
+
+[node name="FreePlayBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 76)
+theme_override_constants/icon_max_width = 44
+theme_override_constants/h_separation = 16
+alignment = 0
+text = "Partie libre"
+icon = ExtResource("9")
+
+[node name="DeckBuilderBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 76)
+theme_override_constants/icon_max_width = 44
+theme_override_constants/h_separation = 16
+alignment = 0
+text = "Deck builder"
+icon = ExtResource("10")
+
+[node name="GuideBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 76)
+theme_override_constants/icon_max_width = 44
+theme_override_constants/h_separation = 16
+alignment = 0
+text = "Guide du jeu"
+icon = ExtResource("11")
+
+[node name="OptionsBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 76)
+theme_override_constants/icon_max_width = 44
+theme_override_constants/h_separation = 16
+alignment = 0
+text = "Options"
+icon = ExtResource("12")
+
+[node name="QuitBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 76)
+theme_override_constants/icon_max_width = 44
+theme_override_constants/h_separation = 16
+alignment = 0
+text = "Quitter"
+icon = ExtResource("13")
+
+[node name="ProgressPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 1370.0
+offset_top = 580.0
+offset_right = 1846.0
+offset_bottom = 950.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_progress")
+
+[node name="VBox" type="VBoxContainer" parent="ProgressPanel"]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="CampaignBtn" type="Button" parent="ButtonPanel/VBox"]
-unique_name_in_owner = true
+[node name="Header" type="HBoxContainer" parent="ProgressPanel/VBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 62)
-text = "Campagne"
+theme_override_constants/separation = 12
 
-[node name="FreePlayBtn" type="Button" parent="ButtonPanel/VBox"]
-unique_name_in_owner = true
+[node name="Gem" type="TextureRect" parent="ProgressPanel/VBox/Header"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 62)
-text = "Partie libre"
+custom_minimum_size = Vector2(36, 44)
+texture = ExtResource("14")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="DeckBuilderBtn" type="Button" parent="ButtonPanel/VBox"]
-unique_name_in_owner = true
+[node name="Title" type="Label" parent="ProgressPanel/VBox/Header"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 62)
-text = "Deck builder"
-
-[node name="GuideBtn" type="Button" parent="ButtonPanel/VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 62)
-text = "Guide du jeu"
-
-[node name="OptionsBtn" type="Button" parent="ButtonPanel/VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 62)
-text = "Options"
-
-[node name="QuitBtn" type="Button" parent="ButtonPanel/VBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 62)
-text = "Quitter"
-
-[node name="StatusLabel" type="Label" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 880.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.663, 0.69, 0.761, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 17
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("2")
+text = "CAMPAGNE"
+vertical_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="ProgressPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.91, 0.894, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 3
 mouse_filter = 2
+
+[node name="Spacer" type="Control" parent="ProgressPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FightBtn" type="Button" parent="ProgressPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 68)
+text = "COMBATTRE"

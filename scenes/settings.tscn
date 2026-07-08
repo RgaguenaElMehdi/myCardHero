@@ -1,19 +1,32 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/settings_scene.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/BoldPixels.ttf" id="2"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/panel_stone.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/tab_infos.png" id="5"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.145, 0.173, 0.243, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-content_margin_left = 10.0
-content_margin_top = 8.0
-content_margin_right = 10.0
-content_margin_bottom = 8.0
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_panel"]
+content_margin_left = 34.0
+content_margin_top = 26.0
+content_margin_right = 34.0
+content_margin_bottom = 30.0
+texture = ExtResource("4")
+texture_margin_left = 14.0
+texture_margin_top = 14.0
+texture_margin_right = 14.0
+texture_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_titleband"]
+content_margin_left = 40.0
+content_margin_top = 10.0
+content_margin_right = 40.0
+content_margin_bottom = 12.0
+texture = ExtResource("5")
+texture_margin_left = 22.0
+texture_margin_top = 12.0
+texture_margin_right = 22.0
+texture_margin_bottom = 12.0
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -32,7 +45,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.106, 0.129, 0.188, 1)
+color = Color(0.082, 0.071, 0.102, 1)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -44,21 +57,36 @@ grow_vertical = 2
 
 [node name="Panel" type="PanelContainer" parent="CenterContainer"]
 layout_mode = 2
-custom_minimum_size = Vector2(640, 0)
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+custom_minimum_size = Vector2(720, 0)
+theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer/Panel"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="CenterContainer/Panel/VBox"]
+[node name="Header" type="CenterContainer" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+
+[node name="TitleBand" type="PanelContainer" parent="CenterContainer/Panel/VBox/Header"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_titleband")
+
+[node name="Title" type="Label" parent="CenterContainer/Panel/VBox/Header/TitleBand"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
-theme_override_constants/outline_size = 9
-theme_override_font_sizes/font_size = 36
+theme_override_constants/outline_size = 7
+theme_override_font_sizes/font_size = 32
 theme_override_fonts/font = ExtResource("2")
-text = "Options"
+text = "PARAMÈTRES"
+horizontal_alignment = 1
+
+[node name="AudioHeader" type="Label" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2")
+text = "AUDIO"
 
 [node name="MusicLabel" type="Label" parent="CenterContainer/Panel/VBox"]
 layout_mode = 2
@@ -92,19 +120,33 @@ max_value = 1.0
 step = 0.05
 value = 0.9
 
+[node name="SepDisplay" type="HSeparator" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+
+[node name="DisplayHeader" type="Label" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2")
+text = "AFFICHAGE"
+
 [node name="FullscreenCheck" type="CheckButton" parent="CenterContainer/Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "Plein écran   (F11 ou Alt+Entrée partout dans le jeu)"
 
+[node name="SepAccount" type="HSeparator" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+
 [node name="ResetBtn" type="Button" parent="CenterContainer/Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
 text = "Réinitialiser la progression"
 
 [node name="BackBtn" type="Button" parent="CenterContainer/Panel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 54)
+custom_minimum_size = Vector2(0, 56)
 text = "← Retour au menu"

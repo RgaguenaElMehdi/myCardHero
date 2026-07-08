@@ -2,57 +2,33 @@ class_name UiTheme
 ## Shared colors and style helpers for every scene. All UI chrome is built
 ## programmatically; generated art (assets/) provides the imagery.
 
-const BG := Color("1b2130")
-const PANEL := Color("252c3e")
-const PANEL_LIGHT := Color("323b52")
+# Palette dark fantasy (maquette) : anthracite chaud, or antique, rouge profond.
+const BG := Color("15121a")
+const PANEL := Color("201c26")
+const PANEL_LIGHT := Color("2b2533")
 const TEXT := Color("e8e4d8")
-const TEXT_DIM := Color("a9b0c2")
+const TEXT_DIM := Color("a89f93")
 const ACCENT := Color("58a6ff")
 const GOLD := Color("e6c35a")
-const DANGER := Color("e2603c")
+const DANGER := Color("a83a28")
 const OK := Color("5aa864")
 
 # Palette de faction : source unique dans GameConst (Règle des couleurs).
 const GUILD_COLORS := GameConst.GUILD_COLORS
 
-const GUILD_ICONS := {
-	GameConst.Guild.FLAME: "res://assets/sprites/ui/icon_flame.png",
-	GameConst.Guild.SYLVAN: "res://assets/sprites/ui/icon_sylvan.png",
-	GameConst.Guild.SHADOW: "res://assets/sprites/ui/icon_shadow.png",
-	GameConst.Guild.LIGHT: "res://assets/sprites/ui/icon_light.png",
-}
-
-# UI chrome sliced from the mockup sheets (assets/sprites/ui/mockup) or
-# generated (assets/sprites/ui). Everything falls back to the flat style when
-# a texture is missing.
-const TEX_CARD_FRAME := "res://assets/sprites/ui/card_frame.png"
-const TEX_PORTRAIT_RING := "res://assets/sprites/ui/pixel/ind_select_gold.png"
-const TEX_BANNER := "res://assets/sprites/ui/banner_ribbon.png"
+# UI chrome: pixel pack generated via tools/generate_ui_pack.py. Everything
+# falls back to the flat style when a texture is missing.
+const TEX_BANNER := "res://assets/sprites/ui/pixel/banner_ribbon.png"
 const TEX_LOGO := "res://assets/sprites/ui/logo.png"
-const TEX_CELL_TILE := "res://assets/sprites/ui/cell_tile.png"
 const TEX_PANEL := "res://assets/sprites/ui/pixel/panel_stone.png"
 const TEX_BUTTON := "res://assets/sprites/ui/pixel/btn_primary.png"
 const TEX_BUTTON_SECONDARY := "res://assets/sprites/ui/pixel/btn_secondary.png"
 const TEX_BUTTON_DISABLED := "res://assets/sprites/ui/pixel/btn_disabled.png"
 const TEX_VICTORY := "res://assets/sprites/ui/victory_bg.png"
 const TEX_DEFEAT := "res://assets/sprites/ui/defeat_bg.png"
-const TEX_PANEL_HUD := "res://assets/sprites/ui/panel_hud.png"
-const TEX_BUTTON_RED := "res://assets/sprites/ui/button_red.png"
-const TEX_BUTTON_BLUE := "res://assets/sprites/ui/button_blue.png"
-const TEX_BUTTON_GREEN := "res://assets/sprites/ui/button_green.png"
-const TEX_BAR_HP_FRAME := "res://assets/sprites/ui/bar_hp_frame.png"
-const TEX_BAR_HP_FILL := "res://assets/sprites/ui/bar_hp_fill.png"
-const TEX_BAR_MANA_FRAME := "res://assets/sprites/ui/bar_mana_frame.png"
-const TEX_BAR_MANA_FILL := "res://assets/sprites/ui/bar_mana_fill.png"
-const TEX_TOOLTIP := "res://assets/sprites/ui/panel_tooltip.png"
-const TEX_TORCH := "res://assets/sprites/ui/torch_decoration.png"
-const TEX_ICON_FLAME := "res://assets/sprites/ui/icon_flame.png"
-const TEX_ICON_SYLVAN := "res://assets/sprites/ui/icon_sylvan.png"
-const TEX_ICON_SHADOW := "res://assets/sprites/ui/icon_shadow.png"
-const TEX_ICON_LIGHT := "res://assets/sprites/ui/icon_light.png"
 
-const FONT_TITLE := "res://assets/fonts/Cinzel.ttf"
-const FONT_DISPLAY := "res://assets/fonts/CinzelDecorative-Bold.ttf"
+const FONT_TITLE := "res://assets/fonts/BoldPixels.ttf"
+const FONT_DISPLAY := "res://assets/fonts/BoldPixels.ttf"
 
 
 static func title_font() -> Font:
@@ -63,7 +39,7 @@ static func display_font() -> Font:
 	return load(FONT_DISPLAY) if ResourceLoader.exists(FONT_DISPLAY) else null
 
 
-## Title text in the game's serif face (Cinzel), with a dark outline.
+## Title text in the game's pixel face (BoldPixels), with a dark outline.
 static func title_label(text: String, size: int = 32, color: Color = GOLD) -> Label:
 	var l := label(text, size, color)
 	var f := title_font()
@@ -284,7 +260,4 @@ static func icon_label(icon_path: String, text: String, size: int, color: Color)
 	box.add_child(label(text, size, color))
 	return box
 
-const ICON_ATK := "res://assets/sprites/ui/pixel/icon_stat_attack.png"
-const ICON_HP := "res://assets/sprites/ui/pixel/res_heart.png"
 const ICON_STONE := "res://assets/sprites/ui/pixel/res_crystal.png"
-const ICON_XP := "res://assets/sprites/ui/icon_xp.png"

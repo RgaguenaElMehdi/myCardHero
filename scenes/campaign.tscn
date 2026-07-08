@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/campaign_scene.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/BoldPixels.ttf" id="2"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/main_menu.png" id="3"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="4"]
 

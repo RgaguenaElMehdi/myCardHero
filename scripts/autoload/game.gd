@@ -64,7 +64,8 @@ func _fit_window() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if String(arg).begins_with("--clickflow") or String(arg) == "--probe" \
 				or String(arg).begins_with("--screenshot") \
-				or String(arg).begins_with("--end-shot") or String(arg) == "--autoplay":
+				or String(arg).begins_with("--end-shot") or String(arg) == "--autoplay" \
+				or String(arg) == "--clicklog":
 			return
 	var win := get_window()
 	if bool(profile.get("settings", {}).get("fullscreen", false)):

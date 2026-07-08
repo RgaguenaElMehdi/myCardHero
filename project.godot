@@ -18,7 +18,7 @@ config/name="Stonebound"
 config/description="Tactical card battler inspired by Trade & Battle: Card Hero — place monsters on a grid, manage stones, evolve your creatures and take down the enemy Master."
 config/version="0.1.0"
 run/main_scene="res://scenes/main_menu.tscn"
-config/features=PackedStringArray("4.7")
+config/features=PackedStringArray("4.6")
 config/icon="res://assets/sprites/ui/app_icon.png"
 
 [autoload]
@@ -32,6 +32,7 @@ DebugHarness="*res://scripts/autoload/debug.gd"
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/size/mode=3
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -41,5 +42,6 @@ project/assembly_name="Stonebound"
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

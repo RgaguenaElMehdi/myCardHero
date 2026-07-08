@@ -19,3 +19,4 @@ tools/.cache/
 
 # Graphe de connaissance local (regenerable via /graphify)
 graphify-out/
+tools/raw_ui/
