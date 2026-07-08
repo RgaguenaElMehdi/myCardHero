@@ -184,6 +184,8 @@ func _init_ui() -> void:
 	%BookBtn.pressed.connect(func() -> void:
 		legend_panel.visible = not legend_panel.visible)
 	%GearBtn.pressed.connect(func() -> void: Game.goto("main_menu"))
+	%LogBtn.pressed.connect(func() -> void:
+		%LogPanel.visible = not %LogPanel.visible)
 
 	# Right-click a side panel = inspect that master.
 	for side in 2:

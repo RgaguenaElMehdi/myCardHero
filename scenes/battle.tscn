@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://jvqga6gkleyk" path="res://assets/sprites/ui/pixel/row_marker_1.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://bw44plj2npvs4" path="res://assets/sprites/ui/pixel/row_marker_2.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://qkar6fm5ku8y" path="res://assets/sprites/ui/pixel/row_marker_3.png" id="18"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_stat_action.png" id="19"]
 
 [sub_resource type="StyleBoxFlat" id="panel_navy"]
 bg_color = Color(0.098, 0.118, 0.196, 0.92)
@@ -582,9 +583,9 @@ theme_override_styles/panel = SubResource("panel_navy")
 custom_minimum_size = Vector2(288, 0)
 layout_mode = 0
 offset_left = 1612.0
-offset_top = 160.0
+offset_top = 385.0
 offset_right = 1900.0
-offset_bottom = 470.0
+offset_bottom = 695.0
 
 [node name="InfoBox" type="VBoxContainer" parent="InfoPanel" unique_id=595276332]
 unique_name_in_owner = true
@@ -638,13 +639,15 @@ theme_override_font_sizes/font_size = 15
 
 [node name="LogPanel" type="PanelContainer" parent="." unique_id=1405430135]
 unique_name_in_owner = true
+visible = false
+z_index = 15
 theme_override_styles/panel = SubResource("panel_navy")
 custom_minimum_size = Vector2(288, 0)
 layout_mode = 0
-offset_left = 1612.0
-offset_top = 444.0
-offset_right = 1900.0
-offset_bottom = 930.0
+offset_left = 20.0
+offset_top = 110.0
+offset_right = 300.0
+offset_bottom = 460.0
 
 [node name="LogBox" type="VBoxContainer" parent="LogPanel" unique_id=719701788]
 layout_mode = 2
@@ -732,6 +735,15 @@ custom_minimum_size = Vector2(62, 66)
 layout_mode = 2
 tooltip_text = "Abandonner la partie"
 texture_normal = ExtResource("13")
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="LogBtn" type="TextureButton" parent="UtilRow" unique_id=1285097627]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(62, 66)
+layout_mode = 2
+tooltip_text = "Dernières actions"
+texture_normal = ExtResource("19")
 ignore_texture_size = true
 stretch_mode = 5
 
