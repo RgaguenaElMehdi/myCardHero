@@ -126,6 +126,12 @@ static func card_tooltip(def: CardDef, evo_name: String = "") -> String:
 			var target := evo_name if evo_name != "" else "sa forme évoluée"
 			lines.append("Au niveau max, peut évoluer en %s pour %d pierres (PV restaurés)."
 					% [target, def.evolve_cost])
+		if not def.on_summon.is_empty():
+			lines.append("Invocation : " + describe_effect(def.on_summon))
+		if not def.on_death.is_empty():
+			lines.append("Mort : " + describe_effect(def.on_death))
+		if not def.on_attack.is_empty():
+			lines.append("Attaque : " + describe_effect(def.on_attack))
 	else:
 		lines.append("Sort : " + describe_effect(def.effect))
 	if def.description != "":

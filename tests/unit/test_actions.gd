@@ -158,7 +158,7 @@ func test_spell_bolt_targeting() -> void:
 
 
 func test_kiran_spell_damage_passive() -> void:
-	var kiran := TestUtil.master("kiran", &"spell_damage_plus")
+	var kiran := TestUtil.master("kiran", GameConst.PASSIVE_SPELL_DAMAGE_PLUS)
 	var state := TestUtil.fresh_game(1, kiran, null)
 	_hand(state, ["bolt"])
 	TestUtil.put(state, Vector2i(0, 2), "grunt", 1)  # 3 hp

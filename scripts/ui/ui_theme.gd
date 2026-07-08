@@ -103,6 +103,11 @@ static func _button_tex_style(tex_path: String, tint: Color) -> StyleBoxTexture:
 	sb.texture_margin_right = m
 	sb.texture_margin_top = m
 	sb.texture_margin_bottom = m
+	# Prevent visual from bleeding ABOVE the rect (would shift click area down).
+	sb.expand_margin_left = 0
+	sb.expand_margin_top = 0
+	sb.expand_margin_right = 0
+	sb.expand_margin_bottom = 0
 	sb.content_margin_left = 18
 	sb.content_margin_right = 18
 	sb.content_margin_top = 8
@@ -222,9 +227,6 @@ static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int 
 		btn.add_theme_font_override("font", f)
 		btn.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.7))
 		btn.add_theme_constant_override("outline_size", 4)
-	# Fire on press (not release): far more forgiving when the mouse moves
-	# slightly during the click, and the whole UI feels snappier.
-	btn.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
 	if not btn.pressed.is_connected(_click_sfx):
 		btn.pressed.connect(_click_sfx)
 

@@ -25,6 +25,14 @@ extends Resource
 ## Tokens (evolved forms) cannot be put in decks.
 @export var token: bool = false
 
+@export_group("Hooks")
+## Ops fired when this monster is summoned. Uses the Effects op vocabulary.
+@export var on_summon: Array[Dictionary] = []
+## Ops fired when this monster dies (caster = owner).
+@export var on_death: Array[Dictionary] = []
+## Ops fired after this monster attacks (caster = owner).
+@export var on_attack: Array[Dictionary] = []
+
 @export_group("Spell")
 ## Ordered effect ops, e.g. [{ "op": "damage", "amount": 2, "target": "enemy_monster" }].
 ## See Effects.gd for the op vocabulary.

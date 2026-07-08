@@ -30,6 +30,12 @@ const KW_RIPOSTE := &"riposte"
 const KW_REGEN := &"regen"
 const KW_SHIELD := &"shield"
 
+## Passive identifiers for master abilities (single source of truth).
+const PASSIVE_SPELL_DAMAGE_PLUS := &"spell_damage_plus"
+const PASSIVE_SUMMON_HP_PLUS    := &"summon_hp_plus"
+const PASSIVE_KILL_BONUS_STONE  := &"kill_bonus_stone"
+const PASSIVE_RANGED_RESIST     := &"ranged_resist"
+
 const GUILD_NAMES := {
 	Guild.FLAME: "Flamme",
 	Guild.SYLVAN: "Sylve",

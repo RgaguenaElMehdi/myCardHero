@@ -125,7 +125,7 @@ func test_xp_level_up_and_kill_reward() -> void:
 
 
 func test_kill_reward_grim_passive() -> void:
-	var grim := TestUtil.master("grim", &"kill_bonus_stone")
+	var grim := TestUtil.master("grim", GameConst.PASSIVE_KILL_BONUS_STONE)
 	var state := TestUtil.fresh_game(1, grim, null)
 	TestUtil.put(state, Vector2i(0, 1), "grunt", 0)
 	TestUtil.put(state, Vector2i(0, 2), "hasty", 1)
@@ -148,7 +148,7 @@ func test_master_damage_and_win() -> void:
 
 
 func test_aria_ranged_resist() -> void:
-	var aria := TestUtil.master("aria", &"ranged_resist")
+	var aria := TestUtil.master("aria", GameConst.PASSIVE_RANGED_RESIST)
 	var state := TestUtil.fresh_game(1, null, aria)
 	TestUtil.put(state, Vector2i(2, 1), "archer", 0)  # atk 2 ranged, master exposed
 	Rules.apply(state, { "type": "attack", "from": Vector2i(2, 1), "to": Vector2i(1, 3) })

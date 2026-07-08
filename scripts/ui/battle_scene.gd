@@ -6,6 +6,8 @@ extends Control
 ## The human is always player 0; the AI is player 1.
 
 const BOARD_CELL_SCENE: PackedScene = preload("res://scenes/widgets/board_cell.tscn")
+const MULLIGAN_SCENE: PackedScene = preload("res://scenes/widgets/mulligan.tscn")
+const GAME_OVER_SCENE: PackedScene = preload("res://scenes/widgets/game_over.tscn")
 
 const HAND_CARD_W := 140.0
 ## Horizontal center of the board (hand, toasts and banners align on it).
@@ -126,41 +128,15 @@ func _setup_match() -> void:
 
 
 func _show_mulligan() -> void:
-	mulligan_overlay = _overlay()
-	var panel := PanelContainer.new()
-	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 16)
-	panel.add_child(vbox)
-	var title := UiTheme.title_label("Main de départ", 30)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	vbox.add_child(title)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	vbox.add_child(row)
+	mulligan_overlay = MULLIGAN_SCENE.instantiate()
+	mulligan_overlay.get_node("%KeepBtn").pressed.connect(_on_mulligan_choice.bind(false))
+	mulligan_overlay.get_node("%RedrawBtn").pressed.connect(_on_mulligan_choice.bind(true))
+	add_child(mulligan_overlay)
 	for id in state.players[0].hand:
 		var cw := CardWidget.create(state.card(id), 170)
 		cw.inspect_requested.connect(func(w2: CardWidget) -> void:
 			CardPopup.open(self, w2.def))
-		row.add_child(cw)
-	var buttons := HBoxContainer.new()
-	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
-	buttons.add_theme_constant_override("separation", 20)
-	vbox.add_child(buttons)
-	var keep := Button.new()
-	keep.text = "Garder"
-	keep.custom_minimum_size = Vector2(180, 48)
-	keep.pressed.connect(_on_mulligan_choice.bind(false))
-	buttons.add_child(keep)
-	var redraw := Button.new()
-	redraw.text = "Nouvelle main"
-	redraw.theme_type_variation = &"ButtonSecondary"
-	redraw.custom_minimum_size = Vector2(180, 48)
-	redraw.pressed.connect(_on_mulligan_choice.bind(true))
-	buttons.add_child(redraw)
-	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
-	center.add_child(panel)
-	mulligan_overlay.add_child(center)
+		mulligan_overlay.get_node("%CardRow").add_child(cw)
 
 
 func _on_mulligan_choice(redraw: bool) -> void:
@@ -246,39 +222,6 @@ func _init_ui() -> void:
 ## Screen rectangle of one board cell (délégué à la scène d'arène du thème).
 func _cell_rect(cell: Vector2i) -> Rect2:
 	return arena.cell_rect(cell)
-
-
-## Radial darkness for full-screen overlays (game over).
-func _add_vignette(parent: Control, strength: float) -> void:
-	var grad := Gradient.new()
-	grad.set_color(0, Color(0, 0, 0, 0))
-	grad.set_color(1, Color(0, 0, 0, strength))
-	grad.add_point(0.62, Color(0, 0, 0, 0))
-	var gt := GradientTexture2D.new()
-	gt.gradient = grad
-	gt.fill = GradientTexture2D.FILL_RADIAL
-	gt.fill_from = Vector2(0.5, 0.5)
-	gt.fill_to = Vector2(0.5, -0.15)
-	gt.width = 512
-	gt.height = 288
-	var rect := TextureRect.new()
-	rect.texture = gt
-	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
-	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	rect.stretch_mode = TextureRect.STRETCH_SCALE
-	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(rect)
-
-
-func _overlay() -> Control:
-	var layer := Control.new()
-	layer.set_anchors_preset(Control.PRESET_FULL_RECT)
-	var dim := ColorRect.new()
-	dim.color = Color(0, 0, 0, 0.6)
-	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
-	layer.add_child(dim)
-	add_child(layer)
-	return layer
 
 
 # --- Refresh --------------------------------------------------------------
@@ -1117,18 +1060,16 @@ func _show_game_over() -> void:
 		Engine.time_scale = 1.0
 	Audio.play_sfx("win" if won else "lose")
 	Audio.stop_music()
-	var overlay := _overlay()
-	# Full-screen illustrated backdrop, fading in.
-	var art := TextureRect.new()
+
+	var overlay: Control = GAME_OVER_SCENE.instantiate()
+	add_child(overlay)
+
+	# Background art fading in.
+	var art: TextureRect = overlay.get_node("%Art")
 	art.texture = UiTheme.tex(UiTheme.TEX_VICTORY if won else UiTheme.TEX_DEFEAT)
-	art.set_anchors_preset(Control.PRESET_FULL_RECT)
-	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	art.modulate.a = 0.0
-	overlay.add_child(art)
 	create_tween().tween_property(art, "modulate:a", 1.0, 0.8)
-	_add_vignette(overlay, 0.6)
+
 	if won:
 		# Golden confetti raining from the top.
 		var confetti := CPUParticles2D.new()
@@ -1149,24 +1090,18 @@ func _show_game_over() -> void:
 		confetti.hue_variation_min = -0.12
 		confetti.hue_variation_max = 0.12
 		overlay.add_child(confetti)
-	# Big display title with a punch-in.
-	var title := UiTheme.title_label("VICTOIRE" if won else "DÉFAITE", 120,
-			UiTheme.GOLD if won else Color("d96a6a"))
-	var display := UiTheme.display_font()
-	if display != null:
-		title.add_theme_font_override("font", display)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	title.offset_top = 260
-	title.pivot_offset = Vector2(960, 80)
+
+	# Title with a punch-in.
+	var title: Label = overlay.get_node("%Title")
+	title.text = "VICTOIRE" if won else "DÉFAITE"
+	title.add_theme_color_override("font_color", UiTheme.GOLD if won else Color("d96a6a"))
 	title.scale = Vector2(1.8, 1.8)
-	title.modulate.a = 0.0
-	overlay.add_child(title)
 	var tw := create_tween()
 	tw.set_parallel(true)
 	tw.tween_property(title, "scale", Vector2.ONE, 0.45) \
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.3)
 	tw.tween_property(title, "modulate:a", 1.0, 0.3).set_delay(0.3)
+
 	# Sub-line + battle stats.
 	var sub := ""
 	if state.winner == -2:
@@ -1177,22 +1112,11 @@ func _show_game_over() -> void:
 		sub = "Votre Maître est tombé…"
 	sub += "\nTours joués : %d      Monstres vaincus : %d      Monstres perdus : %d" \
 			% [state.player_turn_count(), int(kills[0]), int(kills[1])]
-	var sub_l := UiTheme.label(sub, 20, UiTheme.TEXT)
-	sub_l.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
-	sub_l.add_theme_constant_override("outline_size", 8)
-	sub_l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub_l.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	sub_l.offset_top = 460
-	sub_l.modulate.a = 0.0
-	overlay.add_child(sub_l)
+	var sub_l: Label = overlay.get_node("%SubText")
+	sub_l.text = sub
 	create_tween().tween_property(sub_l, "modulate:a", 1.0, 0.4).set_delay(0.7)
-	# Actions.
-	var buttons := HBoxContainer.new()
-	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
-	buttons.add_theme_constant_override("separation", 20)
-	buttons.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	buttons.offset_top = 620
-	overlay.add_child(buttons)
+
+	var buttons: HBoxContainer = overlay.get_node("%Buttons")
 	if autoplay and end_shot != "":
 		await _wait(1.8)
 		var img := get_viewport().get_texture().get_image()

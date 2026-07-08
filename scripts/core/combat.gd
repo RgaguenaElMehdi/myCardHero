@@ -38,9 +38,11 @@ static func destroy(state: GameState, cell: Vector2i, killer: int, grant_reward:
 		return
 	state.players[m.owner_idx].discard.append(m.def.id)
 	events.append({ "e": "death", "cell": cell, "card_id": m.def.id, "owner": m.owner_idx })
+	if not m.def.on_death.is_empty():
+		Effects.apply_ops(state, m.owner_idx, m.def.on_death, null, false, events)
 	if grant_reward and killer >= 0 and killer != m.owner_idx:
 		var reward := m.level
-		if state.players[killer].has_passive(&"kill_bonus_stone"):
+		if state.players[killer].has_passive(GameConst.PASSIVE_KILL_BONUS_STONE):
 			reward += 1
 		events.append({ "e": "kill_reward", "player": killer, "amount": reward })
 		gain_stones(state, killer, reward, events)
@@ -51,7 +53,7 @@ static func damage_master(state: GameState, player_idx: int, raw: int,
 		attack_type: int, events: Array) -> void:
 	var p := state.players[player_idx]
 	var dealt := raw
-	if attack_type == GameConst.AttackType.RANGED and p.has_passive(&"ranged_resist"):
+	if attack_type == GameConst.AttackType.RANGED and p.has_passive(GameConst.PASSIVE_RANGED_RESIST):
 		dealt -= 1
 	dealt = maxi(0, dealt)
 	p.master_hp -= dealt

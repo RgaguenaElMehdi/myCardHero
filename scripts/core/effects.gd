@@ -27,13 +27,13 @@ static func apply_ops(state: GameState, caster: int, ops: Array, target,
 		match String(op.get("op", "")):
 			"damage":
 				var amount: int = op.get("amount", 0)
-				if is_spell_card and state.players[caster].has_passive(&"spell_damage_plus"):
+				if is_spell_card and state.players[caster].has_passive(GameConst.PASSIVE_SPELL_DAMAGE_PLUS):
 					amount += 1
 				if target != null and state.board.at(target) != null:
 					Combat.apply_damage(state, target, amount, true, caster, events)
 			"damage_all_enemies":
 				var amount: int = op.get("amount", 0)
-				if is_spell_card and state.players[caster].has_passive(&"spell_damage_plus"):
+				if is_spell_card and state.players[caster].has_passive(GameConst.PASSIVE_SPELL_DAMAGE_PLUS):
 					amount += 1
 				for cell in state.board.monster_cells_of(1 - caster):
 					if state.board.at(cell) != null:

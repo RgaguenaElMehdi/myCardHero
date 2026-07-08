@@ -158,11 +158,13 @@ static func _apply_summon(state: GameState, action: Dictionary, events: Array) -
 	_spend(state, state.current, def.cost, events)
 	p.hand.remove_at(idx)
 	var m := MonsterInst.create(def, state.current, state.turn)
-	if p.has_passive(&"summon_hp_plus"):
+	if p.has_passive(GameConst.PASSIVE_SUMMON_HP_PLUS):
 		m.max_hp_bonus += 1
 		m.hp = m.max_hp()
 	state.board.place(cell, m)
 	events.append({ "e": "summon", "player": state.current, "cell": cell, "card_id": def.id })
+	if not def.on_summon.is_empty():
+		Effects.apply_ops(state, state.current, def.on_summon, cell, false, events)
 	return ""
 
 
@@ -207,6 +209,9 @@ static func _apply_attack(state: GameState, action: Dictionary, events: Array) -
 		if rip > 0:
 			events.append({ "e": "riposte", "from": to, "to": from, "amount": rip })
 			Combat.apply_damage(state, from, rip, true, defender.owner_idx, events)
+	# on_attack hook: fire if attacker survived the riposte.
+	if state.board.at(from) != null and not attacker.def.on_attack.is_empty():
+		Effects.apply_ops(state, state.current, attacker.def.on_attack, null, false, events)
 	return ""
 
 

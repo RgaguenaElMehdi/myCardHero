@@ -96,7 +96,7 @@ func _score_attack(state: GameState, a: Dictionary) -> float:
 		# Master hit: huge if lethal, always strong tempo otherwise.
 		var dmg := attacker.atk()
 		var foe := state.players[1 - attacker.owner_idx]
-		if foe.has_passive(&"ranged_resist") \
+		if foe.has_passive(GameConst.PASSIVE_RANGED_RESIST) \
 				and attacker.def.attack_type == GameConst.AttackType.RANGED:
 			dmg = maxi(0, dmg - 1)
 		if dmg >= foe.master_hp:
@@ -147,7 +147,7 @@ func _score_summon(state: GameState, a: Dictionary) -> float:
 func _score_cast(state: GameState, a: Dictionary) -> float:
 	var def := state.card(state.me().hand[a.hand_index])
 	return _score_ops(state, def.effect, a.get("target"),
-			state.me().has_passive(&"spell_damage_plus"))
+			state.me().has_passive(GameConst.PASSIVE_SPELL_DAMAGE_PLUS))
 
 
 func _score_power(state: GameState, a: Dictionary) -> float:
@@ -204,12 +204,14 @@ func _score_move(state: GameState, a: Dictionary) -> float:
 	var m := state.board.at(from)
 	var score := 0.0
 	var had_targets := not Rules.legal_attack_targets(state, from).is_empty()
-	# Cheap lookahead: would this cell open up targets next turn?
+	# Cheap lookahead: snapshot board, mutate, score, restore immediately.
+	# No await between save and restore — safe against state corruption.
+	var saved_cells := state.board.cells.duplicate()
 	state.board.move(from, to)
 	var gains_targets := not Rules.legal_attack_targets(state, to).is_empty()
 	var covers_master: bool = to.x == state.me().master_col \
 			and state.board.column_cover(state.current, state.me().master_col, false) == 1
-	state.board.move(to, from)
+	state.board.cells = saved_cells
 	if not had_targets and gains_targets:
 		score += 4.0
 	if covers_master and from.x != state.me().master_col:

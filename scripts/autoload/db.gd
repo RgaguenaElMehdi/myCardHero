@@ -152,6 +152,19 @@ static func _load_cards(path: String, errors: Array[String]) -> Dictionary:
 			for op in entry.get("effect", []):
 				ops.append(_intify(op))
 			c.effect = ops
+		# Trigger hooks — parsed for all card kinds.
+		var summon_ops: Array[Dictionary] = []
+		for op in entry.get("on_summon", []):
+			summon_ops.append(_intify(op))
+		c.on_summon = summon_ops
+		var death_ops: Array[Dictionary] = []
+		for op in entry.get("on_death", []):
+			death_ops.append(_intify(op))
+		c.on_death = death_ops
+		var attack_ops: Array[Dictionary] = []
+		for op in entry.get("on_attack", []):
+			attack_ops.append(_intify(op))
+		c.on_attack = attack_ops
 		if index.has(c.id):
 			errors.append("Carte en double : %s" % c.id)
 		index[c.id] = c
