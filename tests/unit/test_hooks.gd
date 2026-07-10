@@ -97,3 +97,50 @@ func test_on_attack_not_fired_if_attacker_dies() -> void:
 	var before := state.me().stones
 	Rules.apply(state, { "type": "attack", "from": Vector2i(2, 1), "to": Vector2i(2, 2) })
 	eq(state.me().stones, before, "on_attack non déclenché si l'attaquant meurt en riposte")
+
+
+# --- Passifs de maître (nouvelles mécaniques) --------------------------------
+
+func test_passive_melee_damage_plus() -> void:
+	var brand := TestUtil.master("brand", GameConst.PASSIVE_MELEE_DAMAGE_PLUS)
+	var state := TestUtil.fresh_game(1, brand)
+	TestUtil.put(state, Vector2i(0, 1), "grunt", 0)      # mêlée ATQ 2
+	var target := TestUtil.put(state, Vector2i(0, 2), "healer", 1)  # PV 4, sans armure
+	applied(Rules.apply(state,
+			{ "type": "attack", "from": Vector2i(0, 1), "to": Vector2i(0, 2) }), "attaque mêlée")
+	eq(target.hp, 1, "mêlée +1 : 3 dégâts (2+1) infligés au lieu de 2")
+
+
+func test_passive_turn_start_regen() -> void:
+	var rowan := TestUtil.master("rowan", GameConst.PASSIVE_TURN_START_REGEN)
+	var state := TestUtil.fresh_game(1, rowan)
+	var m := TestUtil.put(state, Vector2i(0, 1), "grunt", 0)  # PV max 3
+	m.hp = 1
+	applied(Rules.apply(state, { "type": "end_turn" }), "fin de tour j0")
+	applied(Rules.apply(state, { "type": "end_turn" }), "fin de tour j1")
+	eq(m.hp, 2, "régén de début de tour : +1 PV sur les monstres alliés")
+
+
+func test_passive_ally_death_draw() -> void:
+	var vane := TestUtil.master("vane", GameConst.PASSIVE_ALLY_DEATH_DRAW)
+	var state := TestUtil.fresh_game(1, vane)
+	TestUtil.put(state, Vector2i(0, 1), "grunt", 0)
+	var hand_before := state.players[0].hand.size()
+	var events: Array = []
+	Combat.destroy(state, Vector2i(0, 1), -1, false, events)
+	eq(state.players[0].hand.size(), hand_before + 1,
+			"mort d'un allié : le propriétaire pioche 1 carte")
+
+
+func test_passive_first_summon_shield() -> void:
+	var sol := TestUtil.master("sol", GameConst.PASSIVE_FIRST_SUMMON_SHIELD)
+	var state := TestUtil.fresh_game(1, sol)
+	TestUtil.fill_stones(state)
+	var cells := state.board.summon_cells(0, state.me().master_col)
+	ok(cells.size() >= 2, "au moins deux cases d'invocation disponibles")
+	applied(Rules.apply(state,
+			{ "type": "summon", "hand_index": 0, "cell": cells[0] }), "1re invocation")
+	ok(state.board.at(cells[0]).shield, "1er monstre du tour : Bouclier accordé")
+	applied(Rules.apply(state,
+			{ "type": "summon", "hand_index": 0, "cell": cells[1] }), "2e invocation")
+	ok(not state.board.at(cells[1]).shield, "2e monstre du tour : pas de Bouclier")

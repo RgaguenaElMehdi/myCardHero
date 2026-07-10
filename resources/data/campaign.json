@@ -2,11 +2,15 @@
   "hero_name": "Milo",
   "starter": {
 	"master": "kiran",
-	"masters": [ "kiran" ],
+	"masters": [ "kiran", "brand", "rowan", "vane", "sol" ],
 	"collection": {
 	  "flame_imp": 2, "ember_fox": 2, "fire_archer": 2, "salamander": 2, "lava_golem": 2,
 	  "phoenix": 1, "fireball": 2, "inferno": 1, "squire": 2, "temple_archer": 2, "blessing": 2,
-	  "moss_turtle": 2, "gloom_rat": 2, "forest_wolf": 1
+	  "moss_turtle": 2, "gloom_rat": 2, "forest_wolf": 1,
+	  "cinder_hound": 2, "magma_brute": 2, "spark_sprite": 2, "meteor": 2,
+	  "bramble_colt": 2, "elder_stag": 2, "verdant_push": 2,
+	  "grave_hound": 2, "night_stalker": 2, "soul_leech": 2, "devouring_shadow": 2,
+	  "dawn_squire": 2, "radiant_griffin": 2, "sanctuary": 2
 	},
 	"deck": [
 	  "flame_imp", "flame_imp", "ember_fox", "ember_fox", "fire_archer", "fire_archer",

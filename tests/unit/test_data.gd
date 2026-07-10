@@ -24,10 +24,10 @@ func test_content_counts() -> void:
 			constructible += 1
 		else:
 			constructible += 1
-	eq(constructible, 32, "32 cartes constructibles")
+	eq(constructible, 46, "46 cartes constructibles")
 	eq(tokens, 8, "8 formes évoluées")
-	eq(spells, 8, "8 sorts")
-	eq(result.masters.size(), 4, "4 maîtres")
+	eq(spells, 12, "12 sorts")
+	eq(result.masters.size(), 8, "8 maîtres")
 	eq(result.campaign.get("chapters", []).size(), 10, "10 chapitres")
 
 
@@ -47,12 +47,14 @@ func test_full_collection_reachable() -> void:
 		var copies := int(owned.get(String(id), 0))
 		ok(copies == GameConst.MAX_COPIES,
 				"collection complète : %s (%d/%d exemplaires)" % [id, copies, GameConst.MAX_COPIES])
-	# all masters unlockable
-	var unlocked := { result.campaign.starter.master: true }
+	# all masters unlockable (starter grant + campaign rewards)
+	var unlocked := {}
+	for mid in result.campaign.starter.masters:
+		unlocked[mid] = true
 	for ch in result.campaign.chapters:
 		for mid in ch.get("rewards", {}).get("masters", []):
 			unlocked[mid] = true
-	eq(unlocked.size(), 4, "4 maîtres déblocables")
+	eq(unlocked.size(), 8, "8 maîtres déblocables")
 
 
 func test_playable_matchup_from_data() -> void:

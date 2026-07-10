@@ -14,6 +14,9 @@ var discard: Array[StringName] = []
 var power_used: bool = false
 var master_moved: bool = false
 var mulligan_done: bool = false
+## Reset each turn: true once the first monster of the turn has been summoned
+## (drives the first_summon_shield passive).
+var first_summon_done: bool = false
 ## Consecutive turn-start draws missed on an empty deck (fatigue damage ramps).
 var fatigue: int = 0
 

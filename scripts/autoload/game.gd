@@ -122,6 +122,15 @@ func reset_profile() -> void:
 
 ## Repairs anything inconsistent (deck not owned/invalid, unknown master...).
 func _sanitize_profile() -> void:
+	# Grant any starter content added since this profile was created (new
+	# masters/cards from a content update). Idempotent, never removes anything.
+	var starter: Dictionary = Db.campaign.get("starter", {})
+	for mid in starter.get("masters", []):
+		if not profile.masters.has(mid):
+			profile.masters.append(mid)
+	for id in starter.get("collection", {}):
+		if owned_count(id) < int(starter.collection[id]):
+			profile.collection[id] = int(starter.collection[id])
 	var deck: Array = profile.get("deck", [])
 	if Rules.validate_deck(Db.cards, deck) != "" or not _deck_owned(deck):
 		profile.deck = Db.campaign.starter.deck.duplicate()

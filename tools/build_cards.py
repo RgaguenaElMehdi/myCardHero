@@ -301,7 +301,7 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
                       int(gc[1] * (0.35 + 0.55 * lum)),
                       int(gc[2] * (0.35 + 0.55 * lum)), 255)
     draw = ImageDraw.Draw(img)
-    gem_text = card.get("_gem", str(card.get("cost", 0)))
+    gem_text = card.get("_gem", str(int(card.get("cost", 0))))
     gem_size = int(W * 0.088) if len(gem_text) <= 1 else int(W * 0.066)
     outlined(draw, gem_c, gem_text, font(F_TITLE, gem_size), (255, 255, 255), width=6)
     if card.get("_gem_label"):
@@ -351,9 +351,9 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
     if is_monster:
         levels = card["levels"]
         niv = str(len(levels)) if len(levels) > 1 else "—"
-        values = [str(levels[0]["atk"]),
+        values = [str(int(levels[0]["atk"])),
                   ATTACK_NAMES.get(card.get("attack_type", "melee"), "?"),
-                  niv, str(levels[0]["hp"])]
+                  niv, str(int(levels[0]["hp"]))]
         for i, val in enumerate(values):
             sx, sy = int(W * a["stat_xs"][i]), int(H * a["stat_y"])
             sr, sg, sb, _sa = px[sx, sy]

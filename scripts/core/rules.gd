@@ -129,10 +129,12 @@ static func _start_turn(state: GameState, events: Array) -> void:
 	Combat.gain_stones(state, state.current, GameConst.STONES_PER_TURN, events)
 	p.power_used = false
 	p.master_moved = false
+	p.first_summon_done = false
+	var passive_regen := 1 if p.has_passive(GameConst.PASSIVE_TURN_START_REGEN) else 0
 	for cell in state.board.monster_cells_of(state.current):
 		var m := state.board.at(cell)
 		m.acted = false
-		var regen := m.keyword_value(GameConst.KW_REGEN)
+		var regen := m.keyword_value(GameConst.KW_REGEN) + passive_regen
 		if regen > 0 and m.hp < m.max_hp():
 			var healed: int = mini(m.hp + regen, m.max_hp()) - m.hp
 			m.hp += healed
@@ -161,6 +163,9 @@ static func _apply_summon(state: GameState, action: Dictionary, events: Array) -
 	if p.has_passive(GameConst.PASSIVE_SUMMON_HP_PLUS):
 		m.max_hp_bonus += 1
 		m.hp = m.max_hp()
+	if p.has_passive(GameConst.PASSIVE_FIRST_SUMMON_SHIELD) and not p.first_summon_done:
+		m.shield = true
+	p.first_summon_done = true
 	state.board.place(cell, m)
 	events.append({ "e": "summon", "player": state.current, "cell": cell, "card_id": def.id })
 	if not def.on_summon.is_empty():
@@ -194,14 +199,18 @@ static func _apply_attack(state: GameState, action: Dictionary, events: Array) -
 		return "Cible d'attaque invalide."
 	attacker.acted = true
 	var foe := 1 - state.current
+	var dmg := attacker.atk()
+	if attacker.def.attack_type == GameConst.AttackType.MELEE \
+			and state.me().has_passive(GameConst.PASSIVE_MELEE_DAMAGE_PLUS):
+		dmg += 1
 	var is_master_target := state.board.at(to) == null
 	events.append({ "e": "attack", "from": from, "to": to, "master": is_master_target })
 	if is_master_target:
-		Combat.damage_master(state, foe, attacker.atk(), attacker.def.attack_type, events)
+		Combat.damage_master(state, foe, dmg, attacker.def.attack_type, events)
 		return ""
 	var defender := state.board.at(to)
 	var pierce := attacker.def.attack_type == GameConst.AttackType.MAGIC
-	var res := Combat.apply_damage(state, to, attacker.atk(), pierce, state.current, events)
+	var res := Combat.apply_damage(state, to, dmg, pierce, state.current, events)
 	if int(res.dealt) > 0:
 		_grant_xp(attacker, from, 2 if bool(res.died) else 1, events)
 	if not bool(res.died) and attacker.def.attack_type == GameConst.AttackType.MELEE:

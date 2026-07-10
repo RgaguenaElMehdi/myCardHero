@@ -38,6 +38,8 @@ static func destroy(state: GameState, cell: Vector2i, killer: int, grant_reward:
 		return
 	state.players[m.owner_idx].discard.append(m.def.id)
 	events.append({ "e": "death", "cell": cell, "card_id": m.def.id, "owner": m.owner_idx })
+	if state.players[m.owner_idx].has_passive(GameConst.PASSIVE_ALLY_DEATH_DRAW):
+		Effects.draw_cards(state, m.owner_idx, 1, false, events)
 	if not m.def.on_death.is_empty():
 		Effects.apply_ops(state, m.owner_idx, m.def.on_death, null, false, events)
 	if grant_reward and killer >= 0 and killer != m.owner_idx:

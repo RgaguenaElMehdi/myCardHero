@@ -35,6 +35,10 @@ const PASSIVE_SPELL_DAMAGE_PLUS := &"spell_damage_plus"
 const PASSIVE_SUMMON_HP_PLUS    := &"summon_hp_plus"
 const PASSIVE_KILL_BONUS_STONE  := &"kill_bonus_stone"
 const PASSIVE_RANGED_RESIST     := &"ranged_resist"
+const PASSIVE_MELEE_DAMAGE_PLUS   := &"melee_damage_plus"
+const PASSIVE_TURN_START_REGEN    := &"turn_start_regen"
+const PASSIVE_ALLY_DEATH_DRAW      := &"ally_death_draw"
+const PASSIVE_FIRST_SUMMON_SHIELD := &"first_summon_shield"
 
 const GUILD_NAMES := {
 	Guild.FLAME: "Flamme",

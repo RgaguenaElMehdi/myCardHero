@@ -942,6 +942,198 @@
 				}
 			],
 			"flavor": "En avant, et que la lumière suive."
+		},
+		{
+			"id": "cinder_hound",
+			"name": "Molosse de cendre",
+			"guild": "flame",
+			"kind": "monster",
+			"cost": 2.0,
+			"attack_type": "melee",
+			"levels": [
+				{ "xp": 0.0, "atk": 3.0, "hp": 3.0 },
+				{ "xp": 3.0, "atk": 4.0, "hp": 4.0 }
+			],
+			"keywords": { "haste": true },
+			"flavor": "Il chasse la chaleur — surtout la vôtre."
+		},
+		{
+			"id": "magma_brute",
+			"name": "Brute de magma",
+			"guild": "flame",
+			"kind": "monster",
+			"cost": 4.0,
+			"attack_type": "melee",
+			"levels": [
+				{ "xp": 0.0, "atk": 4.0, "hp": 6.0 },
+				{ "xp": 4.0, "atk": 5.0, "hp": 7.0 }
+			],
+			"keywords": { "armor": 1.0 },
+			"flavor": "Une avalanche qui a appris à marcher."
+		},
+		{
+			"id": "spark_sprite",
+			"name": "Lutin d'étincelles",
+			"guild": "flame",
+			"kind": "monster",
+			"cost": 1.0,
+			"attack_type": "ranged",
+			"levels": [
+				{ "xp": 0.0, "atk": 1.0, "hp": 1.0 },
+				{ "xp": 2.0, "atk": 2.0, "hp": 2.0 }
+			],
+			"on_death": [
+				{ "op": "damage_all_enemies", "amount": 1.0 }
+			],
+			"flavor": "Il explose en gerbe d'étincelles. Toujours."
+		},
+		{
+			"id": "meteor",
+			"name": "Météore",
+			"guild": "flame",
+			"kind": "spell",
+			"cost": 5.0,
+			"effect": [
+				{ "op": "damage", "amount": 5.0, "target": "enemy_monster" }
+			],
+			"flavor": "Le ciel choisit une cible. Elle n'a pas son mot à dire."
+		},
+		{
+			"id": "bramble_colt",
+			"name": "Poulain de ronces",
+			"guild": "sylvan",
+			"kind": "monster",
+			"cost": 2.0,
+			"attack_type": "melee",
+			"levels": [
+				{ "xp": 0.0, "atk": 2.0, "hp": 3.0 },
+				{ "xp": 3.0, "atk": 3.0, "hp": 4.0 }
+			],
+			"keywords": { "riposte": 1.0 },
+			"flavor": "Rue à qui le touche."
+		},
+		{
+			"id": "elder_stag",
+			"name": "Grand cerf",
+			"guild": "sylvan",
+			"kind": "monster",
+			"cost": 4.0,
+			"attack_type": "melee",
+			"levels": [
+				{ "xp": 0.0, "atk": 3.0, "hp": 6.0 },
+				{ "xp": 4.0, "atk": 4.0, "hp": 7.0 }
+			],
+			"keywords": { "regen": 1.0 },
+			"flavor": "Le bois se souvient de chaque saison."
+		},
+		{
+			"id": "verdant_push",
+			"name": "Poussée verdoyante",
+			"guild": "sylvan",
+			"kind": "spell",
+			"cost": 1.0,
+			"effect": [
+				{ "op": "buff", "atk": 1.0, "hp": 1.0, "target": "ally_monster" }
+			],
+			"flavor": "Un peu de sève, beaucoup d'ambition."
+		},
+		{
+			"id": "grave_hound",
+			"name": "Molosse des tombes",
+			"guild": "shadow",
+			"kind": "monster",
+			"cost": 2.0,
+			"attack_type": "melee",
+			"levels": [
+				{ "xp": 0.0, "atk": 2.0, "hp": 2.0 },
+				{ "xp": 3.0, "atk": 3.0, "hp": 3.0 }
+			],
+			"on_death": [
+				{ "op": "stones", "amount": 1.0 }
+			],
+			"flavor": "Il revient toujours — pour son os, et pour vous."
+		},
+		{
+			"id": "night_stalker",
+			"name": "Rôdeur nocturne",
+			"guild": "shadow",
+			"kind": "monster",
+			"cost": 3.0,
+			"attack_type": "ranged",
+			"levels": [
+				{ "xp": 0.0, "atk": 3.0, "hp": 3.0 },
+				{ "xp": 4.0, "atk": 4.0, "hp": 4.0 }
+			],
+			"keywords": { "flying": true },
+			"flavor": "On ne le voit qu'une fois."
+		},
+		{
+			"id": "soul_leech",
+			"name": "Sangsue d'âme",
+			"guild": "shadow",
+			"kind": "monster",
+			"cost": 3.0,
+			"attack_type": "magic",
+			"levels": [
+				{ "xp": 0.0, "atk": 2.0, "hp": 4.0 },
+				{ "xp": 4.0, "atk": 3.0, "hp": 5.0 }
+			],
+			"on_attack": [
+				{ "op": "heal_master", "amount": 1.0 }
+			],
+			"flavor": "À chaque morsure, un peu de vie change de camp."
+		},
+		{
+			"id": "devouring_shadow",
+			"name": "Ombre dévorante",
+			"guild": "shadow",
+			"kind": "spell",
+			"cost": 3.0,
+			"effect": [
+				{ "op": "damage", "amount": 3.0, "target": "enemy_monster" },
+				{ "op": "draw", "count": 1.0 }
+			],
+			"flavor": "Ce qu'elle dévore, elle vous le rend en savoir."
+		},
+		{
+			"id": "dawn_squire",
+			"name": "Écuyer de l'aube",
+			"guild": "light",
+			"kind": "monster",
+			"cost": 2.0,
+			"attack_type": "melee",
+			"levels": [
+				{ "xp": 0.0, "atk": 2.0, "hp": 3.0 },
+				{ "xp": 3.0, "atk": 3.0, "hp": 4.0 }
+			],
+			"keywords": { "shield": true },
+			"flavor": "Son premier geste est de lever le bouclier."
+		},
+		{
+			"id": "radiant_griffin",
+			"name": "Griffon radieux",
+			"guild": "light",
+			"kind": "monster",
+			"cost": 4.0,
+			"attack_type": "ranged",
+			"levels": [
+				{ "xp": 0.0, "atk": 3.0, "hp": 4.0 },
+				{ "xp": 4.0, "atk": 4.0, "hp": 5.0 }
+			],
+			"keywords": { "flying": true },
+			"flavor": "Il fond du soleil, serres en avant."
+		},
+		{
+			"id": "sanctuary",
+			"name": "Sanctuaire",
+			"guild": "light",
+			"kind": "spell",
+			"cost": 3.0,
+			"effect": [
+				{ "op": "heal", "amount": 3.0, "target": "ally_monster" },
+				{ "op": "shield", "target": "ally_monster" }
+			],
+			"flavor": "Un cercle de lumière où rien ne meurt."
 		}
 	]
 }
