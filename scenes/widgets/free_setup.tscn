@@ -78,7 +78,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 30
 theme_override_fonts/font = ExtResource("3")
-text = "SÉLECTIONNER UN MAÎTRE"
+text = "CHOISIR UN DECK"
 horizontal_alignment = 1
 
 [node name="Body" type="HBoxContainer" parent="Center/Panel/VBox"]
@@ -113,13 +113,23 @@ layout_mode = 2
 custom_minimum_size = Vector2(420, 0)
 theme_override_constants/separation = 8
 
+[node name="DeckTitle" type="Label" parent="Center/Panel/VBox/Body/Info"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.94, 0.86, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("3")
+text = "Mon deck"
+
 [node name="MasterName" type="Label" parent="Center/Panel/VBox/Body/Info"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 7
-theme_override_font_sizes/font_size = 34
+theme_override_font_sizes/font_size = 24
 theme_override_fonts/font = ExtResource("3")
 text = "Aria"
 

@@ -165,6 +165,18 @@ RARITIES = {
         "several glowing faceted amber-and-gold gemstones into the four corners and "
         "the small bottom banner, add a subtle warm divine glow along the inner "
         "border."),
+    "ascendant": (
+        "Make this trading-card frame look transcended and divine — an ultimate "
+        "evolution. Keep the frame's base metal color and faction palette, but add "
+        "elaborate radiant filigree, set several glowing faceted TURQUOISE and cyan "
+        "gemstones into the four corners and the small bottom banner, and give the "
+        "outer metal edge a soft cyan-turquoise glow with faint sparkles. IMPORTANT: "
+        "do NOT add any glow, halo, aura or colored border around or inside the big "
+        "art window — that window must stay a perfectly FLAT solid pure magenta "
+        "#FF00FF rectangle with a crisp clean edge. Keep the empty NAME banner and "
+        "the separate empty SUBTITLE plate at the top at their EXACT original "
+        "positions and sizes, well separated with the same clear gap between them — "
+        "do not move, shrink, merge them or let the corner gems overlap them."),
 }
 
 KEEP_SUFFIX = (

@@ -1,35 +1,61 @@
 extends Control
-## Deck builder: browse the owned collection, assemble a legal 20-card deck,
-## save it to the profile.
+## Deck builder: manage up to Game.MAX_DECKS decks. Each deck carries its own
+## master (swappable) + a name + a legal card list, assembled from the owned
+## collection. Saving persists all decks and makes the edited one active.
 
 @onready var filters: HBoxContainer = %Filters
 @onready var collection_grid: GridContainer = %CollectionGrid
+@onready var deck_tabs: HBoxContainer = %DeckTabs
+@onready var name_edit: LineEdit = %NameEdit
+@onready var delete_btn: Button = %DeleteBtn
+@onready var master_card: TextureRect = %MasterCard
+@onready var master_pick: HFlowContainer = %MasterPick
 @onready var deck_list: VBoxContainer = %DeckList
 @onready var count_label: Label = %CountLabel
 @onready var status_label: Label = %StatusLabel
 @onready var save_btn: Button = %SaveBtn
 @onready var back_btn: Button = %BackBtn
 
-var working_deck: Array = []
+var decks: Array = []      ## working copy of profile.decks ({name, master, cards})
+var current := 0           ## index of the deck being edited
 var filter_guild := -1
 
 
 func _ready() -> void:
-	working_deck = Game.profile.deck.duplicate()
+	decks = Game.profile.decks.duplicate(true)
+	current = clampi(int(Game.profile.active_deck), 0, decks.size() - 1)
 
-	# Style buttons
 	UiTheme.style_button(save_btn, UiTheme.OK.darkened(0.25), 20)
 	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 18)
+	UiTheme.style_button(delete_btn, UiTheme.DANGER.darkened(0.35), 16)
 
-	# Build filter buttons (dynamic: depends on guild data)
 	_filter_btn(filters, "Toutes", -1)
 	for guild in GameConst.GUILD_NAMES:
 		_filter_btn(filters, GameConst.GUILD_NAMES[guild], guild)
 
-	# Connect signals
 	save_btn.pressed.connect(_save)
 	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
+	delete_btn.pressed.connect(_delete_current)
+	name_edit.text_changed.connect(func(t: String) -> void:
+		_cur().name = t
+		_rebuild_tabs())
 
+	_rebuild_all()
+
+
+func _cur() -> Dictionary:
+	return decks[current]
+
+
+func _cur_cards() -> Array:
+	return decks[current].cards
+
+
+func _rebuild_all() -> void:
+	name_edit.text = String(_cur().name)
+	delete_btn.disabled = decks.size() <= 1
+	_rebuild_tabs()
+	_rebuild_masters()
 	_refresh()
 
 
@@ -44,8 +70,83 @@ func _filter_btn(parent: Control, text: String, guild: int) -> void:
 	parent.add_child(b)
 
 
+## One tab per deck (★ marks the active one), plus a "+" slot while under the cap.
+func _rebuild_tabs() -> void:
+	for c in deck_tabs.get_children():
+		c.queue_free()
+	for i in decks.size():
+		var b := Button.new()
+		var star := "★ " if i == int(Game.profile.active_deck) else ""
+		b.text = "%s%s" % [star, decks[i].name]
+		var col := UiTheme.GOLD.darkened(0.2) if i == current else UiTheme.PANEL_LIGHT
+		UiTheme.style_button(b, col, 16)
+		b.pressed.connect(_switch_to.bind(i))
+		deck_tabs.add_child(b)
+	if decks.size() < Game.MAX_DECKS:
+		var add := Button.new()
+		add.text = "+ Nouveau"
+		UiTheme.style_button(add, UiTheme.OK.darkened(0.3), 16)
+		add.pressed.connect(_new_deck)
+		deck_tabs.add_child(add)
+
+
+func _switch_to(i: int) -> void:
+	current = i
+	Audio.play_sfx("move")
+	_rebuild_all()
+
+
+func _new_deck() -> void:
+	if decks.size() >= Game.MAX_DECKS:
+		return
+	var master = Game.profile.masters[0] if not Game.profile.masters.is_empty() else "kiran"
+	decks.append(Game.make_deck("Deck %d" % (decks.size() + 1), master, []))
+	current = decks.size() - 1
+	Audio.play_sfx("move")
+	_rebuild_all()
+
+
+func _delete_current() -> void:
+	if decks.size() <= 1:
+		return
+	decks.remove_at(current)
+	current = clampi(current, 0, decks.size() - 1)
+	Audio.play_sfx("move")
+	_rebuild_all()
+
+
+## Shows the deck's master as its full card (art + power + passive), with a row of
+## owned-master portraits to swap it (hover shows the effect).
+func _rebuild_masters() -> void:
+	var cur_id := String(_cur().master)
+	master_card.texture = UiTheme.tex(
+			"res://assets/sprites/cards_full/master_%s.png" % cur_id)
+	for c in master_pick.get_children():
+		c.queue_free()
+	for mid in Game.profile.masters:
+		var m: MasterDef = Db.master(StringName(String(mid)))
+		if m == null:
+			continue
+		var b := Button.new()
+		b.custom_minimum_size = Vector2(74, 74)
+		b.icon = UiTheme.tex(m.portrait)
+		b.expand_icon = true
+		b.tooltip_text = "%s — %s\nPassif : %s\nPouvoir — %s (%d pierres) : %s" % [
+				m.display_name, GameConst.GUILD_NAMES.get(m.guild, ""),
+				m.passive_desc, m.power_name, m.power_cost, m.power_desc]
+		var selected := String(mid) == cur_id
+		UiTheme.style_button(b, UiTheme.guild_color(m.guild).darkened(
+				0.25 if selected else 0.6), 12)
+		b.modulate = Color.WHITE if selected else Color(0.65, 0.65, 0.7)
+		b.pressed.connect(func() -> void:
+			_cur().master = String(mid)
+			Audio.play_sfx("move")
+			_rebuild_masters())
+		master_pick.add_child(b)
+
+
 func _deck_count(id: String) -> int:
-	return working_deck.count(id)
+	return _cur_cards().count(id)
 
 
 func _refresh() -> void:
@@ -73,8 +174,9 @@ func _refresh() -> void:
 func _refresh_deck() -> void:
 	for child in deck_list.get_children():
 		child.queue_free()
+	var cards := _cur_cards()
 	var unique := {}
-	for id in working_deck:
+	for id in cards:
 		unique[id] = int(unique.get(id, 0)) + 1
 	var ids := unique.keys()
 	ids.sort_custom(func(a, b) -> bool:
@@ -92,40 +194,41 @@ func _refresh_deck() -> void:
 		UiTheme.style_button(b, UiTheme.guild_color(def.guild).darkened(0.55), 16)
 		b.pressed.connect(_on_deck_row.bind(String(id)))
 		deck_list.add_child(b)
-	count_label.text = "Deck : %d / %d" % [working_deck.size(), GameConst.DECK_SIZE]
+	count_label.text = "Deck : %d / %d" % [cards.size(), GameConst.DECK_SIZE]
 	var err := ""
-	if working_deck.size() == GameConst.DECK_SIZE:
-		err = Rules.validate_deck(Db.cards, working_deck)
+	if cards.size() == GameConst.DECK_SIZE:
+		err = Rules.validate_deck(Db.cards, cards)
 	else:
 		err = "Le deck doit contenir exactement %d cartes." % GameConst.DECK_SIZE
-	status_label.text = err
+	status_label.text = "Deck valide !" if err == "" else err
 	status_label.add_theme_color_override("font_color",
 			UiTheme.OK if err == "" else UiTheme.DANGER)
-	if err == "":
-		status_label.text = "Deck valide !"
 	save_btn.disabled = err != ""
 
 
-func _on_collection_card(w: CardWidget, id: String) -> void:
+func _on_collection_card(_w: CardWidget, id: String) -> void:
 	var owned := Game.owned_count(id)
 	var used := _deck_count(id)
-	if working_deck.size() >= GameConst.DECK_SIZE:
+	if _cur_cards().size() >= GameConst.DECK_SIZE:
 		return
 	if used >= owned or used >= GameConst.MAX_COPIES:
 		return
-	working_deck.append(id)
+	_cur_cards().append(id)
 	Audio.play_sfx("move")
 	_refresh()
 
 
 func _on_deck_row(id: String) -> void:
-	working_deck.erase(id)
+	_cur_cards().erase(id)
 	Audio.play_sfx("move")
 	_refresh()
 
 
 func _save() -> void:
-	Game.profile.deck = working_deck.duplicate()
+	Game.profile.decks = decks.duplicate(true)
+	Game.profile.active_deck = current   # the deck you just built becomes active
 	Game.save_profile()
-	status_label.text = "Deck enregistré !"
+	Game.profile_changed.emit()
+	status_label.text = "Deck « %s » enregistré et actif !" % _cur().name
 	Audio.play_sfx("levelup")
+	_rebuild_tabs()

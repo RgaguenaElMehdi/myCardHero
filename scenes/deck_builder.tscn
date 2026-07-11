@@ -60,16 +60,59 @@ theme_override_constants/separation = 8
 layout_mode = 0
 offset_left = 60.0
 offset_top = 160.0
-offset_right = 1240.0
+offset_right = 840.0
 offset_bottom = 1020.0
-custom_minimum_size = Vector2(1180, 860)
+custom_minimum_size = Vector2(780, 860)
 
 [node name="CollectionGrid" type="GridContainer" parent="CollectionScroll"]
 unique_name_in_owner = true
 layout_mode = 2
-columns = 6
+columns = 4
 theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
+
+[node name="MasterPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 870.0
+offset_top = 100.0
+offset_right = 1270.0
+offset_bottom = 1020.0
+custom_minimum_size = Vector2(400, 920)
+theme_override_styles/panel = SubResource("StyleBoxFlat_deck_panel")
+
+[node name="MVBox" type="VBoxContainer" parent="MasterPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MasterTitle" type="Label" parent="MasterPanel/MVBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("2")
+text = "Maître du deck"
+mouse_filter = 2
+
+[node name="MasterCard" type="TextureRect" parent="MasterPanel/MVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 520)
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PickLabel" type="Label" parent="MasterPanel/MVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.663, 0.69, 0.761, 1)
+theme_override_font_sizes/font_size = 14
+text = "Changer de maître :"
+mouse_filter = 2
+
+[node name="MasterPick" type="HFlowContainer" parent="MasterPanel/MVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 5
+theme_override_constants/v_separation = 5
 
 [node name="DeckPanel" type="PanelContainer" parent="."]
 layout_mode = 0
@@ -83,6 +126,27 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_deck_panel")
 [node name="VBox" type="VBoxContainer" parent="DeckPanel"]
 layout_mode = 2
 theme_override_constants/separation = 8
+
+[node name="DeckTabs" type="HBoxContainer" parent="DeckPanel/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NameRow" type="HBoxContainer" parent="DeckPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="NameEdit" type="LineEdit" parent="DeckPanel/VBox/NameRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Nom du deck"
+
+[node name="DeleteBtn" type="Button" parent="DeckPanel/VBox/NameRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(110, 0)
+text = "Supprimer"
 
 [node name="CountLabel" type="Label" parent="DeckPanel/VBox"]
 unique_name_in_owner = true

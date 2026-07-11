@@ -116,10 +116,11 @@ func _run_autoplay() -> void:
 
 func _setup_match() -> void:
 	var cfg := Game.battle_config
-	var m0: MasterDef = Db.master(StringName(String(Game.profile.active_master)))
+	var my_deck := Game.active_deck()
+	var m0: MasterDef = Db.master(StringName(String(my_deck.master)))
 	var m1: MasterDef = Db.master(StringName(String(cfg.opponent_master)))
 	state = Rules.setup(Db.cards, [m0, m1],
-			[Game.profile.deck, cfg.opponent_deck], randi())
+			[my_deck.cards, cfg.opponent_deck], randi())
 	ai = AiPlayer.new(int(cfg.ai_level), randi())
 	_refresh_all()
 	_show_mulligan()

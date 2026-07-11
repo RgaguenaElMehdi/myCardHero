@@ -375,8 +375,9 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
                    min(W, max(gxs) + m), min(H, max(gys) + m))
         gem_patch = img.crop(gem_box)
 
-    # 2) art into the window (cover fit, tiny overlap under the gold fillet)
-    pad = 3
+    # 2) art into the window (cover fit, overlap under the gold fillet — a bit
+    #    generous so ornate frames never leave a magenta sliver at the window edge)
+    pad = 7
     ax0, ay0, ax1, ay1 = bx0 - pad, by0 - pad, bx1 + pad, by1 + pad
     bw, bh = ax1 - ax0, ay1 - ay0
     art_path = Path(card["_art"]) if "_art" in card else ART / f"{card['id']}.png"
@@ -430,6 +431,16 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
                 continue
             r, g, b, a4 = px[xx, yy]
             if _is_magenta((r, g, b)):
+                px[xx, yy] = (gc[0] // 4 + 12, gc[1] // 4 + 8, gc[2] // 4 + 12, a4)
+    # 4b) magenta-dominant final pass over the WHOLE image (art region included):
+    # an ornate frame's window edge can leave a thin magenta strip — even blended
+    # with the frame's turquoise glow (antialiasing) — that the art did not cover.
+    # No card art is pink/magenta-dominant (Shadow's violet has R<150), so keying
+    # on "R and B high, clearly above G" is safe everywhere.
+    for yy in range(0, h2):
+        for xx in range(0, w2):
+            r, g, b, a4 = px[xx, yy]
+            if r > 150 and b > 150 and r - g > 40 and b - g > 15:
                 px[xx, yy] = (gc[0] // 4 + 12, gc[1] // 4 + 8, gc[2] // 4 + 12, a4)
 
     # 5) name + subtitle (colors adapt to the banner's brightness — the Light
@@ -599,8 +610,8 @@ def main() -> int:
         if only and card["id"] != only:
             continue
         kind = "monster" if card.get("kind") == "monster" else "spell"
-        # rarity frame only for the constructible tiers (tokens/masters have none)
-        rarity = "" if card.get("token") else card.get("rarity", "")
+        # rarity frame per tier; evolved tokens use the dedicated "ascendant" frame
+        rarity = "ascendant" if card.get("token") else card.get("rarity", "")
         tpl, box, gem = get_template(kind, card.get("guild", "flame"), rarity)
         img = compose_card(card, tpl, box, gem)
         img = auto_trim(img)

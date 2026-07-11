@@ -11,9 +11,9 @@ func _default_profile() -> Dictionary:
 		"save_version": SAVE_VERSION,
 		"campaign_progress": 0,
 		"collection": {},
-		"deck": [],
 		"masters": ["kiran"],
-		"active_master": "kiran",
+		"decks": [{ "name": "Mon deck", "master": "kiran", "cards": [] }],
+		"active_deck": 0,
 		"settings": { "music_volume": 0.8, "sfx_volume": 0.9, "fullscreen": false },
 	}
 
@@ -21,8 +21,11 @@ func _default_profile() -> Dictionary:
 func test_profile_has_required_keys() -> void:
 	var p := _default_profile()
 	for key in ["save_version", "campaign_progress", "collection",
-			"deck", "masters", "active_master", "settings"]:
+			"masters", "decks", "active_deck", "settings"]:
 		ok(p.has(key), "profil par défaut contient '%s'" % key)
+	var d: Dictionary = p.get("decks", [])[0]
+	for key in ["name", "master", "cards"]:
+		ok(d.has(key), "un deck contient '%s'" % key)
 	var s: Dictionary = p.get("settings", {})
 	for key in ["music_volume", "sfx_volume", "fullscreen"]:
 		ok(s.has(key), "settings contient '%s'" % key)
@@ -31,24 +34,48 @@ func test_profile_has_required_keys() -> void:
 func test_json_roundtrip_scalars() -> void:
 	var p := _default_profile()
 	p["campaign_progress"] = 7
-	p["active_master"] = "willow"
+	p["active_deck"] = 2
 	var restored = JSON.parse_string(JSON.stringify(p))
 	ok(restored is Dictionary, "parsé comme Dictionary")
 	eq(int(restored.get("campaign_progress")), 7, "progress survit au round-trip")
-	eq(str(restored.get("active_master")), "willow", "active_master survit au round-trip")
+	eq(int(restored.get("active_deck")), 2, "active_deck survit au round-trip")
 	eq(int(restored.get("save_version")), SAVE_VERSION, "version conservée")
 
 
 func test_json_roundtrip_nested() -> void:
 	var p := _default_profile()
 	p["collection"] = { "grunt": 2, "bolt": 1 }
-	p["deck"] = ["grunt", "grunt", "bolt"]
-	p["masters"] = ["kiran", "willow"]
+	p["decks"] = [{ "name": "Aggro", "master": "brand", "cards": ["grunt", "grunt", "bolt"] }]
+	p["masters"] = ["kiran", "brand"]
 	p["settings"] = { "music_volume": 0.5, "sfx_volume": 0.7, "fullscreen": true }
 	var restored = JSON.parse_string(JSON.stringify(p))
 	eq(int(restored.get("collection", {}).get("grunt")), 2, "collection imbriquée survit")
-	eq(restored.get("deck", []).size(), 3, "deck survit au round-trip")
+	var deck0: Dictionary = restored.get("decks", [])[0]
+	eq(str(deck0.get("master")), "brand", "maître du deck survit au round-trip")
+	eq(deck0.get("cards", []).size(), 3, "cartes du deck survivent au round-trip")
 	ok(bool(restored.get("settings", {}).get("fullscreen")), "fullscreen survit")
+
+
+## Mirror of game.gd _migrate_legacy_deck: a legacy { deck, active_master } save
+## must fold into one deck object carrying its master.
+func test_legacy_save_migrates_to_deck() -> void:
+	var legacy := {
+		"save_version": SAVE_VERSION,
+		"deck": ["grunt", "bolt", "bolt"],
+		"active_master": "vane",
+	}
+	var migrated := legacy.duplicate(true)
+	if not migrated.has("decks") and (migrated.has("deck") or migrated.has("active_master")):
+		migrated["decks"] = [{
+			"name": "Mon deck",
+			"master": migrated.get("active_master", "kiran"),
+			"cards": migrated.get("deck", []),
+		}]
+		migrated["active_deck"] = 0
+	var d: Dictionary = migrated["decks"][0]
+	eq(str(d.get("master")), "vane", "l'ancien active_master devient le maître du deck")
+	eq(d.get("cards", []).size(), 3, "l'ancien deck devient les cartes du deck")
+	eq(int(migrated["active_deck"]), 0, "deck actif = 0 après migration")
 
 
 func test_version_mismatch_does_not_overwrite() -> void:

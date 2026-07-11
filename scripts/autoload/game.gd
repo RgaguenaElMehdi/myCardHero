@@ -79,15 +79,25 @@ func _fit_window() -> void:
 
 # --- Profile ------------------------------------------------------------
 
+## A deck now carries its own master: { name, master, cards[] }. The active deck
+## is chosen by index (active_deck). Up to MAX_DECKS decks.
+const MAX_DECKS := 3
+
+
+func make_deck(name: String, master, cards: Array) -> Dictionary:
+	return { "name": name, "master": String(master), "cards": cards.duplicate() }
+
+
 func default_profile() -> Dictionary:
 	var starter: Dictionary = Db.campaign.get("starter", {})
 	return {
 		"save_version": SAVE_VERSION,
 		"campaign_progress": 0,
 		"collection": starter.get("collection", {}).duplicate(),
-		"deck": starter.get("deck", []).duplicate(),
 		"masters": starter.get("masters", []).duplicate(),
-		"active_master": starter.get("master", "kiran"),
+		"decks": [make_deck("Mon deck", starter.get("master", "kiran"),
+				starter.get("deck", []))],
+		"active_deck": 0,
 		"settings": { "music_volume": 0.8, "sfx_volume": 0.9, "fullscreen": false },
 	}
 
@@ -101,8 +111,22 @@ func load_profile() -> void:
 			for key in profile:
 				if data.has(key):
 					profile[key] = data[key]
+			_migrate_legacy_deck(data)
 	_sanitize_profile()
 	profile_changed.emit()
+
+
+## Old saves stored a single flat `deck` array + a separate `active_master`.
+## Wrap them into the new deck object so the player keeps their build.
+func _migrate_legacy_deck(data: Dictionary) -> void:
+	if data.has("decks"):
+		return  # already the new format
+	if data.has("deck") or data.has("active_master"):
+		var starter: Dictionary = Db.campaign.get("starter", {})
+		var master = data.get("active_master", starter.get("master", "kiran"))
+		var cards: Array = data.get("deck", starter.get("deck", []))
+		profile.decks = [make_deck("Mon deck", master, cards)]
+		profile.active_deck = 0
 
 
 func save_profile() -> void:
@@ -131,12 +155,35 @@ func _sanitize_profile() -> void:
 	for id in starter.get("collection", {}):
 		if owned_count(id) < int(starter.collection[id]):
 			profile.collection[id] = int(starter.collection[id])
-	var deck: Array = profile.get("deck", [])
-	if Rules.validate_deck(Db.cards, deck) != "" or not _deck_owned(deck):
-		profile.deck = Db.campaign.starter.deck.duplicate()
-	if not profile.masters.has(profile.active_master):
-		profile.active_master = profile.masters[0] if not profile.masters.is_empty() else "kiran"
+	# Validate each deck: legal + owned cards, and an owned master. Repair in place.
+	var decks: Array = profile.get("decks", [])
+	if decks.is_empty():
+		decks.append(make_deck("Mon deck", Db.campaign.starter.get("master", "kiran"),
+				Db.campaign.starter.get("deck", [])))
+	if decks.size() > MAX_DECKS:
+		decks.resize(MAX_DECKS)
+	for d in decks:
+		var cards: Array = d.get("cards", [])
+		if Rules.validate_deck(Db.cards, cards) != "" or not _deck_owned(cards):
+			d.cards = Db.campaign.starter.deck.duplicate()
+		var fallback = profile.masters[0] if not profile.masters.is_empty() else "kiran"
+		if not profile.masters.has(d.get("master", "")):
+			d.master = String(fallback)
+	profile.decks = decks
+	profile.active_deck = clampi(int(profile.get("active_deck", 0)), 0, decks.size() - 1)
 	profile.campaign_progress = clampi(int(profile.campaign_progress), 0, Db.chapters().size())
+
+
+## The currently selected deck object { name, master, cards[] }.
+func active_deck() -> Dictionary:
+	var i := clampi(int(profile.get("active_deck", 0)), 0, profile.decks.size() - 1)
+	return profile.decks[i]
+
+
+func set_active_deck(index: int) -> void:
+	profile.active_deck = clampi(index, 0, profile.decks.size() - 1)
+	save_profile()
+	profile_changed.emit()
 
 
 func _deck_owned(deck: Array) -> bool:
