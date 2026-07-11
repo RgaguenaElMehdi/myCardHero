@@ -58,7 +58,7 @@ grow_vertical = 2
 [node name="Panel" type="PanelContainer" parent="Center"]
 layout_mode = 2
 custom_minimum_size = Vector2(1280, 800)
-theme_override_styles/panel = SubResource("StyleBoxTexture_panel")
+theme_type_variation = &"PanelFancy"
 
 [node name="VBox" type="VBoxContainer" parent="Center/Panel"]
 layout_mode = 2

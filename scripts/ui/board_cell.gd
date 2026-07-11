@@ -226,6 +226,10 @@ func _render_monster(m: MonsterInst) -> void:
 	if m.def.max_level() > 1 or m.level > 1:
 		_content.add_child(_badge("★%d" % m.level, Color(0.25, 0.2, 0.05, 0.9), Vector2(4, 4),
 				UiTheme.GOLD))
+	# ability indicators (top-right): attack type + keywords
+	var abil := _ability_icons(m)
+	if abil != null:
+		_content.add_child(abil)
 	# shield ring
 	if m.shield:
 		var ring := Panel.new()
@@ -241,6 +245,66 @@ func _render_monster(m: MonsterInst) -> void:
 	# acted = dimmed
 	if m.acted:
 		_content.modulate = Color(0.6, 0.6, 0.65)
+
+
+const _PX := "res://assets/sprites/ui/pixel/"
+
+## Vertical strip of small keyword icons (attack type + abilities) at the
+## unit's top-right, so its capabilities read at a glance. Null when empty.
+func _ability_icons(m: MonsterInst) -> Control:
+	var paths: Array[String] = []
+	match m.def.attack_type:
+		GameConst.AttackType.RANGED:
+			paths.append(_PX + "kw_ranged.png")
+		GameConst.AttackType.MAGIC:
+			paths.append(_PX + "kw_magic.png")
+		_:
+			paths.append(_PX + "icon_stat_attack.png")
+	if m.has_keyword(GameConst.KW_FLYING):
+		paths.append(_PX + "kw_flying.png")
+	if m.keyword_value(GameConst.KW_ARMOR) > 0:
+		paths.append(_PX + "kw_armor.png")
+	if m.keyword_value(GameConst.KW_RIPOSTE) > 0:
+		paths.append(_PX + "kw_riposte.png")
+	if m.keyword_value(GameConst.KW_REGEN) > 0:
+		paths.append(_PX + "kw_regen.png")
+	if m.has_keyword(GameConst.KW_HASTE):
+		paths.append(_PX + "kw_haste.png")
+	if m.has_keyword(GameConst.KW_SHIELD):
+		paths.append(_PX + "icon_stat_shield.png")
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 2)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for p in paths:
+		var tex := UiTheme.tex(p)
+		if tex == null:
+			continue
+		var chip := Panel.new()
+		chip.custom_minimum_size = Vector2(24, 24)
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0, 0, 0, 0.62)
+		sb.set_corner_radius_all(5)
+		sb.border_color = Color(0.85, 0.72, 0.4, 0.6)
+		sb.set_border_width_all(1)
+		chip.add_theme_stylebox_override("panel", sb)
+		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var ic := TextureRect.new()
+		ic.texture = tex
+		ic.set_anchors_preset(Control.PRESET_FULL_RECT)
+		ic.offset_left = 2
+		ic.offset_top = 2
+		ic.offset_right = -2
+		ic.offset_bottom = -2
+		ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		chip.add_child(ic)
+		col.add_child(chip)
+	if col.get_child_count() == 0:
+		col.queue_free()
+		return null
+	col.position = Vector2(size.x - 28, 4)
+	return col
 
 
 ## Small colored stat plate (mockup style: green ATQ shield / red PV shield).

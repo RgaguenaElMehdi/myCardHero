@@ -30,7 +30,7 @@ UNIT_STYLE = ("Sprite de personnage plein pied isolé, pose de combat dynamique,
               "colorée, 1024x1024, aucun texte.")
 UNITS_ART = {
     "cinder_hound": "un molosse de braise, chien de feu aux flancs de cendre fumante et à la gueule rougeoyante, en position d'attaque",
-    "magma_brute": "un colosse de roche noire et de magma aux bras massifs et fissures incandescentes, debout et menaçant",
+    "flame_berserker": "un berserker de feu enragé, guerrier torse nu aux muscles marqués de runes ardentes, brandissant deux haches enflammées, charge furieuse",
     "spark_sprite": "un petit lutin vif fait d'étincelles électriques et de flammèches, flottant, espiègle",
     "bramble_colt": "un poulain sauvage fait de ronces, de bois et d'épines, cabré",
     "elder_stag": "un grand cerf majestueux aux immenses bois moussus, de face, port noble",
@@ -62,7 +62,7 @@ STYLE = ("Pixel art fantasy 16-bit très détaillé, gros plan {frame} centré, 
 # id -> (subject, guild). kind is implicit (cards vs portraits table).
 CARDS_ART = {
     "cinder_hound": ("un molosse de braise, chien de feu aux flancs de cendre fumante et à la gueule rougeoyante, posture agressive", "flame"),
-    "magma_brute": ("un colosse massif de roche noire et de magma, bras énormes, fissures incandescentes entre les plaques", "flame"),
+    "flame_berserker": ("un berserker de feu enragé torse nu aux muscles marqués de runes ardentes, brandissant deux haches enflammées, en pleine charge", "flame"),
     "spark_sprite": ("un petit lutin vif fait d'étincelles électriques et de flammèches, créature lumineuse espiègle", "flame"),
     "meteor": ("un énorme météore enflammé fonçant vers le sol en laissant une traînée de feu et de fumée, aucun personnage", "flame"),
     "bramble_colt": ("un poulain sauvage fait de ronces, de bois et d'épines, crinière de feuilles, posture cabrée", "sylvan"),

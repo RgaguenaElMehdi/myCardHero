@@ -36,14 +36,29 @@ RAW = ROOT / "tools" / "raw_ui"
 URL = "https://api.openai.com/v1/images/generations"
 MAX_RETRIES = 4
 
-STYLE = ("palette limitée, aucun anti-aliasing, contours nets, style anime, "
-         "aucun texte. Direction artistique dark fantasy : pierre anthracite "
-         "très sombre, ornements en or antique, accents discrets. Pixel art "
-         "authentique haute densité de sprite {w}x{h} comme un jeu SNES "
-         "16-bit : exactement {w}x{h} pixels logiques, pixels FINS et "
-         "nombreux (pas de gros blocs), beaucoup de détail, l'objet remplit "
-         "presque toute la grille, posé sur un fond uni magenta pur "
-         "(#FF00FF) sans dégradé ni ombre portée.")
+STYLE = ("palette limitée, aucun anti-aliasing, contours nets, style pixel art "
+         "anime lumineux et net (jeu de rôle japonais 16-bit), aucun texte. "
+         "Palette sombre élégante rehaussée d'or. Pixel art authentique haute "
+         "densité de sprite {w}x{h} comme un jeu SNES : exactement {w}x{h} "
+         "pixels logiques, pixels FINS et nombreux (pas de gros blocs), "
+         "beaucoup de détail, l'objet remplit presque toute la grille, posé "
+         "sur un fond uni magenta pur (#FF00FF) sans dégradé ni ombre portée.")
+
+# Clean flat-symbol style for tiny HUD keyword icons: bold, high-contrast,
+# legible at ~20px, NO stone/medallion frame (unlike the chrome STYLE above).
+ICON_STYLE = ("symbole unique gros et épuré remplissant tout le cadre, aplat "
+              "de couleurs vives et très contrastées, gros contour noir épais, "
+              "style icône de jeu simple et ultra-lisible, AUCUN cadre, AUCUNE "
+              "médaille, AUCUN décor ni fond ornemental. Pixel art net {w}x{h}, "
+              "aucun anti-aliasing, aucun texte, posé sur un fond uni magenta "
+              "pur (#FF00FF).")
+
+# Smooth style for large 9-slice frames that get stretched: NOT pixel art, so
+# they stay crisp when scaled up (a low-res pixel panel looks blocky enlarged).
+SMOOTH_STYLE = ("illustration d'interface nette et lisse, NON pixellisée, rendu "
+                "propre haute résolution avec anti-aliasing doux, style RPG "
+                "anime soigné, aucun texte, posée bien centrée sur un fond uni "
+                "magenta pur (#FF00FF) sans dégradé.")
 
 # name: (subject prompt, target W, target H, canvas, fit)
 #   canvas: gpt-image-1 generation size ; fit: "exact" (9-slice shapes) or
@@ -53,6 +68,7 @@ ASSETS = {
     # panneaux (9-slice)
     "panel_stone": ("un panneau d'interface rectangulaire en pierre anthracite presque noire, bordure dorée ornée avec coins travaillés, centre uni très sombre tuilable", 128, 128, SQ, "exact"),
     "panel_tooltip": ("un petit panneau d'info-bulle rectangulaire en pierre noire, très fine bordure dorée, centre uni presque noir", 128, 128, SQ, "exact"),
+    "panel_popup": ("un panneau d'interface rectangulaire élégant et raffiné de RPG anime : fine bordure dorée ornée de filigranes délicats avec de belles volutes travaillées aux quatre coins, centre parfaitement lisse d'un noir profond très légèrement texturé, aspect soigné et haut de gamme, contraste net entre l'or et le noir", 512, 448, WIDE, "smooth"),
     # boutons (9-slice)
     "btn_primary": ("un bouton d'interface rectangulaire large en pierre anthracite presque noire, liseré doré fin avec petits ornements aux coins, centre uni sombre", 144, 56, WIDE, "exact"),
     "btn_secondary": ("un bouton d'interface rectangulaire large rouge bordeaux profond, liseré doré fin, centre uni rouge sombre", 144, 56, WIDE, "exact"),
@@ -84,11 +100,20 @@ ASSETS = {
     "icon_stat_attack": ("une icône d'épée dressée (statistique d'attaque), objet unique centré", 64, 64, SQ, "box"),
     "icon_stat_shield": ("une icône de bouclier (statistique de défense), objet unique centré", 64, 64, SQ, "box"),
     "icon_stat_action": ("une icône de sablier (statistique d'action), objet unique centré", 64, 64, SQ, "box"),
+    # icônes de mots-clés (badges sur les unités du plateau)
+    "kw_flying": ("une paire d'ailes blanches stylisées (Vol), blanc et gris clair", 64, 64, SQ, "box"),
+    "kw_ranged": ("un arc doré tendu avec une flèche (attaque à Distance)", 64, 64, SQ, "box"),
+    "kw_magic": ("une étoile magique à quatre branches bleu-violet lumineuse (attaque Magique)", 64, 64, SQ, "box"),
+    "kw_riposte": ("deux épées croisées rouges (Riposte, renvoi de dégâts)", 64, 64, SQ, "box"),
+    "kw_armor": ("un plastron d'armure gris acier vu de face (Armure)", 64, 64, SQ, "box"),
+    "kw_regen": ("une grosse croix médicale verte vif (Régénération)", 64, 64, SQ, "box"),
+    "kw_haste": ("un éclair jaune vif (Célérité, rapidité)", 64, 64, SQ, "box"),
     # icônes de menu
     "icon_menu_bag": ("une icône de bourse de cuir (boutique), objet unique centré", 64, 64, SQ, "box"),
     "icon_menu_book": ("une icône de livre fermé à reliure de cuir (guide), objet unique centré", 64, 64, SQ, "box"),
     "icon_menu_gear": ("une icône d'engrenage métallique (réglages), objet unique centré", 64, 64, SQ, "box"),
     "icon_menu_exit": ("une icône de porte en bois cloutée (quitter), objet unique centré", 64, 64, SQ, "box"),
+    "icon_menu_scroll": ("une icône de parchemin déroulé avec quelques lignes d'écriture (journal des actions), objet unique centré", 64, 64, SQ, "box"),
     # icônes diverses
     "icon_check": ("une icône de coche de validation verte, symbole unique centré", 64, 64, SQ, "box"),
     "icon_cross": ("une icône de croix d'annulation rouge, symbole unique centré", 64, 64, SQ, "box"),
@@ -277,6 +302,30 @@ def _strip_fringe(img: Image.Image) -> Image.Image:
     return img
 
 
+def smooth_postprocess(raw: bytes, target_w: int) -> Image.Image:
+    """Large frames: key out magenta, trim, high-quality downscale — NO pixel
+    collapse, so the enlarged 9-slice stays crisp instead of blocky."""
+    img = chroma_key(Image.open(BytesIO(raw)).convert("RGBA"))
+    img = _strip_fringe(_strip_fringe(img))
+    # Kill any residual magenta/pink anywhere (gold has low blue, red has low
+    # blue+green — neither matches, so they are safe).
+    px = img.load()
+    for y in range(img.height):
+        for x in range(img.width):
+            r, g, b, a = px[x, y]
+            # Pink/magenta = red AND blue both well above green (gold has low
+            # blue, red has low blue+green — both spared).
+            if a and r > 90 and r - g > 16 and b - g > 6:
+                px[x, y] = (r, g, b, 0)
+    bbox = img.getbbox()
+    if bbox:
+        img = img.crop(bbox)
+    if img.width != target_w:
+        scale = target_w / img.width
+        img = img.resize((target_w, max(1, round(img.height * scale))), Image.LANCZOS)
+    return img
+
+
 def postprocess(raw: bytes, w: int, h: int, fit: str) -> Image.Image:
     img = collapse_pixels(chroma_key(Image.open(BytesIO(raw)).convert("RGBA")))
     img = chroma_key(img)  # remnants magenta sur la silhouette
@@ -306,13 +355,18 @@ def run(name: str, api_key: str) -> str | None:
     subject, w, h, canvas, fit = ASSETS[name]
     raw_path = RAW / f"{name}.png"
     try:
+        smooth = fit == "smooth"
         if raw_path.exists():
             raw = raw_path.read_bytes()
         else:
-            prompt = f"Pixel art authentique de {subject}, {STYLE.format(w=w, h=h)}"
+            if smooth:
+                prompt = f"{subject.capitalize()}, {SMOOTH_STYLE}"
+            else:
+                style = ICON_STYLE if name.startswith("kw_") else STYLE
+                prompt = f"Pixel art authentique de {subject}, {style.format(w=w, h=h)}"
             raw = generate(api_key, prompt, canvas)
             raw_path.write_bytes(raw)
-        img = postprocess(raw, w, h, fit)
+        img = smooth_postprocess(raw, w) if smooth else postprocess(raw, w, h, fit)
         img.save(OUT / f"{name}.png")
         print(f"OK   {name}.png ({img.width}x{img.height})")
         return None

@@ -25,8 +25,6 @@ const BOARD_CENTER_X := 960.0
 @onready var end_turn_btn: Button = %EndTurnBtn
 @onready var power_btn: Button = %PowerBtn
 @onready var evolve_btn: Button = %EvolveBtn
-@onready var legend_panel: PanelContainer = %LegendPanel
-@onready var legend_box: VBoxContainer = %LegendBox
 @onready var enemy_panel: PanelContainer = %EnemyPanel
 @onready var player_panel: PanelContainer = %PlayerPanel
 
@@ -175,17 +173,17 @@ func _init_ui() -> void:
 		get_node("RowMarker%d" % r).visible = false
 
 	# Buttons.
-	end_turn_btn.pressed.connect(func() -> void: _submit({ "type": "end_turn" }))
+	end_turn_btn.pressed.connect(func() -> void:
+		_clear_selection()
+		_submit({ "type": "end_turn" }))
 	power_btn.pressed.connect(_on_power_pressed)
 	evolve_btn.pressed.connect(_on_evolve_pressed)
 	%BagBtn.pressed.connect(func() -> void:
 		if state != null:
 			CardPopup.open_master(self, state.players[0].master))
 	%BookBtn.pressed.connect(func() -> void:
-		legend_panel.visible = not legend_panel.visible)
-	%GearBtn.pressed.connect(func() -> void: Game.goto("main_menu"))
-	%LogBtn.pressed.connect(func() -> void:
 		%LogPanel.visible = not %LogPanel.visible)
+	%GearBtn.pressed.connect(func() -> void: Game.goto("main_menu"))
 
 	# Right-click a side panel = inspect that master.
 	for side in 2:
@@ -205,17 +203,6 @@ func _init_ui() -> void:
 			"master": %PlayerMaster, "hp_bar": %PlayerHpBar, "hp": %PlayerHp,
 			"stones": %PlayerStones, "hand": %PlayerHand,
 			"hand_row": %PlayerHandRow, "deck": %PlayerDeck }
-
-	# Keyword legend content (data-driven from GameText).
-	legend_box.add_child(UiTheme.title_label("Mots-clés", 18))
-	for kw in GameText.KEYWORD_NAMES:
-		var line := UiTheme.label("%s : %s." % [GameText.KEYWORD_NAMES[kw],
-				GameText.KEYWORD_DEFS.get(kw, "")], 14, UiTheme.TEXT_DIM)
-		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		legend_box.add_child(line)
-	legend_box.add_child(UiTheme.label(
-			"Mêlée : sa colonne · Distance : partout · Magie : ignore Armure/Bouclier",
-			14, UiTheme.GOLD.lightened(0.15)))
 
 	# Fx above everything.
 	move_child(fx_layer, -1)
@@ -266,18 +253,38 @@ func _fill_enemy_hand() -> void:
 		row.add_child(b)
 
 
-func _fill_pips(box: HBoxContainer, stones: int) -> void:
+func _fill_pips(box: BoxContainer, stones: int) -> void:
 	for c in box.get_children():
 		c.queue_free()
 	var gem := UiTheme.tex(UiTheme.ICON_STONE)
+	var vertical := box is VBoxContainer
+	# A big readable count on top of the column, then the gems.
+	var count := Label.new()
+	count.text = str(stones)
+	count.custom_minimum_size = Vector2(30, 0)
+	count.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	count.add_theme_font_size_override("font_size", 24)
+	count.add_theme_color_override("font_color", Color("bfe3ff"))
+	count.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	count.add_theme_constant_override("outline_size", 6)
+	count.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var f := UiTheme.title_font()
+	if f != null:
+		count.add_theme_font_override("font", f)
+	box.add_child(count)
+	# Vertical mana fills bottom-up: empty slots on top, filled crystals below.
 	for i in GameConst.MAX_STONES:
+		var filled := i >= GameConst.MAX_STONES - stones if vertical else i < stones
 		var pip := TextureRect.new()
 		pip.texture = gem
-		pip.custom_minimum_size = Vector2(18, 18)
+		pip.custom_minimum_size = Vector2(22, 22)
 		pip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		pip.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		pip.modulate = Color(1, 1, 1, 1) if i < stones else Color(0.28, 0.31, 0.42, 0.5)
+		if filled:
+			pip.modulate = Color(1, 1, 1, 1)
+		else:
+			pip.modulate = Color(0.35, 0.4, 0.55, 0.32)
 		box.add_child(pip)
 	box.tooltip_text = "Pierres : %d / %d" % [stones, GameConst.MAX_STONES]
 
@@ -300,7 +307,10 @@ func _refresh_hand() -> void:
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
 		w.inspect_requested.connect(func(w2: CardWidget) -> void:
-			CardPopup.open(self, w2.def))
+			if _has_selection():
+				_clear_selection()
+			else:
+				CardPopup.open(self, w2.def))
 		w.mouse_entered.connect(_on_hand_hover.bind(w, i))
 		w.set_selected(i == sel_hand)
 		if i == sel_hand:
@@ -348,7 +358,7 @@ func _refresh_panels() -> void:
 				back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				row.add_child(back)
 	var p0 := state.players[0]
-	power_btn.text = "%s (%d)" % [p0.master.power_name, p0.master.power_cost]
+	power_btn.text = "✦ %s (%d)" % [p0.master.power_name, p0.master.power_cost]
 	power_btn.tooltip_text = "%s\nPassif : %s" % [p0.master.power_desc, p0.master.passive_desc]
 
 
@@ -438,6 +448,10 @@ func _apply_selection_highlights() -> void:
 
 # --- Input ------------------------------------------------------------
 
+func _has_selection() -> bool:
+	return sel_hand >= 0 or sel_cell != Vector2i(-1, -1) or sel_power
+
+
 func _clear_selection() -> void:
 	sel_hand = -1
 	sel_cell = Vector2i(-1, -1)
@@ -496,9 +510,13 @@ func _on_hand_card_pressed(_w: CardWidget, i: int) -> void:
 	_refresh_all()
 
 
-## Right-click inspection: works at any moment, even during the enemy turn.
+## Right-click: cancels a pending selection first; otherwise inspects (works at
+## any moment, even during the enemy turn).
 func _on_cell_inspect(cell: Vector2i) -> void:
 	if state == null:
+		return
+	if _has_selection():
+		_clear_selection()
 		return
 	for side in 2:
 		if Board.master_cell(side, state.players[side].master_col) == cell:

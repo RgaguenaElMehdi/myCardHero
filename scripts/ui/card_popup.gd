@@ -89,48 +89,126 @@ func _card_image(path: String, fallback_def: CardDef) -> Control:
 	return CardWidget.create(fallback_def, 480) if fallback_def != null else Control.new()
 
 
-func _side_panel(title: String, body: String, width: float = 470.0) -> Control:
+## Ornate 9-slice frame for the inspector panel (gold filigree corners on a
+## deep-black centre). Falls back to the shared stone panel if the art is absent.
+func _popup_frame() -> StyleBox:
+	var tex := UiTheme.tex("res://assets/sprites/ui/pixel/panel_popup.png")
+	if tex == null:
+		return UiTheme.panel_ornate()
+	var sb := StyleBoxTexture.new()
+	sb.texture = tex
+	sb.texture_margin_left = tex.get_width() * 0.16
+	sb.texture_margin_right = tex.get_width() * 0.16
+	sb.texture_margin_top = tex.get_height() * 0.20
+	sb.texture_margin_bottom = tex.get_height() * 0.20
+	# Keep text clear of the corner flourishes (which fill the top/bottom bands).
+	sb.content_margin_left = 40
+	sb.content_margin_right = 40
+	sb.content_margin_top = 58
+	sb.content_margin_bottom = 56
+	return sb
+
+
+## A thin gold rule used to separate sections.
+func _divider() -> Control:
+	var line := ColorRect.new()
+	line.color = Color(0.79, 0.65, 0.31, 0.5)
+	line.custom_minimum_size = Vector2(0, 2)
+	line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return line
+
+
+## sections: Array of [header, body] (empty header = flavor block, italic-dim).
+func _side_panel(title: String, subtitle: String, sections: Array,
+		width: float = 480.0) -> Control:
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", UiTheme.panel_ornate())
+	panel.add_theme_stylebox_override("panel", _popup_frame())
 	panel.custom_minimum_size = Vector2(width, 0)
 	panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 10)
+	vbox.add_theme_constant_override("separation", 7)
 	panel.add_child(vbox)
-	var t := UiTheme.title_label(title, 26)
-	vbox.add_child(t)
-	var l := UiTheme.label(body, 17, UiTheme.TEXT)
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(l)
+	vbox.add_child(UiTheme.title_label(title, 30))
+	if subtitle != "":
+		vbox.add_child(UiTheme.label(subtitle, 16, UiTheme.TEXT_DIM))
+	for sec in sections:
+		var header: String = sec[0]
+		var text: String = sec[1]
+		if text.strip_edges() == "":
+			continue
+		vbox.add_child(_divider())
+		if header != "":
+			var h := UiTheme.label(header, 15, UiTheme.GOLD)
+			var f := UiTheme.title_font()
+			if f != null:
+				h.add_theme_font_override("font", f)
+			vbox.add_child(h)
+		var color := UiTheme.TEXT_DIM if header == "" else UiTheme.TEXT
+		var l := UiTheme.label(text, 16, color)
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.custom_minimum_size = Vector2(width - 50, 0)
+		vbox.add_child(l)
 	return panel
 
 
 func _build_card(def: CardDef, live: MonsterInst) -> void:
 	var row := _base()
 	row.add_child(_card_image(CardWidget.full_card_path(def.id), def))
-	var evo_name := ""
-	if def.evolves_to != &"":
-		var tree := Engine.get_main_loop() as SceneTree
-		var db = tree.root.get_node_or_null("Db") if tree != null else null
-		if db != null and db.card(def.evolves_to) != null:
-			evo_name = db.card(def.evolves_to).display_name
-	var body := GameText.card_tooltip(def, evo_name)
+	var cost_txt := "%d pierre%s" % [def.cost, "" if def.cost <= 1 else "s"]
+	var sections: Array = []
+	var subtitle := ""
 	if def.is_monster():
-		body += "\n\n" + GameText.ATTACK_TYPE_NAMES[def.attack_type] + " : " \
-				+ GameText.ATTACK_TYPE_DEFS[def.attack_type] + "."
+		subtitle = "%s · %s" % [GameText.ATTACK_TYPE_NAMES[def.attack_type], cost_txt]
+		# Niveaux
+		var lv_lines: PackedStringArray = []
+		for i in def.levels.size():
+			var lv: Dictionary = def.levels[i]
+			var seuil := "" if i == 0 else " (%d XP)" % int(lv.xp)
+			lv_lines.append("Niveau %d%s : %d ATQ / %d PV"
+					% [i + 1, seuil, int(lv.atk), int(lv.hp)])
+		lv_lines.append("Gagne 1 XP en blessant, 2 en tuant ; monter de niveau restaure les PV.")
+		sections.append(["NIVEAUX", "\n".join(lv_lines)])
+		# Capacités
+		var caps: PackedStringArray = []
+		caps.append("%s : %s." % [GameText.ATTACK_TYPE_NAMES[def.attack_type],
+				GameText.ATTACK_TYPE_DEFS[def.attack_type]])
 		for kw in def.keywords:
-			body += "\n%s : %s." % [GameText.KEYWORD_NAMES.get(String(kw), String(kw)),
-					GameText.KEYWORD_DEFS.get(String(kw), "")]
+			var kw_name: String = GameText.KEYWORD_NAMES.get(String(kw), String(kw))
+			var value = def.keywords[kw]
+			var shown := kw_name if value is bool else "%s %d" % [kw_name, int(value)]
+			caps.append("%s : %s." % [shown, GameText.KEYWORD_DEFS.get(String(kw), "")])
+		if not def.on_summon.is_empty():
+			caps.append("Invocation : " + GameText.describe_effect(def.on_summon))
+		if not def.on_death.is_empty():
+			caps.append("Mort : " + GameText.describe_effect(def.on_death))
+		if not def.on_attack.is_empty():
+			caps.append("Attaque : " + GameText.describe_effect(def.on_attack))
+		if def.evolves_to != &"":
+			var evo_name := ""
+			var tree := Engine.get_main_loop() as SceneTree
+			var db = tree.root.get_node_or_null("Db") if tree != null else null
+			if db != null and db.card(def.evolves_to) != null:
+				evo_name = db.card(def.evolves_to).display_name
+			var target := evo_name if evo_name != "" else "sa forme évoluée"
+			caps.append("Au niveau max, évolue en %s pour %d pierres (PV restaurés)."
+					% [target, def.evolve_cost])
+		sections.append(["CAPACITÉS", "\n".join(caps)])
+	else:
+		subtitle = "Sort · %s" % cost_txt
+		sections.append(["EFFET", GameText.describe_effect(def.effect)])
+	if def.description != "":
+		sections.append(["", "« %s »" % def.description])
 	if live != null:
-		body += "\n\n— En jeu —\nNiveau %d · ATQ %d · PV %d/%d" \
-				% [live.level, live.atk(), live.hp, live.max_hp()]
+		var live_lines: PackedStringArray = []
+		live_lines.append("Niveau %d · %d ATQ · %d/%d PV"
+				% [live.level, live.atk(), live.hp, live.max_hp()])
 		if not live.at_max_level():
-			body += "\nXP %d / %d" % [live.xp, live.next_level_xp()]
+			live_lines.append("XP %d / %d" % [live.xp, live.next_level_xp()])
 		if live.shield:
-			body += "\nBouclier actif"
-		if live.acted:
-			body += "\nA déjà agi ce tour"
-	row.add_child(_side_panel(def.display_name, body))
+			live_lines.append("Bouclier actif")
+		live_lines.append("A déjà agi ce tour" if live.acted else "Peut encore agir")
+		sections.append(["EN JEU", "\n".join(live_lines)])
+	row.add_child(_side_panel(def.display_name, subtitle, sections))
 	_finish(row)
 
 
@@ -138,12 +216,16 @@ func _build_master(master: MasterDef) -> void:
 	var row := _base()
 	var path := "res://assets/sprites/cards_full/master_%s.png" % master.id
 	row.add_child(_card_image(path, null))
-	var body := "PV : %d\n\nPassif : %s\n\nPouvoir — %s (%d pierres, 1×/tour) :\n%s" \
-			% [master.hp, master.passive_desc, master.power_name, master.power_cost,
-			master.power_desc]
+	var subtitle := "Maître — %s · %d PV" \
+			% [GameConst.GUILD_NAMES.get(master.guild, ""), master.hp]
+	var sections: Array = [
+		["COMPÉTENCE", "%s  (%d pierres, 1×/tour)\n%s"
+				% [master.power_name, master.power_cost, master.power_desc]],
+		["ATTRIBUT", master.passive_desc],
+	]
 	if master.lore != "":
-		body += "\n\n« %s »" % master.lore
-	row.add_child(_side_panel(master.display_name, body))
+		sections.append(["", "« %s »" % master.lore])
+	row.add_child(_side_panel(master.display_name, subtitle, sections))
 	_finish(row)
 
 

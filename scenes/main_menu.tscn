@@ -165,10 +165,10 @@ icon = ExtResource("13")
 layout_mode = 1
 anchors_preset = 0
 offset_left = 1370.0
-offset_top = 580.0
+offset_top = 560.0
 offset_right = 1846.0
-offset_bottom = 950.0
-theme_override_styles/panel = SubResource("StyleBoxTexture_progress")
+offset_bottom = 960.0
+theme_type_variation = &"PanelFancy"
 
 [node name="VBox" type="VBoxContainer" parent="ProgressPanel"]
 layout_mode = 2

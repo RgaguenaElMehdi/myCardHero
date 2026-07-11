@@ -958,18 +958,18 @@
 			"flavor": "Il chasse la chaleur — surtout la vôtre."
 		},
 		{
-			"id": "magma_brute",
-			"name": "Brute de magma",
+			"id": "flame_berserker",
+			"name": "Berserker de feu",
 			"guild": "flame",
 			"kind": "monster",
 			"cost": 4.0,
 			"attack_type": "melee",
 			"levels": [
-				{ "xp": 0.0, "atk": 4.0, "hp": 6.0 },
-				{ "xp": 4.0, "atk": 5.0, "hp": 7.0 }
+				{ "xp": 0.0, "atk": 5.0, "hp": 4.0 },
+				{ "xp": 4.0, "atk": 6.0, "hp": 5.0 }
 			],
-			"keywords": { "armor": 1.0 },
-			"flavor": "Une avalanche qui a appris à marcher."
+			"keywords": { "haste": true },
+			"flavor": "Il ne connaît qu'une direction : devant."
 		},
 		{
 			"id": "spark_sprite",

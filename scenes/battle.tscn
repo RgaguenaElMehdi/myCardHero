@@ -17,7 +17,6 @@
 [ext_resource type="Texture2D" uid="uid://jvqga6gkleyk" path="res://assets/sprites/ui/pixel/row_marker_1.png" id="16"]
 [ext_resource type="Texture2D" uid="uid://bw44plj2npvs4" path="res://assets/sprites/ui/pixel/row_marker_2.png" id="17"]
 [ext_resource type="Texture2D" uid="uid://qkar6fm5ku8y" path="res://assets/sprites/ui/pixel/row_marker_3.png" id="18"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_stat_action.png" id="19"]
 
 [sub_resource type="StyleBoxFlat" id="panel_navy"]
 bg_color = Color(0.098, 0.118, 0.196, 0.92)
@@ -74,6 +73,54 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.96, 0.81, 0.42, 1)
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="btn_power"]
+bg_color = Color(0.29, 0.16, 0.42, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.96, 0.81, 0.42, 1)
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="btn_power_hi"]
+bg_color = Color(0.42, 0.24, 0.58, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.89, 0.55, 1)
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="btn_power_off"]
+bg_color = Color(0.16, 0.13, 0.2, 0.85)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.42, 0.55, 0.5)
 content_margin_left = 12.0
 content_margin_top = 8.0
 content_margin_right = 12.0
@@ -571,12 +618,6 @@ stretch_mode = 5
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
 
-[node name="PowerBtn" type="Button" parent="PlayerPanel/Box" unique_id=195785045]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 44)
-layout_mode = 2
-theme_override_font_sizes/font_size = 17
-
 [node name="InfoPanel" type="PanelContainer" parent="." unique_id=1272779032]
 unique_name_in_owner = true
 theme_override_styles/panel = SubResource("panel_navy")
@@ -585,7 +626,7 @@ layout_mode = 0
 offset_left = 1612.0
 offset_top = 385.0
 offset_right = 1900.0
-offset_bottom = 695.0
+offset_bottom = 745.0
 
 [node name="InfoBox" type="VBoxContainer" parent="InfoPanel" unique_id=595276332]
 unique_name_in_owner = true
@@ -625,6 +666,20 @@ theme_override_styles/hover = SubResource("btn_navy_hi")
 theme_override_styles/pressed = SubResource("btn_navy_hi")
 theme_override_styles/disabled = SubResource("btn_navy")
 text = "FIN DU TOUR"
+
+[node name="PowerBtn" type="Button" parent="InfoPanel/InfoBox" unique_id=195785045]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.93, 0.7, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.62, 0.56, 0.68, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("btn_power")
+theme_override_styles/hover = SubResource("btn_power_hi")
+theme_override_styles/pressed = SubResource("btn_power_hi")
+theme_override_styles/disabled = SubResource("btn_power_off")
+text = "✦ Pouvoir"
 
 [node name="ActionsTitle" type="Label" parent="InfoPanel/InfoBox" unique_id=1149758182]
 layout_mode = 2
@@ -724,7 +779,7 @@ stretch_mode = 5
 unique_name_in_owner = true
 custom_minimum_size = Vector2(62, 66)
 layout_mode = 2
-tooltip_text = "Mots-clés et portées"
+tooltip_text = "Journal des actions de la partie"
 texture_normal = ExtResource("12")
 ignore_texture_size = true
 stretch_mode = 5
@@ -737,31 +792,6 @@ tooltip_text = "Abandonner la partie"
 texture_normal = ExtResource("13")
 ignore_texture_size = true
 stretch_mode = 5
-
-[node name="LogBtn" type="TextureButton" parent="UtilRow" unique_id=1285097627]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(62, 66)
-layout_mode = 2
-tooltip_text = "Dernières actions"
-texture_normal = ExtResource("19")
-ignore_texture_size = true
-stretch_mode = 5
-
-[node name="LegendPanel" type="PanelContainer" parent="." unique_id=2020447835]
-unique_name_in_owner = true
-visible = false
-z_index = 20
-custom_minimum_size = Vector2(430, 0)
-layout_mode = 0
-offset_left = 1090.0
-offset_top = 500.0
-offset_right = 1520.0
-offset_bottom = 520.0
-
-[node name="LegendBox" type="VBoxContainer" parent="LegendPanel" unique_id=2058407191]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 3
 
 [node name="EvolveBtn" type="Button" parent="." unique_id=628776979]
 unique_name_in_owner = true
@@ -792,14 +822,15 @@ offset_bottom = 140.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("top_tray")
 
-[node name="EnemyPips" type="HBoxContainer" parent="." unique_id=770001]
+[node name="EnemyPips" type="VBoxContainer" parent="." unique_id=770001]
 unique_name_in_owner = true
-offset_left = 400.0
-offset_top = 110.0
-offset_right = 760.0
-offset_bottom = 134.0
+offset_left = 336.0
+offset_top = 150.0
+offset_right = 372.0
+offset_bottom = 470.0
 mouse_filter = 2
-theme_override_constants/separation = 2
+alignment = 1
+theme_override_constants/separation = 3
 
 [node name="EnemyDeck" type="TextureRect" parent="." unique_id=770002]
 unique_name_in_owner = true
@@ -825,14 +856,15 @@ theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlayerPips" type="HBoxContainer" parent="." unique_id=770004]
+[node name="PlayerPips" type="VBoxContainer" parent="." unique_id=770004]
 unique_name_in_owner = true
-offset_left = 400.0
-offset_top = 980.0
-offset_right = 760.0
-offset_bottom = 1004.0
+offset_left = 336.0
+offset_top = 590.0
+offset_right = 372.0
+offset_bottom = 910.0
 mouse_filter = 2
-theme_override_constants/separation = 2
+alignment = 1
+theme_override_constants/separation = 3
 
 [node name="PlayerDeck" type="TextureRect" parent="." unique_id=770005]
 unique_name_in_owner = true

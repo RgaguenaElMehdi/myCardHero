@@ -4,6 +4,7 @@ extends Node
 ##   --probe              report which Control receives each button's click
 ##   --clickflow=A|B|C    synthesize real clicks on a button sequence
 ##   --clicklog           log every real mouse click received (position, hover)
+##   --popup=<card_id>    open the card inspector on a card (for screenshots)
 
 
 func _ready() -> void:
@@ -16,6 +17,23 @@ func _ready() -> void:
 			_schedule_clickflow(String(arg).split("=", true, 1)[1].split("|"))
 		elif String(arg) == "--clicklog":
 			_log_clicks = true
+		elif String(arg).begins_with("--popup="):
+			_schedule_popup(String(arg).split("=", true, 1)[1])
+
+
+## Opens the CardPopup on a given card id (with a live instance) for a
+## screenshot: `--popup=<card_id>` (combine with --screenshot).
+func _schedule_popup(card_id: String) -> void:
+	await get_tree().create_timer(1.5, true, false, true).timeout
+	var def: CardDef = Db.card(StringName(card_id))
+	if def == null:
+		print("[popup] carte inconnue : %s" % card_id)
+		return
+	var live: MonsterInst = null
+	if def.is_monster():
+		live = MonsterInst.create(def, 0, 0)
+		live.gain_xp(1)
+	CardPopup.open(get_tree().current_scene, def, live)
 
 
 ## Synthesizes real mouse clicks on a sequence of buttons ("A|B|C"),
