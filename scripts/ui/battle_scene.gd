@@ -29,6 +29,8 @@ const BOARD_CENTER_X := 960.0
 @onready var player_panel: PanelContainer = %PlayerPanel
 
 var state: GameState
+## Seam between UI and rules (local now, network later). All actions go through it.
+var _match := MatchController.new()
 var ai: AiPlayer
 ## --autoplay: both sides AI-driven through the normal UI action path
 ## (integration smoke test of the full battle scene).
@@ -90,7 +92,7 @@ func _process(_delta: float) -> void:
 	elif state.current == 1 and stuck_ms > 20000:
 		# The AI coroutine died mid-turn: recover by force-ending its turn.
 		push_warning("Watchdog : tour IA interrompu, fin de tour forcée.")
-		Rules.apply(state, { "type": "end_turn" })
+		_match.apply({ "type": "end_turn" })
 		busy = false
 		_busy_since_ms = 0
 		_refresh_all()
@@ -119,7 +121,7 @@ func _setup_match() -> void:
 	var my_deck := Game.active_deck()
 	var m0: MasterDef = Db.master(StringName(String(my_deck.master)))
 	var m1: MasterDef = Db.master(StringName(String(cfg.opponent_master)))
-	state = Rules.setup(Db.cards, [m0, m1],
+	state = _match.setup(Db.cards, [m0, m1],
 			[my_deck.cards, cfg.opponent_deck], randi())
 	ai = AiPlayer.new(int(cfg.ai_level), randi())
 	_refresh_all()
@@ -139,8 +141,8 @@ func _show_mulligan() -> void:
 
 
 func _on_mulligan_choice(redraw: bool) -> void:
-	Rules.apply(state, { "type": "mulligan", "redraw": redraw })
-	var res := Rules.apply(state, ai.choose_action(state))  # AI mulligan → starts turn 1
+	_match.apply({ "type": "mulligan", "redraw": redraw })
+	var res := _match.apply(ai.choose_action(state))  # AI mulligan → starts turn 1
 	mulligan_overlay.queue_free()
 	mulligan_overlay = null
 	_log("La partie commence !")
@@ -603,7 +605,7 @@ func _on_evolve_pressed() -> void:
 func _submit(action: Dictionary) -> void:
 	if busy or state.is_over():
 		return
-	var res := Rules.apply(state, action)
+	var res := _match.apply(action)
 	if not res.ok:
 		_toast(res.error)
 		return
@@ -627,10 +629,10 @@ func _ai_turn() -> void:
 	while not state.is_over() and state.current == 1 and guard < 200:
 		guard += 1
 		var action := ai.choose_action(state)
-		var res := Rules.apply(state, action)
+		var res := _match.apply(action)
 		if not res.ok:
 			push_error("Action IA illégale : %s (%s)" % [action, res.error])
-			res = Rules.apply(state, { "type": "end_turn" })
+			res = _match.apply({ "type": "end_turn" })
 		await _play_events(res.events)
 		for cell in cells:
 			cells[cell].render(state)

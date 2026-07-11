@@ -19,6 +19,47 @@ func _ready() -> void:
 			_log_clicks = true
 		elif String(arg).begins_with("--popup="):
 			_schedule_popup(String(arg).split("=", true, 1)[1])
+		elif String(arg).begins_with("--nettest="):
+			_schedule_nettest(String(arg).split("=", true, 1)[1])
+
+
+## Headless E2E smoke test of the ENet transport + authoritative server.
+##   instance 1: --nettest=host          instance 2: --nettest=join=127.0.0.1
+## Drives the full mulligan handshake over the wire and logs each authoritative
+## update, then quits. Proves connection + redacted snapshots + server authority.
+func _schedule_nettest(mode: String) -> void:
+	await get_tree().process_frame
+	var my_player := -1
+	Net.connection_failed.connect(func(r: String) -> void:
+		print("[nettest] refus/erreur: %s" % r))
+	Net.opponent_left.connect(func() -> void:
+		print("[nettest] adversaire parti"))
+	Net.match_ready.connect(func(mp: int) -> void:
+		my_player = mp
+		var st: GameState = Net.controller.state
+		print("[nettest] MATCH prêt — je suis joueur %d, phase=%d current=%d main=%d" % [
+				mp, st.phase, st.current, st.players[0].hand.size()])
+		Net.controller.remote_events.connect(func(ev: Array, over: bool, win: int) -> void:
+			var s2: GameState = Net.controller.state
+			print("[nettest] update: events=%d phase=%d current=%d over=%s" % [
+					ev.size(), s2.phase, s2.current, over])
+			if not over and s2.phase == GameState.Phase.MULLIGAN and s2.current == my_player:
+				Net.submit_action({ "type": "mulligan", "redraw": false })
+			elif s2.phase == GameState.Phase.MAIN:
+				print("[nettest] OK — phase principale atteinte via le réseau")
+				get_tree().create_timer(0.5).timeout.connect(get_tree().quit))
+		if st.current == my_player:
+			Net.submit_action({ "type": "mulligan", "redraw": false }))
+	var deck: Dictionary = Game.active_deck()
+	if mode == "host":
+		print("[nettest] host err='%s' — attente adversaire" % Net.host(deck))
+	elif mode.begins_with("join="):
+		var ip := mode.trim_prefix("join=")
+		print("[nettest] join %s err='%s'" % [ip, Net.join(ip, deck)])
+	# safety quit if nothing happens
+	get_tree().create_timer(15.0).timeout.connect(func() -> void:
+		print("[nettest] fin (timeout)")
+		get_tree().quit())
 
 
 ## Opens the CardPopup on a given card id (with a live instance) for a

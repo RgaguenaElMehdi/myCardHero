@@ -16,6 +16,44 @@ var winner: int = -1
 var card_index: Dictionary = {}
 
 
+## --- Serialization (authoritative snapshots / reconnection) ----------------
+## `card_index` and `master_index` are injected on rebuild (never serialized —
+## they are static definition tables both sides already own). Redaction of hidden
+## zones is applied on the dict BEFORE sending (see NetRedact), not here.
+
+func to_dict(include_rng := true) -> Dictionary:
+	var pl: Array = []
+	for p in players:
+		pl.append(p.to_dict())
+	var d := {
+		"phase": phase, "current": current, "turn": turn, "winner": winner,
+		"players": pl, "board": board.to_dict(),
+	}
+	if include_rng:
+		d["rng_seed"] = rng.seed
+		d["rng_state"] = rng.state
+	return d
+
+
+static func from_dict(d: Dictionary, card_index: Dictionary, master_index: Dictionary) -> GameState:
+	var s := GameState.new()
+	s.card_index = card_index
+	s.phase = int(d.get("phase", Phase.MULLIGAN))
+	s.current = int(d.get("current", 0))
+	s.turn = int(d.get("turn", 1))
+	s.winner = int(d.get("winner", -1))
+	if d.has("rng_seed"):
+		s.rng.seed = int(d["rng_seed"])
+	if d.has("rng_state"):
+		s.rng.state = int(d["rng_state"])
+	var pl: Array[PlayerState] = []
+	for pd in d.get("players", []):
+		pl.append(PlayerState.from_dict(pd, master_index))
+	s.players = pl
+	s.board = Board.from_dict(d.get("board", []), card_index)
+	return s
+
+
 func opponent() -> int:
 	return 1 - current
 

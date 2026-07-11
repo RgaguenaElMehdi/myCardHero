@@ -26,6 +26,7 @@ config/icon="res://assets/sprites/ui/app_icon.png"
 Db="*res://scripts/autoload/db.gd"
 Game="*res://scripts/autoload/game.gd"
 Audio="*res://scripts/autoload/audio.gd"
+Net="*res://scripts/autoload/net.gd"
 DebugHarness="*res://scripts/autoload/debug.gd"
 
 [display]

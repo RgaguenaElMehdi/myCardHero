@@ -29,6 +29,31 @@ static func create(p_def: CardDef, p_owner: int, p_turn: int) -> MonsterInst:
 	return m
 
 
+## --- Serialization (network snapshots / reconnection) ---------------------
+
+func to_dict() -> Dictionary:
+	return {
+		"def": String(def.id), "owner": owner_idx, "level": level, "xp": xp,
+		"hp": hp, "atk_bonus": atk_bonus, "max_hp_bonus": max_hp_bonus,
+		"shield": shield, "acted": acted, "summoned_on_turn": summoned_on_turn,
+	}
+
+
+static func from_dict(d: Dictionary, card_index: Dictionary) -> MonsterInst:
+	var m := MonsterInst.new()
+	m.def = card_index.get(StringName(d.get("def", "")))
+	m.owner_idx = int(d.get("owner", 0))
+	m.level = int(d.get("level", 1))
+	m.xp = int(d.get("xp", 0))
+	m.hp = int(d.get("hp", 0))
+	m.atk_bonus = int(d.get("atk_bonus", 0))
+	m.max_hp_bonus = int(d.get("max_hp_bonus", 0))
+	m.shield = bool(d.get("shield", false))
+	m.acted = bool(d.get("acted", false))
+	m.summoned_on_turn = int(d.get("summoned_on_turn", -1))
+	return m
+
+
 func stats() -> Dictionary:
 	return def.levels[level - 1]
 

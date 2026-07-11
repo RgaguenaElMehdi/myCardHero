@@ -8,6 +8,23 @@ extends RefCounted
 var cells: Dictionary = {}
 
 
+## --- Serialization ---------------------------------------------------------
+
+func to_dict() -> Array:
+	var out: Array = []
+	for cell in cells:
+		out.append({ "c": [cell.x, cell.y], "m": (cells[cell] as MonsterInst).to_dict() })
+	return out
+
+
+static func from_dict(arr: Array, card_index: Dictionary) -> Board:
+	var b := Board.new()
+	for e in arr:
+		var c: Array = e["c"]
+		b.cells[Vector2i(int(c[0]), int(c[1]))] = MonsterInst.from_dict(e["m"], card_index)
+	return b
+
+
 static func back_row(player: int) -> int:
 	return 0 if player == 0 else 3
 
