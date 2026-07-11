@@ -39,17 +39,17 @@ F_BODY = "C:/Windows/Fonts/georgia.ttf"
 # Measured on the pixel-art masters (1024x1536).
 ANCHORS = {
     "monster": {
-        "name": (0.494, 0.065), "name_w": 0.42,
-        "subtitle": (0.494, 0.125),
+        "name": (0.500, 0.065), "name_w": 0.42,
+        "subtitle": (0.500, 0.125),
         "stat_xs": [0.166, 0.390, 0.605, 0.832], "stat_y": 0.612,
         "text_top": 0.695, "text_bottom": 0.855,
-        "rarity": (0.494, 0.901),
+        "rarity": (0.500, 0.901),
     },
     "spell": {
-        "name": (0.496, 0.068), "name_w": 0.44,
-        "subtitle": (0.496, 0.133),
+        "name": (0.500, 0.068), "name_w": 0.44,
+        "subtitle": (0.500, 0.133),
         "text_top": 0.618, "text_bottom": 0.845,
-        "rarity": (0.496, 0.906),
+        "rarity": (0.500, 0.906),
     },
 }
 
@@ -84,15 +84,25 @@ def describe_effect(ops: list) -> str:
     return " ".join(parts)
 
 
+RARITY_LABELS = {"commune": "COMMUNE", "rare": "RARE", "epique": "ÉPIQUE",
+                 "legendaire": "LÉGENDAIRE", "ascendant": "ASCENDANT"}
+
+# Rarity color, used ONLY on the bottom plaque (label + flanking gems). Kept
+# local so it never fights the guild frame's own metal/color.
+RARITY_METAL = {
+    "COMMUNE":    (168, 158, 138),
+    "RARE":       (120, 170, 225),
+    "ÉPIQUE":     (190, 120, 240),
+    "LÉGENDAIRE": (245, 198, 82),
+    "ASCENDANT":  (92, 226, 206),
+    "MAÎTRE":     (224, 229, 238),
+}
+
+
 def rarity_of(card: dict) -> str:
     if card.get("token"):
         return "ASCENDANT"
-    cost = card.get("cost", 0)
-    if cost <= 2:
-        return "COMMUNE"
-    if cost <= 4:
-        return "RARE"
-    return "ÉPIQUE"
+    return RARITY_LABELS.get(card.get("rarity", "commune"), "COMMUNE")
 
 
 # --- template analysis ---------------------------------------------------
@@ -137,33 +147,44 @@ def magenta_window(img: Image.Image) -> tuple:
 
 
 def gem_region(img: Image.Image, window: tuple) -> tuple:
-    """Flood-fills the cost gem's magenta face (seeded above the art window)."""
+    """Flood-fills the cost gem's magenta face. The gem is the LARGEST magenta
+    blob above the art window — picking the largest (not the first seed) keeps it
+    robust against small magenta-ish flecks from the rarity corner gemstones
+    (amethyst highlights read as pink)."""
     px = img.convert("RGB").load()
     w, h = img.size
     wy0 = window[1]
-    seed = None
+
+    def flood(seed: tuple, seen: set) -> set:
+        # Barrier at the art window's top edge: the cost gem lives strictly above
+        # it, so never let the fill leak down into the (much larger) art window.
+        comp = set()
+        stack = [seed]
+        while stack:
+            x, y = stack.pop()
+            if (x, y) in comp or not (0 <= x < w and 0 <= y < wy0):
+                continue
+            if not _is_magenta(px[x, y]):
+                continue
+            comp.add((x, y))
+            stack.extend([(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)])
+        seen |= comp
+        return comp
+
+    seen = set()
+    best = set()
     for y in range(0, wy0, 2):
-        for x in range(0, w // 2, 2):
-            if _is_magenta(px[x, y]):
-                seed = (x, y)
-                break
-        if seed:
-            break
-    if seed is None:
+        for x in range(0, w, 2):
+            if (x, y) in seen or not _is_magenta(px[x, y]):
+                continue
+            comp = flood((x, y), seen)
+            if len(comp) > len(best):
+                best = comp
+    if not best:
         return set(), (int(w * 0.14), int(w * 0.12))
-    pts = set()
-    stack = [seed]
-    while stack:
-        x, y = stack.pop()
-        if (x, y) in pts or not (0 <= x < w and 0 <= y < h):
-            continue
-        if not _is_magenta(px[x, y]):
-            continue
-        pts.add((x, y))
-        stack.extend([(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)])
-    cx = sum(p[0] for p in pts) // len(pts)
-    cy = sum(p[1] for p in pts) // len(pts)
-    return pts, (cx, cy)
+    cx = sum(p[0] for p in best) // len(best)
+    cy = sum(p[1] for p in best) // len(best)
+    return best, (cx, cy)
 
 
 # --- drawing helpers -----------------------------------------------------
@@ -205,6 +226,15 @@ def outlined(draw, pos, text, f, fill, outline=(20, 14, 8), width=3, anchor="mm"
               stroke_width=width, stroke_fill=outline)
 
 
+def vcentered(draw, x, cy, text, f, fill, outline=(20, 14, 8), width=3):
+    """Draw `text` horizontally centered at x and vertically centered on cy by its
+    ACTUAL ink box — all-caps titles have no descenders, so the plain "mm" anchor
+    (which reserves descender space) makes them sit too high. Correct for that."""
+    bb = draw.textbbox((0, 0), text, font=f, anchor="mm", stroke_width=width)
+    y = int(cy - (bb[1] + bb[3]) / 2)
+    outlined(draw, (int(x), y), text, f, fill, outline=outline, width=width)
+
+
 def ornament_divider(draw, cx, y, half_w, color=(150, 120, 70)):
     draw.line((cx - half_w, y, cx - 14, y), fill=color, width=2)
     draw.line((cx + 14, y, cx + half_w, y), fill=color, width=2)
@@ -241,6 +271,76 @@ def auto_trim(img: Image.Image) -> Image.Image:
     return img.crop((x0 + pad, y0 + pad, x1 - pad + 1, y1 - pad + 1))
 
 
+def plate_center_x(img: Image.Image, yfrac: float, yspan: float = 0.045,
+                   default: float = 0.5) -> float:
+    """Horizontal center (as a fraction of width) of the dark plate at `yfrac`.
+    Scans OUTWARD from the middle to the first bright (gold) edge on each side —
+    robust because it starts inside the empty plate and stops at its border, so
+    distant foliage/ornaments never fool it. Detect on the pristine template
+    (empty plates) before any text is drawn."""
+    px = img.load()
+    w, h = img.size
+
+    def lum(x, y):
+        p = px[x, y]
+        return max(p[0], p[1], p[2])
+
+    cands = []
+    lo, hi = int(w * 0.12), int(w * 0.88)
+    for y in range(max(0, int(h * (yfrac - yspan))), min(h, int(h * (yfrac + yspan)))):
+        if lum(w // 2, y) >= 75:          # middle must sit inside the dark plate
+            continue
+        left = w // 2
+        while left > lo and lum(left, y) <= 110:
+            left -= 1
+        right = w // 2
+        while right < hi and lum(right, y) <= 110:
+            right += 1
+        if right - left > w * 0.15:
+            cands.append((left + right) / 2)
+    if not cands:
+        return default
+    cands.sort()
+    return cands[len(cands) // 2] / w
+
+
+def plate_center_y(img: Image.Image, cxfrac: float, yfrac: float,
+                   yspan: float = 0.055, default: float = None) -> float:
+    """Vertical center (fraction of height) of the dark plate that contains the
+    point (cxfrac, yfrac). Scans up/down from that point (inside the plate) to the
+    first bright edge. Detect on the pristine template."""
+    px = img.load()
+    w, h = img.size
+    x = int(w * cxfrac)
+
+    def lum(y):
+        p = px[x, min(h - 1, max(0, y))]
+        return max(p[0], p[1], p[2])
+
+    y0 = int(h * yfrac)
+    if lum(y0) >= 75:                      # nudge onto the dark plate if just off
+        step = None
+        for dy in range(1, int(h * yspan)):
+            if lum(y0 - dy) < 75:
+                step = y0 - dy
+                break
+            if lum(y0 + dy) < 75:
+                step = y0 + dy
+                break
+        if step is None:
+            return default if default is not None else yfrac
+        y0 = step
+    top = y0
+    while top > int(h * (yfrac - yspan)) and lum(top) < 110:
+        top -= 1
+    bot = y0
+    while bot < int(h * (yfrac + yspan)) and lum(bot) < 110:
+        bot += 1
+    if bot - top < h * 0.008:
+        return default if default is not None else yfrac
+    return (top + bot) / 2 / h
+
+
 # --- composition ----------------------------------------------------------
 
 
@@ -253,6 +353,16 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
     gc = GUILD_COLORS[guild]
     gem_pts, gem_c = gem
     bx0, by0, bx1, by1 = box
+
+    # Per-frame centering: detect each dark plate's true center on the pristine
+    # template so short labels (subtitle, rarity) sit dead-center whatever tiny
+    # shift the img2img rarity variants introduced. Falls back to the anchor.
+    name_cx = plate_center_x(img, a["name"][1], default=a["name"][0])
+    sub_cx = plate_center_x(img, a["subtitle"][1], default=a["subtitle"][0])
+    rar_cx = plate_center_x(img, a["rarity"][1], default=a["rarity"][0])
+    name_cy = plate_center_y(img, name_cx, a["name"][1], default=a["name"][1])
+    sub_cy = plate_center_y(img, sub_cx, a["subtitle"][1], default=a["subtitle"][1])
+    rar_cy = plate_center_y(img, rar_cx, a["rarity"][1], default=a["rarity"][1])
 
     # 1) snapshot the gem zone (it may overlap the window corner)
     gem_patch = None
@@ -330,21 +440,21 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
             return (62, 44, 24), (242, 232, 208)
         return (238, 226, 200), (20, 14, 8)
 
-    name_pos = (int(W * a["name"][0]), int(H * a["name"][1]))
-    name_fill, name_edge = _adaptive(name_pos)
+    name_cy_px = int(H * name_cy)
+    name_fill, name_edge = _adaptive((int(W * name_cx), name_cy_px))
     name_font = fit_text(draw, card["name"], F_TITLE, int(W * a["name_w"]),
                          int(W * 0.056))
-    outlined(draw, name_pos, card["name"], name_font, name_fill,
-             outline=name_edge, width=4)
+    vcentered(draw, W * name_cx, name_cy_px, card["name"], name_font, name_fill,
+              outline=name_edge, width=4)
     is_monster = kind == "monster"
     sub_kind = "Sort"
     if is_monster:
         sub_kind = "Ascendant" if card.get("token") else "Écho"
     subtitle = card.get("_subtitle", "%s — %s" % (sub_kind, GUILD_NAMES.get(guild, "")))
-    sub_pos = (int(W * a["subtitle"][0]), int(H * a["subtitle"][1]))
-    sub_fill, sub_edge = _adaptive(sub_pos)
-    outlined(draw, sub_pos, subtitle, font(F_TITLE, int(W * 0.0245)),
-             sub_fill, outline=sub_edge, width=2)
+    sub_cy_px = int(H * sub_cy)
+    sub_fill, sub_edge = _adaptive((int(W * sub_cx), sub_cy_px))
+    vcentered(draw, W * sub_cx, sub_cy_px, subtitle, font(F_TITLE, int(W * 0.0245)),
+              sub_fill, outline=sub_edge, width=2)
 
     # 6) stat values inside the plate bodies (color adapts to plate brightness,
     # e.g. the Light faction's ivory plates need dark text)
@@ -423,11 +533,30 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
         draw.text((W // 2, y), payload, font=f_seg, fill=fill, anchor="ma")
         y += lh
 
-    # 8) rarity banner
-    rar_pos = (int(W * a["rarity"][0]), int(H * a["rarity"][1]))
-    rar_fill, rar_edge = _adaptive(rar_pos)
-    outlined(draw, rar_pos, card.get("_rarity", rarity_of(card)),
-             font(F_TITLE, int(W * 0.026)), rar_fill, outline=rar_edge, width=3)
+    # 8) rarity marker in the frame's own bottom plaque (drawn in template space
+    #    so it lands on the plaque). Colored label + two flanking gems — the
+    #    rarity color stays local, never wrapping/clashing with the guild frame.
+    rar_text = card.get("_rarity", rarity_of(card))
+    metal = RARITY_METAL.get(rar_text, RARITY_METAL["COMMUNE"])
+    rar_cx_px, rar_cy_px = int(W * rar_cx), int(H * rar_cy)
+    rf = font(F_TITLE, int(W * 0.030))
+    label_fill = tuple(min(255, c + 30) for c in metal)
+    vcentered(draw, rar_cx_px, rar_cy_px, rar_text, rf, label_fill,
+              outline=(14, 9, 6), width=3)
+    if rar_text != "COMMUNE":
+        tw = draw.textlength(rar_text, font=rf)
+        gy = rar_cy_px
+        gr = int(W * 0.011)
+        dark = tuple(int(c * 0.5) for c in metal)
+        light = tuple(min(255, c + 70) for c in metal)
+        for gx in (rar_cx_px - int(tw / 2) - int(W * 0.032),
+                   rar_cx_px + int(tw / 2) + int(W * 0.032)):
+            draw.ellipse((gx - gr, gy - gr, gx + gr, gy + gr), fill=dark,
+                         outline=(16, 11, 8), width=2)
+            ir = int(gr * 0.6)
+            draw.ellipse((gx - ir, gy - ir, gx + ir, gy + ir), fill=metal)
+            hr = max(1, int(gr * 0.3))
+            draw.ellipse((gx - hr - 1, gy - hr - 1, gx + hr - 1, gy + hr - 1), fill=light)
     return img
 
 
@@ -435,15 +564,20 @@ def main() -> int:
     only = sys.argv[sys.argv.index("--only") + 1] if "--only" in sys.argv else None
     cards = json.loads((ROOT / "resources/data/cards.json").read_text(encoding="utf-8"))["cards"]
     OUT.mkdir(parents=True, exist_ok=True)
-    tpls = {}
-    for kind in ["monster", "spell"]:
-        for fac in GUILD_NAMES:
-            path = UI / f"card_v2_{kind}_{fac}.png"
-            if not path.exists():
-                path = UI / f"card_v2_{kind}_flame.png"  # variant not generated yet
+    tpl_cache = {}
+
+    def get_template(kind: str, guild: str, rarity: str):
+        # Prefer a rarity-specific frame (card_v2_<kind>_<guild>_<rarity>.png) when
+        # it exists; otherwise fall back to the guild base, then flame. This lets
+        # rarity frames be generated incrementally without breaking any card.
+        cand = [UI / f"card_v2_{kind}_{guild}_{rarity}.png"] if rarity else []
+        cand += [UI / f"card_v2_{kind}_{guild}.png", UI / f"card_v2_{kind}_flame.png"]
+        path = next(p for p in cand if p.exists())
+        if path not in tpl_cache:
             tpl = Image.open(path)
             win = magenta_window(tpl)
-            tpls[(kind, fac)] = (tpl, win, gem_region(tpl, win))
+            tpl_cache[path] = (tpl, win, gem_region(tpl, win))
+        return tpl_cache[path]
     # The four Masters get their own cards on the spell frame of their faction.
     masters = json.loads((ROOT / "resources/data/masters.json").read_text(encoding="utf-8"))["masters"]
     for m in masters:
@@ -465,7 +599,9 @@ def main() -> int:
         if only and card["id"] != only:
             continue
         kind = "monster" if card.get("kind") == "monster" else "spell"
-        tpl, box, gem = tpls[(kind, card.get("guild", "flame"))]
+        # rarity frame only for the constructible tiers (tokens/masters have none)
+        rarity = "" if card.get("token") else card.get("rarity", "")
+        tpl, box, gem = get_template(kind, card.get("guild", "flame"), rarity)
         img = compose_card(card, tpl, box, gem)
         img = auto_trim(img)
         img = img.resize((640, int(640 * img.height / img.width)), Image.LANCZOS)

@@ -107,6 +107,8 @@ func _guild_frame_path() -> String:
 
 
 func _apply_style() -> void:
+	# Rarity now lives in the composed card frame (build_cards.py), not a runtime
+	# glow. The widget only draws selection / hover state.
 	var border := Color.TRANSPARENT
 	var border_w := 0
 	if selected:

@@ -140,12 +140,87 @@ def make_variants() -> None:
             time.sleep(1)
 
 
+# Rarity tiers: img2img upgrades of an existing guild frame. The guild color /
+# emblem / layout / magenta windows are preserved; only the metal material and
+# gemstone ornaments change, so the AI integrates them (no clashing pasted-on
+# lines) and the compositor's anchors keep working. Commune = the base frame.
+# NB: never name the tier word ("RARE"/"EPIC"/...) in the prompt — the model
+# tends to write it into the subtitle plate, which then collides with the card's
+# own subtitle. Describe only the material/gems.
+RARITIES = {
+    "rare": (
+        "Make this trading-card frame more precious. Polish the metal trim to "
+        "bright silver-steel, set a few small faceted BLUE sapphire studs into the "
+        "four corners and into the small bottom banner, make the engraving a touch "
+        "crisper."),
+    "epique": (
+        "Make this trading-card frame more precious and ornate WITHOUT changing its "
+        "base metal color: keep the frame's existing metal color and faction palette "
+        "exactly as they are. Only set faceted PURPLE amethyst gemstones into the "
+        "four corners and along the side ornaments, and add slightly more elaborate "
+        "engraved filigree around the border."),
+    "legendaire": (
+        "Make this trading-card frame the most precious and majestic. Turn the metal "
+        "into radiant gilded gold with elaborate baroque engraved filigree, set "
+        "several glowing faceted amber-and-gold gemstones into the four corners and "
+        "the small bottom banner, add a subtle warm divine glow along the inner "
+        "border."),
+}
+
+KEEP_SUFFIX = (
+    " Keep the SAME overall color palette and faction identity, keep the crisp "
+    "pixel-art style. Keep EVERYTHING's layout, positions and sizes strictly "
+    "identical. Keep the magenta #FF00FF areas (the cost gem's flat face and the "
+    "big art window) exactly the same shape and position — do not recolor or move "
+    "them. The name banner, the subtitle plate and the small bottom banner MUST "
+    "stay completely EMPTY dark plates — absolutely no words such as RARE, EPIC, "
+    "LEGENDARY, COMMON or any label inside them. Keep the small engraved stat "
+    "labels (ATQ, PORTÉE, NIVEAU MAX, PV) and the bottom word 'STONEBOUND' "
+    "unchanged. No other text, letters or numbers anywhere.")
+
+
+def make_rarity(only_kind=None, only_guild=None, only_rar=None) -> None:
+    guilds = ["flame", "sylvan", "shadow", "light"]
+    for kind in ["monster", "spell"]:
+        if only_kind and kind != only_kind:
+            continue
+        for guild in guilds:
+            if only_guild and guild != only_guild:
+                continue
+            base_path = OUT / f"card_v2_{kind}_{guild}.png"
+            if not base_path.exists():
+                print(f"base manquante: {base_path.name}")
+                continue
+            base = base_path.read_bytes()
+            for rar, rprompt in RARITIES.items():
+                if only_rar and rar != only_rar:
+                    continue
+                path = OUT / f"card_v2_{kind}_{guild}_{rar}.png"
+                if path.exists():
+                    print(f"déjà là: {path.name}")
+                    continue
+                path.write_bytes(edit(rprompt + KEEP_SUFFIX, base))
+                print(f"OK {path.name}")
+                time.sleep(1)
+
+
 def main() -> int:
     mode = sys.argv[1] if len(sys.argv) > 1 else "all"
     if mode in ("master", "all"):
         make_masters()
     if mode in ("variants", "all"):
         make_variants()
+    if mode == "rarity":
+        # optional positional filters: rarity [kind] [guild] [rar]
+        rest = sys.argv[2:]
+        kinds = {"monster", "spell"}
+        guilds = {"flame", "sylvan", "shadow", "light"}
+        rars = set(RARITIES)
+        make_rarity(
+            next((a for a in rest if a in kinds), None),
+            next((a for a in rest if a in guilds), None),
+            next((a for a in rest if a in rars), None),
+        )
     return 0
 
 

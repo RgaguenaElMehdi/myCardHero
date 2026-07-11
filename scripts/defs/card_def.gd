@@ -7,6 +7,8 @@ extends Resource
 @export var display_name: String
 @export var guild: GameConst.Guild
 @export var kind: GameConst.CardKind
+## "commune" | "rare" | "epique" | "legendaire" (evolved tokens read as "ascendant").
+@export var rarity: StringName = &"commune"
 @export var cost: int = 1
 @export_multiline var description: String
 ## res:// path of the card illustration (assets/, never embedded in code).

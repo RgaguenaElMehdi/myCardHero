@@ -131,6 +131,7 @@ static func _load_cards(path: String, errors: Array[String]) -> Dictionary:
 		c.cost = int(entry.get("cost", 0))
 		c.description = entry.get("flavor", "")
 		c.token = bool(entry.get("token", false))
+		c.rarity = StringName(entry.get("rarity", "ascendant" if c.token else "commune"))
 		c.art = card_art_path(c.id)
 		if not GUILDS.has(entry.get("guild", "")):
 			errors.append("Carte %s : guilde inconnue '%s'" % [c.id, entry.get("guild")])

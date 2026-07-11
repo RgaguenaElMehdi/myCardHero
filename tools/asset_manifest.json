@@ -87,5 +87,25 @@
     "icon_shield": "a round sturdy shield with a blue glass sheen",
     "card_back": "an ornate trading card back design with a central glowing blue rune stone emblem, symmetrical dark blue filigree corners",
     "app_icon": "a game emblem of a glowing blue rune stone crossed with a sword, circular badge"
+  },
+  "card_rarity_frames": {
+    "provenance": "gen_card_templates.py mode \"rarity\" — édition img2img Gemini (gemini-3-pro-image) du cadre de guilde de base : métal/gemmes rehaussés par tier (rare=saphir/argent, epique=amethyste/violet, legendaire=or radiant), guilde+magenta+layout préservés.",
+    "consumed_by": "build_cards.py get_template() — repli sur le cadre de guilde de base si absent.",
+    "files": [
+      "card_v2_monster_flame_epique.png",
+      "card_v2_monster_flame_legendaire.png",
+      "card_v2_monster_flame_rare.png",
+      "card_v2_monster_light_legendaire.png",
+      "card_v2_monster_light_rare.png",
+      "card_v2_monster_shadow_rare.png",
+      "card_v2_monster_sylvan_legendaire.png",
+      "card_v2_monster_sylvan_rare.png",
+      "card_v2_spell_flame_epique.png",
+      "card_v2_spell_flame_rare.png",
+      "card_v2_spell_light_epique.png",
+      "card_v2_spell_light_rare.png",
+      "card_v2_spell_shadow_epique.png",
+      "card_v2_spell_shadow_rare.png"
+    ]
   }
 }

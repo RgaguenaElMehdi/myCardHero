@@ -54,3 +54,20 @@ const GUILD_COLORS := {
 	Guild.SHADOW: Color("8b6bc7"),
 	Guild.LIGHT: Color("e6c35a"),
 }
+
+## Couleurs de rareté (halo des cartes / unités). "commune" ne brille pas :
+## c'est la valeur par défaut, on met en avant tout ce qui est au-dessus.
+const RARITY_COLORS := {
+	&"commune": Color("8b96a8"),
+	&"rare": Color("4a90e2"),
+	&"epique": Color("b45ee8"),
+	&"legendaire": Color("f0b429"),
+	&"ascendant": Color("46e0c0"),
+}
+
+
+## Halo color for a rarity, or null when it should not glow (commune).
+static func rarity_glow(rarity: StringName):
+	if rarity == &"commune" or not RARITY_COLORS.has(rarity):
+		return null
+	return RARITY_COLORS[rarity]

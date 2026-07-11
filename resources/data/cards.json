@@ -5,6 +5,7 @@
 			"name": "Diablotin",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 1.0,
 			"attack_type": "melee",
 			"levels": [
@@ -53,6 +54,7 @@
 			"name": "Renard de cendre",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
@@ -77,6 +79,7 @@
 			"name": "Archère ardente",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "ranged",
 			"levels": [
@@ -103,6 +106,7 @@
 			"name": "Salamandre",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "melee",
 			"levels": [
@@ -127,6 +131,7 @@
 			"name": "Golem de lave",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "epique",
 			"cost": 4.0,
 			"attack_type": "melee",
 			"levels": [
@@ -157,6 +162,7 @@
 			"name": "Phénix",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "legendaire",
 			"cost": 6.0,
 			"attack_type": "magic",
 			"levels": [
@@ -210,6 +216,7 @@
 			"name": "Germelin",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 1.0,
 			"attack_type": "melee",
 			"levels": [
@@ -261,6 +268,7 @@
 			"name": "Loup sylvestre",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
@@ -282,6 +290,7 @@
 			"name": "Tortue de mousse",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
@@ -306,6 +315,7 @@
 			"name": "Druidesse",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "magic",
 			"levels": [
@@ -333,6 +343,7 @@
 			"name": "Sylphe",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "melee",
 			"levels": [
@@ -385,6 +396,7 @@
 			"name": "Tréant",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "legendaire",
 			"cost": 5.0,
 			"attack_type": "melee",
 			"levels": [
@@ -416,6 +428,7 @@
 			"name": "Ombrelin",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 1.0,
 			"attack_type": "melee",
 			"levels": [
@@ -470,6 +483,7 @@
 			"name": "Rat des ténèbres",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 1.0,
 			"attack_type": "melee",
 			"levels": [
@@ -500,6 +514,7 @@
 			"name": "Nuée de chauves-souris",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
@@ -524,6 +539,7 @@
 			"name": "Cultiste",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 2.0,
 			"attack_type": "ranged",
 			"levels": [
@@ -551,6 +567,7 @@
 			"name": "Spectre",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 4.0,
 			"attack_type": "magic",
 			"levels": [
@@ -575,6 +592,7 @@
 			"name": "Chevalier d'os",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 4.0,
 			"attack_type": "melee",
 			"levels": [
@@ -622,6 +640,7 @@
 			"name": "Écuyer",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 1.0,
 			"attack_type": "melee",
 			"levels": [
@@ -674,6 +693,7 @@
 			"name": "Esprit-lanterne",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "magic",
 			"levels": [
@@ -698,6 +718,7 @@
 			"name": "Archer du temple",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 2.0,
 			"attack_type": "ranged",
 			"levels": [
@@ -719,6 +740,7 @@
 			"name": "Porte-bouclier",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "melee",
 			"levels": [
@@ -744,6 +766,7 @@
 			"name": "Clerc",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "ranged",
 			"levels": [
@@ -768,6 +791,7 @@
 			"name": "Archange",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "legendaire",
 			"cost": 6.0,
 			"attack_type": "melee",
 			"levels": [
@@ -817,6 +841,7 @@
 			"name": "Boule de feu",
 			"guild": "flame",
 			"kind": "spell",
+			"rarity": "rare",
 			"cost": 2.0,
 			"effect": [
 				{
@@ -832,6 +857,7 @@
 			"name": "Fournaise",
 			"guild": "flame",
 			"kind": "spell",
+			"rarity": "epique",
 			"cost": 4.0,
 			"effect": [
 				{
@@ -846,6 +872,7 @@
 			"name": "Régénérescence",
 			"guild": "sylvan",
 			"kind": "spell",
+			"rarity": "commune",
 			"cost": 1.0,
 			"effect": [
 				{
@@ -861,6 +888,7 @@
 			"name": "Croissance sauvage",
 			"guild": "sylvan",
 			"kind": "spell",
+			"rarity": "commune",
 			"cost": 2.0,
 			"effect": [
 				{
@@ -877,6 +905,7 @@
 			"name": "Pacte noir",
 			"guild": "shadow",
 			"kind": "spell",
+			"rarity": "commune",
 			"cost": 1.0,
 			"effect": [
 				{
@@ -895,6 +924,7 @@
 			"name": "Drain de vie",
 			"guild": "shadow",
 			"kind": "spell",
+			"rarity": "rare",
 			"cost": 3.0,
 			"effect": [
 				{
@@ -914,6 +944,7 @@
 			"name": "Bénédiction",
 			"guild": "light",
 			"kind": "spell",
+			"rarity": "commune",
 			"cost": 1.0,
 			"effect": [
 				{
@@ -928,6 +959,7 @@
 			"name": "Élan sacré",
 			"guild": "light",
 			"kind": "spell",
+			"rarity": "rare",
 			"cost": 2.0,
 			"effect": [
 				{
@@ -948,13 +980,24 @@
 			"name": "Molosse de cendre",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
-				{ "xp": 0.0, "atk": 3.0, "hp": 3.0 },
-				{ "xp": 3.0, "atk": 4.0, "hp": 4.0 }
+				{
+					"xp": 0.0,
+					"atk": 3.0,
+					"hp": 3.0
+				},
+				{
+					"xp": 3.0,
+					"atk": 4.0,
+					"hp": 4.0
+				}
 			],
-			"keywords": { "haste": true },
+			"keywords": {
+				"haste": true
+			},
 			"flavor": "Il chasse la chaleur — surtout la vôtre."
 		},
 		{
@@ -962,13 +1005,24 @@
 			"name": "Berserker de feu",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 4.0,
 			"attack_type": "melee",
 			"levels": [
-				{ "xp": 0.0, "atk": 5.0, "hp": 4.0 },
-				{ "xp": 4.0, "atk": 6.0, "hp": 5.0 }
+				{
+					"xp": 0.0,
+					"atk": 5.0,
+					"hp": 4.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 6.0,
+					"hp": 5.0
+				}
 			],
-			"keywords": { "haste": true },
+			"keywords": {
+				"haste": true
+			},
 			"flavor": "Il ne connaît qu'une direction : devant."
 		},
 		{
@@ -976,14 +1030,26 @@
 			"name": "Lutin d'étincelles",
 			"guild": "flame",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 1.0,
 			"attack_type": "ranged",
 			"levels": [
-				{ "xp": 0.0, "atk": 1.0, "hp": 1.0 },
-				{ "xp": 2.0, "atk": 2.0, "hp": 2.0 }
+				{
+					"xp": 0.0,
+					"atk": 1.0,
+					"hp": 1.0
+				},
+				{
+					"xp": 2.0,
+					"atk": 2.0,
+					"hp": 2.0
+				}
 			],
 			"on_death": [
-				{ "op": "damage_all_enemies", "amount": 1.0 }
+				{
+					"op": "damage_all_enemies",
+					"amount": 1.0
+				}
 			],
 			"flavor": "Il explose en gerbe d'étincelles. Toujours."
 		},
@@ -992,9 +1058,14 @@
 			"name": "Météore",
 			"guild": "flame",
 			"kind": "spell",
+			"rarity": "epique",
 			"cost": 5.0,
 			"effect": [
-				{ "op": "damage", "amount": 5.0, "target": "enemy_monster" }
+				{
+					"op": "damage",
+					"amount": 5.0,
+					"target": "enemy_monster"
+				}
 			],
 			"flavor": "Le ciel choisit une cible. Elle n'a pas son mot à dire."
 		},
@@ -1003,13 +1074,24 @@
 			"name": "Poulain de ronces",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
-				{ "xp": 0.0, "atk": 2.0, "hp": 3.0 },
-				{ "xp": 3.0, "atk": 3.0, "hp": 4.0 }
+				{
+					"xp": 0.0,
+					"atk": 2.0,
+					"hp": 3.0
+				},
+				{
+					"xp": 3.0,
+					"atk": 3.0,
+					"hp": 4.0
+				}
 			],
-			"keywords": { "riposte": 1.0 },
+			"keywords": {
+				"riposte": 1.0
+			},
 			"flavor": "Rue à qui le touche."
 		},
 		{
@@ -1017,13 +1099,24 @@
 			"name": "Grand cerf",
 			"guild": "sylvan",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 4.0,
 			"attack_type": "melee",
 			"levels": [
-				{ "xp": 0.0, "atk": 3.0, "hp": 6.0 },
-				{ "xp": 4.0, "atk": 4.0, "hp": 7.0 }
+				{
+					"xp": 0.0,
+					"atk": 3.0,
+					"hp": 6.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 4.0,
+					"hp": 7.0
+				}
 			],
-			"keywords": { "regen": 1.0 },
+			"keywords": {
+				"regen": 1.0
+			},
 			"flavor": "Le bois se souvient de chaque saison."
 		},
 		{
@@ -1031,9 +1124,15 @@
 			"name": "Poussée verdoyante",
 			"guild": "sylvan",
 			"kind": "spell",
+			"rarity": "commune",
 			"cost": 1.0,
 			"effect": [
-				{ "op": "buff", "atk": 1.0, "hp": 1.0, "target": "ally_monster" }
+				{
+					"op": "buff",
+					"atk": 1.0,
+					"hp": 1.0,
+					"target": "ally_monster"
+				}
 			],
 			"flavor": "Un peu de sève, beaucoup d'ambition."
 		},
@@ -1042,14 +1141,26 @@
 			"name": "Molosse des tombes",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
-				{ "xp": 0.0, "atk": 2.0, "hp": 2.0 },
-				{ "xp": 3.0, "atk": 3.0, "hp": 3.0 }
+				{
+					"xp": 0.0,
+					"atk": 2.0,
+					"hp": 2.0
+				},
+				{
+					"xp": 3.0,
+					"atk": 3.0,
+					"hp": 3.0
+				}
 			],
 			"on_death": [
-				{ "op": "stones", "amount": 1.0 }
+				{
+					"op": "stones",
+					"amount": 1.0
+				}
 			],
 			"flavor": "Il revient toujours — pour son os, et pour vous."
 		},
@@ -1058,13 +1169,24 @@
 			"name": "Rôdeur nocturne",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "ranged",
 			"levels": [
-				{ "xp": 0.0, "atk": 3.0, "hp": 3.0 },
-				{ "xp": 4.0, "atk": 4.0, "hp": 4.0 }
+				{
+					"xp": 0.0,
+					"atk": 3.0,
+					"hp": 3.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 4.0,
+					"hp": 4.0
+				}
 			],
-			"keywords": { "flying": true },
+			"keywords": {
+				"flying": true
+			},
 			"flavor": "On ne le voit qu'une fois."
 		},
 		{
@@ -1072,14 +1194,26 @@
 			"name": "Sangsue d'âme",
 			"guild": "shadow",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 3.0,
 			"attack_type": "magic",
 			"levels": [
-				{ "xp": 0.0, "atk": 2.0, "hp": 4.0 },
-				{ "xp": 4.0, "atk": 3.0, "hp": 5.0 }
+				{
+					"xp": 0.0,
+					"atk": 2.0,
+					"hp": 4.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 3.0,
+					"hp": 5.0
+				}
 			],
 			"on_attack": [
-				{ "op": "heal_master", "amount": 1.0 }
+				{
+					"op": "heal_master",
+					"amount": 1.0
+				}
 			],
 			"flavor": "À chaque morsure, un peu de vie change de camp."
 		},
@@ -1088,10 +1222,18 @@
 			"name": "Ombre dévorante",
 			"guild": "shadow",
 			"kind": "spell",
+			"rarity": "epique",
 			"cost": 3.0,
 			"effect": [
-				{ "op": "damage", "amount": 3.0, "target": "enemy_monster" },
-				{ "op": "draw", "count": 1.0 }
+				{
+					"op": "damage",
+					"amount": 3.0,
+					"target": "enemy_monster"
+				},
+				{
+					"op": "draw",
+					"count": 1.0
+				}
 			],
 			"flavor": "Ce qu'elle dévore, elle vous le rend en savoir."
 		},
@@ -1100,13 +1242,24 @@
 			"name": "Écuyer de l'aube",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "commune",
 			"cost": 2.0,
 			"attack_type": "melee",
 			"levels": [
-				{ "xp": 0.0, "atk": 2.0, "hp": 3.0 },
-				{ "xp": 3.0, "atk": 3.0, "hp": 4.0 }
+				{
+					"xp": 0.0,
+					"atk": 2.0,
+					"hp": 3.0
+				},
+				{
+					"xp": 3.0,
+					"atk": 3.0,
+					"hp": 4.0
+				}
 			],
-			"keywords": { "shield": true },
+			"keywords": {
+				"shield": true
+			},
 			"flavor": "Son premier geste est de lever le bouclier."
 		},
 		{
@@ -1114,13 +1267,24 @@
 			"name": "Griffon radieux",
 			"guild": "light",
 			"kind": "monster",
+			"rarity": "rare",
 			"cost": 4.0,
 			"attack_type": "ranged",
 			"levels": [
-				{ "xp": 0.0, "atk": 3.0, "hp": 4.0 },
-				{ "xp": 4.0, "atk": 4.0, "hp": 5.0 }
+				{
+					"xp": 0.0,
+					"atk": 3.0,
+					"hp": 4.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 4.0,
+					"hp": 5.0
+				}
 			],
-			"keywords": { "flying": true },
+			"keywords": {
+				"flying": true
+			},
 			"flavor": "Il fond du soleil, serres en avant."
 		},
 		{
@@ -1128,10 +1292,18 @@
 			"name": "Sanctuaire",
 			"guild": "light",
 			"kind": "spell",
+			"rarity": "epique",
 			"cost": 3.0,
 			"effect": [
-				{ "op": "heal", "amount": 3.0, "target": "ally_monster" },
-				{ "op": "shield", "target": "ally_monster" }
+				{
+					"op": "heal",
+					"amount": 3.0,
+					"target": "ally_monster"
+				},
+				{
+					"op": "shield",
+					"target": "ally_monster"
+				}
 			],
 			"flavor": "Un cercle de lumière où rien ne meurt."
 		}

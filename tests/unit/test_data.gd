@@ -57,6 +57,16 @@ func test_full_collection_reachable() -> void:
 	eq(unlocked.size(), 8, "8 maîtres déblocables")
 
 
+func test_every_card_has_valid_rarity() -> void:
+	var result := DbScript.load_all()
+	var valid := [&"commune", &"rare", &"epique", &"legendaire", &"ascendant"]
+	for id in result.cards:
+		var c: CardDef = result.cards[id]
+		ok(valid.has(c.rarity), "rareté valide : %s (%s)" % [id, c.rarity])
+		if c.token:
+			eq(c.rarity, &"ascendant", "les formes évoluées sont Ascendant : %s" % id)
+
+
 func test_playable_matchup_from_data() -> void:
 	## A real match can be set up from data decks and played (a few actions).
 	var result := DbScript.load_all()
