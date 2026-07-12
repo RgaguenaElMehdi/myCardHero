@@ -188,6 +188,36 @@ ASSETS = {
     "icon_chart": dict(canvas="1024x1024", prompt=(
         "Icône : podium de classement à trois marches en or avec une petite "
         "étoile au sommet, centré, occupant 72% du cadre. " + STYLE)),
+    "icon_sword1": dict(canvas="1024x1024", prompt=(
+        "Icône : une épée droite verticale en or, lame vers le haut, centrée, "
+        "occupant 75% du cadre. " + STYLE)),
+    "icon_book_open": dict(canvas="1024x1024", prompt=(
+        "Icône : grand livre ouvert en or avec un signet, vu de face, centré, "
+        "occupant 75% du cadre. " + STYLE)),
+    # ---- portraits de l'écran SÉLECTION (anime peint, PAS de style or) ----
+    "sel_solo": dict(canvas="1024x1536", prompt=(
+        "Illustration anime peinte de haute qualité, format portrait : jeune "
+        "chevalier solitaire aux cheveux noirs, armure sombre ornée d'or, cape, "
+        "épée dégainée, devant un château gothique nocturne en flammes lointaines. "
+        "Ambiance sombre et héroïque, éclairage dramatique, style RPG anime "
+        "japonais soigné. AUCUN texte.")),
+    "sel_histoire": dict(canvas="1024x1536", prompt=(
+        "Illustration anime peinte de haute qualité, format portrait : héroïne "
+        "aux longs cheveux blonds, robe blanche et or élégante, regard doux, "
+        "devant un royaume lumineux de tours blanches sous un ciel bleu nuageux. "
+        "Ambiance épique et lumineuse, style RPG anime japonais soigné. AUCUN "
+        "texte.")),
+    "sel_defi": dict(canvas="1024x1536", prompt=(
+        "Illustration anime peinte de haute qualité, format portrait : imposant "
+        "chevalier démoniaque en armure noire à cornes, aura violette menaçante, "
+        "yeux rougeoyants, fond ténébreux pourpre. Ambiance intimidante, style "
+        "RPG anime japonais soigné. AUCUN texte.")),
+    "sel_arene": dict(canvas="1024x1536", prompt=(
+        "Illustration peinte de haute qualité, format portrait : intérieur d'un "
+        "colisée gothique nocturne avec estrade circulaire ornée d'une rose des "
+        "vents dorée au sol, bannières rouge et bleue, vasques de feu, statues de "
+        "chevaliers. Ambiance solennelle, éclairage doré chaud, style RPG anime "
+        "soigné. AUCUN texte.")),
 }
 
 
@@ -298,7 +328,8 @@ def compose_bg(w: int, h: int, corner: Image.Image) -> Image.Image:
 
 
 FULL_BLEED = {"arena_bg", "arena_hall", "cell_red", "cell_blue",
-              "card_back_red", "card_back_blue"}   # images pleines : PAS de détourage du noir
+              "card_back_red", "card_back_blue", "sel_solo", "sel_histoire",
+              "sel_defi", "sel_arene"}   # images pleines : PAS de détourage du noir
 
 
 def post() -> None:

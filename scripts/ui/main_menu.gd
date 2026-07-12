@@ -18,7 +18,7 @@ func _ready() -> void:
 		Game.goto("main_menu")
 		return
 
-	selection_btn.pressed.connect(func() -> void: Game.goto("campaign"))
+	selection_btn.pressed.connect(func() -> void: Game.goto("selection"))
 	deck_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
 	arena_btn.pressed.connect(func() -> void: Game.goto("arena_hub"))
 	settings_btn.pressed.connect(func() -> void: Game.goto("settings"))

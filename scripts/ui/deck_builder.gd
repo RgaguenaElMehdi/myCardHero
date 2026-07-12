@@ -38,6 +38,7 @@ var decks: Array = []      ## working copy of profile.decks ({name, master, card
 var current := 0           ## index of the deck being edited
 var filter_guild := -1
 var sel_id := ""           ## card shown in the detail pane
+var _deck_valid := false    ## dernier état de validité (garde le bouton vert/rouge)
 
 
 func _ready() -> void:
@@ -46,6 +47,10 @@ func _ready() -> void:
 
 	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
 	save_btn.pressed.connect(_save)
+	# Bouton MENU au style or (plaque sombre + liseré + texte doré), comme le hub.
+	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 26)
+	back_btn.add_theme_color_override("font_color", GOLD)
+	back_btn.add_theme_color_override("font_hover_color", Color(1, 0.9, 0.6))
 	delete_btn.pressed.connect(_delete_current)
 	add_btn.pressed.connect(func() -> void: _add(sel_id))
 	remove_btn.pressed.connect(func() -> void: _remove(sel_id))
@@ -181,10 +186,12 @@ func _refresh_deck() -> void:
 		err = Rules.validate_deck(Db.cards, cards)
 	else:
 		err = "Le deck doit contenir exactement %d cartes." % GameConst.DECK_SIZE
-	status_label.text = "Deck valide !" if err == "" else err
-	status_label.add_theme_color_override("font_color",
-			UiTheme.OK if err == "" else UiTheme.DANGER)
-	save_btn.disabled = err != ""
+	# État montré par la COULEUR du bouton (vert = valide, rouge = non), plus de
+	# texte qui chevauche. La raison d'invalidité reste en infobulle.
+	_deck_valid = err == ""
+	status_label.visible = false
+	save_btn.modulate = Color(0.55, 1.0, 0.62) if _deck_valid else Color(1.0, 0.5, 0.5)
+	save_btn.tooltip_text = "Deck valide — cliquer pour enregistrer" if _deck_valid else err
 
 
 ## ---- détail de carte ------------------------------------------------------
@@ -316,6 +323,9 @@ func _rebuild_masters() -> void:
 
 
 func _save() -> void:
+	if not _deck_valid:
+		Audio.play_sfx("error")
+		return
 	Game.profile.decks = decks.duplicate(true)
 	Game.profile.active_deck = current   # the deck you just built becomes active
 	Game.save_profile()

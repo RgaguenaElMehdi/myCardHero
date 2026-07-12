@@ -1,0 +1,484 @@
+[gd_scene load_steps=13 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/selection.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/menu_gold_1920.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/divider.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/gem_blue.png" id="gem"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/sel_solo.png" id="sel_solo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/sel_histoire.png" id="sel_histoire"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/sel_defi.png" id="sel_defi"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/sel_arene.png" id="sel_arene"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_sword1.png" id="isword"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_book_open.png" id="ibook"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_swords.png" id="iswords"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_arena.png" id="iarena"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel_dark.png" id="pd"]
+
+[sub_resource type="StyleBoxTexture" id="card"]
+texture = ExtResource("pd")
+texture_margin_left = 14.0
+texture_margin_top = 14.0
+texture_margin_right = 14.0
+texture_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxTexture" id="card_hi"]
+texture = ExtResource("pd")
+texture_margin_left = 14.0
+texture_margin_top = 14.0
+texture_margin_right = 14.0
+texture_margin_bottom = 14.0
+modulate_color = Color(1.28, 1.24, 1.12, 1)
+
+[node name="Selection" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("3")
+script = ExtResource("1")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 40.0
+offset_right = 400.0
+offset_bottom = 116.0
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 64
+theme_override_fonts/font = ExtResource("2")
+text = "SÉLECTION"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DivL" type="TextureRect" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -760.0
+offset_top = 58.0
+offset_right = -420.0
+offset_bottom = 108.0
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="DivR" type="TextureRect" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 420.0
+offset_top = 58.0
+offset_right = 760.0
+offset_bottom = 108.0
+flip_h = true
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Subtitle" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 128.0
+offset_right = 400.0
+offset_bottom = 162.0
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("2")
+text = "◆ CHOISISSEZ VOTRE MODE DE JEU ◆"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="BackBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 40.0
+offset_top = 28.0
+offset_right = 300.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("2")
+text = "← MENU"
+
+[node name="Tiles" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -948.0
+offset_top = -352.0
+offset_right = 948.0
+offset_bottom = 412.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+
+[node name="SoloBtn" type="Button" parent="Tiles"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(420, 764)
+clip_contents = true
+theme_override_styles/normal = SubResource("card")
+theme_override_styles/hover = SubResource("card_hi")
+theme_override_styles/pressed = SubResource("card")
+theme_override_styles/focus = SubResource("card")
+
+[node name="Portrait" type="TextureRect" parent="Tiles/SoloBtn"]
+layout_mode = 1
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 494.0
+texture = ExtResource("sel_solo")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Fade" type="ColorRect" parent="Tiles/SoloBtn"]
+layout_mode = 1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.68
+offset_left = 12.0
+offset_right = -12.0
+color = Color(0.05, 0.043, 0.035, 0.55)
+mouse_filter = 2
+
+[node name="Gem" type="TextureRect" parent="Tiles/SoloBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -22.0
+offset_top = -10.0
+offset_right = 22.0
+offset_bottom = 34.0
+texture = ExtResource("gem")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="Tiles/SoloBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.58
+anchor_right = 0.5
+anchor_bottom = 0.58
+offset_left = -60.0
+offset_top = 0.0
+offset_right = 60.0
+offset_bottom = 120.0
+texture = ExtResource("isword")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Tiles/SoloBtn"]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.82
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("2")
+text = "SOLO"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Desc" type="Label" parent="Tiles/SoloBtn"]
+layout_mode = 1
+anchor_top = 0.84
+anchor_right = 1.0
+anchor_bottom = 0.98
+theme_override_colors/font_color = Color(0.78, 0.73, 0.64, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("2")
+text = "Affrontez l'histoire
+à votre rythme."
+horizontal_alignment = 1
+vertical_alignment = 0
+mouse_filter = 2
+
+[node name="HistoireBtn" type="Button" parent="Tiles"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(420, 764)
+clip_contents = true
+theme_override_styles/normal = SubResource("card")
+theme_override_styles/hover = SubResource("card_hi")
+theme_override_styles/pressed = SubResource("card")
+theme_override_styles/focus = SubResource("card")
+
+[node name="Portrait" type="TextureRect" parent="Tiles/HistoireBtn"]
+layout_mode = 1
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 494.0
+texture = ExtResource("sel_histoire")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Fade" type="ColorRect" parent="Tiles/HistoireBtn"]
+layout_mode = 1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.68
+offset_left = 12.0
+offset_right = -12.0
+color = Color(0.05, 0.043, 0.035, 0.55)
+mouse_filter = 2
+
+[node name="Gem" type="TextureRect" parent="Tiles/HistoireBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -22.0
+offset_top = -10.0
+offset_right = 22.0
+offset_bottom = 34.0
+texture = ExtResource("gem")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="Tiles/HistoireBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.58
+anchor_right = 0.5
+anchor_bottom = 0.58
+offset_left = -60.0
+offset_top = 0.0
+offset_right = 60.0
+offset_bottom = 120.0
+texture = ExtResource("ibook")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Tiles/HistoireBtn"]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.82
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("2")
+text = "HISTOIRE"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Desc" type="Label" parent="Tiles/HistoireBtn"]
+layout_mode = 1
+anchor_top = 0.84
+anchor_right = 1.0
+anchor_bottom = 0.98
+theme_override_colors/font_color = Color(0.78, 0.73, 0.64, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("2")
+text = "Plongez dans une épopée
+riche et captivante."
+horizontal_alignment = 1
+vertical_alignment = 0
+mouse_filter = 2
+
+[node name="DefiBtn" type="Button" parent="Tiles"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(420, 764)
+clip_contents = true
+theme_override_styles/normal = SubResource("card")
+theme_override_styles/hover = SubResource("card_hi")
+theme_override_styles/pressed = SubResource("card")
+theme_override_styles/focus = SubResource("card")
+
+[node name="Portrait" type="TextureRect" parent="Tiles/DefiBtn"]
+layout_mode = 1
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 494.0
+texture = ExtResource("sel_defi")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Fade" type="ColorRect" parent="Tiles/DefiBtn"]
+layout_mode = 1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.68
+offset_left = 12.0
+offset_right = -12.0
+color = Color(0.05, 0.043, 0.035, 0.55)
+mouse_filter = 2
+
+[node name="Gem" type="TextureRect" parent="Tiles/DefiBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -22.0
+offset_top = -10.0
+offset_right = 22.0
+offset_bottom = 34.0
+texture = ExtResource("gem")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="Tiles/DefiBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.58
+anchor_right = 0.5
+anchor_bottom = 0.58
+offset_left = -60.0
+offset_top = 0.0
+offset_right = 60.0
+offset_bottom = 120.0
+texture = ExtResource("iswords")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Tiles/DefiBtn"]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.82
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("2")
+text = "DÉFI"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Desc" type="Label" parent="Tiles/DefiBtn"]
+layout_mode = 1
+anchor_top = 0.84
+anchor_right = 1.0
+anchor_bottom = 0.98
+theme_override_colors/font_color = Color(0.78, 0.73, 0.64, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("2")
+text = "Testez vos limites
+et relevez des défis."
+horizontal_alignment = 1
+vertical_alignment = 0
+mouse_filter = 2
+
+[node name="AreneBtn" type="Button" parent="Tiles"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(420, 764)
+clip_contents = true
+theme_override_styles/normal = SubResource("card")
+theme_override_styles/hover = SubResource("card_hi")
+theme_override_styles/pressed = SubResource("card")
+theme_override_styles/focus = SubResource("card")
+
+[node name="Portrait" type="TextureRect" parent="Tiles/AreneBtn"]
+layout_mode = 1
+anchor_right = 1.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 494.0
+texture = ExtResource("sel_arene")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Fade" type="ColorRect" parent="Tiles/AreneBtn"]
+layout_mode = 1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.68
+offset_left = 12.0
+offset_right = -12.0
+color = Color(0.05, 0.043, 0.035, 0.55)
+mouse_filter = 2
+
+[node name="Gem" type="TextureRect" parent="Tiles/AreneBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -22.0
+offset_top = -10.0
+offset_right = 22.0
+offset_bottom = 34.0
+texture = ExtResource("gem")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="Tiles/AreneBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.58
+anchor_right = 0.5
+anchor_bottom = 0.58
+offset_left = -60.0
+offset_top = 0.0
+offset_right = 60.0
+offset_bottom = 120.0
+texture = ExtResource("iarena")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Tiles/AreneBtn"]
+layout_mode = 1
+anchor_top = 0.75
+anchor_right = 1.0
+anchor_bottom = 0.82
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("2")
+text = "ARÈNE"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="Desc" type="Label" parent="Tiles/AreneBtn"]
+layout_mode = 1
+anchor_top = 0.84
+anchor_right = 1.0
+anchor_bottom = 0.98
+theme_override_colors/font_color = Color(0.78, 0.73, 0.64, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("2")
+text = "Affrontez d'autres joueurs
+et grimpez dans le classement."
+horizontal_alignment = 1
+vertical_alignment = 0
+mouse_filter = 2
