@@ -1,13 +1,22 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/BoldPixels.ttf" id="2"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/main_menu.png" id="4"]
-[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/logo.png" id="6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/ind_attack.png" id="8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_bag.png" id="10"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_book.png" id="11"]
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/menu_gold_2400.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/emblem.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/tile.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_selection.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_deck.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_arena.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_params.png" id="10"]
+
+[sub_resource type="StyleBoxTexture" id="tile_normal"]
+texture = ExtResource("6")
+
+[sub_resource type="StyleBoxTexture" id="tile_hover"]
+texture = ExtResource("6")
+modulate_color = Color(1.22, 1.18, 1.08, 1)
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -16,11 +25,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("5")
+theme = ExtResource("3")
 script = ExtResource("1")
 
 [node name="Background" type="TextureRect" parent="."]
-unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,122 +39,188 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Logo" type="TextureRect" parent="."]
-unique_name_in_owner = true
+[node name="Emblem" type="TextureRect" parent="."]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 16.0
-custom_minimum_size = Vector2(0, 280)
-grow_horizontal = 2
-texture = ExtResource("6")
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 55.0
+offset_right = 400.0
+offset_bottom = 545.0
+texture = ExtResource("5")
 expand_mode = 1
-stretch_mode = 4
+stretch_mode = 5
 mouse_filter = 2
 
-[node name="TitleFallback" type="Label" parent="."]
-unique_name_in_owner = true
-visible = false
+[node name="Tiles" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 100.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
-theme_override_constants/outline_size = 21
-theme_override_font_sizes/font_size = 96
-theme_override_fonts/font = ExtResource("2")
-text = "STONEBOUND"
-horizontal_alignment = 1
-
-[node name="Subtitle" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 304.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.91, 0.894, 0.847, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 40
-theme_override_fonts/font = ExtResource("2")
-text = "Le Circuit de Petraheim"
-horizontal_alignment = 1
-mouse_filter = 2
-
-[node name="MenuColumn" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 0
-offset_left = 120.0
-offset_top = 370.0
-offset_right = 920.0
-offset_bottom = 1046.0
-theme_override_constants/separation = 16
-
-[node name="CampaignBtn" type="Button" parent="MenuColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 122)
-theme_override_constants/icon_max_width = 68
-theme_override_constants/h_separation = 20
-alignment = 0
-text = "Campagne"
-icon = ExtResource("8")
-
-[node name="DeckBuilderBtn" type="Button" parent="MenuColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 122)
-theme_override_constants/icon_max_width = 68
-theme_override_constants/h_separation = 20
-alignment = 0
-text = "Deck builder"
-icon = ExtResource("10")
-
-[node name="GuideBtn" type="Button" parent="MenuColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 122)
-theme_override_constants/icon_max_width = 68
-theme_override_constants/h_separation = 20
-alignment = 0
-text = "Guide du jeu"
-icon = ExtResource("11")
-
-[node name="OptionsBtn" type="Button" parent="MenuColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 122)
-theme_override_constants/h_separation = 20
-alignment = 0
-text = "Options"
-
-[node name="QuitBtn" type="Button" parent="MenuColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 122)
-theme_override_constants/h_separation = 20
-alignment = 0
-text = "Quitter"
-
-[node name="FightPanel" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -740.0
-offset_top = -270.0
-offset_right = -60.0
-offset_bottom = -70.0
-grow_horizontal = 0
+offset_left = -746.0
+offset_top = -475.0
+offset_right = 746.0
+offset_bottom = -135.0
+grow_horizontal = 2
 grow_vertical = 0
-theme_type_variation = &"PanelFancy"
+theme_override_constants/separation = 44
 
-[node name="FightBtn" type="Button" parent="FightPanel"]
+[node name="SelectionBtn" type="Button" parent="Tiles"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 156)
-text = "COMBATTRE"
+custom_minimum_size = Vector2(340, 340)
+theme_override_styles/normal = SubResource("tile_normal")
+theme_override_styles/hover = SubResource("tile_hover")
+theme_override_styles/pressed = SubResource("tile_normal")
+theme_override_styles/focus = SubResource("tile_normal")
+
+[node name="Icon" type="TextureRect" parent="Tiles/SelectionBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.16
+anchor_right = 0.5
+anchor_bottom = 0.6
+offset_left = -75.0
+offset_right = 75.0
+texture = ExtResource("7")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Tiles/SelectionBtn"]
+layout_mode = 1
+anchor_top = 0.64
+anchor_right = 1.0
+anchor_bottom = 0.86
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 38
+theme_override_fonts/font = ExtResource("2")
+text = "SÉLECTION"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="DeckBtn" type="Button" parent="Tiles"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(340, 340)
+theme_override_styles/normal = SubResource("tile_normal")
+theme_override_styles/hover = SubResource("tile_hover")
+theme_override_styles/pressed = SubResource("tile_normal")
+theme_override_styles/focus = SubResource("tile_normal")
+
+[node name="Icon" type="TextureRect" parent="Tiles/DeckBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.16
+anchor_right = 0.5
+anchor_bottom = 0.6
+offset_left = -75.0
+offset_right = 75.0
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Tiles/DeckBtn"]
+layout_mode = 1
+anchor_top = 0.64
+anchor_right = 1.0
+anchor_bottom = 0.86
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_fonts/font = ExtResource("2")
+text = "DECK BUILDER"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="ArenaBtn" type="Button" parent="Tiles"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(340, 340)
+theme_override_styles/normal = SubResource("tile_normal")
+theme_override_styles/hover = SubResource("tile_hover")
+theme_override_styles/pressed = SubResource("tile_normal")
+theme_override_styles/focus = SubResource("tile_normal")
+
+[node name="Icon" type="TextureRect" parent="Tiles/ArenaBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.16
+anchor_right = 0.5
+anchor_bottom = 0.6
+offset_left = -75.0
+offset_right = 75.0
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Tiles/ArenaBtn"]
+layout_mode = 1
+anchor_top = 0.64
+anchor_right = 1.0
+anchor_bottom = 0.86
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_fonts/font = ExtResource("2")
+text = "ARÈNE"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="SettingsBtn" type="Button" parent="Tiles"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(340, 340)
+theme_override_styles/normal = SubResource("tile_normal")
+theme_override_styles/hover = SubResource("tile_hover")
+theme_override_styles/pressed = SubResource("tile_normal")
+theme_override_styles/focus = SubResource("tile_normal")
+
+[node name="Icon" type="TextureRect" parent="Tiles/SettingsBtn"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.16
+anchor_right = 0.5
+anchor_bottom = 0.6
+offset_left = -75.0
+offset_right = 75.0
+texture = ExtResource("10")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Tiles/SettingsBtn"]
+layout_mode = 1
+anchor_top = 0.64
+anchor_right = 1.0
+anchor_bottom = 0.86
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 38
+theme_override_fonts/font = ExtResource("2")
+text = "PARAMÈTRES"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2
+
+[node name="QuitBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -108
+offset_right = 160.0
+offset_bottom = -40
+flat = true
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_colors/font_hover_color = Color(0.9, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_fonts/font = ExtResource("2")
+text = "QUITTER"

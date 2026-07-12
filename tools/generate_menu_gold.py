@@ -76,6 +76,78 @@ ASSETS = {
     "icon_params": dict(canvas="1024x1024", prompt=(
         "Icône : roue dentée mécanique en or au contour net, centrée, "
         "occupant 80% du cadre. " + STYLE)),
+    # ---- pack deck builder ----
+    # panneau rectangulaire 9-slice : coins ornés mais BORDS LISSES (étirables)
+    "panel": dict(canvas="1536x1024", prompt=(
+        "Cadre RECTANGULAIRE d'interface TRÈS FIN et élégant : un double "
+        "liseré d'or MINCE (traits fins), petits ornements d'angle DISCRETS "
+        "et compacts (simple accent de volute minuscule à chaque coin), "
+        "bords parfaitement droits et lisses, intérieur noir charbon uni "
+        "VIDE, le cadre occupe toute l'image. Sobre et raffiné, PAS de "
+        "grosses volutes. " + STYLE)),
+    # emplacement vide de carte dans le deck (dos sombre + losange central)
+    "slot": dict(canvas="1024x1024", prompt=(
+        "Emplacement vide de carte à jouer au format portrait 2:3 : fine "
+        "bordure d'or discrète aux coins ornés, fond noir charbon, un petit "
+        "losange doré discret au centre exact, aucun autre motif, la carte "
+        "occupe presque toute la hauteur de l'image. " + STYLE)),
+    # plaque de bouton allongée (SAUVEGARDER)
+    "btn_plate": dict(canvas="1536x1024", prompt=(
+        "Plaque de bouton d'interface allongée horizontale aux extrémités en "
+        "pointe (forme octogonale étirée), double liseré d'or avec petits "
+        "fleurons en losange aux deux pointes, intérieur noir charbon VIDE "
+        "sans texte, la plaque large et basse est centrée. " + STYLE)),
+    # ornement horizontal de titre (placé de part et d'autre du titre)
+    "divider": dict(canvas="1536x1024", prompt=(
+        "Fin ornement horizontal décoratif : volute de filigrane d'or "
+        "effilée s'étirant horizontalement, élégante et discrète, centrée "
+        "sur l'image, très allongée et basse. " + STYLE)),
+    "icon_filter": dict(canvas="1024x1024", prompt=(
+        "Icône : entonnoir de filtre en or au contour net, centré, occupant "
+        "75% du cadre. " + STYLE)),
+    "icon_helmet": dict(canvas="1024x1024", prompt=(
+        "Icône : heaume de chevalier orné en or, vu de face, cimier élégant, "
+        "centré, occupant 78% du cadre. " + STYLE)),
+    "icon_chevron": dict(canvas="1024x1024", prompt=(
+        "Icône : chevron fléché pointant vers la GAUCHE en or poli, simple "
+        "et net, centré, occupant 70% du cadre. " + STYLE)),
+    # ---- pack bataille ----
+    # décor d'arène SANS grille (la grille est posée par le jeu sur cell_rect)
+    "arena_bg": dict(canvas="1536x1024", prompt=(
+        "Vue de dessus légèrement inclinée d'une arène de duel circulaire en "
+        "pierre sombre, large esplanade dallée VIDE au centre (aucune grille, "
+        "aucun marquage au sol au centre), pourtour orné : torchères aux "
+        "flammes chaudes aux quatre coins, bannières ROUGES suspendues en "
+        "haut, bannières BLEUES en bas, cristaux lumineux bleus et un cristal "
+        "rouge sur des socles de pierre autour de l'esplanade, fines "
+        "incrustations d'or dans le dallage du pourtour. Ambiance nocturne "
+        "luxueuse, éclairage doré chaud, illustration nette haute résolution, "
+        "AUCUN texte.")),
+    "cell_red": dict(canvas="1024x1024", prompt=(
+        "Case CARRÉE de plateau de jeu : cadre ornemental ROUGE et or à "
+        "double liseré avec coins travaillés, intérieur pierre sombre UNIE, "
+        "parfaitement vide, sans aucun motif central, la case occupe toute l'image. " + STYLE)),
+    "cell_blue": dict(canvas="1024x1024", prompt=(
+        "Case CARRÉE de plateau de jeu : cadre ornemental BLEU et or à "
+        "double liseré avec coins travaillés, intérieur pierre sombre UNIE, "
+        "parfaitement vide, sans aucun motif central, la case occupe toute l'image. " + STYLE)),
+    "orb_endturn": dict(canvas="1024x1024", prompt=(
+        "Grand bouton CIRCULAIRE de jeu : orbe de verre BLEU profond serti "
+        "dans un anneau d'or richement ouvragé avec quatre pointes de "
+        "boussole aux cardinaux, léger halo doré, intérieur de l'orbe VIDE "
+        "sans texte, centré, occupant 85% du cadre. " + STYLE)),
+    "card_back_red": dict(canvas="1024x1536", prompt=(
+        "Dos de carte à jouer portrait : fond ROUGE sombre profond, grande "
+        "rose des vents dorée au centre, fine bordure d'or aux coins ornés, "
+        "la carte occupe toute l'image. " + STYLE)),
+    "card_back_blue": dict(canvas="1024x1536", prompt=(
+        "Dos de carte à jouer portrait : fond BLEU nuit profond, grande "
+        "rose des vents dorée au centre, fine bordure d'or aux coins ornés, "
+        "la carte occupe toute l'image. " + STYLE)),
+    "medallion": dict(canvas="1024x1024", prompt=(
+        "Médaillon CIRCULAIRE d'interface : anneau d'or finement ouvragé "
+        "avec une petite couronne dorée sertie au sommet, intérieur noir "
+        "charbon VIDE, centré, occupant 80% du cadre. " + STYLE)),
 }
 
 
@@ -185,6 +257,10 @@ def compose_bg(w: int, h: int, corner: Image.Image) -> Image.Image:
     return img
 
 
+FULL_BLEED = {"arena_bg", "cell_red", "cell_blue", "card_back_red",
+              "card_back_blue"}   # images pleines : PAS de détourage du noir
+
+
 def post() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     for name in ASSETS:
@@ -192,8 +268,11 @@ def post() -> None:
         if not raw.exists():
             print(f"  [skip] {name} (pas de brut)")
             continue
-        img = key_black(Image.open(raw))
-        img = autocrop(img)
+        if name in FULL_BLEED:
+            img = Image.open(raw).convert("RGBA")
+        else:
+            img = key_black(Image.open(raw))
+            img = autocrop(img)
         if name.startswith("icon_"):
             img.thumbnail((512, 512), Image.LANCZOS)
         elif name == "corner":
@@ -209,9 +288,12 @@ def post() -> None:
 
 def main() -> int:
     only = ""
-    for a in sys.argv[1:]:
-        if a.startswith("--only"):
-            only = a.split("=", 1)[1] if "=" in a else ""
+    args = sys.argv[1:]
+    for i, a in enumerate(args):
+        if a == "--only" and i + 1 < len(args):
+            only = args[i + 1]
+        elif a.startswith("--only="):
+            only = a.split("=", 1)[1]
     force = "--force" in sys.argv
     if "--post" not in sys.argv:
         key = api_key()

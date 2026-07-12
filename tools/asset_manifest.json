@@ -107,5 +107,16 @@
       "card_v2_spell_shadow_epique.png",
       "card_v2_spell_shadow_rare.png"
     ]
+  },
+  "ui_gold_menu": {
+    "source": "gpt-image-2 via tools/generate_menu_gold.py",
+    "date": "2026-07-12",
+    "style": "or baroque poli sur noir charbon — mockup accueil fourni par l'utilisateur (recréé, pas découpé)",
+    "files": [
+      "assets/sprites/ui/gold/*.png",
+      "assets/backgrounds/menu_gold_1920.png",
+      "assets/backgrounds/menu_gold_2400.png"
+    ],
+    "note": "pièces sans texte ; labels en vrai texte Godot (police Cinzel.ttf déjà présente)"
   }
 }

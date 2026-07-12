@@ -10,6 +10,7 @@ const MODE_SELECT := preload("res://scenes/widgets/mode_select.tscn")
 @onready var deck_btn: Button = %DeckBtn
 @onready var arena_btn: Button = %ArenaBtn
 @onready var settings_btn: Button = %SettingsBtn
+@onready var quit_btn: Button = %QuitBtn
 
 
 func _ready() -> void:
@@ -24,7 +25,8 @@ func _ready() -> void:
 	deck_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
 	arena_btn.pressed.connect(_show_mode_select)
 	settings_btn.pressed.connect(func() -> void: Game.goto("settings"))
-	for btn: Button in [selection_btn, deck_btn, arena_btn, settings_btn]:
+	quit_btn.pressed.connect(func() -> void: get_tree().quit())
+	for btn: Button in [selection_btn, deck_btn, arena_btn, settings_btn, quit_btn]:
 		btn.pressed.connect(UiTheme._click_sfx)
 
 	Audio.play_music("menu")

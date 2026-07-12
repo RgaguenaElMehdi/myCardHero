@@ -220,9 +220,11 @@ func _init_ui() -> void:
 			board_area.add_child(widget)
 			cells[cell] = widget
 
-	# Numéros de rangée masqués (look épuré).
+	# Numéros de rangée masqués (look épuré) — absents des arènes récentes.
 	for r in GameConst.BOARD_ROWS:
-		get_node("RowMarker%d" % r).visible = false
+		var marker := get_node_or_null("RowMarker%d" % r)
+		if marker != null:
+			marker.visible = false
 
 	# Buttons.
 	end_turn_btn.pressed.connect(func() -> void:
@@ -292,13 +294,15 @@ func _fill_enemy_hand() -> void:
 	var row: HBoxContainer = %EnemyHandRow2
 	for c in row.get_children():
 		c.queue_free()
-	var back := UiTheme.tex("res://assets/sprites/ui/card_back.png")
+	var back := UiTheme.tex("res://assets/sprites/ui/gold/card_back_red.png")
+	if back == null:
+		back = UiTheme.tex("res://assets/sprites/ui/card_back.png")
 	if back == null:
 		return
 	for i in state.players[1].hand.size():
 		var b := TextureRect.new()
 		b.texture = back
-		b.custom_minimum_size = Vector2(46, 66)
+		b.custom_minimum_size = Vector2(64, 90)
 		b.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		b.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 		b.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -350,9 +354,9 @@ func _refresh_hand() -> void:
 	var count := hand.size()
 	if count == 0:
 		return
-	# ponytail: hand magnification capped at 1.6 — full touch_scale (2.0) would
-	# push 388px-tall cards past the bottom of a 1080px screen.
-	var card_w := HAND_CARD_W * minf(UiTheme.touch_scale(), 1.6)
+	# ponytail: hand magnification capped at 1.35 — the gold layout tucks the
+	# hand under the board, taller cards would run off the bottom edge.
+	var card_w := HAND_CARD_W * minf(UiTheme.touch_scale(), 1.1)
 	var overlap := minf(card_w + 8.0, hand_area.size.x / count)
 	var total := overlap * (count - 1) + card_w
 	var start := (hand_area.size.x - total) / 2.0
@@ -398,7 +402,12 @@ func _refresh_panels() -> void:
 		info.hp_bar.max_value = p.master.hp
 		info.hp_bar.value = maxi(p.master_hp, 0)
 		info.hp.text = "%d / %d" % [maxi(p.master_hp, 0), p.master.hp]
-		info.stones.text = "Pierres  %d / %d" % [p.stones, GameConst.MAX_STONES]
+		info.stones.text = "%d / %d" % [p.stones, GameConst.MAX_STONES]
+		# Barre d'énergie (scènes or) — optionnelle, les anciennes scènes n'en ont pas.
+		var ebar := get_node_or_null("%EnemyEnergyBar" if side == 1 else "%PlayerEnergyBar")
+		if ebar != null:
+			(ebar as ProgressBar).max_value = GameConst.MAX_STONES
+			(ebar as ProgressBar).value = p.stones
 		info.hand.text = "Main  %d carte%s" % [p.hand.size(), "s" if p.hand.size() > 1 else ""]
 		# (compteur de deck désormais géré par _refresh_resources ; %*Deck = piles TextureRect)
 		var row: HBoxContainer = info.hand_row
@@ -1003,7 +1012,7 @@ func _draw_anim(player: int) -> void:
 
 func _show_detail_card(def: CardDef) -> void:
 	_clear_detail()
-	var w := CardWidget.create(def, 250)
+	var w := CardWidget.create(def, 215)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	_add_detail_text(_keyword_explanations(def))
@@ -1011,7 +1020,7 @@ func _show_detail_card(def: CardDef) -> void:
 
 func _show_detail_monster(m: MonsterInst) -> void:
 	_clear_detail()
-	var w := CardWidget.create(m.def, 250)
+	var w := CardWidget.create(m.def, 215)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)
 	var status := "Niv %d — ATQ %d, PV %d/%d" % [m.level, m.atk(), m.hp, m.max_hp()]
@@ -1040,7 +1049,7 @@ func _add_detail_text(text: String) -> void:
 		return
 	var info := UiTheme.label(text, 16, UiTheme.TEXT_DIM)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	info.custom_minimum_size = Vector2(260.0 * minf(UiTheme.touch_scale(), 1.3), 0)
+	info.custom_minimum_size = Vector2(260, 0)
 	detail_holder.add_child(info)
 
 

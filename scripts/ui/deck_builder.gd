@@ -1,46 +1,67 @@
 extends Control
-## Deck builder: manage up to Game.MAX_DECKS decks. Each deck carries its own
-## master (swappable) + a name + a legal card list, assembled from the owned
-## collection. Saving persists all decks and makes the edited one active.
+## Deck builder (design "or baroque sur noir", mockup utilisateur).
+## Gauche : MON DECK (grille de cartes) + COLLECTION (rangée horizontale) +
+## SAUVEGARDER. Droite : trois onglets — détail de carte / maître / mes decks.
+## Structure et style dans deck_builder[_mobile].tscn — logique seulement ici.
 
-@onready var filters: HBoxContainer = %Filters
-@onready var collection_grid: GridContainer = %CollectionGrid
-@onready var deck_tabs: HBoxContainer = %DeckTabs
-@onready var name_edit: LineEdit = %NameEdit
-@onready var delete_btn: Button = %DeleteBtn
-@onready var master_card: TextureRect = %MasterCard
-@onready var master_pick: HFlowContainer = %MasterPick
-@onready var deck_list: VBoxContainer = %DeckList
+## Largeurs de cartes, portées par la scène (desktop et mobile diffèrent).
+@export var deck_card_w := 148.0
+@export var coll_card_w := 214.0
+
+const GOLD := Color(0.855, 0.71, 0.42)
+
 @onready var count_label: Label = %CountLabel
-@onready var status_label: Label = %StatusLabel
+@onready var deck_grid: GridContainer = %DeckGrid
+@onready var coll_list: HBoxContainer = %CollList
+@onready var coll_scroll: ScrollContainer = %CollScroll
+@onready var filter_btn: Button = %FilterBtn
+@onready var prev_btn: Button = %PrevBtn
+@onready var next_btn: Button = %NextBtn
 @onready var save_btn: Button = %SaveBtn
 @onready var back_btn: Button = %BackBtn
+@onready var status_label: Label = %StatusLabel
+@onready var tab_btns: Array[Button] = [%TabCardsBtn, %TabMasterBtn, %TabDecksBtn]
+@onready var tab_line: ColorRect = %TabLine
+@onready var pages: Array[Control] = [%PageCards, %PageMaster, %PageDecks]
+@onready var placeholder: Label = %Placeholder
+@onready var detail_card: TextureRect = %DetailCard
+@onready var detail_text: Label = %DetailText
+@onready var add_btn: Button = %AddBtn
+@onready var remove_btn: Button = %RemoveBtn
+@onready var master_card: TextureRect = %MasterCard
+@onready var master_pick: HFlowContainer = %MasterPick
+@onready var deck_tabs: VBoxContainer = %DeckTabs
+@onready var name_edit: LineEdit = %NameEdit
+@onready var delete_btn: Button = %DeleteBtn
 
 var decks: Array = []      ## working copy of profile.decks ({name, master, cards})
 var current := 0           ## index of the deck being edited
 var filter_guild := -1
+var sel_id := ""           ## card shown in the detail pane
 
 
 func _ready() -> void:
 	decks = Game.profile.decks.duplicate(true)
 	current = clampi(int(Game.profile.active_deck), 0, decks.size() - 1)
 
-	UiTheme.style_button(save_btn, UiTheme.OK.darkened(0.25), 20)
-	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 18)
-	UiTheme.style_button(delete_btn, UiTheme.DANGER.darkened(0.35), 16)
-
-	_filter_btn(filters, "Toutes", -1)
-	for guild in GameConst.GUILD_NAMES:
-		_filter_btn(filters, GameConst.GUILD_NAMES[guild], guild)
-
-	save_btn.pressed.connect(_save)
 	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
+	save_btn.pressed.connect(_save)
 	delete_btn.pressed.connect(_delete_current)
+	add_btn.pressed.connect(func() -> void: _add(sel_id))
+	remove_btn.pressed.connect(func() -> void: _remove(sel_id))
 	name_edit.text_changed.connect(func(t: String) -> void:
 		_cur().name = t
-		_rebuild_tabs())
+		_rebuild_deck_tabs())
+	filter_btn.pressed.connect(_show_filter_menu)
+	prev_btn.pressed.connect(func() -> void: _page_collection(-1))
+	next_btn.pressed.connect(func() -> void: _page_collection(1))
+	for i in tab_btns.size():
+		tab_btns[i].pressed.connect(_show_tab.bind(i))
+	for b: Button in [save_btn, add_btn, remove_btn, delete_btn, back_btn]:
+		b.pressed.connect(UiTheme._click_sfx)
 
 	_rebuild_all()
+	_show_tab.call_deferred(0)
 
 
 func _cur() -> Dictionary:
@@ -51,28 +72,172 @@ func _cur_cards() -> Array:
 	return decks[current].cards
 
 
+func _deck_count(id: String) -> int:
+	return _cur_cards().count(id)
+
+
 func _rebuild_all() -> void:
 	name_edit.text = String(_cur().name)
 	delete_btn.disabled = decks.size() <= 1
-	_rebuild_tabs()
+	_rebuild_deck_tabs()
 	_rebuild_masters()
 	_refresh()
 
 
-func _filter_btn(parent: Control, text: String, guild: int) -> void:
-	var b := Button.new()
-	b.text = text
-	b.custom_minimum_size = Vector2(0, 30.0 * UiTheme.touch_scale())
-	var color := UiTheme.PANEL_LIGHT if guild < 0 else UiTheme.guild_color(guild).darkened(0.45)
-	UiTheme.style_button(b, color, 17)
-	b.pressed.connect(func() -> void:
-		filter_guild = guild
+## ---- onglets du panneau droit -------------------------------------------
+
+func _show_tab(i: int) -> void:
+	for j in pages.size():
+		pages[j].visible = j == i
+		tab_btns[j].modulate = Color.WHITE if j == i else Color(0.45, 0.45, 0.45)
+	await get_tree().process_frame        # layout des onglets avant la ligne
+	var b := tab_btns[i]
+	tab_line.global_position.x = b.global_position.x
+	tab_line.size.x = b.size.x
+
+
+## ---- collection -----------------------------------------------------------
+
+func _show_filter_menu() -> void:
+	var menu := PopupMenu.new()
+	menu.add_item("Toutes", 0)
+	for guild in GameConst.GUILD_NAMES:
+		menu.add_item(GameConst.GUILD_NAMES[guild], guild + 1)
+	menu.id_pressed.connect(func(id: int) -> void:
+		filter_guild = id - 1
 		_refresh())
-	parent.add_child(b)
+	add_child(menu)
+	menu.popup(Rect2i(Vector2i(filter_btn.global_position) + Vector2i(0, 60),
+			Vector2i(300, 0)))
 
 
-## One tab per deck (★ marks the active one), plus a "+" slot while under the cap.
-func _rebuild_tabs() -> void:
+func _page_collection(dir: int) -> void:
+	var tw := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(coll_scroll, "scroll_horizontal",
+			coll_scroll.scroll_horizontal + dir * int(coll_scroll.size.x * 0.8), 0.25)
+
+
+func _refresh() -> void:
+	for child in coll_list.get_children():
+		child.queue_free()
+	for def in Db.constructible_cards():
+		var id := String(def.id)
+		var owned := Game.owned_count(id)
+		if owned <= 0:
+			continue
+		if filter_guild >= 0 and def.guild != filter_guild:
+			continue
+		var w := CardWidget.create(def, coll_card_w)
+		var used := _deck_count(id)
+		w.set_count(owned - used)
+		if used >= owned:
+			w.modulate = Color(0.5, 0.5, 0.55)
+		w.pressed.connect(func(_w: CardWidget) -> void: _select(id))
+		w.inspect_requested.connect(func(w2: CardWidget) -> void:
+			CardPopup.open(self, w2.def))
+		coll_list.add_child(w)
+	_refresh_deck()
+
+
+## ---- MON DECK -------------------------------------------------------------
+
+func _refresh_deck() -> void:
+	for child in deck_grid.get_children():
+		child.queue_free()
+	var cards := _cur_cards()
+	var unique := {}
+	for id in cards:
+		unique[id] = int(unique.get(id, 0)) + 1
+	var ids := unique.keys()
+	ids.sort_custom(func(a, b) -> bool:
+		var ca := Db.card(StringName(String(a)))
+		var cb := Db.card(StringName(String(b)))
+		if ca.cost != cb.cost:
+			return ca.cost < cb.cost
+		return ca.display_name < cb.display_name)
+	for id in ids:
+		var def := Db.card(StringName(String(id)))
+		var w := CardWidget.create(def, deck_card_w)
+		w.set_count(unique[id])
+		w.pressed.connect(func(_w: CardWidget) -> void: _select(String(id)))
+		w.inspect_requested.connect(func(w2: CardWidget) -> void:
+			CardPopup.open(self, w2.def))
+		deck_grid.add_child(w)
+	# emplacements vides (esthétique mockup) pour compléter la grille
+	var slot_tex := UiTheme.tex("res://assets/sprites/ui/gold/slot.png")
+	var min_slots := deck_grid.columns * 2
+	for _i in range(maxi(min_slots - ids.size(), 0)):
+		var slot := TextureRect.new()
+		slot.texture = slot_tex
+		slot.custom_minimum_size = Vector2(deck_card_w, deck_card_w * 1.385)
+		slot.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		slot.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		deck_grid.add_child(slot)
+
+	count_label.text = "%d/%d" % [cards.size(), GameConst.DECK_SIZE]
+	var err := ""
+	if cards.size() == GameConst.DECK_SIZE:
+		err = Rules.validate_deck(Db.cards, cards)
+	else:
+		err = "Le deck doit contenir exactement %d cartes." % GameConst.DECK_SIZE
+	status_label.text = "Deck valide !" if err == "" else err
+	status_label.add_theme_color_override("font_color",
+			UiTheme.OK if err == "" else UiTheme.DANGER)
+	save_btn.disabled = err != ""
+
+
+## ---- détail de carte ------------------------------------------------------
+
+func _select(id: String) -> void:
+	sel_id = id
+	var def := Db.card(StringName(id))
+	if def == null:
+		return
+	_show_tab(0)
+	placeholder.visible = false
+	detail_card.visible = true
+	detail_text.visible = true
+	var tex := UiTheme.tex(CardWidget.full_card_path(def.id))
+	detail_card.texture = tex if tex != null else UiTheme.tex(def.art)
+	var evo_name := ""
+	if def.evolves_to != &"" and Db.card(def.evolves_to) != null:
+		evo_name = Db.card(def.evolves_to).display_name
+	detail_text.text = GameText.card_tooltip(def, evo_name)
+	_update_actions()
+
+
+func _update_actions() -> void:
+	if sel_id == "":
+		add_btn.visible = false
+		remove_btn.visible = false
+		return
+	var owned := Game.owned_count(sel_id)
+	var used := _deck_count(sel_id)
+	add_btn.visible = _cur_cards().size() < GameConst.DECK_SIZE \
+			and used < owned and used < GameConst.MAX_COPIES
+	remove_btn.visible = used > 0
+
+
+func _add(id: String) -> void:
+	if id == "":
+		return
+	_cur_cards().append(id)
+	Audio.play_sfx("move")
+	_refresh()
+	_update_actions()
+
+
+func _remove(id: String) -> void:
+	_cur_cards().erase(id)
+	Audio.play_sfx("move")
+	_refresh()
+	_update_actions()
+
+
+## ---- mes decks ------------------------------------------------------------
+
+func _rebuild_deck_tabs() -> void:
 	for c in deck_tabs.get_children():
 		c.queue_free()
 	for i in decks.size():
@@ -86,7 +251,7 @@ func _rebuild_tabs() -> void:
 		deck_tabs.add_child(b)
 	if decks.size() < Game.MAX_DECKS:
 		var add := Button.new()
-		add.text = "+ Nouveau"
+		add.text = "+ Nouveau deck"
 		add.custom_minimum_size = Vector2(0, 30.0 * UiTheme.touch_scale())
 		UiTheme.style_button(add, UiTheme.OK.darkened(0.3), 16)
 		add.pressed.connect(_new_deck)
@@ -118,6 +283,8 @@ func _delete_current() -> void:
 	_rebuild_all()
 
 
+## ---- maître ---------------------------------------------------------------
+
 ## Shows the deck's master as its full card (art + power + passive), with a row of
 ## owned-master portraits to swap it (hover shows the effect).
 func _rebuild_masters() -> void:
@@ -148,92 +315,12 @@ func _rebuild_masters() -> void:
 		master_pick.add_child(b)
 
 
-func _deck_count(id: String) -> int:
-	return _cur_cards().count(id)
-
-
-func _refresh() -> void:
-	for child in collection_grid.get_children():
-		child.queue_free()
-	for def in Db.constructible_cards():
-		var id := String(def.id)
-		var owned := Game.owned_count(id)
-		if owned <= 0:
-			continue
-		if filter_guild >= 0 and def.guild != filter_guild:
-			continue
-		# ponytail: capped at 1.6 — full 2.0 leaves less than 4 columns on phones.
-		var w := CardWidget.create(def, 178.0 * minf(UiTheme.touch_scale(), 1.6))
-		var used := _deck_count(id)
-		w.set_count(owned - used)
-		if used >= owned:
-			w.modulate = Color(0.5, 0.5, 0.55)
-		w.pressed.connect(_on_collection_card.bind(id))
-		w.inspect_requested.connect(func(w2: CardWidget) -> void:
-			CardPopup.open(self, w2.def))
-		collection_grid.add_child(w)
-	_refresh_deck()
-
-
-func _refresh_deck() -> void:
-	for child in deck_list.get_children():
-		child.queue_free()
-	var cards := _cur_cards()
-	var unique := {}
-	for id in cards:
-		unique[id] = int(unique.get(id, 0)) + 1
-	var ids := unique.keys()
-	ids.sort_custom(func(a, b) -> bool:
-		var ca := Db.card(StringName(String(a)))
-		var cb := Db.card(StringName(String(b)))
-		if ca.cost != cb.cost:
-			return ca.cost < cb.cost
-		return ca.display_name < cb.display_name)
-	for id in ids:
-		var def := Db.card(StringName(String(id)))
-		var b := Button.new()
-		b.text = "%d×  %s   (%d pierres)" % [unique[id], def.display_name, def.cost]
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.custom_minimum_size = Vector2(0, 28.0 * UiTheme.touch_scale())
-		b.tooltip_text = "Cliquer pour retirer un exemplaire"
-		UiTheme.style_button(b, UiTheme.guild_color(def.guild).darkened(0.55), 16)
-		b.pressed.connect(_on_deck_row.bind(String(id)))
-		deck_list.add_child(b)
-	count_label.text = "Deck : %d / %d" % [cards.size(), GameConst.DECK_SIZE]
-	var err := ""
-	if cards.size() == GameConst.DECK_SIZE:
-		err = Rules.validate_deck(Db.cards, cards)
-	else:
-		err = "Le deck doit contenir exactement %d cartes." % GameConst.DECK_SIZE
-	status_label.text = "Deck valide !" if err == "" else err
-	status_label.add_theme_color_override("font_color",
-			UiTheme.OK if err == "" else UiTheme.DANGER)
-	save_btn.disabled = err != ""
-
-
-func _on_collection_card(_w: CardWidget, id: String) -> void:
-	var owned := Game.owned_count(id)
-	var used := _deck_count(id)
-	if _cur_cards().size() >= GameConst.DECK_SIZE:
-		return
-	if used >= owned or used >= GameConst.MAX_COPIES:
-		return
-	_cur_cards().append(id)
-	Audio.play_sfx("move")
-	_refresh()
-
-
-func _on_deck_row(id: String) -> void:
-	_cur_cards().erase(id)
-	Audio.play_sfx("move")
-	_refresh()
-
-
 func _save() -> void:
 	Game.profile.decks = decks.duplicate(true)
 	Game.profile.active_deck = current   # the deck you just built becomes active
 	Game.save_profile()
 	Game.profile_changed.emit()
 	status_label.text = "Deck « %s » enregistré et actif !" % _cur().name
+	status_label.add_theme_color_override("font_color", UiTheme.OK)
 	Audio.play_sfx("levelup")
-	_rebuild_tabs()
+	_rebuild_deck_tabs()

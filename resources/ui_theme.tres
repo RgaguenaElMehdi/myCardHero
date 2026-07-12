@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bom0bvm46qbqj" path="res://assets/sprites/ui/pixel/btn_primary.png" id="3"]
 [ext_resource type="Texture2D" uid="uid://bry3l02ae6jh4" path="res://assets/sprites/ui/pixel/btn_secondary.png" id="4"]
 [ext_resource type="Texture2D" uid="uid://bhxrw7tnnonbl" path="res://assets/sprites/ui/pixel/btn_disabled.png" id="5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/panel_popup.png" id="6"]
+[ext_resource type="Texture2D" uid="uid://d2aiv62812uon" path="res://assets/sprites/ui/pixel/panel_popup.png" id="6"]
 
 [sub_resource type="StyleBoxTexture" id="btn_disabled"]
 content_margin_left = 18.0

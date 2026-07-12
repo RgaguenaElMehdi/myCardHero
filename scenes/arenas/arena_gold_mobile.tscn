@@ -1,0 +1,191 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/arena.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/arena_bg.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/cell_red.png" id="3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/cell_blue.png" id="4"]
+
+[node name="Arena" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+board_pos = Vector2(0, 0)
+board_scale = 1.0
+grid_seps_y = Array[float]([120.0, 290.0, 460.0, 630.0, 800.0])
+grid_xl_top = 660.0
+grid_xl_bot = 660.0
+grid_xr_top = 1740.0
+grid_xr_bot = 1740.0
+
+[node name="Environment" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Cell_0_0" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 667.0
+offset_top = 127.0
+offset_right = 1013.0
+offset_bottom = 283.0
+mouse_filter = 2
+texture = ExtResource("3")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_0_1" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1027.0
+offset_top = 127.0
+offset_right = 1373.0
+offset_bottom = 283.0
+mouse_filter = 2
+texture = ExtResource("3")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_0_2" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1387.0
+offset_top = 127.0
+offset_right = 1733.0
+offset_bottom = 283.0
+mouse_filter = 2
+texture = ExtResource("3")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_1_0" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 667.0
+offset_top = 297.0
+offset_right = 1013.0
+offset_bottom = 453.0
+mouse_filter = 2
+texture = ExtResource("3")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_1_1" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1027.0
+offset_top = 297.0
+offset_right = 1373.0
+offset_bottom = 453.0
+mouse_filter = 2
+texture = ExtResource("3")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_1_2" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1387.0
+offset_top = 297.0
+offset_right = 1733.0
+offset_bottom = 453.0
+mouse_filter = 2
+texture = ExtResource("3")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_2_0" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 667.0
+offset_top = 467.0
+offset_right = 1013.0
+offset_bottom = 623.0
+mouse_filter = 2
+texture = ExtResource("4")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_2_1" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1027.0
+offset_top = 467.0
+offset_right = 1373.0
+offset_bottom = 623.0
+mouse_filter = 2
+texture = ExtResource("4")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_2_2" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1387.0
+offset_top = 467.0
+offset_right = 1733.0
+offset_bottom = 623.0
+mouse_filter = 2
+texture = ExtResource("4")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_3_0" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 667.0
+offset_top = 637.0
+offset_right = 1013.0
+offset_bottom = 793.0
+mouse_filter = 2
+texture = ExtResource("4")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_3_1" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1027.0
+offset_top = 637.0
+offset_right = 1373.0
+offset_bottom = 793.0
+mouse_filter = 2
+texture = ExtResource("4")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44
+
+[node name="Cell_3_2" type="NinePatchRect" parent="."]
+layout_mode = 0
+offset_left = 1387.0
+offset_top = 637.0
+offset_right = 1733.0
+offset_bottom = 793.0
+mouse_filter = 2
+texture = ExtResource("4")
+patch_margin_left = 44
+patch_margin_top = 44
+patch_margin_right = 44
+patch_margin_bottom = 44

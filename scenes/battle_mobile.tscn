@@ -1,181 +1,89 @@
-[gd_scene format=3 uid="uid://dcnnuxpcaije0"]
+[gd_scene load_steps=24 format=3]
 
-[ext_resource type="Script" uid="uid://dr0l8c6vx412j" path="res://scripts/ui/battle_scene.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/arenas/arena_dungeon_mobile.tscn" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/battle_scene.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
-[ext_resource type="Texture2D" uid="uid://b5edb5e8xs10r" path="res://assets/sprites/ui/pixel/tab_player.png" id="5"]
-[ext_resource type="Texture2D" uid="uid://bsxgd1uaq04qk" path="res://assets/sprites/ui/pixel/tab_opponent.png" id="6"]
-[ext_resource type="Texture2D" uid="uid://dgkq5nohurrvu" path="res://assets/sprites/ui/pixel/tab_infos.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://bemqkrabkurlq" path="res://assets/sprites/ui/pixel/res_heart.png" id="8"]
-[ext_resource type="Texture2D" uid="uid://cgrfsoywtek3g" path="res://assets/sprites/ui/pixel/res_crystal.png" id="9"]
-[ext_resource type="Texture2D" uid="uid://b88pirnbhhclw" path="res://assets/sprites/ui/card_back.png" id="10"]
-[ext_resource type="Texture2D" uid="uid://dx3lpx1foq4w6" path="res://assets/sprites/ui/pixel/icon_menu_bag.png" id="11"]
-[ext_resource type="Texture2D" uid="uid://bd676ve0xfbgu" path="res://assets/sprites/ui/pixel/icon_menu_book.png" id="12"]
-[ext_resource type="Texture2D" uid="uid://my4y1a0m7le7" path="res://assets/sprites/ui/pixel/icon_menu_gear.png" id="13"]
-[ext_resource type="Texture2D" uid="uid://48nd0qc4qux5" path="res://assets/sprites/ui/pixel/ind_select_gold.png" id="14"]
-[ext_resource type="Texture2D" uid="uid://c0apdqepdjv0b" path="res://assets/sprites/ui/pixel/row_marker_0.png" id="15"]
-[ext_resource type="Texture2D" uid="uid://jvqga6gkleyk" path="res://assets/sprites/ui/pixel/row_marker_1.png" id="16"]
-[ext_resource type="Texture2D" uid="uid://bw44plj2npvs4" path="res://assets/sprites/ui/pixel/row_marker_2.png" id="17"]
-[ext_resource type="Texture2D" uid="uid://qkar6fm5ku8y" path="res://assets/sprites/ui/pixel/row_marker_3.png" id="18"]
+[ext_resource type="PackedScene" path="res://scenes/arenas/arena_gold_mobile.tscn" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel_dark.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/btn_plate.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/orb_endturn.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/medallion.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/slot.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/card_back_red.png" id="back_red"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/card_back_blue.png" id="back_blue"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_bag.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_book.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_gear.png" id="13"]
 
-[sub_resource type="StyleBoxFlat" id="panel_navy"]
-bg_color = Color(0.098, 0.118, 0.196, 0.92)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.79, 0.65, 0.31, 0.55)
-shadow_color = Color(0, 0, 0, 0.38)
-shadow_size = 8
-shadow_offset = Vector2(0, 4)
-content_margin_left = 14.0
-content_margin_top = 12.0
-content_margin_right = 14.0
-content_margin_bottom = 12.0
+[sub_resource type="StyleBoxTexture" id="panel_gold"]
+texture = ExtResource("5")
+texture_margin_left = 14.0
+texture_margin_top = 14.0
+texture_margin_right = 14.0
+texture_margin_bottom = 14.0
+content_margin_left = 24.0
+content_margin_top = 18.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
 
-[sub_resource type="StyleBoxFlat" id="hand_tray"]
-bg_color = Color(0.078, 0.094, 0.157, 0.85)
-corner_radius_top_left = 18
-corner_radius_top_right = 18
-border_width_top = 2
-border_color = Color(0.79, 0.65, 0.31, 0.5)
-shadow_color = Color(0, 0, 0, 0.33)
-shadow_size = 7
+[sub_resource type="StyleBoxTexture" id="plate_gold"]
+texture = ExtResource("6")
 
-[sub_resource type="StyleBoxFlat" id="btn_navy"]
-bg_color = Color(0.145, 0.173, 0.278, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.79, 0.65, 0.31, 0.7)
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
+[sub_resource type="StyleBoxTexture" id="orb_gold"]
+texture = ExtResource("7")
+content_margin_left = 42.0
+content_margin_top = 42.0
+content_margin_right = 42.0
+content_margin_bottom = 42.0
 
-[sub_resource type="StyleBoxFlat" id="btn_navy_hi"]
-bg_color = Color(0.204, 0.243, 0.384, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.96, 0.81, 0.42, 1)
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="btn_power"]
-bg_color = Color(0.29, 0.16, 0.42, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.96, 0.81, 0.42, 1)
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="btn_power_hi"]
-bg_color = Color(0.42, 0.24, 0.58, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(1, 0.89, 0.55, 1)
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="btn_power_off"]
-bg_color = Color(0.16, 0.13, 0.2, 0.85)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5, 0.42, 0.55, 0.5)
-content_margin_left = 12.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="top_tray"]
-bg_color = Color(0.078, 0.094, 0.157, 0.85)
-corner_radius_bottom_right = 18
-corner_radius_bottom_left = 18
-border_width_bottom = 2
-border_color = Color(0.79, 0.65, 0.31, 0.5)
-shadow_color = Color(0, 0, 0, 0.33)
-shadow_size = 7
-
-[sub_resource type="Gradient" id="vignette_grad"]
-offsets = PackedFloat32Array(0, 0.62, 1)
-colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.38)
-
-[sub_resource type="GradientTexture2D" id="vignette_tex"]
-gradient = SubResource("vignette_grad")
-width = 512
-height = 288
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-fill_to = Vector2(0.5, -0.15)
-
-[sub_resource type="StyleBoxFlat" id="header_bar"]
-content_margin_top = 10.0
-content_margin_bottom = 10.0
-bg_color = Color(0.055, 0.06, 0.075, 0.92)
+[sub_resource type="StyleBoxFlat" id="hdr_red"]
+bg_color = Color(0.36, 0.07, 0.09, 1)
+border_color = Color(0.62, 0.5, 0.3, 0.8)
 border_width_bottom = 1
-border_color = Color(0.45, 0.38, 0.22, 1)
+content_margin_top = 6.0
+content_margin_bottom = 6.0
 
-[sub_resource type="StyleBoxFlat" id="hp_back"]
-bg_color = Color(0, 0, 0, 0.6)
+[sub_resource type="StyleBoxFlat" id="hdr_blue"]
+bg_color = Color(0.07, 0.13, 0.33, 1)
+border_color = Color(0.62, 0.5, 0.3, 0.8)
+border_width_bottom = 1
+content_margin_top = 6.0
+content_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="bar_bg"]
+bg_color = Color(0, 0, 0, 0.65)
+border_color = Color(0.62, 0.5, 0.3, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="hp_fill_red"]
-bg_color = Color(0.78, 0.22, 0.16, 1)
+[sub_resource type="StyleBoxFlat" id="fill_red"]
+bg_color = Color(0.72, 0.16, 0.12, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[sub_resource type="StyleBoxFlat" id="hp_fill_green"]
-bg_color = Color(0.35, 0.66, 0.39, 1)
+[sub_resource type="StyleBoxFlat" id="fill_energy"]
+bg_color = Color(0.25, 0.5, 0.92, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="Battle" type="Control" unique_id=1820596343]
+[sub_resource type="StyleBoxFlat" id="fill_blue"]
+bg_color = Color(0.28, 0.62, 0.34, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Battle" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -185,94 +93,11 @@ grow_vertical = 2
 theme = ExtResource("3")
 script = ExtResource("1")
 
-[node name="Arena" parent="." instance=ExtResource("2")]
+[node name="Arena" parent="." instance=ExtResource("4")]
 unique_name_in_owner = true
 layout_mode = 1
 
-[node name="BackgroundFallback" type="ColorRect" parent="." unique_id=26563011]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.082, 0.071, 0.102, 1)
-
-[node name="Vignette" type="TextureRect" parent="." unique_id=125044401]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("vignette_tex")
-expand_mode = 1
-stretch_mode = 1
-
-[node name="HeaderBar" type="PanelContainer" parent="." unique_id=1331851535]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-grow_horizontal = 2
-mouse_filter = 2
-visible = false
-theme_override_styles/panel = SubResource("header_bar")
-
-[node name="HeaderTitle" type="Label" parent="HeaderBar" unique_id=1692195359]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
-theme_override_font_sizes/font_size = 48
-text = "ARÈNE – PLATEAU 3×4"
-horizontal_alignment = 1
-
-[node name="RowMarker3" type="TextureRect" parent="." unique_id=1161510324]
-layout_mode = 0
-offset_left = 652.0
-offset_top = 244.4
-offset_right = 696.0
-offset_bottom = 273.3
-mouse_filter = 2
-texture = ExtResource("18")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="RowMarker2" type="TextureRect" parent="." unique_id=1895884146]
-layout_mode = 0
-offset_left = 652.0
-offset_top = 394.8
-offset_right = 696.0
-offset_bottom = 423.8
-mouse_filter = 2
-texture = ExtResource("17")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="RowMarker1" type="TextureRect" parent="." unique_id=2143521011]
-layout_mode = 0
-offset_left = 652.0
-offset_top = 550.4
-offset_right = 696.0
-offset_bottom = 579.3
-mouse_filter = 2
-texture = ExtResource("16")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="RowMarker0" type="TextureRect" parent="." unique_id=698700871]
-layout_mode = 0
-offset_left = 652.0
-offset_top = 710.2
-offset_right = 696.0
-offset_bottom = 739.1
-mouse_filter = 2
-texture = ExtResource("15")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="BoardArea" type="Control" parent="." unique_id=890148904]
+[node name="BoardArea" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -282,644 +107,674 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="EnemyPanel" type="PanelContainer" parent="." unique_id=702796478]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(300, 0)
-visible = false
-layout_mode = 0
-offset_left = 20.0
-offset_top = 70.0
-offset_right = 280.0
-offset_bottom = 520.0
-
-[node name="Box" type="VBoxContainer" parent="EnemyPanel" unique_id=1106470049]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="TabWrap" type="Control" parent="EnemyPanel/Box" unique_id=884622308]
-custom_minimum_size = Vector2(0, 46)
-layout_mode = 2
-
-[node name="Tab" type="TextureRect" parent="EnemyPanel/Box/TabWrap" unique_id=1011919984]
+[node name="TopLabel" type="Label" parent="."]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("6")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="EnemyMaster" type="Label" parent="EnemyPanel/Box" unique_id=1840779128]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-
-[node name="TopRow" type="HBoxContainer" parent="EnemyPanel/Box" unique_id=1457496202]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="PortraitWrap" type="Control" parent="EnemyPanel/Box/TopRow" unique_id=220022934]
-custom_minimum_size = Vector2(72, 72)
-layout_mode = 2
-
-[node name="EnemyPortrait" type="TextureRect" parent="EnemyPanel/Box/TopRow/PortraitWrap" unique_id=579008423]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = 6.0
-offset_right = -6.0
-offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Frame" type="TextureRect" parent="EnemyPanel/Box/TopRow/PortraitWrap" unique_id=1967385751]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("14")
-expand_mode = 1
-stretch_mode = 1
-
-[node name="Beside" type="VBoxContainer" parent="EnemyPanel/Box/TopRow" unique_id=1678631103]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="EnemyName" type="Label" parent="EnemyPanel/Box/TopRow/Beside" unique_id=1364518337]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
-theme_override_font_sizes/font_size = 36
-
-[node name="HpRow" type="HBoxContainer" parent="EnemyPanel/Box/TopRow/Beside" unique_id=30806370]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Heart" type="TextureRect" parent="EnemyPanel/Box/TopRow/Beside/HpRow" unique_id=356830356]
-custom_minimum_size = Vector2(22, 22)
-layout_mode = 2
-texture = ExtResource("8")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="EnemyHp" type="Label" parent="EnemyPanel/Box/TopRow/Beside/HpRow" unique_id=793173153]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 34
-
-[node name="EnemyHpBar" type="ProgressBar" parent="EnemyPanel/Box" unique_id=515925107]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 16)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/background = SubResource("hp_back")
-theme_override_styles/fill = SubResource("hp_fill_red")
-show_percentage = false
-
-[node name="Sep1" type="ColorRect" parent="EnemyPanel/Box" unique_id=17577656]
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.4, 0.36, 0.27, 1)
-
-[node name="StoneRow" type="HBoxContainer" parent="EnemyPanel/Box" unique_id=339267309]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="Crystal" type="TextureRect" parent="EnemyPanel/Box/StoneRow" unique_id=1207779264]
-custom_minimum_size = Vector2(22, 22)
-layout_mode = 2
-texture = ExtResource("9")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="EnemyStones" type="Label" parent="EnemyPanel/Box/StoneRow" unique_id=515166959]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.345, 0.651, 1, 1)
-theme_override_font_sizes/font_size = 32
-
-[node name="Sep2" type="ColorRect" parent="EnemyPanel/Box" unique_id=1330975925]
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.4, 0.36, 0.27, 1)
-
-[node name="EnemyHand" type="Label" parent="EnemyPanel/Box" unique_id=1187983425]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-
-[node name="EnemyHandRow" type="HBoxContainer" parent="EnemyPanel/Box" unique_id=418799267]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
-
-[node name="Sep3" type="ColorRect" parent="EnemyPanel/Box" unique_id=792887674]
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.4, 0.36, 0.27, 1)
-
-[node name="DeckRow" type="HBoxContainer" parent="EnemyPanel/Box" unique_id=1745229584]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="DeckIcon" type="TextureRect" parent="EnemyPanel/Box/DeckRow" unique_id=1839540744]
-custom_minimum_size = Vector2(16, 24)
-layout_mode = 2
-texture = ExtResource("10")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="EnemyDeck" type="Label" parent="EnemyPanel/Box/DeckRow" unique_id=2129548622]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-
-[node name="PlayerPanel" type="PanelContainer" parent="." unique_id=414071347]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(266, 0)
-visible = false
-layout_mode = 0
-offset_left = 1810.0
-offset_top = 70.0
-offset_right = 2046.0
-offset_bottom = 560.0
-
-[node name="Box" type="VBoxContainer" parent="PlayerPanel" unique_id=453981364]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="TabWrap" type="Control" parent="PlayerPanel/Box" unique_id=833638305]
-custom_minimum_size = Vector2(0, 46)
-layout_mode = 2
-
-[node name="Tab" type="TextureRect" parent="PlayerPanel/Box/TabWrap" unique_id=1194697756]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("5")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerMaster" type="Label" parent="PlayerPanel/Box" unique_id=1561280746]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-
-[node name="TopRow" type="HBoxContainer" parent="PlayerPanel/Box" unique_id=2084726754]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="PortraitWrap" type="Control" parent="PlayerPanel/Box/TopRow" unique_id=334024616]
-custom_minimum_size = Vector2(72, 72)
-layout_mode = 2
-
-[node name="PlayerPortrait" type="TextureRect" parent="PlayerPanel/Box/TopRow/PortraitWrap" unique_id=1891727509]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = 6.0
-offset_right = -6.0
-offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Frame" type="TextureRect" parent="PlayerPanel/Box/TopRow/PortraitWrap" unique_id=1973225050]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("14")
-expand_mode = 1
-stretch_mode = 1
-
-[node name="Beside" type="VBoxContainer" parent="PlayerPanel/Box/TopRow" unique_id=161621892]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="PlayerName" type="Label" parent="PlayerPanel/Box/TopRow/Beside" unique_id=1444215328]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
-theme_override_font_sizes/font_size = 36
-
-[node name="HpRow" type="HBoxContainer" parent="PlayerPanel/Box/TopRow/Beside" unique_id=1678233514]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Heart" type="TextureRect" parent="PlayerPanel/Box/TopRow/Beside/HpRow" unique_id=675050073]
-custom_minimum_size = Vector2(22, 22)
-layout_mode = 2
-texture = ExtResource("8")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerHp" type="Label" parent="PlayerPanel/Box/TopRow/Beside/HpRow" unique_id=532640399]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 34
-
-[node name="PlayerHpBar" type="ProgressBar" parent="PlayerPanel/Box" unique_id=1995304348]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 16)
-layout_mode = 2
-mouse_filter = 2
-theme_override_styles/background = SubResource("hp_back")
-theme_override_styles/fill = SubResource("hp_fill_green")
-show_percentage = false
-
-[node name="Sep1" type="ColorRect" parent="PlayerPanel/Box" unique_id=2041997681]
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.4, 0.36, 0.27, 1)
-
-[node name="StoneRow" type="HBoxContainer" parent="PlayerPanel/Box" unique_id=1107751427]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="Crystal" type="TextureRect" parent="PlayerPanel/Box/StoneRow" unique_id=1666217236]
-custom_minimum_size = Vector2(22, 22)
-layout_mode = 2
-texture = ExtResource("9")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerStones" type="Label" parent="PlayerPanel/Box/StoneRow" unique_id=964163107]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.345, 0.651, 1, 1)
-theme_override_font_sizes/font_size = 32
-
-[node name="Sep2" type="ColorRect" parent="PlayerPanel/Box" unique_id=266308418]
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.4, 0.36, 0.27, 1)
-
-[node name="PlayerHand" type="Label" parent="PlayerPanel/Box" unique_id=1228648210]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-
-[node name="PlayerHandRow" type="HBoxContainer" parent="PlayerPanel/Box" unique_id=1697911772]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 4
-
-[node name="Sep3" type="ColorRect" parent="PlayerPanel/Box" unique_id=2086520236]
-custom_minimum_size = Vector2(0, 1)
-layout_mode = 2
-mouse_filter = 2
-color = Color(0.4, 0.36, 0.27, 1)
-
-[node name="DeckRow" type="HBoxContainer" parent="PlayerPanel/Box" unique_id=282901615]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="DeckIcon" type="TextureRect" parent="PlayerPanel/Box/DeckRow" unique_id=1294022755]
-custom_minimum_size = Vector2(16, 24)
-layout_mode = 2
-texture = ExtResource("10")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerDeck" type="Label" parent="PlayerPanel/Box/DeckRow" unique_id=1759757654]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-
-[node name="InfoPanel" type="PanelContainer" parent="." unique_id=1272779032]
-unique_name_in_owner = true
-theme_override_styles/panel = SubResource("panel_navy")
-custom_minimum_size = Vector2(470, 0)
-layout_mode = 0
-offset_left = 1914.0
-offset_top = 280.0
-offset_right = 2384.0
-offset_bottom = 900.0
-
-[node name="InfoBox" type="VBoxContainer" parent="InfoPanel" unique_id=595276332]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="TabWrap" type="Control" parent="InfoPanel/InfoBox" unique_id=1519047438]
-custom_minimum_size = Vector2(0, 42)
-layout_mode = 2
-
-[node name="Tab" type="TextureRect" parent="InfoPanel/InfoBox/TabWrap" unique_id=1792345320]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = ExtResource("7")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TurnLabel" type="Label" parent="InfoPanel/InfoBox" unique_id=207325490]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 36
-horizontal_alignment = 1
-
-[node name="EndTurnBtn" type="Button" parent="InfoPanel/InfoBox" unique_id=864980773]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 104)
-layout_mode = 2
-theme_override_font_sizes/font_size = 42
-theme_override_styles/normal = SubResource("btn_navy")
-theme_override_styles/hover = SubResource("btn_navy_hi")
-theme_override_styles/pressed = SubResource("btn_navy_hi")
-theme_override_styles/disabled = SubResource("btn_navy")
-text = "FIN DU TOUR"
-
-[node name="PowerBtn" type="Button" parent="InfoPanel/InfoBox" unique_id=195785045]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 96)
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.93, 0.7, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/font_disabled_color = Color(0.62, 0.56, 0.68, 1)
-theme_override_font_sizes/font_size = 36
-theme_override_styles/normal = SubResource("btn_power")
-theme_override_styles/hover = SubResource("btn_power_hi")
-theme_override_styles/pressed = SubResource("btn_power_hi")
-theme_override_styles/disabled = SubResource("btn_power_off")
-text = "✦ Pouvoir"
-
-[node name="ActionsTitle" type="Label" parent="InfoPanel/InfoBox" unique_id=1149758182]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.663, 0.69, 0.761, 1)
-theme_override_font_sizes/font_size = 30
-text = "Actions restantes :"
-
-[node name="TurnInfo" type="Label" parent="InfoPanel/InfoBox" unique_id=2104479611]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 30
-
-[node name="LogPanel" type="PanelContainer" parent="." unique_id=1405430135]
-unique_name_in_owner = true
-visible = false
-z_index = 15
-theme_override_styles/panel = SubResource("panel_navy")
-custom_minimum_size = Vector2(288, 0)
-layout_mode = 0
-offset_left = 20.0
-offset_top = 110.0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 8.0
 offset_right = 300.0
-offset_bottom = 460.0
-
-[node name="LogBox" type="VBoxContainer" parent="LogPanel" unique_id=719701788]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="LogTitle" type="Label" parent="LogPanel/LogBox" unique_id=1212897987]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
-theme_override_font_sizes/font_size = 32
-text = "DERNIÈRES ACTIONS"
+offset_bottom = 30.0
 horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("2")
+text = "MAIN ADVERSAIRE"
+mouse_filter = 2
 
-[node name="LogSep" type="ColorRect" parent="LogPanel/LogBox" unique_id=1749873090]
-custom_minimum_size = Vector2(0, 1)
+[node name="TopTray" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 4.0
+offset_right = 1620.0
+offset_bottom = 114.0
+theme_override_styles/panel = SubResource("panel_gold")
+mouse_filter = 2
+
+[node name="EnemyHandRow2" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 800.0
+offset_top = 20.0
+offset_right = 1600.0
+offset_bottom = 110.0
+alignment = 1
+theme_override_constants/separation = 6
+mouse_filter = 2
+
+[node name="EnemyPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 20.0
+offset_right = 420.0
+offset_bottom = 524.0
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="Box" type="VBoxContainer" parent="EnemyPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="PanelContainer" parent="EnemyPanel/Box"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("hdr_red")
+
+[node name="EnemyName" type="Label" parent="EnemyPanel/Box/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_fonts/font = ExtResource("2")
+text = "JOUEUR"
+mouse_filter = 2
+
+[node name="EnemyMaster" type="Label" parent="EnemyPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 19
+mouse_filter = 2
+
+[node name="PortraitWrap" type="Control" parent="EnemyPanel/Box"]
+custom_minimum_size = Vector2(0, 136)
 layout_mode = 2
 mouse_filter = 2
-color = Color(0.4, 0.36, 0.27, 1)
 
-[node name="LogScroll" type="ScrollContainer" parent="LogPanel/LogBox" unique_id=283917913]
+[node name="EnemyPortrait" type="TextureRect" parent="EnemyPanel/Box/PortraitWrap"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -58.0
+offset_top = 10.0
+offset_right = 58.0
+offset_bottom = 126.0
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Medallion" type="TextureRect" parent="EnemyPanel/Box/PortraitWrap"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -68.0
+offset_top = 0.0
+offset_right = 68.0
+offset_bottom = 136.0
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="HpRow" type="HBoxContainer" parent="EnemyPanel/Box"]
 layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
+theme_override_constants/separation = 10
 
-[node name="LogList" type="VBoxContainer" parent="LogPanel/LogBox/LogScroll" unique_id=283917914]
+[node name="EnemyHpBar" type="ProgressBar" parent="EnemyPanel/Box/HpRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 3
+size_flags_vertical = 4
+custom_minimum_size = Vector2(0, 22)
+show_percentage = false
+theme_override_styles/background = SubResource("bar_bg")
+theme_override_styles/fill = SubResource("fill_red")
 
-[node name="HandTray" type="Panel" parent="." unique_id=118488090]
-layout_mode = 0
-offset_left = 460.0
-offset_top = 745.0
-offset_right = 1690.0
-offset_bottom = 1080.0
+[node name="EnemyHp" type="Label" parent="EnemyPanel/Box/HpRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 24
 mouse_filter = 2
-theme_override_styles/panel = SubResource("hand_tray")
 
-[node name="HandArea" type="Control" parent="." unique_id=118488092]
+[node name="EnergyRow" type="HBoxContainer" parent="EnemyPanel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="EnergyLbl" type="Label" parent="EnemyPanel/Box/EnergyRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 19
+theme_override_fonts/font = ExtResource("2")
+text = "ÉNERGIE"
+mouse_filter = 2
+
+[node name="EnemyEnergyBar" type="ProgressBar" parent="EnemyPanel/Box/EnergyRow"]
 unique_name_in_owner = true
-anchors_preset = 0
-offset_left = 460.0
-offset_top = 745.0
-offset_right = 1690.0
-offset_bottom = 1080.0
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+custom_minimum_size = Vector2(0, 18)
+show_percentage = false
+theme_override_styles/background = SubResource("bar_bg")
+theme_override_styles/fill = SubResource("fill_energy")
 
-[node name="DetailHolder" type="VBoxContainer" parent="." unique_id=1298083378]
+[node name="EnemyStones" type="Label" parent="EnemyPanel/Box/EnergyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="EnemyHand" type="Label" parent="EnemyPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="EnemyHandRow" type="HBoxContainer" parent="EnemyPanel/Box"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Piles" type="HBoxContainer" parent="EnemyPanel/Box"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 40
+
+[node name="DeckCol" type="VBoxContainer" parent="EnemyPanel/Box/Piles"]
+layout_mode = 2
+
+[node name="DeckLbl" type="Label" parent="EnemyPanel/Box/Piles/DeckCol"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2")
+text = "DECK"
+mouse_filter = 2
+
+[node name="EnemyDeck" type="TextureRect" parent="EnemyPanel/Box/Piles/DeckCol"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(78, 110)
+texture = ExtResource("back_red")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="EnemyDeckCount" type="Label" parent="EnemyPanel/Box/Piles/DeckCol/EnemyDeck"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+mouse_filter = 2
+
+[node name="DiscardCol" type="VBoxContainer" parent="EnemyPanel/Box/Piles"]
+layout_mode = 2
+
+[node name="DiscardLbl" type="Label" parent="EnemyPanel/Box/Piles/DiscardCol"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2")
+text = "DÉFAUSSE"
+mouse_filter = 2
+
+[node name="DiscardSlot" type="TextureRect" parent="EnemyPanel/Box/Piles/DiscardCol"]
+layout_mode = 2
+custom_minimum_size = Vector2(78, 110)
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="PlayerPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
-offset_left = 20.0
-offset_top = 400.0
-offset_right = 360.0
+offset_left = 24.0
+offset_top = 552.0
+offset_right = 420.0
 offset_bottom = 1060.0
-theme_override_constants/separation = 8
+theme_override_styles/panel = SubResource("panel_gold")
 
-[node name="UtilRow" type="HBoxContainer" parent="." unique_id=1172199121]
+[node name="Box" type="VBoxContainer" parent="PlayerPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Header" type="PanelContainer" parent="PlayerPanel/Box"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("hdr_blue")
+
+[node name="PlayerName" type="Label" parent="PlayerPanel/Box/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_fonts/font = ExtResource("2")
+text = "JOUEUR"
+mouse_filter = 2
+
+[node name="PlayerMaster" type="Label" parent="PlayerPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 19
+mouse_filter = 2
+
+[node name="PortraitWrap" type="Control" parent="PlayerPanel/Box"]
+custom_minimum_size = Vector2(0, 136)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PlayerPortrait" type="TextureRect" parent="PlayerPanel/Box/PortraitWrap"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -58.0
+offset_top = 10.0
+offset_right = 58.0
+offset_bottom = 126.0
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="Medallion" type="TextureRect" parent="PlayerPanel/Box/PortraitWrap"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -68.0
+offset_top = 0.0
+offset_right = 68.0
+offset_bottom = 136.0
+texture = ExtResource("8")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="HpRow" type="HBoxContainer" parent="PlayerPanel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PlayerHpBar" type="ProgressBar" parent="PlayerPanel/Box/HpRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+custom_minimum_size = Vector2(0, 22)
+show_percentage = false
+theme_override_styles/background = SubResource("bar_bg")
+theme_override_styles/fill = SubResource("fill_blue")
+
+[node name="PlayerHp" type="Label" parent="PlayerPanel/Box/HpRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 24
+mouse_filter = 2
+
+[node name="EnergyRow" type="HBoxContainer" parent="PlayerPanel/Box"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="EnergyLbl" type="Label" parent="PlayerPanel/Box/EnergyRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 19
+theme_override_fonts/font = ExtResource("2")
+text = "ÉNERGIE"
+mouse_filter = 2
+
+[node name="PlayerEnergyBar" type="ProgressBar" parent="PlayerPanel/Box/EnergyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+custom_minimum_size = Vector2(0, 18)
+show_percentage = false
+theme_override_styles/background = SubResource("bar_bg")
+theme_override_styles/fill = SubResource("fill_energy")
+
+[node name="PlayerStones" type="Label" parent="PlayerPanel/Box/EnergyRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="PlayerHand" type="Label" parent="PlayerPanel/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="PlayerHandRow" type="HBoxContainer" parent="PlayerPanel/Box"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[node name="Piles" type="HBoxContainer" parent="PlayerPanel/Box"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 40
+
+[node name="DeckCol" type="VBoxContainer" parent="PlayerPanel/Box/Piles"]
+layout_mode = 2
+
+[node name="DeckLbl" type="Label" parent="PlayerPanel/Box/Piles/DeckCol"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2")
+text = "DECK"
+mouse_filter = 2
+
+[node name="PlayerDeck" type="TextureRect" parent="PlayerPanel/Box/Piles/DeckCol"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(78, 110)
+texture = ExtResource("back_blue")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="PlayerDeckCount" type="Label" parent="PlayerPanel/Box/Piles/DeckCol/PlayerDeck"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+mouse_filter = 2
+
+[node name="DiscardCol" type="VBoxContainer" parent="PlayerPanel/Box/Piles"]
+layout_mode = 2
+
+[node name="DiscardLbl" type="Label" parent="PlayerPanel/Box/Piles/DiscardCol"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2")
+text = "DÉFAUSSE"
+mouse_filter = 2
+
+[node name="DiscardSlot" type="TextureRect" parent="PlayerPanel/Box/Piles/DiscardCol"]
+layout_mode = 2
+custom_minimum_size = Vector2(78, 110)
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="UtilRow" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 30.0
-offset_top = 16.0
-offset_right = 650.0
-offset_bottom = 152.0
+offset_left = 444.0
+offset_top = 14.0
+offset_right = 640.0
+offset_bottom = 66.0
 theme_override_constants/separation = 12
 
-[node name="BagBtn" type="TextureButton" parent="UtilRow" unique_id=2112401026]
+[node name="BagBtn" type="TextureButton" parent="UtilRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 128)
+visible = false
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
-tooltip_text = "Votre Maître (pouvoir, passif)"
 texture_normal = ExtResource("11")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="BookBtn" type="TextureButton" parent="UtilRow" unique_id=1399063396]
+[node name="BookBtn" type="TextureButton" parent="UtilRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 128)
+visible = false
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
-tooltip_text = "Journal des actions de la partie"
 texture_normal = ExtResource("12")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="GearBtn" type="TextureButton" parent="UtilRow" unique_id=1285097626]
+[node name="GearBtn" type="TextureButton" parent="UtilRow"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 128)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
-tooltip_text = "Abandonner la partie"
 texture_normal = ExtResource("13")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="EvolveBtn" type="Button" parent="." unique_id=628776979]
+[node name="InfoPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 1980.0
+offset_top = 20.0
+offset_right = 2376.0
+offset_bottom = 266.0
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="InfoBox" type="VBoxContainer" parent="InfoPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="InfoTitle" type="Label" parent="InfoPanel/InfoBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("2")
+text = "INFOS DE PARTIE"
+mouse_filter = 2
+
+[node name="TurnLabel" type="Label" parent="InfoPanel/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 2
+mouse_filter = 2
+
+[node name="TurnInfo" type="Label" parent="InfoPanel/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+autowrap_mode = 2
+mouse_filter = 2
+
+[node name="DetailPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 1980.0
+offset_top = 282.0
+offset_right = 2376.0
+offset_bottom = 742.0
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="DetailBox" type="VBoxContainer" parent="DetailPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DetailTitle" type="Label" parent="DetailPanel/DetailBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("2")
+text = "DÉTAIL DE LA CARTE"
+mouse_filter = 2
+
+[node name="DetailScroll" type="ScrollContainer" parent="DetailPanel/DetailBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="DetailHolder" type="VBoxContainer" parent="DetailPanel/DetailBox/DetailScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+
+[node name="PowerBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1980.0
+offset_top = 756.0
+offset_right = 2376.0
+offset_bottom = 830.0
+theme_override_styles/normal = SubResource("panel_gold")
+theme_override_styles/hover = SubResource("panel_gold")
+theme_override_styles/pressed = SubResource("panel_gold")
+theme_override_styles/focus = SubResource("panel_gold")
+theme_override_styles/disabled = SubResource("panel_gold")
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_colors/font_disabled_color = Color(0.5, 0.42, 0.3, 1)
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 22
+clip_text = true
+
+[node name="EndTurnBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 2072.0
+offset_top = 838.0
+offset_right = 2330.0
+offset_bottom = 1072.0
+theme_override_styles/normal = SubResource("orb_gold")
+theme_override_styles/hover = SubResource("orb_gold")
+theme_override_styles/pressed = SubResource("orb_gold")
+theme_override_styles/focus = SubResource("orb_gold")
+theme_override_styles/disabled = SubResource("orb_gold")
+theme_override_colors/font_color = Color(0.95, 0.9, 0.78, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.58, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("2")
+text = "TERMINER
+MON TOUR"
+alignment = 1
+
+[node name="HandTray" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 548.0
+offset_top = 828.0
+offset_right = 1852.0
+offset_bottom = 1080.0
+theme_override_styles/panel = SubResource("panel_gold")
+mouse_filter = 2
+
+[node name="HandTrayLbl" type="Label" parent="HandTray"]
+layout_mode = 2
+size_flags_vertical = 0
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("2")
+text = "VOTRE MAIN"
+mouse_filter = 2
+
+[node name="HandArea" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 560.0
+offset_top = 856.0
+offset_right = 1840.0
+offset_bottom = 1080.0
+
+[node name="LogPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
-offset_right = 180.0
-offset_bottom = 40.0
-theme_override_font_sizes/font_size = 36
+offset_left = 660.0
+offset_top = 140.0
+offset_right = 1740.0
+offset_bottom = 620.0
+theme_override_styles/panel = SubResource("panel_gold")
 
-[node name="ToastLabel" type="Label" parent="." unique_id=352089781]
+[node name="LogBox" type="VBoxContainer" parent="LogPanel"]
+layout_mode = 2
+
+[node name="LogTitle" type="Label" parent="LogPanel/LogBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("2")
+text = "JOURNAL DE COMBAT"
+mouse_filter = 2
+
+[node name="LogScroll" type="ScrollContainer" parent="LogPanel/LogBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LogList" type="VBoxContainer" parent="LogPanel/LogBox/LogScroll"]
 unique_name_in_owner = true
-modulate = Color(1, 1, 1, 0)
-custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyPips" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+visible = false
 layout_mode = 0
-offset_left = 560.0
-offset_top = 824.0
-offset_right = 1160.0
-offset_bottom = 854.0
-theme_override_colors/font_color = Color(1, 0.824, 0.753, 1)
-theme_override_font_sizes/font_size = 44
-horizontal_alignment = 1
-
-[node name="EnemyTray" type="Panel" parent="." unique_id=118488091]
-offset_left = 620.0
+offset_left = 0.0
 offset_top = 0.0
-offset_right = 1690.0
-offset_bottom = 140.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("top_tray")
+offset_right = 40.0
+offset_bottom = 200.0
 
-[node name="EnemyPips" type="VBoxContainer" parent="." unique_id=770001]
+[node name="PlayerPips" type="VBoxContainer" parent="."]
 unique_name_in_owner = true
-offset_left = 1715.0
-offset_top = 40.0
-offset_right = 1763.0
-offset_bottom = 505.0
-mouse_filter = 2
-alignment = 1
-theme_override_constants/separation = 3
+visible = false
+layout_mode = 0
+offset_left = 0.0
+offset_top = 300.0
+offset_right = 40.0
+offset_bottom = 500.0
 
-[node name="EnemyDeck" type="TextureRect" parent="." unique_id=770002]
+[node name="EvolveBtn" type="Button" parent="."]
 unique_name_in_owner = true
-offset_left = 2040.0
-offset_top = 6.0
-offset_right = 2190.0
-offset_bottom = 146.0
-mouse_filter = 2
-texture = ExtResource("10")
-expand_mode = 1
-stretch_mode = 5
+visible = false
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 170.0
+offset_bottom = 54.0
+theme_override_styles/normal = SubResource("plate_gold")
+theme_override_styles/hover = SubResource("plate_gold")
+theme_override_styles/pressed = SubResource("plate_gold")
+theme_override_styles/focus = SubResource("plate_gold")
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 18
 
-[node name="EnemyDeckCount" type="Label" parent="EnemyDeck" unique_id=770003]
+[node name="ToastLabel" type="Label" parent="."]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 56
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -260.0
+offset_right = 500.0
+offset_bottom = -200.0
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="PlayerPips" type="VBoxContainer" parent="." unique_id=770004]
-unique_name_in_owner = true
-offset_left = 1715.0
-offset_top = 555.0
-offset_right = 1763.0
-offset_bottom = 1020.0
-mouse_filter = 2
-alignment = 1
-theme_override_constants/separation = 3
-
-[node name="PlayerDeck" type="TextureRect" parent="." unique_id=770005]
-unique_name_in_owner = true
-offset_left = 2040.0
-offset_top = 935.0
-offset_right = 2190.0
-offset_bottom = 1075.0
-mouse_filter = 2
-texture = ExtResource("10")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="PlayerDeckCount" type="Label" parent="PlayerDeck" unique_id=770006]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 56
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="MidLine" type="Control" parent="." unique_id=770010]
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 36
+theme_override_fonts/font = ExtResource("2")
 mouse_filter = 2
 
-[node name="Glow" type="ColorRect" parent="MidLine" unique_id=770011]
-offset_left = 707.0
-offset_top = 443.3
-offset_right = 1693.0
-offset_bottom = 456.9
-mouse_filter = 2
-color = Color(0.96, 0.81, 0.42, 0.1)
-
-[node name="Line" type="ColorRect" parent="MidLine" unique_id=770012]
-offset_left = 707.0
-offset_top = 448.4
-offset_right = 1693.0
-offset_bottom = 451.8
-mouse_filter = 2
-color = Color(0.902, 0.753, 0.384, 0.72)
-
-[node name="EnemyHandRow2" type="HBoxContainer" parent="." unique_id=770007]
-unique_name_in_owner = true
-offset_left = 800.0
-offset_top = 30.0
-offset_right = 1600.0
-offset_bottom = 106.0
-mouse_filter = 2
-alignment = 1
-theme_override_constants/separation = 6
-
-[node name="FxLayer" type="Control" parent="." unique_id=948007153]
+[node name="FxLayer" type="Control" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
