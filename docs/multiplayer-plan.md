@@ -113,15 +113,30 @@ via un signal `remote_events`.
 ### Deux topologies (même logique autoritaire `NetServerLogic`)
 - **Listen-server** : un joueur héberge ET joue (lobby → « Héberger »). Il est
   joueur 0 ; l'autre rejoint par IP (joueur 1).
-- **Serveur dédié** : une instance headless arbitre sans jouer. Les **deux** joueurs
-  rejoignent par IP ; le serveur les assigne joueur 0 / 1 par ordre de connexion.
+- **Serveur dédié** : une instance headless arbitre sans jouer (scène légère
+  `scenes/server.tscn`, ne charge aucun asset de rendu). Les **deux** joueurs
+  rejoignent par IP ; le serveur les assigne joueur 0 / 1 par ordre de connexion
+  et se réinitialise entre les parties (always-on).
   ```
-  GODOT --headless --path . -- --serve            # serveur dédié (VPS/LAN), port 8790
-  GODOT --headless --path . -- --serve=9000       # port personnalisé
+  GODOT --headless --path . scenes/server.tscn -- --serve        # port 8790
+  GODOT --headless --path . scenes/server.tscn -- --serve=9000   # port perso
   ```
-  Puis dans le jeu, chaque joueur fait « Multijoueur → Rejoindre par IP » vers
-  l'adresse du serveur. Pour la prod : exporter un build **headless** et lancer
-  `--serve` sur le VPS (ouvrir le port UDP ENet).
+  Puis chaque joueur fait « Multijoueur → Rejoindre par IP » vers l'adresse du
+  serveur. **Testé E2E** depuis un poste distant vers un VPS (2 parties d'affilée).
+
+### Déploiement VPS (Linux) — testé
+Copier `godot` (binaire Linux headless) + le code **sans les assets lourds**
+(`scripts/`, `resources/`, `scenes/`, `project.godot` suffisent ; le serveur ne
+rend rien). Puis un service systemd :
+```ini
+[Service]
+Environment=HOME=/root                     # sinon Godot ne peut créer user:// → crash
+WorkingDirectory=/opt/stonebound
+ExecStart=/opt/stonebound/godot --headless --path /opt/stonebound res://scenes/server.tscn -- --serve
+Restart=always
+```
+Ouvrir le port **UDP 8790** (OS + pare-feu de l'hébergeur). Gérer : `systemctl
+{status,restart} stonebound`, logs `journalctl -u stonebound -f`.
 
 ### Smoke-test réseau (headless)
 ```

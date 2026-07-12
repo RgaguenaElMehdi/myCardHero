@@ -123,8 +123,18 @@ func _on_peer_connected(id: int) -> void:            # server (HOST or SERVER)
 	opponent_joined.emit()
 
 
-func _on_peer_disconnected(_id: int) -> void:
+func _on_peer_disconnected(id: int) -> void:
+	_peer_player.erase(id)
 	opponent_left.emit()
+	# Dedicated server: tear the finished/abandoned match down and drop any lingering
+	# peer so the next pair starts fresh — the listen socket stays open (always-on).
+	if role == Role.SERVER:
+		_server = NetServerLogic.new()
+		_decks = [null, null]
+		_started = false
+		for pid in _peer_player.keys():
+			multiplayer.multiplayer_peer.disconnect_peer(pid)
+		_peer_player = {}
 
 
 func _on_connected() -> void:                        # client
