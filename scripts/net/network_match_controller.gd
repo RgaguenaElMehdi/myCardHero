@@ -29,16 +29,21 @@ func setup(_cards2: Dictionary, _masters2: Array, _decks: Array, _seed: int) -> 
 	return state
 
 
-## Send the local player's action to the authority; the result comes back via
-## the server push (ingest), so there are no events to return synchronously.
+## Send the local player's action to the authority. The action is expressed in
+## MY view (player 0 = me); flip it back to server coordinates first. The result
+## comes back via the server push (ingest), so no events to return synchronously.
 func apply(action: Dictionary) -> Dictionary:
-	Net.submit_action(action)
+	Net.submit_action(NetView.flip_action(action, my_player))
 	return { "ok": true, "events": [] }
 
 
-## Called by Net with an authoritative update destined for this client.
+## Called by Net with an authoritative (server-coords) update for this client.
+## Normalize snapshot + events into my view so the battle scene always renders me
+## at the bottom as player 0.
 func ingest(events: Array, snapshot: Dictionary, over: bool, winner: int) -> void:
 	if not snapshot.is_empty():
-		state = GameState.from_dict(snapshot, _cards, _masters)
+		state = GameState.from_dict(
+				NetView.normalize_snapshot(snapshot, my_player), _cards, _masters)
 	_ready = state != null
-	remote_events.emit(events, over, winner)
+	remote_events.emit(NetView.flip_events(events, my_player),
+			over, NetView.flip_pidx(winner, my_player))

@@ -127,7 +127,9 @@ func _start_match(player_idx: int, snapshot: Dictionary) -> void:
 	controller = NetworkMatchController.new()
 	controller.configure(player_idx, Db.cards, Db.masters)
 	controller.ingest([], snapshot, false, -1)
-	match_ready.emit(player_idx)
+	# deferred so both sides finish setup before any handler acts (avoids the host
+	# mutating the match before the joiner's initial snapshot is taken).
+	match_ready.emit.call_deferred(player_idx)
 
 
 # --- Action routing (RPC) --------------------------------------------------

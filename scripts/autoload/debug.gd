@@ -37,18 +37,23 @@ func _schedule_nettest(mode: String) -> void:
 	Net.match_ready.connect(func(mp: int) -> void:
 		my_player = mp
 		var st: GameState = Net.controller.state
-		print("[nettest] MATCH prêt — je suis joueur %d, phase=%d current=%d main=%d" % [
-				mp, st.phase, st.current, st.players[0].hand.size()])
+		var own_hidden := 0
+		for id in st.players[0].hand:
+			if NetRedact.is_hidden(id):
+				own_hidden += 1
+		# in my normalized view I am always player 0, so "my turn" = current == 0
+		print("[nettest] MATCH prêt — mp=%d ctrl.my_player=%d phase=%d current(vue)=%d main=%d cachées=%d" % [
+				mp, Net.controller.my_player, st.phase, st.current, st.players[0].hand.size(), own_hidden])
 		Net.controller.remote_events.connect(func(ev: Array, over: bool, win: int) -> void:
 			var s2: GameState = Net.controller.state
-			print("[nettest] update: events=%d phase=%d current=%d over=%s" % [
+			print("[nettest] update: events=%d phase=%d current(vue)=%d over=%s" % [
 					ev.size(), s2.phase, s2.current, over])
-			if not over and s2.phase == GameState.Phase.MULLIGAN and s2.current == my_player:
+			if not over and s2.phase == GameState.Phase.MULLIGAN and s2.current == 0:
 				Net.submit_action({ "type": "mulligan", "redraw": false })
 			elif s2.phase == GameState.Phase.MAIN:
 				print("[nettest] OK — phase principale atteinte via le réseau")
 				get_tree().create_timer(0.5).timeout.connect(get_tree().quit))
-		if st.current == my_player:
+		if st.current == 0:
 			Net.submit_action({ "type": "mulligan", "redraw": false }))
 	var deck: Dictionary = Game.active_deck()
 	if mode == "host":

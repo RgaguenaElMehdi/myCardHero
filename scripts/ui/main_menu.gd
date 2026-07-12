@@ -42,6 +42,9 @@ func _ready() -> void:
 	campaign_btn.pressed.connect(func() -> void: Game.goto("campaign"))
 	fight_btn.pressed.connect(func() -> void: Game.goto("campaign"))
 	free_play_btn.pressed.connect(_show_free_setup)
+	var multi_btn := get_node_or_null("%MultiBtn")
+	if multi_btn != null:
+		multi_btn.pressed.connect(func() -> void: Game.goto("online_lobby"))
 	deck_builder_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
 	guide_btn.pressed.connect(func() -> void: Game.goto("guide"))
 	options_btn.pressed.connect(func() -> void: Game.goto("settings"))

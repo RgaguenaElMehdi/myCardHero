@@ -29,8 +29,11 @@ const BOARD_CENTER_X := 960.0
 @onready var player_panel: PanelContainer = %PlayerPanel
 
 var state: GameState
-## Seam between UI and rules (local now, network later). All actions go through it.
+## Seam between UI and rules. Local = a plain MatchController; online = the
+## NetworkMatchController from Net (authoritative server behind it).
 var _match := MatchController.new()
+var _online := false
+var _net: NetworkMatchController
 var ai: AiPlayer
 ## --autoplay: both sides AI-driven through the normal UI action path
 ## (integration smoke test of the full battle scene).
@@ -89,8 +92,9 @@ func _process(_delta: float) -> void:
 		busy = false
 		_busy_since_ms = 0
 		_refresh_all()
-	elif state.current == 1 and stuck_ms > 20000:
+	elif state.current == 1 and stuck_ms > 20000 and not _online:
 		# The AI coroutine died mid-turn: recover by force-ending its turn.
+		# (online: never force the opponent's turn — the server is authoritative.)
 		push_warning("Watchdog : tour IA interrompu, fin de tour forcée.")
 		_match.apply({ "type": "end_turn" })
 		busy = false
@@ -118,6 +122,9 @@ func _run_autoplay() -> void:
 
 func _setup_match() -> void:
 	var cfg := Game.battle_config
+	if String(cfg.get("mode", "")) == "online":
+		_setup_online()
+		return
 	var my_deck := Game.active_deck()
 	var m0: MasterDef = Db.master(StringName(String(my_deck.master)))
 	var m1: MasterDef = Db.master(StringName(String(cfg.opponent_master)))
@@ -126,6 +133,42 @@ func _setup_match() -> void:
 	ai = AiPlayer.new(int(cfg.ai_level), randi())
 	_refresh_all()
 	_show_mulligan()
+
+
+## Online: the authoritative server drives everything. `state` is Net.controller's
+## normalized view (I am always player 0), refreshed on each server push; the
+## opponent's moves arrive as pushed events — no AI, no local rule application.
+func _setup_online() -> void:
+	_online = true
+	_net = Net.controller
+	_match = _net
+	_net.remote_events.connect(_on_remote_events)
+	Net.connection_failed.connect(func(msg: String) -> void:
+		busy = false
+		_toast(msg)
+		_refresh_all())
+	Net.opponent_left.connect(func() -> void:
+		_toast("Adversaire déconnecté."))
+	state = _net.state
+	_refresh_all()
+	if state.phase == GameState.Phase.MULLIGAN and state.current == 0:
+		_show_mulligan()
+
+
+## Authoritative update pushed by the server: adopt the new (normalized) state and
+## animate the public events. Winner is in my view (0 = me).
+func _on_remote_events(events: Array, over: bool, _winner: int) -> void:
+	state = _net.state
+	busy = true
+	_refresh_all()
+	await _play_events(events)
+	busy = false
+	_refresh_all()
+	if over or state.is_over():
+		_show_game_over()
+		return
+	if state.phase == GameState.Phase.MULLIGAN and state.current == 0 and mulligan_overlay == null:
+		_show_mulligan()
 
 
 func _show_mulligan() -> void:
@@ -141,6 +184,12 @@ func _show_mulligan() -> void:
 
 
 func _on_mulligan_choice(redraw: bool) -> void:
+	if _online:
+		_match.apply({ "type": "mulligan", "redraw": redraw })
+		mulligan_overlay.queue_free()
+		mulligan_overlay = null
+		busy = true                    # wait for the server push (opponent + start)
+		return
 	_match.apply({ "type": "mulligan", "redraw": redraw })
 	var res := _match.apply(ai.choose_action(state))  # AI mulligan → starts turn 1
 	mulligan_overlay.queue_free()
@@ -604,6 +653,13 @@ func _on_evolve_pressed() -> void:
 
 func _submit(action: Dictionary) -> void:
 	if busy or state.is_over():
+		return
+	if _online:
+		if state.current != 0:
+			return                        # not my turn (server would reject anyway)
+		_match.apply(action)              # fire to the server; result via _on_remote_events
+		busy = true
+		_refresh_buttons()
 		return
 	var res := _match.apply(action)
 	if not res.ok:

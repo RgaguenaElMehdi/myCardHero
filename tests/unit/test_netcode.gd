@@ -77,6 +77,42 @@ func test_redacted_snapshot_rebuilds_without_crash() -> void:
 	eq(client_state.board.cells.size(), ctx.state.board.cells.size(), "plateau côté client")
 
 
+func test_netview_is_involution() -> void:
+	for v in [0, 1]:
+		for c in [Vector2i(0, 0), Vector2i(2, 3), Vector2i(1, 2)]:
+			eq(NetView.flip_cell(NetView.flip_cell(c, v), v), c, "flip_cell involutif v%d" % v)
+		for p in [0, 1]:
+			eq(NetView.flip_pidx(NetView.flip_pidx(p, v), v), p, "flip_pidx involutif v%d" % v)
+	eq(NetView.flip_pidx(-1, 1), -1, "pas de vainqueur reste -1")
+
+
+func test_netview_normalizes_viewer_to_player0() -> void:
+	var ctx := _setup_ctx()
+	# server-coords redacted snapshot for player 1, then normalized to its view
+	var snap := NetRedact.snapshot_for(ctx.state, 1)
+	var view := NetView.normalize_snapshot(snap, 1)
+	eq(NetView.normalize_snapshot(snap, 0), snap, "viewer 0 = identité")
+	# in player 1's own view, index 0 is player 1 → their hand is real (not hidden)
+	for id in (view.players[0] as Dictionary).hand:
+		ok(not NetRedact.is_hidden(id), "ma main (joueur 1) est visible dans ma vue")
+	# board monsters get mirrored ownership/coords, twice → identity
+	eq(NetView.normalize_snapshot(NetView.normalize_snapshot(snap, 1), 1).board.size(),
+			snap.board.size(), "double normalisation conserve le plateau")
+
+
+func test_netview_flips_current_and_winner() -> void:
+	var snap := { "players": [{ "master_col": 1 }, { "master_col": 1 }],
+			"board": [], "current": 0, "winner": -1 }
+	var v := NetView.normalize_snapshot(snap, 1)
+	eq(int(v.current), 1, "current 0 → 1 pour viewer 1")
+	var snap2 := { "players": [{ "master_col": 1 }, { "master_col": 1 }],
+			"board": [], "current": 1, "winner": 1 }
+	var v2 := NetView.normalize_snapshot(snap2, 1)
+	eq(int(v2.current), 0, "current 1 → 0")
+	eq(int(v2.winner), 0, "winner 1 → 0")
+	eq(int(NetView.normalize_snapshot(snap2, 0).current), 1, "viewer 0 = identité")
+
+
 func test_server_authoritative_flow() -> void:
 	var result := DbScript.load_all()
 	var srv := NetServerLogic.new()
