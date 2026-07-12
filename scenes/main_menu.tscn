@@ -111,25 +111,6 @@ alignment = 0
 text = "Campagne"
 icon = ExtResource("8")
 
-[node name="FreePlayBtn" type="Button" parent="MenuColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 76)
-theme_override_constants/icon_max_width = 44
-theme_override_constants/h_separation = 16
-alignment = 0
-text = "Partie libre"
-icon = ExtResource("9")
-
-[node name="MultiBtn" type="Button" parent="MenuColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 76)
-theme_override_constants/icon_max_width = 44
-theme_override_constants/h_separation = 16
-alignment = 0
-text = "Multijoueur"
-
 [node name="DeckBuilderBtn" type="Button" parent="MenuColumn"]
 unique_name_in_owner = true
 layout_mode = 2

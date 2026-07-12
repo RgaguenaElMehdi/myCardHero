@@ -3,12 +3,12 @@ extends Control
 ## guide, settings, quit. Structure in main_menu.tscn — logic only here.
 
 const FREE_SETUP := preload("res://scenes/widgets/free_setup.tscn")
+const MODE_SELECT := preload("res://scenes/widgets/mode_select.tscn")
 
 @onready var background: TextureRect = %Background
 @onready var logo: TextureRect = %Logo
 @onready var title_fallback: Label = %TitleFallback
 @onready var campaign_btn: Button = %CampaignBtn
-@onready var free_play_btn: Button = %FreePlayBtn
 @onready var deck_builder_btn: Button = %DeckBuilderBtn
 @onready var guide_btn: Button = %GuideBtn
 @onready var options_btn: Button = %OptionsBtn
@@ -33,18 +33,14 @@ func _ready() -> void:
 		title_fallback.visible = true
 
 	# Style all buttons; the hub CTA gets the red/secondary plate.
-	for btn in [free_play_btn, deck_builder_btn, guide_btn, options_btn, quit_btn]:
+	for btn in [deck_builder_btn, guide_btn, options_btn, quit_btn]:
 		UiTheme.style_button(btn, UiTheme.PANEL_LIGHT, 24)
 	UiTheme.style_button(campaign_btn, UiTheme.DANGER, 24)
 	UiTheme.style_button(fight_btn, UiTheme.DANGER, 26)
 
-	# Connect button signals
+	# Connect button signals — "Combattre" opens the mode picker.
 	campaign_btn.pressed.connect(func() -> void: Game.goto("campaign"))
-	fight_btn.pressed.connect(func() -> void: Game.goto("campaign"))
-	free_play_btn.pressed.connect(_show_free_setup)
-	var multi_btn := get_node_or_null("%MultiBtn")
-	if multi_btn != null:
-		multi_btn.pressed.connect(func() -> void: Game.goto("online_lobby"))
+	fight_btn.pressed.connect(_show_mode_select)
 	deck_builder_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
 	guide_btn.pressed.connect(func() -> void: Game.goto("guide"))
 	options_btn.pressed.connect(func() -> void: Game.goto("settings"))
@@ -57,6 +53,18 @@ func _ready() -> void:
 	status_label.text = status
 
 	Audio.play_music("menu")
+
+
+func _show_mode_select() -> void:
+	var popup: Control = MODE_SELECT.instantiate()
+	popup.chose_free.connect(_show_free_setup)
+	popup.chose_normal.connect(func() -> void:
+		Game.matchmaking_ranked = false
+		Game.goto("matchmaking"))
+	popup.chose_ranked.connect(func() -> void:
+		Game.matchmaking_ranked = true
+		Game.goto("matchmaking"))
+	add_child(popup)
 
 
 func _show_free_setup() -> void:

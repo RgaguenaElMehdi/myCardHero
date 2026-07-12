@@ -1126,6 +1126,11 @@ func _toast(text: String) -> void:
 func _show_game_over() -> void:
 	var won := state.winner == 0
 	Game.last_battle_won = won
+	# Ranked match → update the local MMR (Glicko-2). Opponent rating is neutral
+	# here; a hosted backend would exchange the real rating via the server.
+	if bool(Game.battle_config.get("ranked", false)):
+		LocalBackend.new().report_result(1.0 if won else 0.0,
+				{ "rating": 1500.0, "rd": 200.0 })
 	var end_shot := ""
 	for arg in OS.get_cmdline_user_args():
 		if String(arg).begins_with("--end-shot="):

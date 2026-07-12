@@ -250,6 +250,31 @@ func start_chapter(index: int) -> void:
 	goto("dialogue")
 
 
+## Ranked intent carried into the matchmaking screen ("Classé" vs "Partie normale").
+var matchmaking_ranked := false
+
+const _PSEUDOS := ["Kael", "Nyx", "Ronin", "Vex", "Astra", "Drake", "Luna", "Cyrus",
+	"Iris", "Talon", "Wren", "Zara", "Odin", "Sable", "Fenrix", "Mira", "Kira", "Bram"]
+
+
+## Battle config for a match vs a random AI, dressed up as a real online opponent
+## (player-like name, no difficulty shown). Used when matchmaking finds nobody.
+func matchmaking_ai_config(ranked: bool) -> Dictionary:
+	var chapters := Db.chapters()
+	var opp: Dictionary = chapters[randi() % chapters.size()].opponent
+	var levels := [AiPlayer.Level.NOVICE, AiPlayer.Level.ADEPT, AiPlayer.Level.MASTER]
+	return {
+		"mode": "free",
+		"ranked": ranked,
+		"ai_level": int(levels[randi() % levels.size()]),
+		"opponent_master": String(opp.master),
+		"opponent_deck": opp.deck,
+		"opponent_name": "%s%d" % [_PSEUDOS[randi() % _PSEUDOS.size()], randi() % 900 + 100],
+		"opponent_portrait": String(opp.master),
+		"background": "arena_day",
+	}
+
+
 func start_free_battle(ai_level: int, opponent_master: String, opponent_deck: Array) -> void:
 	battle_config = {
 		"mode": "free",
