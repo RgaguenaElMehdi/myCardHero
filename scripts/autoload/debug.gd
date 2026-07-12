@@ -78,9 +78,10 @@ func _schedule_serve(arg: String) -> void:
 	if "=" in arg:
 		port = int(arg.split("=", true, 1)[1])
 	Net.opponent_joined.connect(func() -> void:
-		print("[serve] joueur connecté (%d/2)" % Net._peer_player.size()))
+		print("[serve] joueur en file (%d en attente, %d parties)" % [
+				Net._queue.size(), Net._matches.size()]))
 	Net.opponent_left.connect(func() -> void:
-		print("[serve] un joueur s'est déconnecté"))
+		print("[serve] déconnexion (%d parties en cours)" % Net._matches.size()))
 	var err := Net.serve(port)
 	print("[serve] serveur dédié err='%s' — en attente de 2 joueurs sur le port %d" % [err, port])
 	if err != "":

@@ -1,54 +1,64 @@
 extends Node
-## ENet transport for online 1v1. Two server topologies share the same
-## authoritative logic (NetServerLogic):
-##   • HOST (listen-server): one player also arbitrates — is player 0, waits for 1
-##     client (player 1).
-##   • SERVER (dedicated, headless): pure arbiter, not a player — waits for 2
-##     clients and assigns them player 0 / 1 by connection order.
-## A CLIENT just connects and plays. See docs/multiplayer-plan.md (Phase 1).
+## ENet transport + matchmaking for online 1v1.
+##
+## The server side (HOST or dedicated SERVER) keeps a QUEUE of players and runs
+## any number of concurrent matches, pairing waiting players two at a time. Each
+## match has its own authoritative NetServerLogic; the event stream carries no
+## hidden info, only per-player state snapshots are redacted.
+##   • HOST (listen-server): the host is also a player and is paired with the one
+##     joining client.
+##   • SERVER (dedicated, headless): pure matchmaker/arbiter — clients click
+##     "Trouver une partie", queue up, and get paired automatically.
+## See docs/multiplayer-plan.md.
 
 signal match_ready(my_player: int)
+signal searching                                ## client: connected, waiting for a pair
 signal opponent_joined
 signal connection_failed(reason: String)
 signal opponent_left
 
 const DEFAULT_PORT := 8790
+const MAX_CLIENTS := 32
+## Default matchmaking server ("Trouver une partie" connects here without typing).
+const MATCH_SERVER := "37.60.232.49"
 
 enum Role { NONE, HOST, CLIENT, SERVER }
 var role := Role.NONE
 var controller: NetworkMatchController         ## client side (incl. HOST's own view)
 
-var _server: NetServerLogic                    ## HOST / SERVER
-var _peer_player := {}                          ## peer_id -> player index
-var _local_player := -1                         ## HOST = 0, SERVER/CLIENT = -1
+const SELF_ID := 1                              ## our peer id while we are the server
 var _my_deck: Dictionary                        ## HOST / CLIENT
-var _decks := [null, null]                      ## server side: deck per player index
-var _started := false
+var _host_plays := false                         ## HOST: our own id 1 is a player
+# server-side matchmaking state
+var _queue: Array = []                           ## peer ids waiting (deck received)
+var _peer_deck := {}                             ## pid -> deck
+var _matches: Array = []                         ## [{ logic, peers:[pid0, pid1] }]
+var _peer_match := {}                            ## pid -> match dict
+var _peer_pidx := {}                             ## pid -> 0 | 1
 
 
 # --- Public API ------------------------------------------------------------
 
-## Listen-server: I host AND play (player 0).
+## Listen-server: I host AND play. Paired with the single joining client.
 func host(deck: Dictionary, port := DEFAULT_PORT) -> String:
 	var err := _create_server(port, 1)
 	if err != "":
 		return err
 	role = Role.HOST
-	_local_player = 0
 	_my_deck = deck
-	_decks = [deck, null]
-	_peer_player = { 1: 0 }
+	_host_plays = true
+	_peer_deck[SELF_ID] = deck
+	_queue = [SELF_ID]
 	return ""
 
 
-## Dedicated server: pure arbiter, not a player. Waits for two clients.
+## Dedicated server: pure matchmaker, not a player. Runs many concurrent matches.
 func serve(port := DEFAULT_PORT) -> String:
-	var err := _create_server(port, 2)
+	var err := _create_server(port, MAX_CLIENTS)
 	if err != "":
 		return err
 	role = Role.SERVER
-	_local_player = -1
-	_decks = [null, null]
+	_host_plays = false
 	return ""
 
 
@@ -70,7 +80,9 @@ func join(ip: String, deck: Dictionary, port := DEFAULT_PORT) -> String:
 
 func submit_action(action: Dictionary) -> void:
 	if role == Role.HOST:
-		_apply_authoritative(_local_player, action)   # my own (player 0)
+		var m = _peer_match.get(SELF_ID)
+		if m != null:
+			_apply_in_match(m, int(_peer_pidx.get(SELF_ID, 0)), action)
 	elif role == Role.CLIENT:
 		_srv_action.rpc_id(1, action)
 
@@ -80,11 +92,12 @@ func reset() -> void:
 		multiplayer.multiplayer_peer = null
 	role = Role.NONE
 	controller = null
-	_server = null
-	_peer_player = {}
-	_local_player = -1
-	_decks = [null, null]
-	_started = false
+	_host_plays = false
+	_queue = []
+	_peer_deck = {}
+	_matches = []
+	_peer_match = {}
+	_peer_pidx = {}
 
 
 # --- Server bring-up -------------------------------------------------------
@@ -96,49 +109,33 @@ func _create_server(port: int, max_clients: int) -> String:
 	if err != OK:
 		return "Impossible d'héberger sur le port %d (%s)." % [port, error_string(err)]
 	multiplayer.multiplayer_peer = peer
-	_server = NetServerLogic.new()
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	return ""
 
 
-func _next_player_slot() -> int:
-	var taken := {}
-	if _local_player >= 0:
-		taken[_local_player] = true
-	for p in _peer_player.values():
-		taken[p] = true
-	for i in 2:
-		if not taken.has(i):
-			return i
-	return -1
-
-
-func _on_peer_connected(id: int) -> void:            # server (HOST or SERVER)
-	var slot := _next_player_slot()
-	if slot == -1:
-		multiplayer.multiplayer_peer.disconnect_peer(id)   # match already full
-		return
-	_peer_player[id] = slot
+func _on_peer_connected(_id: int) -> void:           # server: wait for its deck
 	opponent_joined.emit()
 
 
 func _on_peer_disconnected(id: int) -> void:
-	_peer_player.erase(id)
+	_queue.erase(id)
+	_peer_deck.erase(id)
 	opponent_left.emit()
-	# Dedicated server: tear the finished/abandoned match down and drop any lingering
-	# peer so the next pair starts fresh — the listen socket stays open (always-on).
-	if role == Role.SERVER:
-		_server = NetServerLogic.new()
-		_decks = [null, null]
-		_started = false
-		for pid in _peer_player.keys():
-			multiplayer.multiplayer_peer.disconnect_peer(pid)
-		_peer_player = {}
+	var m = _peer_match.get(id)
+	if m != null:
+		for pid in m.peers:
+			_peer_match.erase(pid)
+			_peer_pidx.erase(pid)
+			if pid != id and pid != SELF_ID:
+				_opp_left.rpc_id(pid)                # tell the survivor the match is off
+		_matches.erase(m)
+	_try_matchmake()
 
 
 func _on_connected() -> void:                        # client
 	_send_deck.rpc_id(1, _my_deck)
+	searching.emit()
 
 
 func _on_server_left() -> void:
@@ -146,33 +143,47 @@ func _on_server_left() -> void:
 	reset()
 
 
-# --- Deck exchange & match start -------------------------------------------
+# --- Matchmaking -----------------------------------------------------------
 
 @rpc("any_peer", "call_remote", "reliable")
-func _send_deck(deck: Dictionary) -> void:           # client → server
-	var idx := int(_peer_player.get(multiplayer.get_remote_sender_id(), -1))
-	if idx < 0 or _decks[idx] != null:
+func _send_deck(deck: Dictionary) -> void:           # client → server: enter queue
+	var pid := multiplayer.get_remote_sender_id()
+	if _peer_deck.has(pid) or _peer_match.has(pid):
 		return
-	_decks[idx] = deck
-	if _decks[0] != null and _decks[1] != null and not _started:
-		_begin_match()
+	_peer_deck[pid] = deck
+	_queue.append(pid)
+	_try_matchmake()
 
 
-func _begin_match() -> void:
-	_started = true
-	var d0: Dictionary = _decks[0]
-	var d1: Dictionary = _decks[1]
-	var m0: MasterDef = Db.master(StringName(String(d0.get("master", "kiran"))))
-	var m1: MasterDef = Db.master(StringName(String(d1.get("master", "kiran"))))
-	_server.setup(Db.cards, [m0, m1], [d0.get("cards", []), d1.get("cards", [])], randi())
-	for p in 2:
-		var snap := NetRedact.snapshot_for(_server.state(), p)
-		if p == _local_player:
-			_start_match(p, snap)                    # HOST's own player, local
-		else:
-			var peer := _peer_of(p)
-			if peer != -1:
-				_start_match.rpc_id(peer, p, snap)
+func _try_matchmake() -> void:
+	while _queue.size() >= 2:
+		_start_match_between(_queue.pop_front(), _queue.pop_front())
+
+
+func _start_match_between(pid_a: int, pid_b: int) -> void:
+	var da: Dictionary = _peer_deck[pid_a]
+	var db: Dictionary = _peer_deck[pid_b]
+	var ma: MasterDef = Db.master(StringName(String(da.get("master", "kiran"))))
+	var mb: MasterDef = Db.master(StringName(String(db.get("master", "kiran"))))
+	var logic := NetServerLogic.new()
+	logic.setup(Db.cards, [ma, mb], [da.get("cards", []), db.get("cards", [])], randi())
+	var m := { "logic": logic, "peers": [pid_a, pid_b] }
+	_matches.append(m)
+	_peer_match[pid_a] = m
+	_peer_pidx[pid_a] = 0
+	_peer_match[pid_b] = m
+	_peer_pidx[pid_b] = 1
+	_send_start(m, 0)
+	_send_start(m, 1)
+
+
+func _send_start(m: Dictionary, pidx: int) -> void:
+	var pid: int = m.peers[pidx]
+	var snap := NetRedact.snapshot_for(m.logic.state(), pidx)
+	if pid == SELF_ID and _host_plays:
+		_start_match(pidx, snap)                     # HOST's own player (local)
+	else:
+		_start_match.rpc_id(pid, pidx, snap)
 
 
 @rpc("authority", "call_local", "reliable")
@@ -187,35 +198,37 @@ func _start_match(player_idx: int, snapshot: Dictionary) -> void:
 
 @rpc("any_peer", "call_remote", "reliable")
 func _srv_action(action: Dictionary) -> void:        # client → server
-	_apply_authoritative(int(_peer_player.get(multiplayer.get_remote_sender_id(), -1)), action)
+	var pid := multiplayer.get_remote_sender_id()
+	var m = _peer_match.get(pid)
+	if m != null:
+		_apply_in_match(m, int(_peer_pidx.get(pid, 0)), action)
 
 
-func _apply_authoritative(player_idx: int, action: Dictionary) -> void:
-	var res := _server.handle_action(player_idx, action)
+func _apply_in_match(m: Dictionary, pidx: int, action: Dictionary) -> void:
+	var res: Dictionary = m.logic.handle_action(pidx, action)
 	if not res.get("ok", false):
-		_error_to(player_idx, String(res.get("error", "Action refusée.")))
+		_send_error(m, pidx, String(res.get("error", "Action refusée.")))
 		return
 	for p in 2:
-		_deliver(p, res.events, res.snapshots[p], res.over, res.winner)
+		_send_update(m, p, res.events, res.snapshots[p], res.over, res.winner)
 
 
-func _deliver(player_idx: int, events: Array, snapshot: Dictionary, over: bool, winner: int) -> void:
-	if player_idx == _local_player:
+func _send_update(m: Dictionary, pidx: int, events: Array, snapshot: Dictionary,
+		over: bool, winner: int) -> void:
+	var pid: int = m.peers[pidx]
+	if pid == SELF_ID and _host_plays:
 		if controller != null:
 			controller.ingest(events, snapshot, over, winner)
 	else:
-		var peer := _peer_of(player_idx)
-		if peer != -1:
-			_cli_update.rpc_id(peer, events, snapshot, over, winner)
+		_cli_update.rpc_id(pid, events, snapshot, over, winner)
 
 
-func _error_to(player_idx: int, msg: String) -> void:
-	if player_idx == _local_player:
+func _send_error(m: Dictionary, pidx: int, msg: String) -> void:
+	var pid: int = m.peers[pidx]
+	if pid == SELF_ID and _host_plays:
 		connection_failed.emit(msg)
 	else:
-		var peer := _peer_of(player_idx)
-		if peer != -1:
-			_cli_error.rpc_id(peer, msg)
+		_cli_error.rpc_id(pid, msg)
 
 
 @rpc("authority", "call_remote", "reliable")
@@ -229,8 +242,6 @@ func _cli_error(msg: String) -> void:
 	connection_failed.emit(msg)
 
 
-func _peer_of(player_idx: int) -> int:
-	for peer in _peer_player:
-		if _peer_player[peer] == player_idx:
-			return peer
-	return -1
+@rpc("authority", "call_remote", "reliable")
+func _opp_left() -> void:
+	opponent_left.emit()

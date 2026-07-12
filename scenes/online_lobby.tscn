@@ -54,11 +54,20 @@ theme_override_colors/font_color = Color(0.78, 0.8, 0.86, 1)
 theme_override_font_sizes/font_size = 20
 text = "Deck : —"
 
+[node name="MatchmakeBtn" type="Button" parent="Center/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 80)
+text = "Trouver une partie"
+
+[node name="Sep1" type="HSeparator" parent="Center/VBox"]
+layout_mode = 2
+
 [node name="HostBtn" type="Button" parent="Center/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 64)
-text = "Héberger une partie"
+text = "Héberger une partie (LAN)"
 
 [node name="JoinRow" type="HBoxContainer" parent="Center/VBox"]
 layout_mode = 2
