@@ -14,6 +14,16 @@ signal chose_free
 
 
 func _ready() -> void:
+	# Touch sizing: widen the panel and thicken the rows on phones.
+	var ts := UiTheme.touch_scale()
+	if ts > 1.0:
+		($Center/Panel/VBox as Control).custom_minimum_size = Vector2(1100, 0)
+		for b: Button in [ranked_btn, normal_btn, free_btn]:
+			b.custom_minimum_size = Vector2(0, 74 * ts)
+		close_btn.custom_minimum_size = Vector2(0, 48 * ts)
+		($Center/Panel/VBox/Title as Label).add_theme_font_size_override(
+				"font_size", int(40 * ts))
+
 	UiTheme.style_button(ranked_btn, UiTheme.GOLD.darkened(0.15), 22)
 	UiTheme.style_button(normal_btn, UiTheme.ACCENT.darkened(0.2), 22)
 	UiTheme.style_button(free_btn, UiTheme.OK.darkened(0.25), 22)

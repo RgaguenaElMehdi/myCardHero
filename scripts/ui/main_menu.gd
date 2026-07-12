@@ -1,64 +1,33 @@
 extends Control
-## Main menu hub: campaign, free play (widget free_setup.tscn), deck builder,
-## guide, settings, quit. Structure in main_menu.tscn — logic only here.
+## Accueil (design "or baroque sur noir", mockup utilisateur) : quatre tuiles —
+## Sélection (campagne), Deck builder, Arène (modes de combat), Paramètres.
+## Structure et style dans main_menu[_mobile].tscn — logique seulement ici.
 
 const FREE_SETUP := preload("res://scenes/widgets/free_setup.tscn")
 const MODE_SELECT := preload("res://scenes/widgets/mode_select.tscn")
 
-@onready var background: TextureRect = %Background
-@onready var logo: TextureRect = %Logo
-@onready var title_fallback: Label = %TitleFallback
-@onready var campaign_btn: Button = %CampaignBtn
-@onready var deck_builder_btn: Button = %DeckBuilderBtn
-@onready var guide_btn: Button = %GuideBtn
-@onready var options_btn: Button = %OptionsBtn
-@onready var quit_btn: Button = %QuitBtn
-@onready var fight_btn: Button = %FightBtn
+@onready var selection_btn: Button = %SelectionBtn
+@onready var deck_btn: Button = %DeckBtn
+@onready var arena_btn: Button = %ArenaBtn
+@onready var settings_btn: Button = %SettingsBtn
 
 
 func _ready() -> void:
-	# Background texture: override with runtime path if different from scene default
-	var bg_tex := UiTheme.tex(Db.background_path("main_menu"))
-	if bg_tex != null:
-		background.texture = bg_tex
+	# The boot scene is the desktop menu; hop to the mobile variant on a phone.
+	# (Every other screen is reached through Game.goto, which resolves this.)
+	if OS.has_feature("mobile") and not scene_file_path.ends_with("_mobile.tscn") \
+			and ResourceLoader.exists("res://scenes/main_menu_mobile.tscn"):
+		Game.goto("main_menu")
+		return
 
-	# Logo: show texture if available, otherwise fallback title
-	var logo_tex := UiTheme.tex(UiTheme.TEX_LOGO)
-	if logo_tex != null:
-		logo.texture = logo_tex
-		title_fallback.visible = false
-	else:
-		logo.visible = false
-		title_fallback.visible = true
+	selection_btn.pressed.connect(func() -> void: Game.goto("campaign"))
+	deck_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
+	arena_btn.pressed.connect(_show_mode_select)
+	settings_btn.pressed.connect(func() -> void: Game.goto("settings"))
+	for btn: Button in [selection_btn, deck_btn, arena_btn, settings_btn]:
+		btn.pressed.connect(UiTheme._click_sfx)
 
-	# Style all buttons; the hub CTA gets the red/secondary plate.
-	for btn in [deck_builder_btn, guide_btn, options_btn, quit_btn]:
-		UiTheme.style_button(btn, UiTheme.PANEL_LIGHT, 24)
-	UiTheme.style_button(campaign_btn, UiTheme.DANGER, 24)
-	UiTheme.style_button(fight_btn, UiTheme.DANGER, 26)
-
-	# Connect button signals — "Combattre" opens the mode picker.
-	campaign_btn.pressed.connect(func() -> void: Game.goto("campaign"))
-	fight_btn.pressed.connect(_show_mode_select)
-	deck_builder_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
-	guide_btn.pressed.connect(func() -> void: Game.goto("guide"))
-	options_btn.pressed.connect(func() -> void: Game.goto("settings"))
-	quit_btn.pressed.connect(func() -> void: get_tree().quit())
-
-	_animate_fight_btn.call_deferred()
 	Audio.play_music("menu")
-
-
-## Looping "breathing" pulse on the main COMBATTRE call-to-action (glow + scale).
-func _animate_fight_btn() -> void:
-	await get_tree().process_frame            # wait for layout so the pivot is centered
-	fight_btn.pivot_offset = fight_btn.size / 2.0
-	var tw := fight_btn.create_tween().set_loops()
-	tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tw.tween_property(fight_btn, "scale", Vector2(1.05, 1.05), 0.7)
-	tw.parallel().tween_property(fight_btn, "modulate", Color(1.25, 1.14, 0.82), 0.7)
-	tw.tween_property(fight_btn, "scale", Vector2.ONE, 0.7)
-	tw.parallel().tween_property(fight_btn, "modulate", Color.WHITE, 0.7)
 
 
 func _show_mode_select() -> void:

@@ -62,6 +62,7 @@ func _rebuild_all() -> void:
 func _filter_btn(parent: Control, text: String, guild: int) -> void:
 	var b := Button.new()
 	b.text = text
+	b.custom_minimum_size = Vector2(0, 30.0 * UiTheme.touch_scale())
 	var color := UiTheme.PANEL_LIGHT if guild < 0 else UiTheme.guild_color(guild).darkened(0.45)
 	UiTheme.style_button(b, color, 17)
 	b.pressed.connect(func() -> void:
@@ -78,6 +79,7 @@ func _rebuild_tabs() -> void:
 		var b := Button.new()
 		var star := "★ " if i == int(Game.profile.active_deck) else ""
 		b.text = "%s%s" % [star, decks[i].name]
+		b.custom_minimum_size = Vector2(0, 30.0 * UiTheme.touch_scale())
 		var col := UiTheme.GOLD.darkened(0.2) if i == current else UiTheme.PANEL_LIGHT
 		UiTheme.style_button(b, col, 16)
 		b.pressed.connect(_switch_to.bind(i))
@@ -85,6 +87,7 @@ func _rebuild_tabs() -> void:
 	if decks.size() < Game.MAX_DECKS:
 		var add := Button.new()
 		add.text = "+ Nouveau"
+		add.custom_minimum_size = Vector2(0, 30.0 * UiTheme.touch_scale())
 		UiTheme.style_button(add, UiTheme.OK.darkened(0.3), 16)
 		add.pressed.connect(_new_deck)
 		deck_tabs.add_child(add)
@@ -128,7 +131,7 @@ func _rebuild_masters() -> void:
 		if m == null:
 			continue
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(74, 74)
+		b.custom_minimum_size = Vector2(74, 74) * minf(UiTheme.touch_scale(), 1.35)
 		b.icon = UiTheme.tex(m.portrait)
 		b.expand_icon = true
 		b.tooltip_text = "%s — %s\nPassif : %s\nPouvoir — %s (%d pierres) : %s" % [
@@ -159,7 +162,8 @@ func _refresh() -> void:
 			continue
 		if filter_guild >= 0 and def.guild != filter_guild:
 			continue
-		var w := CardWidget.create(def, 178)
+		# ponytail: capped at 1.6 — full 2.0 leaves less than 4 columns on phones.
+		var w := CardWidget.create(def, 178.0 * minf(UiTheme.touch_scale(), 1.6))
 		var used := _deck_count(id)
 		w.set_count(owned - used)
 		if used >= owned:
@@ -190,6 +194,7 @@ func _refresh_deck() -> void:
 		var b := Button.new()
 		b.text = "%d×  %s   (%d pierres)" % [unique[id], def.display_name, def.cost]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.custom_minimum_size = Vector2(0, 28.0 * UiTheme.touch_scale())
 		b.tooltip_text = "Cliquer pour retirer un exemplaire"
 		UiTheme.style_button(b, UiTheme.guild_color(def.guild).darkened(0.55), 16)
 		b.pressed.connect(_on_deck_row.bind(String(id)))

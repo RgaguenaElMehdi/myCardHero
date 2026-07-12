@@ -177,7 +177,7 @@ func _show_mulligan() -> void:
 	mulligan_overlay.get_node("%RedrawBtn").pressed.connect(_on_mulligan_choice.bind(true))
 	add_child(mulligan_overlay)
 	for id in state.players[0].hand:
-		var cw := CardWidget.create(state.card(id), 170)
+		var cw := CardWidget.create(state.card(id), 170.0 * minf(UiTheme.touch_scale(), 1.6))
 		cw.inspect_requested.connect(func(w2: CardWidget) -> void:
 			CardPopup.open(self, w2.def))
 		mulligan_overlay.get_node("%CardRow").add_child(cw)
@@ -329,7 +329,8 @@ func _fill_pips(box: BoxContainer, stones: int) -> void:
 		var filled := i >= GameConst.MAX_STONES - stones if vertical else i < stones
 		var pip := TextureRect.new()
 		pip.texture = gem
-		pip.custom_minimum_size = Vector2(22, 22)
+		# ponytail: pips capped at 1.5 — 14 stones × 33 px must fit the side rail.
+		pip.custom_minimum_size = Vector2(22, 22) * minf(UiTheme.touch_scale(), 1.5)
 		pip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		pip.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -349,12 +350,15 @@ func _refresh_hand() -> void:
 	var count := hand.size()
 	if count == 0:
 		return
-	var overlap := minf(HAND_CARD_W + 8.0, hand_area.size.x / count)
-	var total := overlap * (count - 1) + HAND_CARD_W
+	# ponytail: hand magnification capped at 1.6 — full touch_scale (2.0) would
+	# push 388px-tall cards past the bottom of a 1080px screen.
+	var card_w := HAND_CARD_W * minf(UiTheme.touch_scale(), 1.6)
+	var overlap := minf(card_w + 8.0, hand_area.size.x / count)
+	var total := overlap * (count - 1) + card_w
 	var start := (hand_area.size.x - total) / 2.0
 	for i in count:
 		# Full composed cards in hand, like the mockup reference screen.
-		var w := CardWidget.create(state.card(hand[i]), HAND_CARD_W)
+		var w := CardWidget.create(state.card(hand[i]), card_w)
 		w.position = Vector2(start + i * overlap, 6)
 		var base_y := w.position.y
 		w.pressed.connect(_on_hand_card_pressed.bind(i))
@@ -404,7 +408,7 @@ func _refresh_panels() -> void:
 			for i in mini(p.hand.size(), GameConst.HAND_LIMIT):
 				var back := TextureRect.new()
 				back.texture = back_tex
-				back.custom_minimum_size = Vector2(26, 38)
+				back.custom_minimum_size = Vector2(26, 38) * UiTheme.touch_scale()
 				back.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 				back.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 				back.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1036,7 +1040,7 @@ func _add_detail_text(text: String) -> void:
 		return
 	var info := UiTheme.label(text, 16, UiTheme.TEXT_DIM)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	info.custom_minimum_size = Vector2(260, 0)
+	info.custom_minimum_size = Vector2(260.0 * minf(UiTheme.touch_scale(), 1.3), 0)
 	detail_holder.add_child(info)
 
 

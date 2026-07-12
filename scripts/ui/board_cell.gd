@@ -280,7 +280,7 @@ func _ability_icons(m: MonsterInst) -> Control:
 		if tex == null:
 			continue
 		var chip := Panel.new()
-		chip.custom_minimum_size = Vector2(24, 24)
+		chip.custom_minimum_size = Vector2(24, 24) * UiTheme.touch_scale()
 		var sb := StyleBoxFlat.new()
 		sb.bg_color = Color(0, 0, 0, 0.62)
 		sb.set_corner_radius_all(5)
@@ -303,7 +303,7 @@ func _ability_icons(m: MonsterInst) -> Control:
 	if col.get_child_count() == 0:
 		col.queue_free()
 		return null
-	col.position = Vector2(size.x - 28, 4)
+	col.position = Vector2(size.x - 28.0 * UiTheme.touch_scale(), 4)
 	return col
 
 
@@ -340,14 +340,34 @@ func _badge(text: String, bg: Color, pos: Vector2, fg: Color = Color.WHITE) -> C
 	return panel
 
 
+var _holding := false
+var _long := false
+
+
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			accept_event()
-			clicked.emit(cell)
-		elif event.button_index == MOUSE_BUTTON_RIGHT and (state_has_content()):
-			accept_event()
-			inspect_requested.emit(cell)
+	if not (event is InputEventMouseButton):
+		return
+	if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and state_has_content():
+		accept_event()
+		inspect_requested.emit(cell)             # desktop: right-click inspects
+	elif event.button_index == MOUSE_BUTTON_LEFT:
+		accept_event()
+		if event.pressed:
+			_holding = true
+			_long = false
+			_long_press()
+		else:
+			_holding = false                     # released before the long-press fired
+			if not _long:
+				clicked.emit(cell)               # quick tap / click = act
+
+## Hold ~0.5 s (touch or mouse) on an occupied cell to inspect it — touch = right-click.
+func _long_press() -> void:
+	await get_tree().create_timer(0.5).timeout
+	if _holding and state_has_content():
+		_long = true
+		inspect_requested.emit(cell)
+	_holding = false
 
 
 ## True when the cell currently shows a monster or a master (worth inspecting);

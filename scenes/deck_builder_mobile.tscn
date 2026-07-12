@@ -10,10 +10,10 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
-content_margin_left = 10.0
-content_margin_top = 8.0
-content_margin_right = 10.0
-content_margin_bottom = 8.0
+content_margin_left = 14.0
+content_margin_top = 12.0
+content_margin_right = 14.0
+content_margin_bottom = 12.0
 
 [node name="DeckBuilder" type="Control"]
 layout_mode = 3
@@ -35,62 +35,76 @@ grow_vertical = 2
 color = Color(0.082, 0.071, 0.102, 1)
 
 [node name="Title" type="Label" parent="."]
-layout_mode = 0
-offset_left = 60.0
-offset_top = 30.0
-offset_right = 400.0
-offset_bottom = 80.0
+layout_mode = 1
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 20.0
+offset_right = 560.0
+offset_bottom = 88.0
 theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
 theme_override_constants/outline_size = 10
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 52
 theme_override_fonts/font = ExtResource("2")
 text = "Deck builder"
 
+[node name="BackBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -340.0
+offset_top = 16.0
+offset_right = -40.0
+offset_bottom = 112.0
+custom_minimum_size = Vector2(300, 96)
+text = "← Menu"
+
 [node name="Filters" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 60.0
-offset_top = 100.0
-offset_right = 700.0
-offset_bottom = 140.0
-theme_override_constants/separation = 8
+layout_mode = 1
+anchors_preset = 0
+offset_left = 40.0
+offset_top = 108.0
+offset_right = 1200.0
+offset_bottom = 172.0
+theme_override_constants/separation = 12
 
 [node name="CollectionScroll" type="ScrollContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.031
-anchor_top = 0.0
-anchor_right = 0.438
 anchor_bottom = 1.0
-offset_top = 160.0
-offset_bottom = -60.0
+offset_left = 40.0
+offset_top = 188.0
+offset_right = 1216.0
+offset_bottom = -20.0
+horizontal_scroll_mode = 0
 
 [node name="CollectionGrid" type="GridContainer" parent="CollectionScroll"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 columns = 4
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 12
 
 [node name="MasterPanel" type="PanelContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.453
-anchor_top = 0.0
-anchor_right = 0.661
 anchor_bottom = 1.0
-offset_top = 100.0
-offset_bottom = -60.0
+offset_left = 1236.0
+offset_top = 108.0
+offset_right = 1668.0
+offset_bottom = -20.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_deck_panel")
 
 [node name="MVBox" type="VBoxContainer" parent="MasterPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="MasterTitle" type="Label" parent="MasterPanel/MVBox"]
 layout_mode = 2
 horizontal_alignment = 1
 theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 32
 theme_override_fonts/font = ExtResource("2")
 text = "Maître du deck"
 mouse_filter = 2
@@ -99,99 +113,88 @@ mouse_filter = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-custom_minimum_size = Vector2(0, 520)
 expand_mode = 1
 stretch_mode = 5
 
 [node name="PickLabel" type="Label" parent="MasterPanel/MVBox"]
 layout_mode = 2
+horizontal_alignment = 1
 theme_override_colors/font_color = Color(0.663, 0.69, 0.761, 1)
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 24
 text = "Changer de maître :"
 mouse_filter = 2
 
 [node name="MasterPick" type="HFlowContainer" parent="MasterPanel/MVBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/h_separation = 5
-theme_override_constants/v_separation = 5
+alignment = 1
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
 
 [node name="DeckPanel" type="PanelContainer" parent="."]
 layout_mode = 1
-anchor_left = 0.677
-anchor_top = 0.0
-anchor_right = 0.969
 anchor_bottom = 1.0
-offset_top = 100.0
-offset_bottom = -60.0
+offset_left = 1688.0
+offset_top = 108.0
+offset_right = 2360.0
+offset_bottom = -20.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_deck_panel")
 
 [node name="VBox" type="VBoxContainer" parent="DeckPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="DeckTabs" type="HBoxContainer" parent="DeckPanel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="NameRow" type="HBoxContainer" parent="DeckPanel/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 10
 
 [node name="NameEdit" type="LineEdit" parent="DeckPanel/VBox/NameRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 30
+custom_minimum_size = Vector2(0, 80)
 placeholder_text = "Nom du deck"
 
 [node name="DeleteBtn" type="Button" parent="DeckPanel/VBox/NameRow"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(110, 0)
+custom_minimum_size = Vector2(190, 80)
 text = "Supprimer"
 
 [node name="CountLabel" type="Label" parent="DeckPanel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 38
 mouse_filter = 2
 
 [node name="DeckScroll" type="ScrollContainer" parent="DeckPanel/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
 [node name="DeckList" type="VBoxContainer" parent="DeckPanel/VBox/DeckScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 4
+theme_override_constants/separation = 6
 
 [node name="StatusLabel" type="Label" parent="DeckPanel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.886, 0.376, 0.235, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 24
 autowrap_mode = 2
 mouse_filter = 2
 
 [node name="SaveBtn" type="Button" parent="DeckPanel/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 54)
+custom_minimum_size = Vector2(0, 96)
 text = "Enregistrer le deck"
-
-[node name="BackBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 1.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 0.0
-offset_left = -220.0
-offset_top = 30.0
-offset_right = -60.0
-offset_bottom = 80.0
-custom_minimum_size = Vector2(160, 50)
-text = "← Menu"

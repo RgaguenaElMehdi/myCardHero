@@ -144,11 +144,32 @@ func set_count(n: int) -> void:
 	%Count.visible = n > 0
 
 
+var _holding := false
+var _long := false
+
+
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			accept_event()
-			pressed.emit(self)
-		elif event.button_index == MOUSE_BUTTON_RIGHT:
-			accept_event()
-			inspect_requested.emit(self)
+	if not (event is InputEventMouseButton):
+		return
+	if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		accept_event()
+		inspect_requested.emit(self)            # desktop: right-click inspects
+	elif event.button_index == MOUSE_BUTTON_LEFT:
+		accept_event()
+		if event.pressed:
+			_holding = true
+			_long = false
+			_long_press()
+		else:
+			_holding = false                    # released before the long-press fired
+			if not _long:
+				pressed.emit(self)              # quick tap / click = play / select
+
+
+## Hold ~0.5 s (touch or mouse) to inspect — the touch equivalent of right-click.
+func _long_press() -> void:
+	await get_tree().create_timer(0.5).timeout
+	if _holding:
+		_long = true
+		inspect_requested.emit(self)
+	_holding = false

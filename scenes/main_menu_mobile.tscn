@@ -1,0 +1,152 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/BoldPixels.ttf" id="2"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/main_menu.png" id="4"]
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/logo.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/ind_attack.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_bag.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_book.png" id="11"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5")
+script = ExtResource("1")
+
+[node name="Background" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Logo" type="TextureRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 16.0
+custom_minimum_size = Vector2(0, 280)
+grow_horizontal = 2
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 4
+mouse_filter = 2
+
+[node name="TitleFallback" type="Label" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 100.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 21
+theme_override_font_sizes/font_size = 96
+theme_override_fonts/font = ExtResource("2")
+text = "STONEBOUND"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 304.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.91, 0.894, 0.847, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("2")
+text = "Le Circuit de Petraheim"
+horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="MenuColumn" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 120.0
+offset_top = 370.0
+offset_right = 920.0
+offset_bottom = 1046.0
+theme_override_constants/separation = 16
+
+[node name="CampaignBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 122)
+theme_override_constants/icon_max_width = 68
+theme_override_constants/h_separation = 20
+alignment = 0
+text = "Campagne"
+icon = ExtResource("8")
+
+[node name="DeckBuilderBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 122)
+theme_override_constants/icon_max_width = 68
+theme_override_constants/h_separation = 20
+alignment = 0
+text = "Deck builder"
+icon = ExtResource("10")
+
+[node name="GuideBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 122)
+theme_override_constants/icon_max_width = 68
+theme_override_constants/h_separation = 20
+alignment = 0
+text = "Guide du jeu"
+icon = ExtResource("11")
+
+[node name="OptionsBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 122)
+theme_override_constants/h_separation = 20
+alignment = 0
+text = "Options"
+
+[node name="QuitBtn" type="Button" parent="MenuColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 122)
+theme_override_constants/h_separation = 20
+alignment = 0
+text = "Quitter"
+
+[node name="FightPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -740.0
+offset_top = -270.0
+offset_right = -60.0
+offset_bottom = -70.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_type_variation = &"PanelFancy"
+
+[node name="FightBtn" type="Button" parent="FightPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 156)
+text = "COMBATTRE"

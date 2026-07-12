@@ -34,10 +34,9 @@ func _input(event: InputEvent) -> void:
 
 
 func set_fullscreen(on: bool) -> void:
-	# Jeu incrusté dans l'éditeur (Godot 4.4+) : changer le mode fenêtre n'est
-	# pas supporté et décale le mapping souris (clics qui tombent au-dessus des
-	# boutons). On ne touche à rien dans ce cas.
-	if Engine.is_embedded_in_editor():
+	# Mobile : plein écran natif, rien à changer. Éditeur incrusté (Godot 4.4+) :
+	# changer le mode fenêtre décale le mapping souris — on ne touche à rien.
+	if OS.has_feature("mobile") or Engine.is_embedded_in_editor():
 		return
 	profile.settings.fullscreen = on
 	if on:
@@ -56,9 +55,9 @@ func set_fullscreen(on: bool) -> void:
 ## off-screen and clicks feel broken. Maximize whenever the window would not
 ## fully fit, and take focus so the first click is never eaten.
 func _fit_window() -> void:
-	# Jeu incrusté dans l'éditeur : mode fenêtre imposé par l'éditeur, ne pas
-	# forcer fullscreen/maximized (non supporté, casse les coordonnées souris).
-	if Engine.is_embedded_in_editor():
+	# Mobile : toujours plein écran natif, pas de gestion de fenêtre. Éditeur
+	# incrusté : mode fenêtre imposé, ne pas forcer fullscreen (casse la souris).
+	if OS.has_feature("mobile") or Engine.is_embedded_in_editor():
 		return
 	# Test harnesses need window coords == canvas coords: skip any resizing.
 	for arg in OS.get_cmdline_user_args():
@@ -290,4 +289,15 @@ func start_free_battle(ai_level: int, opponent_master: String, opponent_deck: Ar
 
 
 func goto(scene_name: String) -> void:
-	get_tree().call_deferred("change_scene_to_file", "res://scenes/%s.tscn" % scene_name)
+	get_tree().call_deferred("change_scene_to_file", scene_path(scene_name))
+
+
+## Resolves the mobile variant (<name>_mobile.tscn) when running on a touch
+## device and one exists; otherwise the desktop scene. Single navigation point,
+## so desktop is untouched and each screen opts into mobile by adding a scene.
+func scene_path(scene_name: String) -> String:
+	if OS.has_feature("mobile"):
+		var mobile := "res://scenes/%s_mobile.tscn" % scene_name
+		if ResourceLoader.exists(mobile):
+			return mobile
+	return "res://scenes/%s.tscn" % scene_name

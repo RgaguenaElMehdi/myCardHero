@@ -156,7 +156,7 @@ static func style_button_flat(btn: Button, base: Color, font_size: int = 18) -> 
 	btn.add_theme_color_override("font_color", TEXT)
 	btn.add_theme_color_override("font_hover_color", Color.WHITE)
 	btn.add_theme_color_override("font_disabled_color", TEXT.darkened(0.45))
-	btn.add_theme_font_size_override("font_size", font_size)
+	btn.add_theme_font_size_override("font_size", int(font_size * touch_scale()))
 	var f := title_font()
 	if f != null:
 		btn.add_theme_font_override("font", f)
@@ -172,6 +172,12 @@ static func button_style(base: Color) -> Dictionary:
 		"pressed": panel(base.darkened(0.15), 8),
 		"disabled": panel(Color(base.darkened(0.55), 0.55), 8),
 	}
+
+
+## UI magnification for touch devices. At ~450 dpi one logical pixel is tiny,
+## so script-built text and hit targets double. 1.0 on desktop — no change.
+static func touch_scale() -> float:
+	return 2.0 if OS.has_feature("mobile") else 1.0
 
 
 static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int = 20) -> void:
@@ -197,7 +203,7 @@ static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int 
 	btn.add_theme_color_override("font_color", TEXT)
 	btn.add_theme_color_override("font_hover_color", Color.WHITE)
 	btn.add_theme_color_override("font_disabled_color", TEXT.darkened(0.5))
-	btn.add_theme_font_size_override("font_size", font_size)
+	btn.add_theme_font_size_override("font_size", int(font_size * touch_scale()))
 	var f := title_font()
 	if f != null:
 		btn.add_theme_font_override("font", f)
@@ -222,7 +228,7 @@ static func style_toggle(btn: Button, base: Color = PANEL_LIGHT, font_size: int 
 static func label(text: String, size: int = 18, color: Color = TEXT) -> Label:
 	var l := Label.new()
 	l.text = text
-	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_font_size_override("font_size", int(size * touch_scale()))
 	l.add_theme_color_override("font_color", color)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return l
