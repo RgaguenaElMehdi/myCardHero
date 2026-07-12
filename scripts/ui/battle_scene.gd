@@ -432,6 +432,7 @@ func _refresh_buttons() -> void:
 	end_turn_btn.disabled = not my_turn
 	var p0 := state.players[0]
 	power_btn.disabled = not my_turn or p0.power_used or p0.stones < p0.master.power_cost
+	_pulse_power(not power_btn.disabled)
 	if p0.power_used:
 		power_btn.tooltip_text = "Pouvoir déjà utilisé ce tour."
 	elif p0.stones < p0.master.power_cost:
@@ -667,6 +668,8 @@ func _on_evolve_pressed() -> void:
 func _submit(action: Dictionary) -> void:
 	if busy or state.is_over():
 		return
+	if String(action.get("type", "")) == "master_power":
+		Game.quest_bump("powers")          # quête quotidienne « compétences »
 	if _online:
 		if state.current != 0:
 			return                        # not my turn (server would reject anyway)
@@ -1139,6 +1142,8 @@ func _toast(text: String) -> void:
 func _show_game_over() -> void:
 	var won := state.winner == 0
 	Game.last_battle_won = won
+	if won:
+		Game.quest_bump("wins")            # quêtes quotidiennes « victoires »
 	# Ranked match → update the local MMR (Glicko-2). Opponent rating is neutral
 	# here; a hosted backend would exchange the real rating via the server.
 	if bool(Game.battle_config.get("ranked", false)):
@@ -1247,3 +1252,20 @@ func _add_btn(parent: Control, text: String, secondary: bool, action: Callable) 
 		b.theme_type_variation = &"ButtonSecondary"
 	b.pressed.connect(action)
 	parent.add_child(b)
+
+
+var _power_tw: Tween
+
+
+## Pulsation dorée du bouton de pouvoir tant qu'il est activable.
+func _pulse_power(on: bool) -> void:
+	if on and _power_tw == null:
+		_power_tw = power_btn.create_tween().set_loops()
+		_power_tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_power_tw.tween_property(power_btn, "modulate",
+				Color(1.35, 1.25, 0.95), 0.6)
+		_power_tw.tween_property(power_btn, "modulate", Color.WHITE, 0.6)
+	elif not on and _power_tw != null:
+		_power_tw.kill()
+		_power_tw = null
+		power_btn.modulate = Color.WHITE

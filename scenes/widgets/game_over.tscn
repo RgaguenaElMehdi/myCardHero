@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://ce7i3thjglhaa"]
 
 [ext_resource type="Theme" uid="uid://b8exa286p0qed" path="res://resources/ui_theme.tres" id="1"]
-[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/BoldPixels.ttf" id="2"]
-[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/BoldPixels.ttf" id="3"]
+[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/Cinzel.ttf" id="3"]
 
 [sub_resource type="Gradient" id="vignette_grad"]
 offsets = PackedFloat32Array(0, 0.62, 1)

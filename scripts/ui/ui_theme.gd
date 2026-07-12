@@ -27,8 +27,11 @@ const TEX_BUTTON_DISABLED := "res://assets/sprites/ui/pixel/btn_disabled.png"
 const TEX_VICTORY := "res://assets/sprites/ui/victory_bg.png"
 const TEX_DEFEAT := "res://assets/sprites/ui/defeat_bg.png"
 
-const FONT_TITLE := "res://assets/fonts/BoldPixels.ttf"
-const FONT_DISPLAY := "res://assets/fonts/BoldPixels.ttf"
+const FONT_TITLE := "res://assets/fonts/Cinzel.ttf"
+const FONT_DISPLAY := "res://assets/fonts/Cinzel.ttf"
+
+## Plaque de bouton du design or (fond sombre, liseré doré fin).
+const TEX_BTN_GOLD := "res://assets/sprites/ui/gold/panel_dark.png"
 
 
 static func title_font() -> Font:
@@ -66,6 +69,22 @@ static func panel_ornate(tint: Color = Color.WHITE) -> StyleBox:
 	sb.content_margin_right = 18
 	sb.content_margin_top = 14
 	sb.content_margin_bottom = 14
+	sb.modulate_color = tint
+	return sb
+
+
+## Plaque or : panneau sombre 9-slice teinté (une seule texture pour tous les états).
+static func _gold_btn_style(tint: Color) -> StyleBoxTexture:
+	var sb := StyleBoxTexture.new()
+	sb.texture = UiTheme.tex(TEX_BTN_GOLD)
+	sb.texture_margin_left = 14
+	sb.texture_margin_top = 14
+	sb.texture_margin_right = 14
+	sb.texture_margin_bottom = 14
+	sb.content_margin_left = 18
+	sb.content_margin_right = 18
+	sb.content_margin_top = 8
+	sb.content_margin_bottom = 8
 	sb.modulate_color = tint
 	return sb
 
@@ -181,18 +200,17 @@ static func touch_scale() -> float:
 
 
 static func style_button(btn: Button, base: Color = PANEL_LIGHT, font_size: int = 20) -> void:
-	if UiTheme.tex(TEX_BUTTON) != null:
-		# The mockup buttons carry their own paint; the caller's base color only
-		# picks the plate: reddish/danger -> secondary, anything else -> primary.
-		var tex := TEX_BUTTON_SECONDARY \
-				if (base.r > base.g + 0.06 and base.r > base.b + 0.06) else TEX_BUTTON
-		btn.add_theme_stylebox_override("normal", _button_tex_style(tex, Color.WHITE))
+	if UiTheme.tex(TEX_BTN_GOLD) != null:
+		# Design or : plaque sombre à liseré doré, teintée par la couleur d'accent
+		# du bouton (danger -> rouge sombre, ok -> vert sombre, etc.).
+		var tint := Color.WHITE.lerp(base, 0.4)
+		btn.add_theme_stylebox_override("normal", _gold_btn_style(tint))
 		btn.add_theme_stylebox_override("hover",
-				_button_tex_style(tex, Color(1.18, 1.18, 1.18)))
+				_gold_btn_style(tint * Color(1.35, 1.32, 1.22)))
 		btn.add_theme_stylebox_override("pressed",
-				_button_tex_style(tex, Color(0.78, 0.78, 0.78)))
+				_gold_btn_style(tint * Color(0.75, 0.75, 0.75)))
 		btn.add_theme_stylebox_override("disabled",
-				_button_tex_style(TEX_BUTTON_DISABLED, Color.WHITE))
+				_gold_btn_style(Color(0.42, 0.42, 0.42)))
 	else:
 		var styles := button_style(base)
 		btn.add_theme_stylebox_override("normal", styles.normal)

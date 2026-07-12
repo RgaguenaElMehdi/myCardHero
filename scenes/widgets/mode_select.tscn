@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ccn1tkfxkpmpq"]
 
 [ext_resource type="Script" uid="uid://bpki6d4hl0tnk" path="res://scripts/ui/mode_select.gd" id="1"]
-[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/BoldPixels.ttf" id="2"]
+[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/Cinzel.ttf" id="2"]
 [ext_resource type="Theme" uid="uid://b8exa286p0qed" path="res://resources/ui_theme.tres" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="panel"]
@@ -9,12 +9,12 @@ content_margin_left = 34.0
 content_margin_top = 28.0
 content_margin_right = 34.0
 content_margin_bottom = 28.0
-bg_color = Color(0.113, 0.129, 0.184, 0.98)
+bg_color = Color(0.051, 0.043, 0.035, 0.98)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.902, 0.765, 0.353, 0.55)
+border_color = Color(0.725, 0.58, 0.29, 0.9)
 corner_radius_top_left = 14
 corner_radius_top_right = 14
 corner_radius_bottom_right = 14

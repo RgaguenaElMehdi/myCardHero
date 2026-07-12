@@ -148,6 +148,46 @@ ASSETS = {
         "Médaillon CIRCULAIRE d'interface : anneau d'or finement ouvragé "
         "avec une petite couronne dorée sertie au sommet, intérieur noir "
         "charbon VIDE, centré, occupant 80% du cadre. " + STYLE)),
+    # ---- pack hub arène ----
+    "arena_hall": dict(canvas="1536x1024", prompt=(
+        "Intérieur majestueux d'un colisée gothique nocturne vu de face : "
+        "grande estrade circulaire de pierre au centre orné d'une rose des "
+        "vents dorée incrustée, escalier montant vers un portail monumental, "
+        "statues de chevaliers dans des niches, bannière ROUGE à gauche et "
+        "bannière BLEUE à droite, vasques de feu dorées, colonnes et arches "
+        "sombres, fines incrustations d'or. Ambiance solennelle nocturne, "
+        "éclairage doré chaud, illustration nette haute résolution, AUCUN "
+        "texte.")),
+    "icon_swords": dict(canvas="1024x1024", prompt=(
+        "Icône : deux épées croisées en or, centrées, occupant 75% du "
+        "cadre. " + STYLE)),
+    "icon_shield_q": dict(canvas="1024x1024", prompt=(
+        "Icône : bouclier héraldique en or, centré, occupant 75% du "
+        "cadre. " + STYLE)),
+    "icon_laurel": dict(canvas="1024x1024", prompt=(
+        "Icône : couronne de laurier en or avec une étoile au centre, "
+        "centrée, occupant 75% du cadre. " + STYLE)),
+    "icon_crystal_blue": dict(canvas="1024x1024", prompt=(
+        "Icône : cristal facetté BLEU lumineux serti d'or, centré, occupant "
+        "70% du cadre. " + STYLE)),
+    "icon_crystal_purple": dict(canvas="1024x1024", prompt=(
+        "Icône : cristal facetté VIOLET lumineux serti d'or, centré, "
+        "occupant 70% du cadre. " + STYLE)),
+    "icon_coin": dict(canvas="1024x1024", prompt=(
+        "Icône : pièce de monnaie en or frappée d'une étoile à quatre "
+        "branches, centrée, occupant 70% du cadre. " + STYLE)),
+    "icon_chest": dict(canvas="1024x1024", prompt=(
+        "Icône : coffre au trésor en bois cerclé d'or, fermé, centré, "
+        "occupant 72% du cadre. " + STYLE)),
+    "icon_scroll": dict(canvas="1024x1024", prompt=(
+        "Icône : parchemin enroulé aux embouts d'or, centré, occupant 72% "
+        "du cadre. " + STYLE)),
+    "icon_gift": dict(canvas="1024x1024", prompt=(
+        "Icône : coffret cadeau orné d'or avec un ruban, centré, occupant "
+        "72% du cadre. " + STYLE)),
+    "icon_chart": dict(canvas="1024x1024", prompt=(
+        "Icône : podium de classement à trois marches en or avec une petite "
+        "étoile au sommet, centré, occupant 72% du cadre. " + STYLE)),
 }
 
 
@@ -257,8 +297,8 @@ def compose_bg(w: int, h: int, corner: Image.Image) -> Image.Image:
     return img
 
 
-FULL_BLEED = {"arena_bg", "cell_red", "cell_blue", "card_back_red",
-              "card_back_blue"}   # images pleines : PAS de détourage du noir
+FULL_BLEED = {"arena_bg", "arena_hall", "cell_red", "cell_blue",
+              "card_back_red", "card_back_blue"}   # images pleines : PAS de détourage du noir
 
 
 def post() -> None:

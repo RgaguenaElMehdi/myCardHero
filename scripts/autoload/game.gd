@@ -288,6 +288,25 @@ func start_free_battle(ai_level: int, opponent_master: String, opponent_deck: Ar
 	goto("battle")
 
 
+## --- Quêtes quotidiennes (hub Arène) ---------------------------------------
+## Compteurs remis à zéro chaque jour ; incrémentés par la scène de bataille.
+func quest_state() -> Dictionary:
+	var today := Time.get_date_string_from_system()
+	var q: Dictionary = profile.get("quests", {})
+	if String(q.get("date", "")) != today:
+		q = { "date": today, "wins": 0, "powers": 0 }
+		profile["quests"] = q
+		save_profile()
+	return q
+
+
+func quest_bump(key: String) -> void:
+	var q := quest_state()
+	q[key] = int(q.get(key, 0)) + 1
+	profile["quests"] = q
+	save_profile()
+
+
 func goto(scene_name: String) -> void:
 	get_tree().call_deferred("change_scene_to_file", scene_path(scene_name))
 
