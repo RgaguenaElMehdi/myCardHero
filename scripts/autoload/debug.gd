@@ -21,6 +21,8 @@ func _ready() -> void:
 			_schedule_popup(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--nettest="):
 			_schedule_nettest(String(arg).split("=", true, 1)[1])
+		elif String(arg).begins_with("--serve"):
+			_schedule_serve(arg)
 
 
 ## Headless E2E smoke test of the ENet transport + authoritative server.
@@ -65,6 +67,24 @@ func _schedule_nettest(mode: String) -> void:
 	get_tree().create_timer(15.0).timeout.connect(func() -> void:
 		print("[nettest] fin (timeout)")
 		get_tree().quit())
+
+
+## Dedicated headless match server: --serve[=port]. Arbitrates one 1v1 between
+## two joining clients; not a player itself. Export a headless build and run this
+## on a VPS for real hosting. See docs/multiplayer-plan.md.
+func _schedule_serve(arg: String) -> void:
+	await get_tree().process_frame
+	var port := Net.DEFAULT_PORT
+	if "=" in arg:
+		port = int(arg.split("=", true, 1)[1])
+	Net.opponent_joined.connect(func() -> void:
+		print("[serve] joueur connecté (%d/2)" % Net._peer_player.size()))
+	Net.opponent_left.connect(func() -> void:
+		print("[serve] un joueur s'est déconnecté"))
+	var err := Net.serve(port)
+	print("[serve] serveur dédié err='%s' — en attente de 2 joueurs sur le port %d" % [err, port])
+	if err != "":
+		get_tree().quit(1)
 
 
 ## Opens the CardPopup on a given card id (with a live instance) for a

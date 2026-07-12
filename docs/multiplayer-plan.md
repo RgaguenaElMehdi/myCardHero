@@ -110,13 +110,32 @@ via un signal `remote_events`.
   phase MAIN, anti-triche, déconnexion propre.
 - **Backend méta** — interface `MetaBackend` + `LocalBackend` (offline, ranked réel).
 
-### Smoke-test réseau (2 process headless)
+### Deux topologies (même logique autoritaire `NetServerLogic`)
+- **Listen-server** : un joueur héberge ET joue (lobby → « Héberger »). Il est
+  joueur 0 ; l'autre rejoint par IP (joueur 1).
+- **Serveur dédié** : une instance headless arbitre sans jouer. Les **deux** joueurs
+  rejoignent par IP ; le serveur les assigne joueur 0 / 1 par ordre de connexion.
+  ```
+  GODOT --headless --path . -- --serve            # serveur dédié (VPS/LAN), port 8790
+  GODOT --headless --path . -- --serve=9000       # port personnalisé
+  ```
+  Puis dans le jeu, chaque joueur fait « Multijoueur → Rejoindre par IP » vers
+  l'adresse du serveur. Pour la prod : exporter un build **headless** et lancer
+  `--serve` sur le VPS (ouvrir le port UDP ENet).
+
+### Smoke-test réseau (headless)
 ```
-GODOT --headless --path . -- --nettest=host           # terminal 1
-GODOT --headless --path . -- --nettest=join=127.0.0.1  # terminal 2
+# listen-server (2 process)
+GODOT --headless --path . -- --nettest=host
+GODOT --headless --path . -- --nettest=join=127.0.0.1
+
+# serveur dédié (3 process : 1 serveur + 2 clients)
+GODOT --headless --path . -- --serve
+GODOT --headless --path . -- --nettest=join=127.0.0.1
+GODOT --headless --path . -- --nettest=join=127.0.0.1
 ```
-Chaque instance pilote le handshake et loggue `[nettest] …`. Attendu : `MATCH prêt`
-une fois par côté puis `OK — phase principale atteinte via le réseau`.
+Chaque client loggue `[nettest] …` : `MATCH prêt` puis `OK — phase principale
+atteinte via le réseau`. Les deux topologies sont vérifiées E2E.
 
 ### Dernier kilomètre (UI, à itérer en 2 fenêtres réelles)
 1. **Lobby** : écran héberger/rejoindre par IP → `Net.host(deck)` / `Net.join(ip, deck)` ;
