@@ -14,7 +14,6 @@ const MODE_SELECT := preload("res://scenes/widgets/mode_select.tscn")
 @onready var options_btn: Button = %OptionsBtn
 @onready var quit_btn: Button = %QuitBtn
 @onready var fight_btn: Button = %FightBtn
-@onready var status_label: Label = %StatusLabel
 
 
 func _ready() -> void:
@@ -46,13 +45,20 @@ func _ready() -> void:
 	options_btn.pressed.connect(func() -> void: Game.goto("settings"))
 	quit_btn.pressed.connect(func() -> void: get_tree().quit())
 
-	# Campaign progress status
-	var progress := int(Game.profile.campaign_progress)
-	var status := "Progression : chapitre %d / %d" % [mini(progress + 1, 10), Db.chapters().size()] \
-			if progress < Db.chapters().size() else "Campagne terminée — Champion de Petraheim !"
-	status_label.text = status
-
+	_animate_fight_btn.call_deferred()
 	Audio.play_music("menu")
+
+
+## Looping "breathing" pulse on the main COMBATTRE call-to-action (glow + scale).
+func _animate_fight_btn() -> void:
+	await get_tree().process_frame            # wait for layout so the pivot is centered
+	fight_btn.pivot_offset = fight_btn.size / 2.0
+	var tw := fight_btn.create_tween().set_loops()
+	tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(fight_btn, "scale", Vector2(1.05, 1.05), 0.7)
+	tw.parallel().tween_property(fight_btn, "modulate", Color(1.25, 1.14, 0.82), 0.7)
+	tw.tween_property(fight_btn, "scale", Vector2.ONE, 0.7)
+	tw.parallel().tween_property(fight_btn, "modulate", Color.WHITE, 0.7)
 
 
 func _show_mode_select() -> void:
