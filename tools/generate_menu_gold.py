@@ -205,8 +205,14 @@ ASSETS = {
         "vents dorée au sol, bannières rouge et bleue, vasques de feu, statues de "
         "chevaliers. Ambiance solennelle, éclairage doré chaud, style RPG anime "
         "soigné. AUCUN texte.")),
+    "icon_monitor": dict(canvas="1024x1024", prompt=("Icône : écran d'ordinateur / moniteur en or, vu de face, centré, occupant 75% du cadre. " + STYLE)),
+    "icon_speaker": dict(canvas="1024x1024", prompt=("Icône : haut-parleur émettant des ondes sonores en or, centré, occupant 75% du cadre. " + STYLE)),
+    "icon_gamepad": dict(canvas="1024x1024", prompt=("Icône : manette de jeu (gamepad) en or, vue de face, centrée, occupant 75% du cadre. " + STYLE)),
+    "icon_globe": dict(canvas="1024x1024", prompt=("Icône : globe terrestre stylisé en or avec méridiens, centré, occupant 75% du cadre. " + STYLE)),
+    "icon_account": dict(canvas="1024x1024", prompt=("Icône : buste de personne (avatar de compte) en or dans un contour, centré, occupant 75% du cadre. " + STYLE)),
+    "icon_reset": dict(canvas="1024x1024", prompt=("Icône : deux flèches circulaires de rafraîchissement en or, centrées, occupant 75% du cadre. " + STYLE)),
+    "icon_headset": dict(canvas="1024x1024", prompt=("Icône : casque-micro d'assistance en or, vu de face, centré, occupant 75% du cadre. " + STYLE)),
 }
-
 
 def api_key() -> str:
     for line in (ROOT / ".env").read_text(encoding="utf-8").splitlines():

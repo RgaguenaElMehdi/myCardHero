@@ -33,6 +33,34 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 
+## Mode d'affichage : 0 = plein écran, 1 = fenêtré, 2 = sans bordure (maximisé).
+func set_display_mode(mode: int) -> void:
+	profile.settings.display_mode = mode
+	profile.settings.fullscreen = mode == 0
+	save_profile()
+	if OS.has_feature("mobile") or Engine.is_embedded_in_editor():
+		return
+	var win := get_window()
+	match mode:
+		0:
+			win.borderless = false
+			win.mode = Window.MODE_FULLSCREEN
+		1:
+			win.mode = Window.MODE_WINDOWED
+			win.borderless = false
+		2:
+			win.mode = Window.MODE_MAXIMIZED
+			win.borderless = true
+	profile_changed.emit()
+
+
+## Applique la limite d'images (0 = illimité) et la mémorise.
+func set_max_fps(v: int) -> void:
+	Engine.max_fps = v
+	profile.settings.max_fps = v
+	save_profile()
+
+
 func set_fullscreen(on: bool) -> void:
 	# Mobile : plein écran natif, rien à changer. Éditeur incrusté (Godot 4.4+) :
 	# changer le mode fenêtre décale le mapping souris — on ne touche à rien.

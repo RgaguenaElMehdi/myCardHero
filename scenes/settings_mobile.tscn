@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/ui/settings_scene.gd" id="1"]
 [ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/menu_gold_1920.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/menu_gold_2400.png" id="4"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel_dark.png" id="pd"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/divider.png" id="5"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/emblem.png" id="emb"]
@@ -132,9 +132,9 @@ mouse_filter = 2
 
 [node name="LeftPanel" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 38.4
+offset_left = 48.0
 offset_top = 150.0
-offset_right = 480.0
+offset_right = 600.0
 offset_bottom = 892.0
 theme_override_styles/panel = SubResource("panel")
 
@@ -277,9 +277,9 @@ text = "  AUTRES"
 
 [node name="CenterPanel" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 512.0
+offset_left = 640.0
 offset_top = 150.0
-offset_right = 1392.0
+offset_right = 1740.0
 offset_bottom = 892.0
 theme_override_styles/panel = SubResource("panel")
 
@@ -661,9 +661,9 @@ mouse_filter = 2
 
 [node name="RightPanel" type="PanelContainer" parent="."]
 layout_mode = 0
-offset_left = 1424.0
+offset_left = 1780.0
 offset_top = 150.0
-offset_right = 1888.0
+offset_right = 2360.0
 offset_bottom = 892.0
 theme_override_styles/panel = SubResource("panel")
 
@@ -702,9 +702,9 @@ unique_name_in_owner = true
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 38.4
+offset_left = 48.0
 offset_top = -120.0
-offset_right = 320.0
+offset_right = 400.0
 offset_bottom = -40.0
 theme_override_styles/normal = SubResource("seg")
 theme_override_styles/hover = SubResource("seg_hi")
@@ -726,9 +726,9 @@ unique_name_in_owner = true
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 1296.0
+offset_left = 1620.0
 offset_top = -120.0
-offset_right = 1584.0
+offset_right = 1980.0
 offset_bottom = -40.0
 theme_override_styles/normal = SubResource("seg")
 theme_override_styles/hover = SubResource("seg_hi")
@@ -750,9 +750,9 @@ unique_name_in_owner = true
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 1608.0
+offset_left = 2010.0
 offset_top = -120.0
-offset_right = 1888.0
+offset_right = 2360.0
 offset_bottom = -40.0
 theme_override_styles/normal = SubResource("plate")
 theme_override_styles/hover = SubResource("seg_hi")
