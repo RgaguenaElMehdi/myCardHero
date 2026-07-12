@@ -123,19 +123,6 @@ ASSETS = {
         "incrustations d'or dans le dallage du pourtour. Ambiance nocturne "
         "luxueuse, éclairage doré chaud, illustration nette haute résolution, "
         "AUCUN texte.")),
-    "cell_red": dict(canvas="1024x1024", prompt=(
-        "Case CARRÉE de plateau de jeu : cadre ornemental ROUGE et or à "
-        "double liseré avec coins travaillés, intérieur pierre sombre UNIE, "
-        "parfaitement vide, sans aucun motif central, la case occupe toute l'image. " + STYLE)),
-    "cell_blue": dict(canvas="1024x1024", prompt=(
-        "Case CARRÉE de plateau de jeu : cadre ornemental BLEU et or à "
-        "double liseré avec coins travaillés, intérieur pierre sombre UNIE, "
-        "parfaitement vide, sans aucun motif central, la case occupe toute l'image. " + STYLE)),
-    "orb_endturn": dict(canvas="1024x1024", prompt=(
-        "Grand bouton CIRCULAIRE de jeu : orbe de verre BLEU profond serti "
-        "dans un anneau d'or richement ouvragé avec quatre pointes de "
-        "boussole aux cardinaux, léger halo doré, intérieur de l'orbe VIDE "
-        "sans texte, centré, occupant 85% du cadre. " + STYLE)),
     "card_back_red": dict(canvas="1024x1536", prompt=(
         "Dos de carte à jouer portrait : fond ROUGE sombre profond, grande "
         "rose des vents dorée au centre, fine bordure d'or aux coins ornés, "

@@ -18,6 +18,9 @@ func _ready() -> void:
 	defi_btn.pressed.connect(_launch_challenge)
 	arene_btn.pressed.connect(func() -> void: Game.goto("arena_hub"))
 	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
+	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 26)
+	back_btn.add_theme_color_override("font_color", UiTheme.GOLD)
+	back_btn.add_theme_color_override("font_hover_color", Color(1, 0.9, 0.6))
 	for b: Button in [solo_btn, histoire_btn, defi_btn, arene_btn, back_btn]:
 		b.pressed.connect(UiTheme._click_sfx)
 
