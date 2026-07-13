@@ -7,6 +7,7 @@ extends PanelContainer
 
 signal pressed(widget: CardWidget)
 signal inspect_requested(widget: CardWidget)
+signal activated(widget: CardWidget)     ## double-clic : ajouter / retirer
 
 var def: CardDef
 var selected := false
@@ -156,7 +157,11 @@ func _gui_input(event: InputEvent) -> void:
 		inspect_requested.emit(self)            # desktop: right-click inspects
 	elif event.button_index == MOUSE_BUTTON_LEFT:
 		accept_event()
-		if event.pressed:
+		if event.pressed and event.double_click:
+			_holding = false
+			_long = true                        # empêche le pressed au relâchement
+			activated.emit(self)                # double-clic = ajouter / retirer
+		elif event.pressed:
 			_holding = true
 			_long = false
 			_long_press()

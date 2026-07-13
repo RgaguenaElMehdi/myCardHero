@@ -11,8 +11,9 @@ extends Control
 const GOLD := Color(0.855, 0.71, 0.42)
 
 @onready var count_label: Label = %CountLabel
-@onready var deck_grid: GridContainer = %DeckGrid
-@onready var coll_list: HBoxContainer = %CollList
+@onready var deck_grid: HBoxContainer = %DeckGrid          ## deck = rangée (bas)
+@onready var deck_scroll: ScrollContainer = %DeckScroll
+@onready var coll_list: GridContainer = %CollList          ## collection = grille (haut)
 @onready var coll_scroll: ScrollContainer = %CollScroll
 @onready var filter_btn: Button = %FilterBtn
 @onready var prev_btn: Button = %PrevBtn
@@ -29,7 +30,7 @@ const GOLD := Color(0.855, 0.71, 0.42)
 @onready var add_btn: Button = %AddBtn
 @onready var remove_btn: Button = %RemoveBtn
 @onready var master_card: TextureRect = %MasterCard
-@onready var master_pick: HFlowContainer = %MasterPick
+@onready var master_pick: VBoxContainer = %MasterPick
 @onready var deck_tabs: VBoxContainer = %DeckTabs
 @onready var name_edit: LineEdit = %NameEdit
 @onready var delete_btn: Button = %DeleteBtn
@@ -47,10 +48,6 @@ func _ready() -> void:
 
 	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
 	save_btn.pressed.connect(_save)
-	# Bouton MENU au style or (plaque sombre + liseré + texte doré), comme le hub.
-	UiTheme.style_button(back_btn, UiTheme.PANEL_LIGHT, 26)
-	back_btn.add_theme_color_override("font_color", GOLD)
-	back_btn.add_theme_color_override("font_hover_color", Color(1, 0.9, 0.6))
 	delete_btn.pressed.connect(_delete_current)
 	add_btn.pressed.connect(func() -> void: _add(sel_id))
 	remove_btn.pressed.connect(func() -> void: _remove(sel_id))
@@ -58,8 +55,8 @@ func _ready() -> void:
 		_cur().name = t
 		_rebuild_deck_tabs())
 	filter_btn.pressed.connect(_show_filter_menu)
-	prev_btn.pressed.connect(func() -> void: _page_collection(-1))
-	next_btn.pressed.connect(func() -> void: _page_collection(1))
+	prev_btn.pressed.connect(func() -> void: _page_deck(-1))    # défile le deck (bas)
+	next_btn.pressed.connect(func() -> void: _page_deck(1))
 	for i in tab_btns.size():
 		tab_btns[i].pressed.connect(_show_tab.bind(i))
 	for b: Button in [save_btn, add_btn, remove_btn, delete_btn, back_btn]:
@@ -79,6 +76,19 @@ func _cur_cards() -> Array:
 
 func _deck_count(id: String) -> int:
 	return _cur_cards().count(id)
+
+
+## Cadenas superposé sur une carte non possédée (verrouillée).
+func _add_lock(w: Control) -> void:
+	var lock := TextureRect.new()
+	lock.texture = UiTheme.tex("res://assets/sprites/ui/gold/icon_lock.png")
+	lock.custom_minimum_size = Vector2(48, 48)
+	lock.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	lock.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	lock.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	lock.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lock.modulate = Color(1, 1, 1, 0.92)
+	w.add_child(lock)
 
 
 func _rebuild_all() -> void:
@@ -116,28 +126,35 @@ func _show_filter_menu() -> void:
 			Vector2i(300, 0)))
 
 
-func _page_collection(dir: int) -> void:
+func _page_deck(dir: int) -> void:
 	var tw := create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	tw.tween_property(coll_scroll, "scroll_horizontal",
-			coll_scroll.scroll_horizontal + dir * int(coll_scroll.size.x * 0.8), 0.25)
+	tw.tween_property(deck_scroll, "scroll_horizontal",
+			deck_scroll.scroll_horizontal + dir * int(deck_scroll.size.x * 0.8), 0.25)
 
 
 func _refresh() -> void:
 	for child in coll_list.get_children():
 		child.queue_free()
+	# On affiche TOUTES les cartes : les non-possédées sont grisées (verrouillées)
+	# et non ajoutables au deck, mais restent visibles/consultables.
 	for def in Db.constructible_cards():
 		var id := String(def.id)
 		var owned := Game.owned_count(id)
-		if owned <= 0:
-			continue
 		if filter_guild >= 0 and def.guild != filter_guild:
 			continue
 		var w := CardWidget.create(def, coll_card_w)
 		var used := _deck_count(id)
-		w.set_count(owned - used)
-		if used >= owned:
-			w.modulate = Color(0.5, 0.5, 0.55)
+		if owned <= 0:
+			# NON POSSÉDÉE : assombrie + CADENAS (verrouillée, non ajoutable).
+			w.modulate = Color(0.42, 0.42, 0.48)
+			_add_lock(w)
+		else:
+			# POSSÉDÉE : couleurs normales + badge « ×restants ». Pas de cadenas ni
+			# de gris → une carte possédée dont tous les exemplaires sont dans le
+			# deck n'a simplement plus de badge, mais reste en couleurs vives.
+			w.set_count(owned - used)
 		w.pressed.connect(func(_w: CardWidget) -> void: _select(id))
+		w.activated.connect(func(_w: CardWidget) -> void: _add(id))   # double-clic = ajouter
 		w.inspect_requested.connect(func(w2: CardWidget) -> void:
 			CardPopup.open(self, w2.def))
 		coll_list.add_child(w)
@@ -161,24 +178,15 @@ func _refresh_deck() -> void:
 			return ca.cost < cb.cost
 		return ca.display_name < cb.display_name)
 	for id in ids:
-		var def := Db.card(StringName(String(id)))
+		var idd := String(id)
+		var def := Db.card(StringName(idd))
 		var w := CardWidget.create(def, deck_card_w)
 		w.set_count(unique[id])
-		w.pressed.connect(func(_w: CardWidget) -> void: _select(String(id)))
+		w.pressed.connect(func(_w: CardWidget) -> void: _select(idd))
+		w.activated.connect(func(_w: CardWidget) -> void: _remove(idd))  # double-clic = retirer
 		w.inspect_requested.connect(func(w2: CardWidget) -> void:
 			CardPopup.open(self, w2.def))
 		deck_grid.add_child(w)
-	# emplacements vides (esthétique mockup) pour compléter la grille
-	var slot_tex := UiTheme.tex("res://assets/sprites/ui/gold/slot.png")
-	var min_slots := deck_grid.columns * 2
-	for _i in range(maxi(min_slots - ids.size(), 0)):
-		var slot := TextureRect.new()
-		slot.texture = slot_tex
-		slot.custom_minimum_size = Vector2(deck_card_w, deck_card_w * 1.385)
-		slot.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		slot.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		deck_grid.add_child(slot)
 
 	count_label.text = "%d/%d" % [cards.size(), GameConst.DECK_SIZE]
 	var err := ""
@@ -300,25 +308,33 @@ func _rebuild_masters() -> void:
 			"res://assets/sprites/cards_full/master_%s.png" % cur_id)
 	for c in master_pick.get_children():
 		c.queue_free()
-	for mid in Game.profile.masters:
-		var m: MasterDef = Db.master(StringName(String(mid)))
-		if m == null:
-			continue
+	# On liste TOUS les maîtres ; ceux non possédés sont grisés + cadenassés
+	# (non sélectionnables), comme la collection de cartes.
+	for m: MasterDef in Db.masters.values():
+		var mid := String(m.id)
+		var owned: bool = Game.profile.masters.has(mid)
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(74, 74) * minf(UiTheme.touch_scale(), 1.35)
+		b.custom_minimum_size = Vector2(0, 118)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.icon = UiTheme.tex(m.portrait)
 		b.expand_icon = true
-		b.tooltip_text = "%s — %s\nPassif : %s\nPouvoir — %s (%d pierres) : %s" % [
+		b.disabled = not owned
+		b.tooltip_text = "%s — %s\nPassif : %s\nPouvoir — %s (%d pierres) : %s%s" % [
 				m.display_name, GameConst.GUILD_NAMES.get(m.guild, ""),
-				m.passive_desc, m.power_name, m.power_cost, m.power_desc]
-		var selected := String(mid) == cur_id
+				m.passive_desc, m.power_name, m.power_cost, m.power_desc,
+				"" if owned else "\n(Verrouillé — débloquer en campagne)"]
+		var selected := mid == cur_id
 		UiTheme.style_button(b, UiTheme.guild_color(m.guild).darkened(
 				0.25 if selected else 0.6), 12)
-		b.modulate = Color.WHITE if selected else Color(0.65, 0.65, 0.7)
-		b.pressed.connect(func() -> void:
-			_cur().master = String(mid)
-			Audio.play_sfx("move")
-			_rebuild_masters())
+		if not owned:
+			b.modulate = Color(0.4, 0.4, 0.46)
+			_add_lock(b)
+		else:
+			b.modulate = Color.WHITE if selected else Color(0.65, 0.65, 0.7)
+			b.pressed.connect(func() -> void:
+				_cur().master = mid
+				Audio.play_sfx("move")
+				_rebuild_masters())
 		master_pick.add_child(b)
 
 

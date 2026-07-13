@@ -1,10 +1,10 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/deck_builder.gd" id="1"]
 [ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/menu_gold_1920.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel_dark.png" id="5"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/btn_plate.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/divider.png" id="7"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/emblem.png" id="8"]
@@ -17,14 +17,14 @@
 
 [sub_resource type="StyleBoxTexture" id="panel_gold"]
 texture = ExtResource("5")
-texture_margin_left = 72.0
-texture_margin_top = 60.0
-texture_margin_right = 72.0
-texture_margin_bottom = 60.0
-content_margin_left = 46.0
-content_margin_top = 36.0
-content_margin_right = 46.0
-content_margin_bottom = 32.0
+texture_margin_left = 14.0
+texture_margin_top = 14.0
+texture_margin_right = 14.0
+texture_margin_bottom = 14.0
+content_margin_left = 30.0
+content_margin_top = 24.0
+content_margin_right = 30.0
+content_margin_bottom = 22.0
 
 [sub_resource type="StyleBoxTexture" id="plate_gold"]
 texture = ExtResource("6")
@@ -38,8 +38,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("3")
 script = ExtResource("1")
-deck_card_w = 100.0
-coll_card_w = 118.0
+deck_card_w = 112.0
+coll_card_w = 138.0
 
 [node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
@@ -67,104 +67,35 @@ text = "DECK BUILDER"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DivL" type="TextureRect" parent="."]
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -700.0
-offset_top = 30.0
-offset_right = -420.0
-offset_bottom = 74.0
-texture = ExtResource("7")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="DivR" type="TextureRect" parent="."]
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 420.0
-offset_top = 30.0
-offset_right = 700.0
-offset_bottom = 74.0
-flip_h = true
-texture = ExtResource("7")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
 [node name="BackBtn" type="Button" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 0
-offset_left = 40.0
-offset_top = 28.0
-offset_right = 280.0
-offset_bottom = 88.0
-theme_override_font_sizes/font_size = 24
+offset_left = 697.6
+offset_top = 936.0
+offset_right = 1001.6
+offset_bottom = 1004.0
+theme_override_styles/normal = SubResource("plate_gold")
+theme_override_styles/hover = SubResource("plate_gold")
+theme_override_styles/pressed = SubResource("plate_gold")
+theme_override_styles/focus = SubResource("plate_gold")
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 28
 theme_override_fonts/font = ExtResource("2")
 text = "← MENU"
-
-[node name="DeckPanel" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = 0
-offset_left = 32.0
-offset_top = 96.0
-offset_right = 1112.0
-offset_bottom = 620.0
-theme_override_styles/panel = SubResource("panel_gold")
-
-[node name="DeckBox" type="VBoxContainer" parent="DeckPanel"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="DeckHeader" type="HBoxContainer" parent="DeckPanel/DeckBox"]
-layout_mode = 2
-
-[node name="DeckTitle" type="Label" parent="DeckPanel/DeckBox/DeckHeader"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 30
-theme_override_fonts/font = ExtResource("2")
-text = "MON DECK"
-mouse_filter = 2
-
-[node name="CountLabel" type="Label" parent="DeckPanel/DeckBox/DeckHeader"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 30
-theme_override_fonts/font = ExtResource("2")
-text = "0/25"
-mouse_filter = 2
-
-[node name="DeckScroll" type="ScrollContainer" parent="DeckPanel/DeckBox"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="DeckGrid" type="GridContainer" parent="DeckPanel/DeckBox/DeckScroll"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-columns = 8
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
 
 [node name="CollectionPanel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 0
 offset_left = 32.0
-offset_top = 636.0
+offset_top = 96.0
 offset_right = 1112.0
-offset_bottom = 996.0
+offset_bottom = 636.0
 theme_override_styles/panel = SubResource("panel_gold")
 
 [node name="CollBox" type="VBoxContainer" parent="CollectionPanel"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
 [node name="CollHeader" type="HBoxContainer" parent="CollectionPanel/CollBox"]
 layout_mode = 2
@@ -188,12 +119,60 @@ icon = ExtResource("12")
 theme_override_constants/icon_max_width = 44
 expand_icon = true
 
-[node name="CollRow" type="HBoxContainer" parent="CollectionPanel/CollBox"]
+[node name="CollScroll" type="ScrollContainer" parent="CollectionPanel/CollBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CollList" type="GridContainer" parent="CollectionPanel/CollBox/CollScroll"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 6
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="DeckPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 32.0
+offset_top = 652.0
+offset_right = 1112.0
+offset_bottom = 902.0
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="DeckBox" type="VBoxContainer" parent="DeckPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DeckHeader" type="HBoxContainer" parent="DeckPanel/DeckBox"]
+layout_mode = 2
+
+[node name="DeckTitle" type="Label" parent="DeckPanel/DeckBox/DeckHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_fonts/font = ExtResource("2")
+text = "MON DECK"
+mouse_filter = 2
+
+[node name="CountLabel" type="Label" parent="DeckPanel/DeckBox/DeckHeader"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_font_sizes/font_size = 30
+theme_override_fonts/font = ExtResource("2")
+text = "0/25"
+mouse_filter = 2
+
+[node name="DeckRow" type="HBoxContainer" parent="DeckPanel/DeckBox"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 8
 
-[node name="PrevBtn" type="Button" parent="CollectionPanel/CollBox/CollRow"]
+[node name="PrevBtn" type="Button" parent="DeckPanel/DeckBox/DeckRow"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(52, 0)
@@ -202,19 +181,19 @@ icon = ExtResource("13")
 theme_override_constants/icon_max_width = 40
 expand_icon = true
 
-[node name="CollScroll" type="ScrollContainer" parent="CollectionPanel/CollBox/CollRow"]
+[node name="DeckScroll" type="ScrollContainer" parent="DeckPanel/DeckBox/DeckRow"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 vertical_scroll_mode = 0
 
-[node name="CollList" type="HBoxContainer" parent="CollectionPanel/CollBox/CollRow/CollScroll"]
+[node name="DeckGrid" type="HBoxContainer" parent="DeckPanel/DeckBox/DeckRow/DeckScroll"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="NextBtn" type="Button" parent="CollectionPanel/CollBox/CollRow"]
+[node name="NextBtn" type="Button" parent="DeckPanel/DeckBox/DeckRow"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(52, 0)
@@ -227,10 +206,10 @@ expand_icon = true
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 0
-offset_left = 366.0
-offset_top = 984.0
-offset_right = 786.0
-offset_bottom = 1052.0
+offset_left = 240.0
+offset_top = 936.0
+offset_right = 656.0
+offset_bottom = 1004.0
 theme_override_styles/normal = SubResource("plate_gold")
 theme_override_styles/hover = SubResource("plate_gold")
 theme_override_styles/pressed = SubResource("plate_gold")
@@ -242,17 +221,16 @@ text = "SAUVEGARDER"
 
 [node name="StatusLabel" type="Label" parent="."]
 unique_name_in_owner = true
-horizontal_alignment = 1
+visible = false
 layout_mode = 1
 anchors_preset = 0
-offset_left = 366.0
-offset_top = 948.0
-offset_right = 786.0
-offset_bottom = 1064.0
+offset_left = 364.0
+offset_top = 936.0
+offset_right = 780.0
+offset_bottom = 1004.0
 theme_override_colors/font_color = Color(0.886, 0.376, 0.235, 1)
 theme_override_font_sizes/font_size = 20
 autowrap_mode = 2
-vertical_alignment = 1
 mouse_filter = 2
 
 [node name="Tabs" type="HBoxContainer" parent="."]
@@ -408,28 +386,29 @@ theme_override_fonts/font = ExtResource("2")
 text = "MAÎTRE DU DECK"
 mouse_filter = 2
 
-[node name="MasterCard" type="TextureRect" parent="DetailPanel/PageMaster"]
+[node name="MasterRow" type="HBoxContainer" parent="DetailPanel/PageMaster"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="PickScroll" type="ScrollContainer" parent="DetailPanel/PageMaster/MasterRow"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="MasterPick" type="VBoxContainer" parent="DetailPanel/PageMaster/MasterRow/PickScroll"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="MasterCard" type="TextureRect" parent="DetailPanel/PageMaster/MasterRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 expand_mode = 1
 stretch_mode = 5
-
-[node name="PickLabel" type="Label" parent="DetailPanel/PageMaster"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.72, 0.6, 0.38, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "CHANGER DE MAÎTRE"
-mouse_filter = 2
-
-[node name="MasterPick" type="HFlowContainer" parent="DetailPanel/PageMaster"]
-unique_name_in_owner = true
-layout_mode = 2
-alignment = 1
-theme_override_constants/h_separation = 10
-theme_override_constants/v_separation = 10
 
 [node name="PageDecks" type="VBoxContainer" parent="DetailPanel"]
 unique_name_in_owner = true

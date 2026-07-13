@@ -212,6 +212,7 @@ ASSETS = {
     "icon_account": dict(canvas="1024x1024", prompt=("Icône : buste de personne (avatar de compte) en or dans un contour, centré, occupant 75% du cadre. " + STYLE)),
     "icon_reset": dict(canvas="1024x1024", prompt=("Icône : deux flèches circulaires de rafraîchissement en or, centrées, occupant 75% du cadre. " + STYLE)),
     "icon_headset": dict(canvas="1024x1024", prompt=("Icône : casque-micro d'assistance en or, vu de face, centré, occupant 75% du cadre. " + STYLE)),
+    "icon_skull": dict(canvas="1024x1024", prompt=("Icône : crâne héraldique stylisé de face dans un anneau circulaire épuré, contour net monochrome CLAIR (blanc cassé) sur fond magenta, pour être teinté ensuite. Simple, gros contour, occupant 78% du cadre. Pixel art net 1024x1024, aucun anti-aliasing, aucun texte, fond magenta pur #FF00FF." )),
 }
 
 def api_key() -> str:
