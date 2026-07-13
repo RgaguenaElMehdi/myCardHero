@@ -87,6 +87,54 @@ ASSETS = {
         "island, blue magical atmosphere. Blue ambient light with warm "
         "golden highlights, cinematic, ultra detailed, hand painted, "
         "Legends of Runeterra / Genshin Impact quality.")),
+    # Arène finale (reco TCG AAA) : caméra 3/4 LÉGÈRE (~20-25°), esplanade
+    # VIDE — les 12 cases sont dessinées par Godot (arena_iso.tscn).
+    "arena_iso": dict(canvas="1536x1024", keyed=False, prompt=(
+        "AAA anime fantasy game environment concept art, night scene, ONLY "
+        "scenery, NO interface, NO characters, NO text, NO icons. A grand "
+        "magical battle arena built on a floating stone island, seen from a "
+        "VERY SLIGHT 3/4 angle: camera tilted only about 20 degrees from "
+        "vertical, facing straight ahead (no rotation), like premium "
+        "digital card games. The center of the image is a large EMPTY "
+        "esplanade of grey ancient stone, PERFECTLY FLAT, rectangular "
+        "with a very slight perspective taper, centered, occupying about "
+        "60% of the image width. CARVED INTO the stone floor: EXACTLY 12 "
+        "identical rectangular card slots, 3 columns and 4 rows, "
+        "perfectly aligned — each slot is a shallow RECESSED housing "
+        "sunk into the stone (soft inner shadow, real depth), bordered "
+        "by finely sculpted stone with thin GOLD inlays and small "
+        "engraved runes, discreet ornamental corners, DEEPLY recessed "
+        "as if the arena had been built to hold magical summons. The "
+        "stone stays GREY: absolutely no colored fill — the ONLY color "
+        "is a subtle RED light seeping out of the rune grooves of the 6 "
+        "UPPER slots, and a subtle BLUE light seeping from the 6 LOWER "
+        "slots, like Legends of Runeterra. The terrain tells a story: "
+        "the upper ENEMY half is built of slightly darker, colder stone; "
+        "the lower PLAYER half of slightly warmer, lighter stone; and "
+        "between the two halves, a clearly WIDER front line marked by a "
+        "MONUMENTAL ANCIENT RUNE CIRCLE engraved across the full width "
+        "of the esplanade, faintly glowing with magical energy along a "
+        "central line. Wide ceremonial STAIRS descend at the top and "
+        "bottom edges of the esplanade. Generous empty stone margins "
+        "remain around the 12 slots. The esplanade is a TRUE ARENA: a "
+        "monumental SCULPTED stone base with SEVERAL LEVELS — wide "
+        "foundation, cornices, a raised outer LEDGE with a carved "
+        "PARAPET all around, and visible steps on the sides — so the "
+        "arena clearly FLOATS. Around the esplanade WITHOUT touching "
+        "the slots: ancient statues, weathered ruins overgrown with "
+        "vegetation and ivy, elegant columns and ornate pillars, stone "
+        "torches with warm flames, decorative chains, large "
+        "RED magical crystals on the pillars near the two TOP corners, "
+        "large BLUE magical crystals near the two BOTTOM corners, red "
+        "fantasy banners, decorative golden chains between pillars, stone "
+        "lanterns and magic braziers with warm flames — all OUTSIDE the "
+        "empty central esplanade, a few elements slightly overlapping its "
+        "outer edge. Background at the top: a gigantic luminous fantasy "
+        "castle on floating islands, waterfalls, bridges, moon and Milky "
+        "Way. Below and around: floating cliffs falling into a moonlit "
+        "cloud ocean. Blue ambient light, warm golden highlights, "
+        "cinematic, ultra detailed, hand painted, Legends of Runeterra / "
+        "Genshin Impact quality.")),
     # Orbe FIN DU TOUR : disque de cristal bleu cerclé d'or.
     "orb_endturn": dict(canvas="1024x1024", keyed=True, prompt=(
         "Grand bouton rond de jeu : disque de CRISTAL BLEU profond lumineux "
@@ -124,26 +172,48 @@ ASSETS = {
         "rayonnante au centre, fine bordure d'or aux coins ouvragés, style "
         "anime fantasy peint AAA luxueux. La carte occupe TOUTE l'image. "
         "AUCUN texte.")),
-    # Cases du plateau : cadre lumineux, intérieur transparent (chroma).
-    "cell_red": dict(canvas="1024x1024", keyed=True, prompt=(
-        "Cadre de case de plateau de jeu carré aux coins doucement "
-        "arrondis : fin liseré ROUGE lumineux gravé dans la pierre, serti "
-        "de minces filets d'or, petits ornements d'angle discrets. "
-        "L'INTÉRIEUR du cadre est entièrement FOND VERT PUR (vide), le "
-        "cadre occupe presque toute l'image, traits réguliers et lisses. "
-        + STYLE_ICON)),
-    "cell_blue": dict(canvas="1024x1024", keyed=True, prompt=(
-        "Cadre de case de plateau de jeu carré aux coins doucement "
-        "arrondis : fin liseré BLEU lumineux gravé dans la pierre, serti "
-        "de minces filets d'or, petits ornements d'angle discrets. "
-        "L'INTÉRIEUR du cadre est entièrement FOND VERT PUR (vide), le "
-        "cadre occupe presque toute l'image, traits réguliers et lisses. "
+    # Cases du plateau : bordure GRAVÉE dans la pierre, incrustation d'or,
+    # lueur de camp très légère. Intérieur transparent (chroma), NinePatch.
+    "cell_red": dict(canvas="1536x1024", keyed=True, prompt=(
+        "Bordure de case de plateau de jeu RECTANGULAIRE horizontale, "
+        "coins à peine arrondis, GRAVÉE EN CREUX dans de la pierre "
+        "ancienne : un fin sillon sculpté avec une mince INCRUSTATION "
+        "D'OR et quelques runes minuscules, très discret et élégant, "
+        "l'aspect d'une gravure dans le sol (léger relief, ombre du "
+        "creux), au fond du sillon une TRÈS LÉGÈRE lueur ROUGE douce. "
+        "AUCUN gros cadre, AUCUN ornement massif, épaisseur constante et "
+        "fine. L'INTÉRIEUR est entièrement FOND VERT PUR (vide), la "
+        "bordure occupe presque toute l'image. " + STYLE_ICON)),
+    "cell_blue": dict(canvas="1536x1024", keyed=True, prompt=(
+        "Bordure de case de plateau de jeu RECTANGULAIRE horizontale, "
+        "coins à peine arrondis, GRAVÉE EN CREUX dans de la pierre "
+        "ancienne : un fin sillon sculpté avec une mince INCRUSTATION "
+        "D'OR et quelques runes minuscules, très discret et élégant, "
+        "l'aspect d'une gravure dans le sol (léger relief, ombre du "
+        "creux), au fond du sillon une TRÈS LÉGÈRE lueur BLEUE douce. "
+        "AUCUN gros cadre, AUCUN ornement massif, épaisseur constante et "
+        "fine. L'INTÉRIEUR est entièrement FOND VERT PUR (vide), la "
+        "bordure occupe presque toute l'image. " + STYLE_ICON)),
+    # Attache murale des panneaux UI : les panneaux font partie de l'arène.
+    "panel_mount": dict(canvas="1024x1024", keyed=True, prompt=(
+        "Ferrure d'attache en métal doré forgé pour fixer un panneau : "
+        "petit support ornemental avec rivets, d'où part vers le HAUT un "
+        "court segment de CHAÎNE dorée à trois maillons, style fantasy "
+        "élégant, vu de face. " + STYLE_ICON)),
+    # Piédestal des maîtres : dais de pierre circulaire, suit la colonne du
+    # maître (widget board_cell), teinté rouge/bleu par camp via modulate.
+    "dais_master": dict(canvas="1536x1024", keyed=True, prompt=(
+        "Piédestal bas de pierre sculptée vu de dessus en très légère "
+        "plongée : disque elliptique horizontal à deux gradins, cerclé "
+        "d'un anneau d'OR gravé de runes discrètes, centre de pierre UNIE "
+        "légèrement sombre (un personnage sera affiché par-dessus), "
+        "élégant, ancien, sobre. FOND VERT PUR tout autour du piédestal. "
         + STYLE_ICON)),
 }
 
 SIZES = { "orb_endturn": 320, "icon_menu": 96, "icon_emotes": 96,
-          "hp_shield": 192, "cell_red": 256, "cell_blue": 256,
-          "banner_ribbon": 1024 }
+          "hp_shield": 192, "cell_red": 384, "cell_blue": 384,
+          "dais_master": 320, "panel_mount": 128, "banner_ribbon": 1024 }
 
 
 def post() -> None:
@@ -158,6 +228,14 @@ def post() -> None:
             cover_crop(img, 1920, 1080).save(BG_OUT / "arena_ruins_1920.png")
             cover_crop(img, 2400, 1080).save(BG_OUT / "arena_ruins_2400.png")
             print("  [ok] arena_ruins_1920/2400")
+            continue
+        if name == "arena_iso":
+            # biais bas : la rangée 4 doit finir au-dessus de la main (y=842)
+            cover_crop(img, 1920, 1080, top_bias=1.0).save(
+                BG_OUT / "arena_iso_1920.png")
+            cover_crop(img, 2400, 1080, top_bias=0.9).save(
+                BG_OUT / "arena_iso_2400.png")
+            print("  [ok] arena_iso_1920/2400")
             continue
         if name == "arena_top":
             # biais bas : le plateau doit finir au-dessus de la main (y=842)

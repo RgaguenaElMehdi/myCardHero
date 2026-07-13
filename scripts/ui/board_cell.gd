@@ -14,8 +14,10 @@ var highlight := ""  ## "", "summon", "move", "attack", "selected", "target"
 
 var _content: Control
 var _pulse: Tween
+var _unit: TextureRect      ## sprite de l'occupant (pour le halo de sélection)
+var _halo: TextureRect      ## silhouette lumineuse derrière le sprite
 
-@onready var _ring: Panel = $Ring
+@onready var _ring: TextureRect = $Ring
 
 
 ## Called by the battle scene right after instantiating the widget.
@@ -47,7 +49,7 @@ func set_highlight(mode: String) -> void:
 	# Cases jouables : pulsation douce qui attire l'œil ; sélection plus vive.
 	if mode in ["summon", "move", "attack", "target"]:
 		_pulse = create_tween().set_loops()
-		_pulse.tween_property(_ring, "modulate:a", 0.45, 0.65)\
+		_pulse.tween_property(_ring, "modulate:a", 0.62, 0.65)\
 				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 		_pulse.tween_property(_ring, "modulate:a", 1.0, 0.65)\
 				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -58,41 +60,33 @@ func set_highlight(mode: String) -> void:
 
 
 func _apply_style() -> void:
-	# Les cases rouges/bleues sont PEINTES dans le décor (arena_night) : la
-	# case reste transparente, seul l'anneau de surbrillance est dessiné.
-	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
-
+	# Les logements sont GRAVÉS dans le décor : pas de cadre dessiné. La
+	# surbrillance est une lueur douce au sol qui emplit le logement (pas de
+	# rectangle), teintée selon l'action.
 	var fill := Color.TRANSPARENT
-	var border := Color.TRANSPARENT
-	var width := 0
+	var halo := Color.TRANSPARENT
 	match highlight:
 		"summon":
-			border = UiTheme.GOLD
-			fill = Color(UiTheme.GOLD, 0.14)
-			width = 4
+			fill = Color(UiTheme.GOLD, 0.9)
 		"move":
-			border = UiTheme.ACCENT
-			fill = Color(UiTheme.ACCENT, 0.14)
-			width = 4
+			fill = Color(0.35, 0.72, 1.0, 0.95)
 		"attack", "target":
-			border = UiTheme.DANGER
-			fill = Color(UiTheme.DANGER, 0.16)
-			width = 5
+			fill = Color(UiTheme.DANGER, 0.9)
+			halo = Color(1.6, 0.55, 0.45, 0.85)
 		"selected":
-			border = Color.WHITE
-			width = 4
-	var ring_sb := StyleBoxFlat.new()
-	ring_sb.bg_color = fill
-	ring_sb.set_corner_radius_all(8)
-	ring_sb.border_color = border
-	ring_sb.set_border_width_all(width)
-	_ring.add_theme_stylebox_override("panel", ring_sb)
+			fill = Color(1, 1, 1, 0.8)
+			halo = Color(1.7, 1.6, 1.1, 0.9)
+	_ring.self_modulate = fill
+	if is_instance_valid(_halo):
+		_halo.self_modulate = halo
 
 
 ## Rebuilds the cell content from state.
 func render(state: GameState) -> void:
 	if _content != null:
 		_content.queue_free()
+	_unit = null
+	_halo = null
 	_content = Control.new()
 	_content.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -116,40 +110,65 @@ static func unit_tex(id: String) -> Texture2D:
 	return UiTheme.tex("res://assets/sprites/units/%s.png" % id)
 
 
+## Sprite détouré debout dans le logement : à l'échelle (marge visible tout
+## autour), pieds posés un peu au-dessus du bord bas. Un halo-silhouette est
+## préparé derrière lui pour la sélection.
+func _standing_sprite(tex: Texture2D, breathe: bool) -> void:
+	var ts := tex.get_size()
+	var k := minf(size.x * 0.62 / ts.x, size.y * 0.80 / ts.y)
+	var ssz := ts * k
+	var feet_y := size.y - maxf(19.0, size.y * 0.20)
+	var pos := Vector2((size.x - ssz.x) / 2.0, feet_y - ssz.y)
+	# Halo de sélection : même sprite légèrement agrandi, teinté, derrière.
+	_halo = TextureRect.new()
+	_halo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_halo.stretch_mode = TextureRect.STRETCH_SCALE
+	_halo.texture = tex
+	_halo.size = ssz * 1.14
+	_halo.position = pos - (ssz * 0.07)
+	_halo.self_modulate = Color(1, 1, 1, 0)
+	_halo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_content.add_child(_halo)
+	var unit := TextureRect.new()
+	unit.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	unit.stretch_mode = TextureRect.STRETCH_SCALE
+	unit.texture = tex
+	unit.size = ssz
+	unit.position = pos
+	unit.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_content.add_child(unit)
+	_unit = unit
+	_apply_style()  # réapplique le halo si la case est déjà sélectionnée
+	if breathe:
+		# Respiration subtile : l'unité vit sur sa case.
+		var period := 1.1 + randf() * 0.5
+		var tw := unit.create_tween().set_loops()
+		tw.tween_property(unit, "position:y", -2.0, period).as_relative()\
+				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		tw.tween_property(unit, "position:y", 2.0, period).as_relative()\
+				.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
 func _render_master(_state: GameState, p: PlayerState) -> void:
-	# Camp-tinted halo under the master — red enemy, blue player (mockup style).
-	var tile := ColorRect.new()
-	tile.set_anchors_preset(Control.PRESET_FULL_RECT)
-	tile.offset_left = 4
-	tile.offset_top = 4
-	tile.offset_right = -4
-	tile.offset_bottom = -4
-	tile.color = Color("2f4a86", 0.4) if side == 0 else Color("8c2f26", 0.4)
-	tile.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_content.add_child(tile)
-	var ring := Panel.new()
-	ring.set_anchors_preset(Control.PRESET_FULL_RECT)
-	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color.TRANSPARENT
-	sb.set_corner_radius_all(8)
-	sb.border_color = Color("6e93e8") if side == 0 else Color("d95f4b")
-	sb.set_border_width_all(3)
-	ring.add_theme_stylebox_override("panel", sb)
-	_content.add_child(ring)
+	# Halo de camp au sol (bleu joueur / rouge adverse) : on comprend
+	# immédiatement « c'est le Maître », sans piédestal.
+	var col := Color(0.45, 0.72, 1.0) if side == 0 else Color(1.0, 0.42, 0.36)
+	for i in 2:  # deux nappes superposées = halo net et bien visible
+		var glow := TextureRect.new()
+		var gw := size.x * (1.02 if i == 0 else 0.68)
+		var gh := size.y * (0.58 if i == 0 else 0.4)
+		glow.position = Vector2((size.x - gw) / 2.0, size.y - gh - 4)
+		glow.size = Vector2(gw, gh)
+		glow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		glow.stretch_mode = TextureRect.STRETCH_SCALE
+		glow.texture = UiTheme.tex("res://assets/sprites/ui/battle/glow_master.png")
+		glow.modulate = Color(col, 1.0)
+		glow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_content.add_child(glow)
 
 	var sprite := unit_tex("master_%s" % p.master.id)
 	if sprite != null:
-		var unit := TextureRect.new()
-		unit.set_anchors_preset(Control.PRESET_FULL_RECT)
-		unit.offset_left = 8
-		unit.offset_top = 4
-		unit.offset_right = -8
-		unit.offset_bottom = -12
-		unit.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		unit.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		unit.texture = sprite
-		_content.add_child(unit)
+		_standing_sprite(sprite, true)
 	else:
 		var portrait := TextureRect.new()
 		portrait.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -176,16 +195,20 @@ func _render_monster(m: MonsterInst) -> void:
 	# Preferred: detoured sprite standing on the tile (mockup style).
 	var sprite := unit_tex(String(m.def.id))
 	if sprite != null:
-		var unit := TextureRect.new()
-		unit.set_anchors_preset(Control.PRESET_FULL_RECT)
-		unit.offset_left = 6
-		unit.offset_top = 2
-		unit.offset_right = -6
-		unit.offset_bottom = -10
-		unit.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		unit.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		unit.texture = sprite
-		_content.add_child(unit)
+		# Ombre portée au sol : ancre l'unité sur le logement.
+		var shadow := TextureRect.new()
+		var sw := size.x * 0.5
+		var sh := size.y * 0.18
+		shadow.position = Vector2((size.x - sw) / 2.0,
+				size.y - maxf(16.0, size.y * 0.17) - sh * 0.5)
+		shadow.size = Vector2(sw, sh)
+		shadow.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		shadow.stretch_mode = TextureRect.STRETCH_SCALE
+		shadow.texture = UiTheme.tex("res://assets/sprites/ui/battle/glow_master.png")
+		shadow.modulate = Color(0, 0, 0, 0.4)
+		shadow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_content.add_child(shadow)
+		_standing_sprite(sprite, true)
 	else:
 		var art := TextureRect.new()
 		art.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -222,18 +245,19 @@ func _render_monster(m: MonsterInst) -> void:
 	var abil := _ability_icons(m)
 	if abil != null:
 		_content.add_child(abil)
-	# shield ring
+	# bouclier : aura magique bleutée enveloppant l'unité (pas de rectangle)
 	if m.shield:
-		var ring := Panel.new()
-		ring.set_anchors_preset(Control.PRESET_FULL_RECT)
-		ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var rsb := StyleBoxFlat.new()
-		rsb.bg_color = Color.TRANSPARENT
-		rsb.set_corner_radius_all(8)
-		rsb.border_color = Color("7dd8ff")
-		rsb.set_border_width_all(3)
-		ring.add_theme_stylebox_override("panel", rsb)
-		_content.add_child(ring)
+		var aura := TextureRect.new()
+		var aw := size.x * 0.7
+		var ah := size.y * 0.85
+		aura.position = Vector2((size.x - aw) / 2.0, size.y - ah - 8)
+		aura.size = Vector2(aw, ah)
+		aura.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		aura.stretch_mode = TextureRect.STRETCH_SCALE
+		aura.texture = UiTheme.tex("res://assets/sprites/ui/battle/glow_master.png")
+		aura.modulate = Color(0.49, 0.85, 1.0, 0.5)
+		aura.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_content.add_child(aura)
 	# acted = dimmed
 	if m.acted:
 		_content.modulate = Color(0.6, 0.6, 0.65)

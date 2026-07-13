@@ -1,9 +1,9 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/battle_scene.gd" id="1"]
 [ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="2"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/arenas/arena_top_mobile.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/arenas/arena_iso_mobile.tscn" id="4"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/panel_night.png" id="5"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/btn_secondary_sm.png" id="6"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/orb_endturn.png" id="7"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/icon_menu.png" id="11"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/icon_emotes.png" id="12"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_settings.png" id="13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/panel_mount.png" id="200"]
 
 [sub_resource type="StyleBoxTexture" id="panel_gold"]
 texture = ExtResource("5")
@@ -811,4 +812,126 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+
+[node name="MountPlayerL" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 44.0
+offset_top = -53.0
+offset_right = 84.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
+mouse_filter = 2
+
+[node name="MountPlayerR" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 272.0
+offset_top = -53.0
+offset_right = 312.0
+offset_bottom = 30.0
+flip_h = true
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
+mouse_filter = 2
+
+[node name="MountEnemyL" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -312.0
+offset_top = -53.0
+offset_right = -272.0
+offset_bottom = 30.0
+grow_horizontal = 0
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
+mouse_filter = 2
+
+[node name="MountEnemyR" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_top = -53.0
+offset_right = -44.0
+offset_bottom = 30.0
+grow_horizontal = 0
+flip_h = true
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
+mouse_filter = 2
+
+[node name="MountDetailL" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -312.0
+offset_top = 303.0
+offset_right = -272.0
+offset_bottom = 386.0
+grow_horizontal = 0
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
+mouse_filter = 2
+
+[node name="MountDetailR" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_top = 303.0
+offset_right = -44.0
+offset_bottom = 386.0
+grow_horizontal = 0
+flip_h = true
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
+mouse_filter = 2
+
+[node name="MountInfoL" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_top = 1.0
+anchor_bottom = 1.0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -312.0
+offset_top = -237.0
+offset_right = -272.0
+offset_bottom = -154.0
+grow_horizontal = 0
+grow_vertical = 0
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
+mouse_filter = 2
+
+[node name="MountInfoR" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_top = 1.0
+anchor_bottom = 1.0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -84.0
+offset_top = -237.0
+offset_right = -44.0
+offset_bottom = -154.0
+grow_horizontal = 0
+grow_vertical = 0
+flip_h = true
+expand_mode = 1
+stretch_mode = 5
+texture = ExtResource("200")
 mouse_filter = 2

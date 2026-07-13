@@ -180,6 +180,7 @@
       "arena_bg": "Vue de DESSUS en forte plongée d'une vaste esplanade rectangulaire de dalles de pierre lisses et claires, VIDE (aucune g",
       "arena_night": "AAA anime fantasy game environment concept art, night scene, ONLY scenery, NO interface, NO characters, NO text, NO icon",
       "arena_top": "AAA anime fantasy game environment concept art, night scene, ONLY scenery, NO interface, NO characters, NO text. STRICT ",
+      "arena_iso": "AAA anime fantasy game environment concept art, night scene, ONLY scenery, NO interface, NO characters, NO text, NO icon",
       "orb_endturn": "Grand bouton rond de jeu : disque de CRISTAL BLEU profond lumineux aux reflets magiques, serti dans un anneau d'OR antiq",
       "banner_ribbon": "Large bannière-ruban horizontale déployée, en tissu bleu nuit profond bordé d'OR antique finement ouvragé, extrémités en",
       "icon_menu": "Icône : trois lignes horizontales dorées ouvragées (menu), style orfèvrerie. Icône d'interface de jeu premium, style ani",
@@ -187,8 +188,10 @@
       "hp_shield": "Écu héraldique ROUGE profond serti d'une bordure d'or antique finement gravée, centre UNI et sombre (aucun motif central",
       "back_blue": "Dos de carte à jouer plein cadre, format portrait : fond BLEU NUIT profond richement orné, grande étoile-boussole dorée ",
       "back_red": "Dos de carte à jouer plein cadre, format portrait : fond ROUGE sombre profond richement orné, grande étoile-boussole dor",
-      "cell_red": "Cadre de case de plateau de jeu carré aux coins doucement arrondis : fin liseré ROUGE lumineux gravé dans la pierre, ser",
-      "cell_blue": "Cadre de case de plateau de jeu carré aux coins doucement arrondis : fin liseré BLEU lumineux gravé dans la pierre, sert"
+      "cell_red": "Bordure de case de plateau de jeu RECTANGULAIRE horizontale, coins à peine arrondis, GRAVÉE EN CREUX dans de la pierre a",
+      "cell_blue": "Bordure de case de plateau de jeu RECTANGULAIRE horizontale, coins à peine arrondis, GRAVÉE EN CREUX dans de la pierre a",
+      "panel_mount": "Ferrure d'attache en métal doré forgé pour fixer un panneau : petit support ornemental avec rivets, d'où part vers le HA",
+      "dais_master": "Piédestal bas de pierre sculptée vu de dessus en très légère plongée : disque elliptique horizontal à deux gradins, cerc"
     }
   }
 }
