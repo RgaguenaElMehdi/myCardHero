@@ -57,14 +57,14 @@ func _fill_profile() -> void:
 	var p: Dictionary = Game.profile.get("player", {})
 	%PlayerName.text = str(p.get("name", "Joueur"))
 	%LevelLabel.text = "Niv. %d" % int(p.get("level", 1))
-	%XpLabel.text = "%s / %s XP" % [_fmt(int(p.get("xp", 0))),
-			_fmt(int(p.get("xp_next", 100)))]
+	%XpLabel.text = "%s / %s XP" % [UiTheme.fmt_thousands(int(p.get("xp", 0))),
+			UiTheme.fmt_thousands(int(p.get("xp_next", 100)))]
 	%XpBar.max_value = maxi(1, int(p.get("xp_next", 100)))
 	%XpBar.value = int(p.get("xp", 0))
 	var cur: Dictionary = Game.profile.get("currency", {})
-	%GoldLabel.text = _fmt(int(cur.get("gold", 0)))
-	%ShardLabel.text = _fmt(int(cur.get("shards", 0)))
-	%GemLabel.text = _fmt(int(cur.get("gems", 0)))
+	%GoldLabel.text = UiTheme.fmt_thousands(int(cur.get("gold", 0)))
+	%ShardLabel.text = UiTheme.fmt_thousands(int(cur.get("shards", 0)))
+	%GemLabel.text = UiTheme.fmt_thousands(int(cur.get("gems", 0)))
 
 
 ## Bannière d'événement + fil d'actualités : contenu déclaratif dans
@@ -134,16 +134,3 @@ func _toast(msg: String) -> void:
 	_toast_tween.tween_interval(1.4)
 	_toast_tween.tween_property(t, "modulate:a", 0.0, 0.35)
 	_toast_tween.tween_callback(func() -> void: t.visible = false)
-
-
-## 2350 -> "2 350" (séparateur de milliers).
-static func _fmt(n: int) -> String:
-	var s := str(n)
-	var out := ""
-	var count := 0
-	for i in range(s.length() - 1, -1, -1):
-		out = s[i] + out
-		count += 1
-		if count % 3 == 0 and i > 0:
-			out = " " + out
-	return out

@@ -145,5 +145,24 @@
       "icon_shard": "Cristal facetté VIOLET lumineux dressé, éclats d'améthyste. Icône d'interface de jeu premium, style anime fantasy peint,",
       "icon_gem": "Cristal facetté BLEU lumineux dressé, éclats de saphir. Icône d'interface de jeu premium, style anime fantasy peint, mod"
     }
+  },
+  "deck_anime": {
+    "generator": "tools/generate_deck_anime.py (gpt-image-2, juillet 2026)",
+    "assets": {
+      "hero_deck": "Illustration anime fantasy moderne de haute qualité, format portrait vertical : un jeune héros aux cheveux bruns en bata",
+      "slot_empty": "Emplacement vide de carte à jouer, format portrait 2:3 plein cadre : fond bleu nuit très sombre légèrement texturé, très",
+      "icon_back": "Flèche de retour pointant vers la GAUCHE, dorée et ouvragée, pointe nette. Icône d'interface de jeu premium, style anime",
+      "icon_help": "Point d'interrogation doré ouvragé, forme épaisse et lisible. Icône d'interface de jeu premium, style anime fantasy pein",
+      "icon_save": "Parchemin roulé scellé d'un cachet de cire dorée frappé d'une étoile. Icône d'interface de jeu premium, style anime fant",
+      "icon_search": "Loupe dorée au manche ouvragé, verre bleuté brillant. Icône d'interface de jeu premium, style anime fantasy peint, moder",
+      "icon_funnel": "Entonnoir de filtre doré au contour net. Icône d'interface de jeu premium, style anime fantasy peint, moderne et lumineu",
+      "icon_sort": "Deux flèches verticales dorées côte à côte, une vers le haut et une vers le bas. Icône d'interface de jeu premium, style",
+      "icon_plus": "Signe PLUS doré épais aux extrémités ornées. Icône d'interface de jeu premium, style anime fantasy peint, moderne et lum",
+      "icon_minus": "Signe MOINS doré épais aux extrémités ornées (barre horizontale unique). Icône d'interface de jeu premium, style anime f",
+      "guild_flame": "Flamme stylisée orange et or, vive et lumineuse. Icône d'interface de jeu premium, style anime fantasy peint, moderne et",
+      "guild_sylvan": "Feuille stylisée vert émeraude nervurée d'or. Icône d'interface de jeu premium, style anime fantasy peint, moderne et lu",
+      "guild_shadow": "Crâne stylisé violet améthyste cerclé d'or, aura sombre. Icône d'interface de jeu premium, style anime fantasy peint, mo",
+      "guild_light": "Soleil rayonnant doré éclatant. Icône d'interface de jeu premium, style anime fantasy peint, moderne et lumineux : refle"
+    }
   }
 }

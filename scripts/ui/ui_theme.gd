@@ -124,6 +124,19 @@ static func guild_color(guild: int) -> Color:
 	return GUILD_COLORS.get(guild, ACCENT)
 
 
+## 2350 -> "2 350" (séparateur de milliers).
+static func fmt_thousands(n: int) -> String:
+	var s := str(n)
+	var out := ""
+	var count := 0
+	for i in range(s.length() - 1, -1, -1):
+		out = s[i] + out
+		count += 1
+		if count % 3 == 0 and i > 0:
+			out = " " + out
+	return out
+
+
 static func panel(color: Color = PANEL, radius: int = 10, border: Color = Color.TRANSPARENT,
 		border_width: int = 0) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
