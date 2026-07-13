@@ -237,10 +237,13 @@ func _render_monster(m: MonsterInst) -> void:
 	hp_badge.position = Vector2(size.x * 0.84 - hp_badge.get_minimum_size().x,
 			size.y - 38)
 
-	# level badge
+	# level badge + XP vers le niveau suivant (« 2/3 ») juste dessous
 	if m.def.max_level() > 1 or m.level > 1:
 		_content.add_child(_badge("★%d" % m.level, Color(0.25, 0.2, 0.05, 0.9), Vector2(4, 4),
 				UiTheme.GOLD))
+		if not m.at_max_level():
+			_content.add_child(_badge("%d/%d" % [m.xp, m.next_level_xp()],
+					Color(0.08, 0.1, 0.18, 0.9), Vector2(4, 30), Color(0.72, 0.82, 1.0)))
 	# ability indicators (top-right): attack type + keywords
 	var abil := _ability_icons(m)
 	if abil != null:

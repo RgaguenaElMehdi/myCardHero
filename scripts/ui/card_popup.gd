@@ -60,7 +60,7 @@ func _finish(row: HBoxContainer) -> void:
 	var close := Button.new()
 	close.text = "✕  Fermer"
 	close.custom_minimum_size = Vector2(150, 48)
-	UiTheme.style_button(close, UiTheme.DANGER.darkened(0.35), 18)
+	close.theme_type_variation = &"MenuTabButton"
 	close.set_anchors_preset(Control.PRESET_TOP_RIGHT)
 	close.offset_left = -190
 	close.offset_top = 30
@@ -94,26 +94,6 @@ func _card_image(path: String, fallback_def: CardDef) -> Control:
 	return CardWidget.create(fallback_def, 480) if fallback_def != null else Control.new()
 
 
-## Ornate 9-slice frame for the inspector panel (gold filigree corners on a
-## deep-black centre). Falls back to the shared stone panel if the art is absent.
-func _popup_frame() -> StyleBox:
-	var tex := UiTheme.tex("res://assets/sprites/ui/pixel/panel_popup.png")
-	if tex == null:
-		return UiTheme.panel_ornate()
-	var sb := StyleBoxTexture.new()
-	sb.texture = tex
-	sb.texture_margin_left = tex.get_width() * 0.16
-	sb.texture_margin_right = tex.get_width() * 0.16
-	sb.texture_margin_top = tex.get_height() * 0.20
-	sb.texture_margin_bottom = tex.get_height() * 0.20
-	# Keep text clear of the corner flourishes (which fill the top/bottom bands).
-	sb.content_margin_left = 40
-	sb.content_margin_right = 40
-	sb.content_margin_top = 58
-	sb.content_margin_bottom = 56
-	return sb
-
-
 ## A thin gold rule used to separate sections.
 func _divider() -> Control:
 	var line := ColorRect.new()
@@ -127,7 +107,8 @@ func _divider() -> Control:
 func _side_panel(title: String, subtitle: String, sections: Array,
 		width: float = 480.0) -> Control:
 	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _popup_frame())
+	# Même habillage que le deck builder (kit bleu nuit / doré).
+	panel.theme_type_variation = &"NightPanel"
 	panel.custom_minimum_size = Vector2(width, 0)
 	panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var vbox := VBoxContainer.new()

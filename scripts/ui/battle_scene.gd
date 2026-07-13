@@ -434,8 +434,9 @@ func _refresh_panels() -> void:
 				back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 				row.add_child(back)
 	var p0 := state.players[0]
-	power_btn.text = "✦ %s (%d)" % [p0.master.power_name, p0.master.power_cost]
-	power_btn.tooltip_text = "%s\nPassif : %s" % [p0.master.power_desc, p0.master.passive_desc]
+	(%PowerName as Label).text = "✦ %s (%d)" % [p0.master.power_name, p0.master.power_cost]
+	(%PowerDesc as Label).text = "%s\nPassif : %s" \
+			% [p0.master.power_desc, p0.master.passive_desc]
 
 
 func _refresh_buttons() -> void:
@@ -444,13 +445,16 @@ func _refresh_buttons() -> void:
 	var p0 := state.players[0]
 	power_btn.disabled = not my_turn or p0.power_used or p0.stones < p0.master.power_cost
 	_pulse_power(not power_btn.disabled)
+	_pulse_end_turn(my_turn)
+	# Le petit texte sous le nom explique le pouvoir (ou pourquoi il est
+	# bloqué) ; le passif, toujours actif, reste affiché dessous.
+	var power_line := p0.master.power_desc
 	if p0.power_used:
-		power_btn.tooltip_text = "Pouvoir déjà utilisé ce tour."
+		power_line = "Déjà utilisé ce tour."
 	elif p0.stones < p0.master.power_cost:
-		power_btn.tooltip_text = "Il vous faut %d pierres (vous en avez %d)." \
+		power_line = "Il vous faut %d pierres (vous en avez %d)." \
 				% [p0.master.power_cost, p0.stones]
-	else:
-		power_btn.tooltip_text = "%s\nPassif : %s" % [p0.master.power_desc, p0.master.passive_desc]
+	(%PowerDesc as Label).text = "%s\nPassif : %s" % [power_line, p0.master.passive_desc]
 	turn_label.text = ""
 	if state.phase == GameState.Phase.MAIN:
 		turn_label.text = "Tour %d — %s" % [state.player_turn_count(),
@@ -1024,29 +1028,36 @@ func _draw_anim(player: int) -> void:
 
 # --- Detail panel / log / toast ---------------------------------------------
 
+## Largeur de la mini-carte : tout le panneau doit tenir SANS scroll.
+const DETAIL_CARD_W := 235.0
+
+
 func _show_detail_card(def: CardDef) -> void:
 	_clear_detail()
 	if not def.is_monster():
-		# Sorts : l'effet en clair AVANT la carte, sinon il est masqué sous le
-		# pli du ScrollContainer (la mini-carte remplit déjà le panneau).
+		# Sorts : l'effet en clair (le texte de la mini-carte est illisible).
 		_add_detail_text(GameText.describe_effect(def.effect))
-	var w := CardWidget.create(def, 215)
+	var w := CardWidget.create(def, DETAIL_CARD_W)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	w.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	detail_holder.add_child(w)
 	_add_detail_text(_keyword_explanations(def))
 
 
 func _show_detail_monster(m: MonsterInst) -> void:
 	_clear_detail()
-	var w := CardWidget.create(m.def, 215)
+	var w := CardWidget.create(m.def, DETAIL_CARD_W)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	w.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	detail_holder.add_child(w)
+	# Une seule ligne compacte : le panneau doit tenir sans scroll.
 	var status := "Niv %d — ATQ %d, PV %d/%d" % [m.level, m.atk(), m.hp, m.max_hp()]
 	if not m.at_max_level():
-		status += "\nXP %d / %d" % [m.xp, m.next_level_xp()]
+		status += " · XP %d/%d" % [m.xp, m.next_level_xp()]
 	if m.shield:
-		status += "\nBouclier actif"
-	var l := UiTheme.label(status, 17, UiTheme.TEXT)
+		status += " · Bouclier"
+	var l := UiTheme.label(status, 16, UiTheme.TEXT)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	detail_holder.add_child(l)
 	_add_detail_text(_keyword_explanations(m.def))
 
@@ -1065,9 +1076,9 @@ func _keyword_explanations(def: CardDef) -> String:
 func _add_detail_text(text: String) -> void:
 	if text == "":
 		return
-	var info := UiTheme.label(text, 16, UiTheme.TEXT_DIM)
+	var info := UiTheme.label(text, 15, UiTheme.TEXT_DIM)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	info.custom_minimum_size = Vector2(260, 0)
+	info.custom_minimum_size = Vector2(280, 0)
 	detail_holder.add_child(info)
 
 
@@ -1273,6 +1284,23 @@ var _power_tw: Tween
 
 
 ## Pulsation dorée du bouton de pouvoir tant qu'il est activable.
+var _end_turn_tw: Tween
+
+
+## Halo doré pulsant autour de « Fin du tour » tant que c'est à vous de jouer.
+func _pulse_end_turn(on: bool) -> void:
+	var glow := %EndTurnGlow as TextureRect
+	if on and _end_turn_tw == null:
+		_end_turn_tw = glow.create_tween().set_loops()
+		_end_turn_tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+		_end_turn_tw.tween_property(glow, "modulate:a", 0.9, 0.7)
+		_end_turn_tw.tween_property(glow, "modulate:a", 0.25, 0.7)
+	elif not on and _end_turn_tw != null:
+		_end_turn_tw.kill()
+		_end_turn_tw = null
+		glow.modulate.a = 0.0
+
+
 func _pulse_power(on: bool) -> void:
 	if on and _power_tw == null:
 		_power_tw = power_btn.create_tween().set_loops()

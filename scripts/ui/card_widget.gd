@@ -39,15 +39,8 @@ static func create_mini(p_def: CardDef, width: float = 156.0) -> CardWidget:
 
 func _setup() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
-
-	var evo_name := ""
-	if def.evolves_to != &"":
-		var tree := Engine.get_main_loop() as SceneTree
-		var db = tree.root.get_node_or_null("Db") if tree != null else null
-		if db != null and db.card(def.evolves_to) != null:
-			evo_name = db.card(def.evolves_to).display_name
-	tooltip_text = GameText.card_tooltip(def, evo_name)
-
+	# Pas d'info-bulle : le panneau « Détail de la carte » (bataille) et le
+	# panneau détails (deck builder) affichent déjà tout au survol.
 	mouse_entered.connect(func() -> void:
 		hovering = true
 		_apply_style())
