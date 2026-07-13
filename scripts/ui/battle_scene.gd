@@ -1026,6 +1026,10 @@ func _draw_anim(player: int) -> void:
 
 func _show_detail_card(def: CardDef) -> void:
 	_clear_detail()
+	if not def.is_monster():
+		# Sorts : l'effet en clair AVANT la carte, sinon il est masqué sous le
+		# pli du ScrollContainer (la mini-carte remplit déjà le panneau).
+		_add_detail_text(GameText.describe_effect(def.effect))
 	var w := CardWidget.create(def, 215)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	detail_holder.add_child(w)

@@ -15,7 +15,8 @@ import json
 import sys
 from pathlib import Path  # noqa: F401 — used for _art overrides
 
-from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 UI = ROOT / "assets" / "sprites" / "ui"
@@ -269,6 +270,41 @@ def auto_trim(img: Image.Image) -> Image.Image:
         y1 -= 1
     pad = 3
     return img.crop((x0 + pad, y0 + pad, x1 - pad + 1, y1 - pad + 1))
+
+
+def strip_black_margin(img: Image.Image, thresh: int = 30) -> Image.Image:
+    """Rend transparente la marge noire du gabarit autour du cadre (les frames
+    Ombre/Maître sont peints sur fond noir plus étroit que le canevas — sans ça
+    le noir reste cuit dans la carte : bandes visibles en jeu). Flood fill du
+    quasi-noir depuis les bords ; on garde un liséré de 2 px pour préserver le
+    contour sombre du cadre."""
+    a = np.array(img)
+    dark = (a[..., :3].max(axis=2) < thresh) | (a[..., 3] < 30)
+    reach = np.zeros_like(dark)
+    reach[0, :] = dark[0, :]
+    reach[-1, :] = dark[-1, :]
+    reach[:, 0] |= dark[:, 0]
+    reach[:, -1] |= dark[:, -1]
+    while True:
+        grown = reach.copy()
+        grown[1:, :] |= reach[:-1, :]
+        grown[:-1, :] |= reach[1:, :]
+        grown[:, 1:] |= reach[:, :-1]
+        grown[:, :-1] |= reach[:, 1:]
+        grown &= dark
+        if (grown == reach).all():
+            break
+        reach = grown
+    keep = ~reach  # dilaté de 2 px : liséré sombre conservé contre le cadre
+    for _ in range(2):
+        grown = keep.copy()
+        grown[1:, :] |= keep[:-1, :]
+        grown[:-1, :] |= keep[1:, :]
+        grown[:, 1:] |= keep[:, :-1]
+        grown[:, :-1] |= keep[:, 1:]
+        keep = grown
+    a[..., 3] = np.where(reach & ~keep, 0, a[..., 3])
+    return Image.fromarray(a)
 
 
 def plate_center_x(img: Image.Image, yfrac: float, yspan: float = 0.045,
@@ -615,11 +651,15 @@ def main() -> int:
         tpl, box, gem = get_template(kind, card.get("guild", "flame"), rarity)
         img = compose_card(card, tpl, box, gem)
         img = auto_trim(img)
+        img = strip_black_margin(img)
+        bbox = img.getchannel("A").getbbox()
+        if bbox:
+            img = img.crop(bbox)
         img = img.resize((640, int(640 * img.height / img.width)), Image.LANCZOS)
         mask = Image.new("L", img.size, 0)
         ImageDraw.Draw(mask).rounded_rectangle(
             (0, 0, img.width - 1, img.height - 1), radius=int(img.width * 0.05), fill=255)
-        img.putalpha(mask)
+        img.putalpha(ImageChops.darker(img.getchannel("A"), mask))
         img.save(OUT / f"{card['id']}.png")
         print(f"OK {card['id']}")
     print("Cartes composées.")

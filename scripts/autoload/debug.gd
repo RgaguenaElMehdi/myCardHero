@@ -19,6 +19,8 @@ func _ready() -> void:
 			_log_clicks = true
 		elif String(arg).begins_with("--popup="):
 			_schedule_popup(String(arg).split("=", true, 1)[1])
+		elif String(arg).begins_with("--detail="):
+			_schedule_detail(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--nettest="):
 			_schedule_nettest(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--serve"):
@@ -113,6 +115,18 @@ func _schedule_popup(card_id: String) -> void:
 		live = MonsterInst.create(def, 0, 0)
 		live.gain_xp(1)
 	CardPopup.open(get_tree().current_scene, def, live)
+
+
+## Remplit le panneau « Détail de la carte » de la scène de bataille sur une
+## carte donnée : `--detail=<card_id>` (combiner avec --screenshot).
+func _schedule_detail(card_id: String) -> void:
+	await get_tree().create_timer(1.5, true, false, true).timeout
+	var def: CardDef = Db.card(StringName(card_id))
+	var sc := get_tree().current_scene
+	if def == null or sc == null or not sc.has_method("_show_detail_card"):
+		print("[detail] carte inconnue ou scène sans panneau détail : %s" % card_id)
+		return
+	sc.call("_show_detail_card", def)
 
 
 ## Synthesizes real mouse clicks on a sequence of buttons ("A|B|C"),

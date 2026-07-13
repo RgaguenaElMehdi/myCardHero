@@ -18,7 +18,9 @@ static func open_master(host: Control, master: MasterDef) -> void:
 
 
 func _base() -> HBoxContainer:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	# Déjà dans l'arbre ici : set_anchors_preset seul garderait le rect 0×0
+	# (offsets compensés) → popup réduit au coin haut-gauche, sans fond sombre.
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	z_index = 50
 	var dim := ColorRect.new()
@@ -82,7 +84,10 @@ func _card_image(path: String, fallback_def: CardDef) -> Control:
 	if tex != null:
 		var img := TextureRect.new()
 		img.texture = tex
-		img.custom_minimum_size = Vector2(560, 780)
+		# Boîte au ratio exact de la carte : pas de bandes de letterboxing
+		# (les cartes composées n'ont pas toutes les mêmes dimensions).
+		var h := 780.0
+		img.custom_minimum_size = Vector2(h * tex.get_width() / tex.get_height(), h)
 		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		return img
