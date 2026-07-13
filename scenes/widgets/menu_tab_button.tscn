@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/menu_tab_button.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+
+[node name="MenuTabButton" type="Button"]
+custom_minimum_size = Vector2(114, 100)
+theme_type_variation = &"MenuTabButton"
+script = ExtResource("1")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="TabIcon" type="TextureRect" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(40, 40)
+size_flags_horizontal = 4
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="TabLabel" type="Label" parent="Content"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.9, 0.86, 0.76, 1)
+theme_override_constants/outline_size = 0
+text = "ONGLET"
+horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="Badge" type="Panel" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -26.0
+offset_top = -6.0
+offset_right = -4.0
+offset_bottom = 16.0
+theme_type_variation = &"NotifBadge"
+mouse_filter = 2
+
+[node name="BadgeLabel" type="Label" parent="Badge"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 0
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+mouse_filter = 2

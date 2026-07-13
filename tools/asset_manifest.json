@@ -118,5 +118,32 @@
       "assets/backgrounds/menu_gold_2400.png"
     ],
     "note": "pièces sans texte ; labels en vrai texte Godot (police Cinzel.ttf déjà présente)"
+  },
+  "menu_anime": {
+    "generator": "tools/generate_menu_anime.py (gpt-image-2, juillet 2026)",
+    "assets": {
+      "bg_main": "Illustration anime fantasy moderne de très haute qualité, plan large cinématographique : un jeune héros aux cheveux brun",
+      "emblem_crystal": "Grand cristal bleu lumineux facetté dressé à la verticale, serti d'ornements d'or effilés en couronne à sa base, éclats ",
+      "event_art": "Portrait anime fantasy peint : magicienne élégante aux longs cheveux violet pâle et yeux améthyste, tenue de festival so",
+      "news_art": "Éventail de trois cartes à jouer au dos bleu nuit orné d'or et serties de cristaux bleus lumineux, posées sur une table ",
+      "avatar_player": "Portrait carré d'avatar de jeu, style anime fantasy peint : jeune héros aux cheveux bruns en bataille et yeux bleus déte",
+      "rank_badge": "Insigne de rang de jeu : écu bleu nuit serti d'un cristal bleu lumineux, bordure d'argent finement ouvragée, deux petite",
+      "icon_campaign": "Bannière-étendard bleu roi frappée d'une étoile de boussole d'or, hampe dorée, flottant fièrement. Icône d'interface de ",
+      "icon_free": "Deux épées dorées croisées aux gardes ouvragées, petit éclat d'étincelle au croisement. Icône d'interface de jeu premium",
+      "icon_deck": "Éventail de trois cartes à jouer au dos sombre liseré d'or, la carte du dessus ornée d'une étoile dorée. Icône d'interfa",
+      "icon_collection": "Grand livre-grimoire ouvert à couverture bleu nuit et or, pages lumineuses, petit cristal serti sur la tranche. Icône d'",
+      "icon_shop": "Échoppe de marché fantasy : auvent rayé rouge et or au-dessus d'un étal de bois. Icône d'interface de jeu premium, style",
+      "icon_quests": "Parchemin déroulé aux embouts d'or avec un sceau de cire rouge. Icône d'interface de jeu premium, style anime fantasy pe",
+      "icon_pass": "Écu doré frappé d'une étoile, entouré d'un ruban bleu. Icône d'interface de jeu premium, style anime fantasy peint, mode",
+      "icon_ranking": "Trophée-bouclier d'or couronné de laurier avec une petite couronne au sommet. Icône d'interface de jeu premium, style an",
+      "icon_settings": "Roue dentée d'or au contour net et poli. Icône d'interface de jeu premium, style anime fantasy peint, moderne et lumineu",
+      "icon_quit": "Porte de bois cerclée d'or entrouverte avec une flèche dorée qui en sort. Icône d'interface de jeu premium, style anime ",
+      "icon_mail": "Enveloppe de parchemin clair scellée de cire dorée. Icône d'interface de jeu premium, style anime fantasy peint, moderne",
+      "icon_gift": "Coffret cadeau bleu nuit au ruban doré noué. Icône d'interface de jeu premium, style anime fantasy peint, moderne et lum",
+      "icon_social": "Deux silhouettes de bustes dorés côte à côte (amis). Icône d'interface de jeu premium, style anime fantasy peint, modern",
+      "icon_gold": "Pièce d'or brillante frappée d'une étoile à quatre branches. Icône d'interface de jeu premium, style anime fantasy peint",
+      "icon_shard": "Cristal facetté VIOLET lumineux dressé, éclats d'améthyste. Icône d'interface de jeu premium, style anime fantasy peint,",
+      "icon_gem": "Cristal facetté BLEU lumineux dressé, éclats de saphir. Icône d'interface de jeu premium, style anime fantasy peint, mod"
+    }
   }
 }

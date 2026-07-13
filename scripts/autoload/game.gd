@@ -126,6 +126,10 @@ func default_profile() -> Dictionary:
 				starter.get("deck", []))],
 		"active_deck": 0,
 		"settings": { "music_volume": 0.8, "sfx_volume": 0.9, "fullscreen": false },
+		# Identité et monnaies affichées par le menu d'accueil. Valeurs de départ
+		# provisoires (mockup) tant qu'aucun système d'XP/boutique ne les alimente.
+		"player": { "name": "Mercure", "level": 12, "xp": 850, "xp_next": 1500 },
+		"currency": { "gold": 2350, "shards": 860, "gems": 120 },
 	}
 
 
