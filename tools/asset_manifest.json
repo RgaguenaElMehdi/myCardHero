@@ -164,5 +164,14 @@
       "guild_shadow": "Crâne stylisé violet améthyste cerclé d'or, aura sombre. Icône d'interface de jeu premium, style anime fantasy peint, mo",
       "guild_light": "Soleil rayonnant doré éclatant. Icône d'interface de jeu premium, style anime fantasy peint, moderne et lumineux : refle"
     }
+  },
+  "ui_kit_anime": {
+    "generator": "tools/generate_ui_kit_anime.py (gpt-image-2, juillet 2026)",
+    "assets": {
+      "btn_primary": "Plaque de bouton d'interface rectangulaire très allongée : OR antique (#C89A45) en léger dégradé vertical (or lumineux e",
+      "btn_secondary": "Plaque de bouton d'interface rectangulaire très allongée : BLEU NUIT profond (#182235) en léger dégradé vertical, très f",
+      "btn_danger": "Plaque de bouton d'interface rectangulaire très allongée : ROUGE sombre profond en léger dégradé vertical, fine bordure ",
+      "panel_night": "Grand panneau d'interface rectangulaire : fond BLEU NUIT profond (#101827) quasi uni avec très léger dégradé vertical et"
+    }
   }
 }

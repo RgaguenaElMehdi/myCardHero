@@ -1073,10 +1073,9 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 52)
-theme_type_variation = &"MenuTabButton"
+theme_type_variation = &"DangerButton"
 theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(1, 0.6, 0.5, 1)
 text = "SUPPRIMER"
 
 [node name="CloseDecksBtn" type="Button" parent="DecksOverlay/VBox"]
@@ -1105,9 +1104,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -420.0
-offset_top = -280.0
+offset_top = -350.0
 offset_right = 420.0
-offset_bottom = 280.0
+offset_bottom = 350.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_type_variation = &"NightPanel"
@@ -1138,15 +1137,34 @@ columns = 4
 theme_override_constants/h_separation = 12
 theme_override_constants/v_separation = 12
 
-[node name="CloseMasterBtn" type="Button" parent="MasterOverlay/VBox"]
+[node name="MasterInfoPanel" type="PanelContainer" parent="MasterOverlay/VBox"]
+layout_mode = 2
+theme_type_variation = &"NightPanel"
+
+[node name="MasterInfo" type="Label" parent="MasterOverlay/VBox/MasterInfoPanel"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 52)
-theme_type_variation = &"MenuTabButton"
+custom_minimum_size = Vector2(0, 92)
 theme_override_fonts/font = ExtResource("3")
-theme_override_font_sizes/font_size = 16
-text = "FERMER"
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.85, 0.83, 0.76, 1)
+theme_override_constants/outline_size = 0
+theme_override_constants/line_spacing = 4
+text = ""
+autowrap_mode = 2
 
+[node name="SelectMasterBtn" type="Button" parent="MasterOverlay/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 60)
+theme_type_variation = &"MenuNavFeatured"
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.16, 0.11, 0.04, 1)
+theme_override_colors/font_hover_color = Color(0.16, 0.11, 0.04, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.07, 0.02, 1)
+theme_override_colors/font_disabled_color = Color(0.35, 0.28, 0.16, 1)
+text = "SÉLECTIONNER"
 [node name="MissingOverlay" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false

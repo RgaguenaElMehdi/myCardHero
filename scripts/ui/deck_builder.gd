@@ -50,6 +50,8 @@ func _ready() -> void:
 		var defs := _sorted_defs()
 		if not defs.is_empty():
 			_select.call_deferred(String((defs[defs.size() / 2] as CardDef).id))
+	if OS.get_cmdline_user_args().has("--show-masters"):
+		_open_overlay.call_deferred(%MasterOverlay)
 
 
 ## Nombre de colonnes tenant dans le conteneur (séparation 10 px).
@@ -134,8 +136,10 @@ func _wire_overlays() -> void:
 	%Dim.gui_input.connect(func(e: InputEvent) -> void:
 		if e is InputEventMouseButton and e.pressed:
 			_close_overlays())
-	for b: Button in [%CloseDecksBtn, %CloseMasterBtn, %CloseMissingBtn, %CloseHelpBtn]:
+	for b: Button in [%CloseDecksBtn, %CloseMissingBtn, %CloseHelpBtn]:
 		b.pressed.connect(_close_overlays)
+	%SelectMasterBtn.pressed.connect(_apply_master)
+	%SelectMasterBtn.pressed.connect(UiTheme._click_sfx)
 	%NewDeckBtn.pressed.connect(_new_deck)
 	%DupDeckBtn.pressed.connect(_duplicate_deck)
 	%DeleteDeckBtn.pressed.connect(func() -> void: %DeleteConfirm.popup_centered())
@@ -566,6 +570,7 @@ func _open_overlay(panel: Control) -> void:
 	if panel == %DecksOverlay:
 		_rebuild_deck_list()
 	elif panel == %MasterOverlay:
+		_master_preview = String(_cur().master)
 		_rebuild_masters()
 
 
@@ -586,7 +591,7 @@ func _rebuild_deck_list() -> void:
 		var here := "  (en cours)" if i == current else ""
 		b.text = "%s%s%s" % [star, decks[i].name, here]
 		b.theme_type_variation = &"MenuNavButton" if i != current else &"MenuNavFeatured"
-		b.custom_minimum_size = Vector2(0, 52)
+		b.custom_minimum_size = Vector2(0, 58)
 		b.pressed.connect(func() -> void:
 			current = i
 			sel_id = ""
@@ -635,9 +640,13 @@ func _after_deck_change() -> void:
 
 ## ---- maître ---------------------------------------------------------------------
 
+## Maître affiché dans le cadre d'infos de l'overlay (pas encore appliqué).
+var _master_preview := ""
+
+
 ## Tous les maîtres en grille ; les non possédés sont grisés + cadenassés.
+## Un clic PRÉVISUALISE (infos dans le cadre du bas) ; SÉLECTIONNER applique.
 func _rebuild_masters() -> void:
-	var cur_id := String(_cur().master)
 	for c in %MasterPick.get_children():
 		c.queue_free()
 	for m: MasterDef in Db.masters.values():
@@ -648,21 +657,39 @@ func _rebuild_masters() -> void:
 		b.icon = UiTheme.tex(m.portrait)
 		b.expand_icon = true
 		b.disabled = not owned
-		b.theme_type_variation = &"MenuNavFeatured" if mid == cur_id else &"MenuNavButton"
-		b.tooltip_text = "%s — %s\nPassif : %s\nPouvoir — %s (%d pierres) : %s%s" % [
-				m.display_name, GameConst.GUILD_NAMES.get(m.guild, ""),
-				m.passive_desc, m.power_name, m.power_cost, m.power_desc,
-				"" if owned else "\n(Verrouillé — débloquer en campagne)"]
+		b.theme_type_variation = &"MenuNavFeatured" if mid == _master_preview else &"MenuNavButton"
 		if not owned:
 			b.modulate = Color(0.4, 0.4, 0.46)
+			b.tooltip_text = "%s (Verrouillé — débloquer en campagne)" % m.display_name
 		else:
 			b.pressed.connect(func() -> void:
-				_cur().master = mid
+				_master_preview = mid
 				Audio.play_sfx("move")
-				_set_dirty(true)
-				_close_overlays()
-				_refresh_identity())
+				_rebuild_masters())
 		%MasterPick.add_child(b)
+	_update_master_info()
+
+
+func _update_master_info() -> void:
+	var m: MasterDef = Db.master(StringName(_master_preview))
+	if m == null:
+		%MasterInfo.text = ""
+		%SelectMasterBtn.disabled = true
+		return
+	%MasterInfo.text = "%s — %s\nPassif : %s\nPouvoir — %s (%d pierres) : %s" % [
+			m.display_name, GameConst.GUILD_NAMES.get(m.guild, ""),
+			m.passive_desc, m.power_name, m.power_cost, m.power_desc]
+	%SelectMasterBtn.disabled = not Game.profile.masters.has(_master_preview)
+
+
+func _apply_master() -> void:
+	if _master_preview == "" or not Game.profile.masters.has(_master_preview):
+		return
+	_cur().master = _master_preview
+	Audio.play_sfx("move")
+	_set_dirty(true)
+	_close_overlays()
+	_refresh_identity()
 
 
 ## ---- cartes absentes --------------------------------------------------------------
