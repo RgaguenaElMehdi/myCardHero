@@ -1,26 +1,26 @@
 [gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/battle_scene.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="2"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/arenas/arena_gold.tscn" id="4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel_dark.png" id="5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/btn_plate.png" id="6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/orb_endturn.png" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/arenas/arena_top.tscn" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/panel_night.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/btn_secondary_sm.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/orb_endturn.png" id="7"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/medallion.png" id="8"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/slot.png" id="9"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/card_back_red.png" id="back_red"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/card_back_blue.png" id="back_blue"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_bag.png" id="11"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_book.png" id="12"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/pixel/icon_menu_gear.png" id="13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/back_red.png" id="back_red"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/back_blue.png" id="back_blue"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/icon_menu.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/icon_emotes.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_settings.png" id="13"]
 
 [sub_resource type="StyleBoxTexture" id="panel_gold"]
 texture = ExtResource("5")
-texture_margin_left = 14.0
-texture_margin_top = 14.0
-texture_margin_right = 14.0
-texture_margin_bottom = 14.0
+texture_margin_left = 56.0
+texture_margin_top = 44.0
+texture_margin_right = 56.0
+texture_margin_bottom = 44.0
 content_margin_left = 24.0
 content_margin_top = 18.0
 content_margin_right = 24.0
@@ -28,6 +28,14 @@ content_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxTexture" id="plate_gold"]
 texture = ExtResource("6")
+texture_margin_left = 24.0
+texture_margin_top = 14.0
+texture_margin_right = 24.0
+texture_margin_bottom = 14.0
+content_margin_left = 12.0
+content_margin_top = 6.0
+content_margin_right = 12.0
+content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxTexture" id="orb_gold"]
 texture = ExtResource("7")
@@ -37,14 +45,14 @@ content_margin_right = 42.0
 content_margin_bottom = 42.0
 
 [sub_resource type="StyleBoxFlat" id="hdr_red"]
-bg_color = Color(0.36, 0.07, 0.09, 1)
+bg_color = Color(0.45, 0.12, 0.14, 1)
 border_color = Color(0.62, 0.5, 0.3, 0.8)
 border_width_bottom = 1
 content_margin_top = 6.0
 content_margin_bottom = 6.0
 
 [sub_resource type="StyleBoxFlat" id="hdr_blue"]
-bg_color = Color(0.07, 0.13, 0.33, 1)
+bg_color = Color(0.09, 0.16, 0.34, 1)
 border_color = Color(0.62, 0.5, 0.3, 0.8)
 border_width_bottom = 1
 content_margin_top = 6.0
@@ -63,21 +71,21 @@ corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="fill_red"]
-bg_color = Color(0.72, 0.16, 0.12, 1)
+bg_color = Color(0.89, 0.29, 0.29, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="fill_energy"]
-bg_color = Color(0.25, 0.5, 0.92, 1)
+bg_color = Color(0.31, 0.72, 1, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="fill_blue"]
-bg_color = Color(0.28, 0.62, 0.34, 1)
+bg_color = Color(0.31, 0.85, 0.48, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -108,6 +116,7 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="TopLabel" type="Label" parent="."]
+visible = false
 layout_mode = 1
 anchor_left = 0.5
 anchor_right = 0.5
@@ -123,6 +132,7 @@ text = "MAIN ADVERSAIRE"
 mouse_filter = 2
 
 [node name="TopTray" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 624.0
 offset_top = 4.0
@@ -132,6 +142,7 @@ theme_override_styles/panel = SubResource("panel_gold")
 mouse_filter = 2
 
 [node name="EnemyHandRow2" type="HBoxContainer" parent="."]
+visible = false
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 640.0
@@ -143,12 +154,15 @@ theme_override_constants/separation = 6
 mouse_filter = 2
 
 [node name="EnemyPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -336.0
+offset_top = 16.0
+offset_right = -20.0
+offset_bottom = 356.0
+grow_horizontal = 0
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 19.2
-offset_top = 20.0
-offset_right = 336.0
-offset_bottom = 524.0
 theme_override_styles/panel = SubResource("panel_gold")
 
 [node name="Box" type="VBoxContainer" parent="EnemyPanel"]
@@ -178,7 +192,7 @@ theme_override_font_sizes/font_size = 19
 mouse_filter = 2
 
 [node name="PortraitWrap" type="Control" parent="EnemyPanel/Box"]
-custom_minimum_size = Vector2(0, 136)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_filter = 2
 
@@ -187,10 +201,10 @@ unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -58.0
-offset_top = 10.0
-offset_right = 58.0
-offset_bottom = 126.0
+offset_left = -42.0
+offset_top = 6.0
+offset_right = 42.0
+offset_bottom = 94.0
 expand_mode = 1
 stretch_mode = 6
 mouse_filter = 2
@@ -199,10 +213,10 @@ mouse_filter = 2
 layout_mode = 1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -68.0
+offset_left = -50.0
 offset_top = 0.0
-offset_right = 68.0
-offset_bottom = 136.0
+offset_right = 50.0
+offset_bottom = 100.0
 texture = ExtResource("8")
 expand_mode = 1
 stretch_mode = 5
@@ -271,6 +285,7 @@ visible = false
 layout_mode = 2
 
 [node name="Piles" type="HBoxContainer" parent="EnemyPanel/Box"]
+visible = false
 layout_mode = 2
 alignment = 1
 theme_override_constants/separation = 40
@@ -331,12 +346,12 @@ stretch_mode = 5
 mouse_filter = 2
 
 [node name="PlayerPanel" type="PanelContainer" parent="."]
-unique_name_in_owner = true
 layout_mode = 0
-offset_left = 19.2
-offset_top = 552.0
+offset_left = 20.0
+offset_top = 16.0
 offset_right = 336.0
-offset_bottom = 1060.0
+offset_bottom = 356.0
+unique_name_in_owner = true
 theme_override_styles/panel = SubResource("panel_gold")
 
 [node name="Box" type="VBoxContainer" parent="PlayerPanel"]
@@ -366,7 +381,7 @@ theme_override_font_sizes/font_size = 19
 mouse_filter = 2
 
 [node name="PortraitWrap" type="Control" parent="PlayerPanel/Box"]
-custom_minimum_size = Vector2(0, 136)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 mouse_filter = 2
 
@@ -375,10 +390,10 @@ unique_name_in_owner = true
 layout_mode = 1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -58.0
-offset_top = 10.0
-offset_right = 58.0
-offset_bottom = 126.0
+offset_left = -42.0
+offset_top = 6.0
+offset_right = 42.0
+offset_bottom = 94.0
 expand_mode = 1
 stretch_mode = 6
 mouse_filter = 2
@@ -387,10 +402,10 @@ mouse_filter = 2
 layout_mode = 1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -68.0
+offset_left = -50.0
 offset_top = 0.0
-offset_right = 68.0
-offset_bottom = 136.0
+offset_right = 50.0
+offset_bottom = 100.0
 texture = ExtResource("8")
 expand_mode = 1
 stretch_mode = 5
@@ -458,24 +473,31 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="Piles" type="HBoxContainer" parent="PlayerPanel/Box"]
-layout_mode = 2
+[node name="PlayerPiles" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -220.0
+offset_right = 340.0
+offset_bottom = -16.0
+grow_vertical = 0
 alignment = 1
 theme_override_constants/separation = 40
 
-[node name="DeckCol" type="VBoxContainer" parent="PlayerPanel/Box/Piles"]
+[node name="DeckCol" type="VBoxContainer" parent="PlayerPiles"]
 layout_mode = 2
 
-[node name="DeckLbl" type="Label" parent="PlayerPanel/Box/Piles/DeckCol"]
+[node name="DeckLbl" type="Label" parent="PlayerPiles/DeckCol"]
 layout_mode = 2
 horizontal_alignment = 1
 theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_fonts/font = ExtResource("2")
-text = "DECK"
+text = "PIOCHE"
 mouse_filter = 2
 
-[node name="PlayerDeck" type="TextureRect" parent="PlayerPanel/Box/Piles/DeckCol"]
+[node name="PlayerDeck" type="TextureRect" parent="PlayerPiles/DeckCol"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(78, 110)
@@ -484,7 +506,7 @@ expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="PlayerDeckCount" type="Label" parent="PlayerPanel/Box/Piles/DeckCol/PlayerDeck"]
+[node name="PlayerDeckCount" type="Label" parent="PlayerPiles/DeckCol/PlayerDeck"]
 unique_name_in_owner = true
 layout_mode = 1
 anchor_top = 1.0
@@ -498,10 +520,10 @@ theme_override_constants/outline_size = 8
 theme_override_font_sizes/font_size = 30
 mouse_filter = 2
 
-[node name="DiscardCol" type="VBoxContainer" parent="PlayerPanel/Box/Piles"]
+[node name="DiscardCol" type="VBoxContainer" parent="PlayerPiles"]
 layout_mode = 2
 
-[node name="DiscardLbl" type="Label" parent="PlayerPanel/Box/Piles/DiscardCol"]
+[node name="DiscardLbl" type="Label" parent="PlayerPiles/DiscardCol"]
 layout_mode = 2
 horizontal_alignment = 1
 theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
@@ -510,7 +532,7 @@ theme_override_fonts/font = ExtResource("2")
 text = "DÉFAUSSE"
 mouse_filter = 2
 
-[node name="DiscardSlot" type="TextureRect" parent="PlayerPanel/Box/Piles/DiscardCol"]
+[node name="DiscardSlot" type="TextureRect" parent="PlayerPiles/DiscardCol"]
 layout_mode = 2
 custom_minimum_size = Vector2(78, 110)
 texture = ExtResource("9")
@@ -518,12 +540,12 @@ expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="UtilRow" type="HBoxContainer" parent="."]
+[node name="UtilRow" type="VBoxContainer" parent="."]
 layout_mode = 0
-offset_left = 355.2
-offset_top = 14.0
-offset_right = 512.0
-offset_bottom = 66.0
+offset_left = 20.0
+offset_top = 486.0
+offset_right = 84.0
+offset_bottom = 700.0
 theme_override_constants/separation = 12
 
 [node name="BagBtn" type="TextureButton" parent="UtilRow"]
@@ -553,11 +575,17 @@ ignore_texture_size = true
 stretch_mode = 5
 
 [node name="InfoPanel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 1584.0
-offset_top = 20.0
-offset_right = 1900.8
-offset_bottom = 266.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -336.0
+offset_top = -168.0
+offset_right = -20.0
+offset_bottom = -14.0
+grow_horizontal = 0
+grow_vertical = 0
 theme_override_styles/panel = SubResource("panel_gold")
 
 [node name="InfoBox" type="VBoxContainer" parent="InfoPanel"]
@@ -565,6 +593,7 @@ layout_mode = 2
 theme_override_constants/separation = 8
 
 [node name="InfoTitle" type="Label" parent="InfoPanel/InfoBox"]
+visible = false
 layout_mode = 2
 horizontal_alignment = 1
 theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
@@ -591,11 +620,14 @@ autowrap_mode = 2
 mouse_filter = 2
 
 [node name="DetailPanel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 1584.0
-offset_top = 282.0
-offset_right = 1900.8
-offset_bottom = 742.0
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -336.0
+offset_top = 372.0
+offset_right = -20.0
+offset_bottom = 700.0
+grow_horizontal = 0
 theme_override_styles/panel = SubResource("panel_gold")
 
 [node name="DetailBox" type="VBoxContainer" parent="DetailPanel"]
@@ -623,12 +655,12 @@ size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="PowerBtn" type="Button" parent="."]
-unique_name_in_owner = true
 layout_mode = 0
-offset_left = 1584.0
-offset_top = 756.0
-offset_right = 1900.8
-offset_bottom = 830.0
+offset_left = 20.0
+offset_top = 372.0
+offset_right = 336.0
+offset_bottom = 468.0
+unique_name_in_owner = true
 theme_override_styles/normal = SubResource("panel_gold")
 theme_override_styles/hover = SubResource("panel_gold")
 theme_override_styles/pressed = SubResource("panel_gold")
@@ -641,12 +673,18 @@ theme_override_font_sizes/font_size = 22
 clip_text = true
 
 [node name="EndTurnBtn" type="Button" parent="."]
+layout_mode = 1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -274.0
+offset_top = -366.0
+offset_right = -74.0
+offset_bottom = -176.0
+grow_horizontal = 0
+grow_vertical = 0
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1666.0
-offset_top = 856.0
-offset_right = 1874.0
-offset_bottom = 1064.0
 theme_override_styles/normal = SubResource("orb_gold")
 theme_override_styles/hover = SubResource("orb_gold")
 theme_override_styles/pressed = SubResource("orb_gold")
@@ -658,11 +696,12 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 22
 theme_override_fonts/font = ExtResource("2")
-text = "TERMINER
-MON TOUR"
+text = "FIN DU
+TOUR"
 alignment = 1
 
 [node name="HandTray" type="PanelContainer" parent="."]
+visible = false
 layout_mode = 0
 offset_left = 438.4
 offset_top = 828.0

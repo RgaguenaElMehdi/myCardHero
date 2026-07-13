@@ -18,7 +18,7 @@ const GUILD_COLORS := GameConst.GUILD_COLORS
 
 # UI chrome: pixel pack generated via tools/generate_ui_pack.py. Everything
 # falls back to the flat style when a texture is missing.
-const TEX_BANNER := "res://assets/sprites/ui/pixel/banner_ribbon.png"
+const TEX_BANNER := "res://assets/sprites/ui/battle/banner_ribbon.png"
 const TEX_LOGO := "res://assets/sprites/ui/logo.png"
 const TEX_PANEL := "res://assets/sprites/ui/pixel/panel_stone.png"
 const TEX_BUTTON := "res://assets/sprites/ui/pixel/btn_primary.png"

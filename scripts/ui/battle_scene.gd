@@ -211,14 +211,13 @@ func _init_ui() -> void:
 			var cell := Vector2i(col, row)
 			var widget: BoardCell = BOARD_CELL_SCENE.instantiate()
 			widget.setup(cell)
-			var rect := _cell_rect(cell)
-			widget.position = rect.position
-			widget.custom_minimum_size = rect.size
-			widget.size = rect.size
 			widget.clicked.connect(_on_cell_clicked)
 			widget.inspect_requested.connect(_on_cell_inspect)
 			board_area.add_child(widget)
 			cells[cell] = widget
+	_layout_cells()
+	# La grille suit le plateau peint quelle que soit la taille de fenêtre.
+	arena.resized.connect(_layout_cells)
 
 	# Numéros de rangée masqués (look épuré) — absents des arènes récentes.
 	for r in GameConst.BOARD_ROWS:
@@ -265,6 +264,18 @@ func _init_ui() -> void:
 ## Screen rectangle of one board cell (délégué à la scène d'arène du thème).
 func _cell_rect(cell: Vector2i) -> Rect2:
 	return arena.cell_rect(cell)
+
+
+## (Re)pose chaque case sur le plateau peint ; rappelé quand l'arène change
+## de taille pour que la grille reste collée au décor.
+func _layout_cells() -> void:
+	for cell in cells:
+		var rect := _cell_rect(cell)
+		cells[cell].position = rect.position
+		cells[cell].size = rect.size
+	if state != null:
+		for cell in cells:
+			cells[cell].render(state)
 
 
 # --- Refresh --------------------------------------------------------------

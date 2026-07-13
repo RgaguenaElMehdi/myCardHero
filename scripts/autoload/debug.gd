@@ -23,6 +23,18 @@ func _ready() -> void:
 			_schedule_nettest(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--serve"):
 			_schedule_serve(arg)
+		elif String(arg).begins_with("--canvas="):
+			# Force le canvas logique (ex. 2400x1080 mobile). Le fullscreen
+			# forcé (mode=3) donnerait un canvas "expand" 2400x1350 : on passe
+			# en fenêtré au même ratio que le canvas pour un rendu fidèle.
+			var wh := String(arg).split("=", true, 1)[1].split("x")
+			var cs := Vector2i(int(wh[0]), int(wh[1]))
+			var win := get_window()
+			win.mode = Window.MODE_WINDOWED
+			var scr := DisplayServer.screen_get_size()
+			var k := minf(float(scr.x) / cs.x, float(scr.y) / cs.y)
+			win.size = Vector2i(int(cs.x * k), int(cs.y * k))
+			win.content_scale_size = cs
 
 
 ## Headless E2E smoke test of the ENet transport + authoritative server.

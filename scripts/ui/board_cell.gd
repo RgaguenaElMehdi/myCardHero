@@ -58,17 +58,9 @@ func set_highlight(mode: String) -> void:
 
 
 func _apply_style() -> void:
-	# Clean flat tile (anime navy+gold look) drawn by the cell itself,
-	# teintée par camp : rangées hautes (adversaire) chaudes, basses (joueur) froides.
-	var base := StyleBoxFlat.new()
-	base.bg_color = Color(0.24, 0.16, 0.22, 0.55) if cell.y >= 2 else Color(0.14, 0.19, 0.33, 0.55)
-	base.set_corner_radius_all(12)
-	base.border_color = Color(0.79, 0.65, 0.31, 0.30)
-	base.set_border_width_all(2)
-	base.shadow_color = Color(0, 0, 0, 0.35)
-	base.shadow_size = 6
-	base.shadow_offset = Vector2(0, 3)
-	add_theme_stylebox_override("panel", base)
+	# Les cases rouges/bleues sont PEINTES dans le décor (arena_night) : la
+	# case reste transparente, seul l'anneau de surbrillance est dessiné.
+	add_theme_stylebox_override("panel", StyleBoxEmpty.new())
 
 	var fill := Color.TRANSPARENT
 	var border := Color.TRANSPARENT

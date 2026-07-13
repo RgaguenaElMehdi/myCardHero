@@ -19,6 +19,10 @@ extends Control
 
 
 ## Rectangle écran d'une cellule sur la grille peinte.
+## La géométrie est exprimée en pixels de la TEXTURE de fond ; elle est mappée
+## à travers la même transformation "cover" que le TextureRect Environment
+## (stretch KEEP_ASPECT_COVERED), pour rester calée quelle que soit la taille
+## ou le ratio de la fenêtre.
 func cell_rect(cell: Vector2i) -> Rect2:
 	# Rangées ennemies en haut (rangée 3 d'abord), joueur en bas.
 	var screen_row := 3 - cell.y
@@ -28,5 +32,12 @@ func cell_rect(cell: Vector2i) -> Rect2:
 	var xl := lerpf(grid_xl_top, grid_xl_bot, t)
 	var xr := lerpf(grid_xr_top, grid_xr_bot, t)
 	var pitch := (xr - xl) / 3.0
-	return Rect2(board_pos + Vector2(xl + cell.x * pitch, y0) * board_scale,
-			Vector2(pitch, y1 - y0) * board_scale)
+	var pos := board_pos + Vector2(xl + cell.x * pitch, y0) * board_scale
+	var sz := Vector2(pitch, y1 - y0) * board_scale
+	var env := get_node_or_null("Environment") as TextureRect
+	if env != null and env.texture != null:
+		var ts := env.texture.get_size()
+		var k := maxf(size.x / ts.x, size.y / ts.y)
+		var off := (size - ts * k) / 2.0
+		return Rect2(off + pos * k, sz * k)
+	return Rect2(pos, sz)
