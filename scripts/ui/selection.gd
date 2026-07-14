@@ -3,7 +3,7 @@ extends Control
 ## Solo (partie libre vs IA), Histoire (campagne), Défi (IA maximale),
 ## Arène (classé, hub). Structure dans selection[_mobile].tscn — logique ici.
 
-const FREE_SETUP := preload("res://scenes/widgets/free_setup.tscn")
+const FREE_SETUP := preload("res://scenes/free_setup.tscn")
 
 @onready var solo_btn: Button = %SoloBtn
 @onready var histoire_btn: Button = %HistoireBtn

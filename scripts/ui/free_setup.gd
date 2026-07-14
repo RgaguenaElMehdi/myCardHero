@@ -40,14 +40,23 @@ func _ready() -> void:
 		_diffs[i].pressed.connect(_pick_diff.bind(i, int(levels[i])))
 		_diffs[i].pressed.connect(UiTheme._click_sfx)
 
+	# Scène de destination (menu « Partie libre ») OU overlay (écran Sélection) :
+	# en scène autonome on lance/quitte soi-même, en overlay on émet le signal.
+	var standalone := get_tree().current_scene == self
 	(%LaunchBtn as Button).pressed.connect(func() -> void:
 		UiTheme._click_sfx()
 		var opp := _opponents[_sel_opp]
-		launched.emit(String(opp.master), opp.deck, _level)
-		queue_free())
+		if standalone:
+			Game.start_free_battle(_level, String(opp.master), opp.deck)
+		else:
+			launched.emit(String(opp.master), opp.deck, _level)
+			queue_free())
 	(%BackBtn as Button).pressed.connect(func() -> void:
 		UiTheme._click_sfx()
-		queue_free())
+		if standalone:
+			Game.goto("main_menu")
+		else:
+			queue_free())
 
 	# Flèches de défilement (remplacent la barre de scroll, masquée) : ne
 	# s'affichent que si la rangée déborde.

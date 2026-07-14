@@ -167,6 +167,16 @@ ASSETS = {
         "élégantes repliées, centre UNI et sombre (le texte sera affiché "
         "par-dessus), légers reflets dorés. Très allongée et basse, centrée. "
         + STYLE_ICON)),
+    # Icônes de la barre latérale des Paramètres (style orfèvrerie dorée).
+    "icon_audio": dict(canvas="1024x1024", keyed=True, prompt=(
+        "Icône : haut-parleur doré ouvragé avec petites ondes sonores, style "
+        "orfèvrerie fantasy. " + STYLE_ICON)),
+    "icon_display": dict(canvas="1024x1024", keyed=True, prompt=(
+        "Icône : écran/moniteur doré au contour finement gravé, style "
+        "orfèvrerie fantasy. " + STYLE_ICON)),
+    "icon_account": dict(canvas="1024x1024", keyed=True, prompt=(
+        "Icône : buste de personnage (profil utilisateur) doré au trait "
+        "ouvragé, style orfèvrerie fantasy. " + STYLE_ICON)),
     "icon_menu": dict(canvas="1024x1024", keyed=True, prompt=(
         "Icône : trois lignes horizontales dorées ouvragées (menu), style "
         "orfèvrerie. " + STYLE_ICON)),

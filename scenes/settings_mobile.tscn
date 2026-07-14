@@ -1,71 +1,42 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/settings_scene.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
-[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/menu_gold_2400.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel_dark.png" id="pd"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/divider.png" id="5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/emblem.png" id="emb"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_params.png" id="ipar"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_monitor.png" id="imon"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_speaker.png" id="ispk"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_gamepad.png" id="ipad"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_globe.png" id="iglo"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_account.png" id="iacc"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_dots.png" id="idot"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_reset.png" id="irst"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_headset.png" id="ihst"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_selection.png" id="isel"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/toggle_on.png" id="ton"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/toggle_off.png" id="toff"]
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="2"]
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/freeplay_2400.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/panel_night.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_settings.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/icon_audio.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/icon_display.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/icon_account.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/arena_iso_1920.png" id="10"]
 
-[sub_resource type="StyleBoxEmpty" id="empty"]
+[sub_resource type="StyleBoxTexture" id="panel_gold"]
+texture = ExtResource("5")
+texture_margin_left = 56.0
+texture_margin_top = 44.0
+texture_margin_right = 56.0
+texture_margin_bottom = 44.0
+content_margin_left = 28.0
+content_margin_top = 20.0
+content_margin_right = 28.0
+content_margin_bottom = 20.0
 
-[sub_resource type="StyleBoxTexture" id="panel"]
-texture = ExtResource("pd")
-texture_margin_left = 14.0
-texture_margin_top = 14.0
-texture_margin_right = 14.0
-texture_margin_bottom = 14.0
-content_margin_left = 26.0
-content_margin_top = 22.0
-content_margin_right = 26.0
-content_margin_bottom = 22.0
-
-[sub_resource type="StyleBoxTexture" id="seg"]
-texture = ExtResource("pd")
-texture_margin_left = 14.0
-texture_margin_top = 14.0
-texture_margin_right = 14.0
-texture_margin_bottom = 14.0
+[sub_resource type="StyleBoxFlat" id="nav_selected"]
+bg_color = Color(0.13, 0.31, 0.62, 0.92)
+border_color = Color(0.79, 0.65, 0.31, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_left = 10
+corner_radius_bottom_right = 10
 content_margin_left = 16.0
 content_margin_top = 8.0
-content_margin_right = 16.0
+content_margin_right = 12.0
 content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="seg_hi"]
-texture = ExtResource("pd")
-texture_margin_left = 14.0
-texture_margin_top = 14.0
-texture_margin_right = 14.0
-texture_margin_bottom = 14.0
-content_margin_left = 16.0
-content_margin_top = 8.0
-content_margin_right = 16.0
-content_margin_bottom = 8.0
-modulate_color = Color(1.35, 1.3, 1.15, 1)
-
-[sub_resource type="StyleBoxTexture" id="plate"]
-texture = ExtResource("pd")
-texture_margin_left = 14.0
-texture_margin_top = 14.0
-texture_margin_right = 14.0
-texture_margin_bottom = 14.0
-content_margin_left = 20.0
-content_margin_top = 10.0
-content_margin_right = 20.0
-content_margin_bottom = 10.0
 
 [node name="Settings" type="Control"]
 layout_mode = 3
@@ -74,10 +45,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("3")
+theme = ExtResource("2")
 script = ExtResource("1")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="BG" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -88,686 +59,529 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Title" type="Label" parent="."]
+[node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.5
+anchor_top = 0.5
 anchor_right = 0.5
-offset_left = -400.0
-offset_top = 34.0
-offset_right = 400.0
-offset_bottom = 110.0
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 60
-theme_override_fonts/font = ExtResource("2")
-text = "PARAMÈTRES"
-horizontal_alignment = 1
-vertical_alignment = 1
+anchor_bottom = 0.5
+offset_left = -830.0
+offset_top = -472.0
+offset_right = 830.0
+offset_bottom = 472.0
+theme_override_styles/panel = SubResource("panel_gold")
 
-[node name="DivL" type="TextureRect" parent="."]
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -720.0
-offset_top = 50.0
-offset_right = -400.0
-offset_bottom = 96.0
-texture = ExtResource("5")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="DivR" type="TextureRect" parent="."]
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = 400.0
-offset_top = 50.0
-offset_right = 720.0
-offset_bottom = 96.0
-flip_h = true
-texture = ExtResource("5")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="LeftPanel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 48.0
-offset_top = 150.0
-offset_right = 600.0
-offset_bottom = 892.0
-theme_override_styles/panel = SubResource("panel")
-
-[node name="NavBox" type="VBoxContainer" parent="LeftPanel"]
+[node name="Root" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="NavGeneral" type="Button" parent="LeftPanel/NavBox"]
-unique_name_in_owner = true
+[node name="Header" type="HBoxContainer" parent="Panel/Root"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 92)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 46
-theme_override_constants/h_separation = 18
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("ipar")
-icon_alignment = 0
-alignment = 0
-expand_icon = true
-text = "  GÉNÉRAL"
+theme_override_constants/separation = 16
 
-[node name="NavGraphics" type="Button" parent="LeftPanel/NavBox"]
-unique_name_in_owner = true
+[node name="Gear" type="TextureRect" parent="Panel/Root/Header"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 92)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 46
-theme_override_constants/h_separation = 18
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("imon")
-icon_alignment = 0
-alignment = 0
-expand_icon = true
-text = "  GRAPHISMES"
-
-[node name="NavAudio" type="Button" parent="LeftPanel/NavBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 92)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 46
-theme_override_constants/h_separation = 18
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("ispk")
-icon_alignment = 0
-alignment = 0
-expand_icon = true
-text = "  AUDIO"
-
-[node name="NavCommands" type="Button" parent="LeftPanel/NavBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 92)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 46
-theme_override_constants/h_separation = 18
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("ipad")
-icon_alignment = 0
-alignment = 0
-expand_icon = true
-text = "  COMMANDES"
-
-[node name="NavLanguage" type="Button" parent="LeftPanel/NavBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 92)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 46
-theme_override_constants/h_separation = 18
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("iglo")
-icon_alignment = 0
-alignment = 0
-expand_icon = true
-text = "  LANGUE"
-
-[node name="NavAccount" type="Button" parent="LeftPanel/NavBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 92)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 46
-theme_override_constants/h_separation = 18
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("iacc")
-icon_alignment = 0
-alignment = 0
-expand_icon = true
-text = "  COMPTE"
-
-[node name="NavOthers" type="Button" parent="LeftPanel/NavBox"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 92)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 46
-theme_override_constants/h_separation = 18
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("idot")
-icon_alignment = 0
-alignment = 0
-expand_icon = true
-text = "  AUTRES"
-
-[node name="CenterPanel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 640.0
-offset_top = 150.0
-offset_right = 1740.0
-offset_bottom = 892.0
-theme_override_styles/panel = SubResource("panel")
-
-[node name="PageGeneral" type="VBoxContainer" parent="CenterPanel"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 14
-
-[node name="QLbl" type="Label" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "QUALITÉ GRAPHIQUE"
-mouse_filter = 2
-
-[node name="QRow" type="HBoxContainer" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="Q0" type="Button" parent="CenterPanel/PageGeneral/QRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "BASSE"
-
-[node name="Q1" type="Button" parent="CenterPanel/PageGeneral/QRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "MOYENNE"
-
-[node name="Q2" type="Button" parent="CenterPanel/PageGeneral/QRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "ÉLEVÉE"
-
-[node name="Q3" type="Button" parent="CenterPanel/PageGeneral/QRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "ULTRA"
-
-[node name="DLbl" type="Label" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "MODE D'AFFICHAGE"
-mouse_filter = 2
-
-[node name="DRow" type="HBoxContainer" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="D0" type="Button" parent="CenterPanel/PageGeneral/DRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "PLEIN ÉCRAN"
-
-[node name="D1" type="Button" parent="CenterPanel/PageGeneral/DRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "FENÊTRÉ"
-
-[node name="D2" type="Button" parent="CenterPanel/PageGeneral/DRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "BORDURE"
-
-[node name="FLbl" type="Label" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "TAUX D'IMAGES MAX"
-mouse_filter = 2
-
-[node name="FRow" type="HBoxContainer" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="F0" type="Button" parent="CenterPanel/PageGeneral/FRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "30"
-
-[node name="F1" type="Button" parent="CenterPanel/PageGeneral/FRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "60"
-
-[node name="F2" type="Button" parent="CenterPanel/PageGeneral/FRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "90"
-
-[node name="F3" type="Button" parent="CenterPanel/PageGeneral/FRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "120"
-
-[node name="F4" type="Button" parent="CenterPanel/PageGeneral/FRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "144"
-
-[node name="F5" type="Button" parent="CenterPanel/PageGeneral/FRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 62)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "ILLIMITÉ"
-
-[node name="LangRowN" type="HBoxContainer" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-
-[node name="LangLbl" type="Label" parent="CenterPanel/PageGeneral/LangRowN"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "LANGUE"
-mouse_filter = 2
-
-[node name="LangOption" type="OptionButton" parent="CenterPanel/PageGeneral/LangRowN"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(280, 56)
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-
-[node name="VibrCheckRowN" type="HBoxContainer" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-
-[node name="VibrCheckRowLbl" type="Label" parent="CenterPanel/PageGeneral/VibrCheckRowN"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "VIBRATIONS"
-mouse_filter = 2
-
-[node name="VibrCheck" type="CheckButton" parent="CenterPanel/PageGeneral/VibrCheckRowN"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_icons/checked = ExtResource("ton")
-theme_override_icons/unchecked = ExtResource("toff")
-theme_override_icons/checked_disabled = ExtResource("ton")
-theme_override_icons/unchecked_disabled = ExtResource("toff")
-theme_override_styles/normal = SubResource("empty")
-theme_override_styles/hover = SubResource("empty")
-theme_override_styles/pressed = SubResource("empty")
-theme_override_styles/focus = SubResource("empty")
-
-[node name="TutoCheckRowN" type="HBoxContainer" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-
-[node name="TutoCheckRowLbl" type="Label" parent="CenterPanel/PageGeneral/TutoCheckRowN"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "TUTORIELS"
-mouse_filter = 2
-
-[node name="TutoCheck" type="CheckButton" parent="CenterPanel/PageGeneral/TutoCheckRowN"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_icons/checked = ExtResource("ton")
-theme_override_icons/unchecked = ExtResource("toff")
-theme_override_icons/checked_disabled = ExtResource("ton")
-theme_override_icons/unchecked_disabled = ExtResource("toff")
-theme_override_styles/normal = SubResource("empty")
-theme_override_styles/hover = SubResource("empty")
-theme_override_styles/pressed = SubResource("empty")
-theme_override_styles/focus = SubResource("empty")
-
-[node name="PowerCheckRowN" type="HBoxContainer" parent="CenterPanel/PageGeneral"]
-layout_mode = 2
-
-[node name="PowerCheckRowLbl" type="Label" parent="CenterPanel/PageGeneral/PowerCheckRowN"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "MODE ÉCONOMIE D'ÉNERGIE"
-mouse_filter = 2
-
-[node name="PowerCheck" type="CheckButton" parent="CenterPanel/PageGeneral/PowerCheckRowN"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_icons/checked = ExtResource("ton")
-theme_override_icons/unchecked = ExtResource("toff")
-theme_override_icons/checked_disabled = ExtResource("ton")
-theme_override_icons/unchecked_disabled = ExtResource("toff")
-theme_override_styles/normal = SubResource("empty")
-theme_override_styles/hover = SubResource("empty")
-theme_override_styles/pressed = SubResource("empty")
-theme_override_styles/focus = SubResource("empty")
-
-[node name="PageAudio" type="VBoxContainer" parent="CenterPanel"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="MusLbl" type="Label" parent="CenterPanel/PageAudio"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "VOLUME MUSIQUE"
-mouse_filter = 2
-
-[node name="MusicSlider" type="HSlider" parent="CenterPanel/PageAudio"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 34)
-max_value = 1.0
-step = 0.05
-
-[node name="SfxLbl" type="Label" parent="CenterPanel/PageAudio"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "VOLUME EFFETS"
-mouse_filter = 2
-
-[node name="SfxSlider" type="HSlider" parent="CenterPanel/PageAudio"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 34)
-max_value = 1.0
-step = 0.05
-
-[node name="PageOther" type="VBoxContainer" parent="CenterPanel"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="OtherLbl" type="Label" parent="CenterPanel/PageOther"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_fonts/font = ExtResource("2")
-text = "Bientôt disponible."
-mouse_filter = 2
-
-[node name="RightPanel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 1780.0
-offset_top = 150.0
-offset_right = 2360.0
-offset_bottom = 892.0
-theme_override_styles/panel = SubResource("panel")
-
-[node name="RWrap" type="Control" parent="RightPanel"]
-layout_mode = 2
-
-[node name="Watermark" type="TextureRect" parent="RightPanel/RWrap"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-modulate = Color(1, 1, 1, 0.06)
-texture = ExtResource("emb")
+custom_minimum_size = Vector2(46, 46)
+texture = ExtResource("6")
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="RightText" type="Label" parent="RightPanel/RWrap"]
+[node name="Title" type="Label" parent="Panel/Root/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_fonts/font = ExtResource("3")
+text = "PARAMÈTRES"
+mouse_filter = 2
+
+[node name="CloseBtn" type="Button" parent="Panel/Root/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(54, 54)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 24
+text = "✕"
+
+[node name="HSep" type="ColorRect" parent="Panel/Root"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 1)
+color = Color(0.79, 0.65, 0.31, 0.45)
+mouse_filter = 2
+
+[node name="Body" type="HBoxContainer" parent="Panel/Root"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 22
+
+[node name="SideBar" type="VBoxContainer" parent="Panel/Root/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(260, 0)
+theme_override_constants/separation = 8
+
+[node name="NavGeneral" type="Button" parent="Panel/Root/Body/SideBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 58)
+toggle_mode = true
+alignment = 0
+theme_override_styles/pressed = SubResource("nav_selected")
+theme_override_styles/hover_pressed = SubResource("nav_selected")
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+icon = ExtResource("6")
+expand_icon = true
+text = " GÉNÉRAL"
+
+[node name="NavAudio" type="Button" parent="Panel/Root/Body/SideBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 58)
+toggle_mode = true
+alignment = 0
+theme_override_styles/pressed = SubResource("nav_selected")
+theme_override_styles/hover_pressed = SubResource("nav_selected")
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+icon = ExtResource("7")
+expand_icon = true
+text = " AUDIO"
+
+[node name="NavGraphics" type="Button" parent="Panel/Root/Body/SideBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 58)
+toggle_mode = true
+alignment = 0
+theme_override_styles/pressed = SubResource("nav_selected")
+theme_override_styles/hover_pressed = SubResource("nav_selected")
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+icon = ExtResource("8")
+expand_icon = true
+text = " GRAPHISMES"
+
+[node name="NavAccount" type="Button" parent="Panel/Root/Body/SideBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 58)
+toggle_mode = true
+alignment = 0
+theme_override_styles/pressed = SubResource("nav_selected")
+theme_override_styles/hover_pressed = SubResource("nav_selected")
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.95, 0.85, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+icon = ExtResource("9")
+expand_icon = true
+text = " COMPTE"
+
+[node name="Spacer" type="Control" parent="Panel/Root/Body/SideBar"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="DefaultsBtn" type="Button" parent="Panel/Root/Body/SideBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 17
+text = "↺  RÉTABLIR PAR DÉFAUT"
+
+[node name="VSep1" type="ColorRect" parent="Panel/Root/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(1, 0)
+color = Color(0.79, 0.65, 0.31, 0.3)
+mouse_filter = 2
+
+[node name="Pages" type="Control" parent="Panel/Root/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="PageGeneral" type="VBoxContainer" parent="Panel/Root/Body/Pages"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-text = "MODIFIEZ VOS PRÉFÉRENCES
-POUR PERSONNALISER
-VOTRE EXPÉRIENCE."
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 2
+offset_left = 12.0
+offset_right = -12.0
+theme_override_constants/separation = 12
+
+[node name="SecLang" type="Label" parent="Panel/Root/Body/Pages/PageGeneral"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+text = "LANGUE"
 mouse_filter = 2
 
-[node name="ResetBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 48.0
-offset_top = -120.0
-offset_right = 400.0
-offset_bottom = -40.0
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 40
-theme_override_constants/h_separation = 14
-theme_override_font_sizes/font_size = 28
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("irst")
-icon_alignment = 0
-alignment = 1
-expand_icon = true
-text = "RÉINITIALISER"
+[node name="RowLang" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageGeneral"]
+layout_mode = 2
 
-[node name="HelpBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 1620.0
-offset_top = -120.0
-offset_right = 1980.0
-offset_bottom = -40.0
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 40
-theme_override_constants/h_separation = 14
-theme_override_font_sizes/font_size = 28
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("ihst")
-icon_alignment = 0
-alignment = 1
-expand_icon = true
-text = "ASSISTANCE"
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageGeneral/RowLang"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Langue du jeu"
+mouse_filter = 2
 
-[node name="SaveBtn" type="Button" parent="."]
+[node name="LangOption" type="OptionButton" parent="Panel/Root/Body/Pages/PageGeneral/RowLang"]
 unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 44)
+
+[node name="SecGen" type="Label" parent="Panel/Root/Body/Pages/PageGeneral"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+text = "GÉNÉRAL"
+mouse_filter = 2
+
+[node name="RowTuto" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageGeneral"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageGeneral/RowTuto"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Tutoriels"
+mouse_filter = 2
+
+[node name="TutoCheck" type="Button" parent="Panel/Root/Body/Pages/PageGeneral/RowTuto"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(96, 40)
+toggle_mode = true
+theme_type_variation = &"ToggleSwitch"
+
+[node name="RowVibr" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageGeneral"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageGeneral/RowVibr"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Vibration"
+mouse_filter = 2
+
+[node name="VibrCheck" type="Button" parent="Panel/Root/Body/Pages/PageGeneral/RowVibr"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(96, 40)
+toggle_mode = true
+theme_type_variation = &"ToggleSwitch"
+
+[node name="RowPower" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageGeneral"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageGeneral/RowPower"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Économie d'énergie"
+mouse_filter = 2
+
+[node name="PowerCheck" type="Button" parent="Panel/Root/Body/Pages/PageGeneral/RowPower"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(96, 40)
+toggle_mode = true
+theme_type_variation = &"ToggleSwitch"
+
+[node name="PageAudio" type="VBoxContainer" parent="Panel/Root/Body/Pages"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 1
-anchor_top = 1.0
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 2010.0
-offset_top = -120.0
-offset_right = 2360.0
-offset_bottom = -40.0
-theme_override_styles/normal = SubResource("plate")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("plate")
-theme_override_styles/focus = SubResource("plate")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 40
-theme_override_constants/h_separation = 14
-theme_override_font_sizes/font_size = 28
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("isel")
-icon_alignment = 0
-alignment = 1
-expand_icon = true
-text = "SAUVEGARDER"
+offset_left = 12.0
+offset_right = -12.0
+theme_override_constants/separation = 12
+
+[node name="SecVol" type="Label" parent="Panel/Root/Body/Pages/PageAudio"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+text = "VOLUMES"
+mouse_filter = 2
+
+[node name="RowMusic" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageAudio"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageAudio/RowMusic"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Musique"
+mouse_filter = 2
+
+[node name="MusicSlider" type="HSlider" parent="Panel/Root/Body/Pages/PageAudio/RowMusic"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 32)
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+
+[node name="MusicPct" type="Label" parent="Panel/Root/Body/Pages/PageAudio/RowMusic"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(64, 0)
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="RowSfx" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageAudio"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageAudio/RowSfx"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Effets sonores"
+mouse_filter = 2
+
+[node name="SfxSlider" type="HSlider" parent="Panel/Root/Body/Pages/PageAudio/RowSfx"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 32)
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+
+[node name="SfxPct" type="Label" parent="Panel/Root/Body/Pages/PageAudio/RowSfx"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(64, 0)
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="PageGraphics" type="VBoxContainer" parent="Panel/Root/Body/Pages"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_right = -12.0
+theme_override_constants/separation = 12
+
+[node name="SecDisp" type="Label" parent="Panel/Root/Body/Pages/PageGraphics"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+text = "AFFICHAGE"
+mouse_filter = 2
+
+[node name="RowQuality" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageGraphics"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageGraphics/RowQuality"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Qualité graphique"
+mouse_filter = 2
+
+[node name="QualityOption" type="OptionButton" parent="Panel/Root/Body/Pages/PageGraphics/RowQuality"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 44)
+
+[node name="RowDisplay" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageGraphics"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageGraphics/RowDisplay"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Mode d'affichage"
+mouse_filter = 2
+
+[node name="DisplayOption" type="OptionButton" parent="Panel/Root/Body/Pages/PageGraphics/RowDisplay"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 44)
+
+[node name="RowFps" type="HBoxContainer" parent="Panel/Root/Body/Pages/PageGraphics"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Panel/Root/Body/Pages/PageGraphics/RowFps"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 20
+text = "Limite d'images (FPS)"
+mouse_filter = 2
+
+[node name="FpsOption" type="OptionButton" parent="Panel/Root/Body/Pages/PageGraphics/RowFps"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(280, 44)
+
+[node name="PageAccount" type="VBoxContainer" parent="Panel/Root/Body/Pages"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_right = -12.0
+theme_override_constants/separation = 12
+
+[node name="SecProfile" type="Label" parent="Panel/Root/Body/Pages/PageAccount"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+text = "PROFIL"
+mouse_filter = 2
+
+[node name="SaveBtn" type="Button" parent="Panel/Root/Body/Pages/PageAccount"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 19
+text = "SAUVEGARDER MES PRÉFÉRENCES"
+
+[node name="ResetProfileBtn" type="Button" parent="Panel/Root/Body/Pages/PageAccount"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+theme_type_variation = &"DangerButton"
+theme_override_font_sizes/font_size = 19
+text = "RÉINITIALISER LE PROFIL"
+
+[node name="ResetHint" type="Label" parent="Panel/Root/Body/Pages/PageAccount"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.58, 0.5, 1)
+theme_override_font_sizes/font_size = 15
+text = "Efface la progression, la collection et les decks. Action irréversible."
+mouse_filter = 2
+
+[node name="VSep2" type="ColorRect" parent="Panel/Root/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(1, 0)
+color = Color(0.79, 0.65, 0.31, 0.3)
+mouse_filter = 2
+
+[node name="Right" type="VBoxContainer" parent="Panel/Root/Body"]
+layout_mode = 2
+custom_minimum_size = Vector2(430, 0)
+theme_override_constants/separation = 14
+
+[node name="PreviewPanel" type="PanelContainer" parent="Panel/Root/Body/Right"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="PvBox" type="VBoxContainer" parent="Panel/Root/Body/Right/PreviewPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PvTitle" type="Label" parent="Panel/Root/Body/Right/PreviewPanel/PvBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "APERÇU DU PLATEAU"
+mouse_filter = 2
+
+[node name="Preview" type="TextureRect" parent="Panel/Root/Body/Right/PreviewPanel/PvBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 210)
+texture = ExtResource("10")
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="TipPanel" type="PanelContainer" parent="Panel/Root/Body/Right"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="TipBox" type="VBoxContainer" parent="Panel/Root/Body/Right/TipPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TipTitle" type="Label" parent="Panel/Root/Body/Right/TipPanel/TipBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "ASTUCE"
+mouse_filter = 2
+
+[node name="TipText" type="Label" parent="Panel/Root/Body/Right/TipPanel/TipBox"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 17
+text = "Personnalisez votre expérience de jeu selon vos préférences."
+mouse_filter = 2
+
+[node name="SupportBtn" type="Button" parent="Panel/Root/Body/Right"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 19
+text = "SUPPORT"
+
+[node name="CreditsBtn" type="Button" parent="Panel/Root/Body/Right"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 19
+text = "CRÉDITS"
+
+[node name="RSpacer" type="Control" parent="Panel/Root/Body/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VersionLabel" type="Label" parent="Panel/Root/Body/Right"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 2
+theme_override_colors/font_color = Color(0.62, 0.58, 0.5, 1)
+theme_override_font_sizes/font_size = 15
+text = "Version 1.0"
+mouse_filter = 2
 
 [node name="InfoPopup" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -777,65 +591,40 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -200.0
-offset_right = 360.0
-offset_bottom = 200.0
-theme_override_styles/panel = SubResource("panel")
+offset_left = -300.0
+offset_top = -140.0
+offset_right = 300.0
+offset_bottom = 140.0
+theme_type_variation = &"NightPanel"
 
 [node name="IBox" type="VBoxContainer" parent="InfoPopup"]
 layout_mode = 2
-theme_override_constants/separation = 18
+alignment = 1
+theme_override_constants/separation = 14
 
 [node name="InfoTitle" type="Label" parent="InfoPopup/IBox"]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_fonts/font = ExtResource("2")
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("3")
 mouse_filter = 2
 
 [node name="InfoLabel" type="Label" parent="InfoPopup/IBox"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
 horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 24
 autowrap_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 18
 mouse_filter = 2
 
 [node name="InfoCloseBtn" type="Button" parent="InfoPopup/IBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 64)
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "FERMER"
-
-[node name="BackBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -150.0
-offset_top = -114.0
-offset_right = 150.0
-offset_bottom = -46.0
-theme_override_styles/normal = SubResource("seg")
-theme_override_styles/hover = SubResource("seg_hi")
-theme_override_styles/pressed = SubResource("seg")
-theme_override_styles/focus = SubResource("seg")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-text = "← MENU"
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(180, 48)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 18
+text = "Fermer"

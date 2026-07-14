@@ -1,147 +1,163 @@
 extends Control
-## Paramètres (mockup utilisateur) : barre latérale d'onglets + panneau central de
-## réglages + panneau droit. Onglet GÉNÉRAL = qualité, affichage, FPS, langue,
-## vibrations, tutoriels, économie d'énergie. AUDIO = volumes. Les autres onglets
-## sont des espaces réservés. Structure dans settings[_mobile].tscn — logique ici.
+## Paramètres (mockup utilisateur, style bleu nuit/doré) : barre latérale
+## d'onglets (Général / Audio / Graphismes / Compte), panneau central de
+## réglages, panneau droit (aperçu, astuce, support/crédits/déconnexion).
+## Structure dans settings[_mobile].tscn — logique ici.
 
 const FPS_VALUES := [30, 60, 90, 120, 144, 0]   # 0 = illimité
-const NAV := ["General", "Graphics", "Audio", "Commands", "Language", "Account", "Others"]
+const FPS_LABELS := ["30", "60", "90", "120", "144", "Illimité"]
+const QUALITY_LABELS := ["Faible", "Moyenne", "Élevée", "Ultra"]
+const DISPLAY_LABELS := ["Plein écran", "Fenêtré", "Sans bordure"]
+const DEFAULTS := { "gfx_quality": 3, "display_mode": 1, "max_fps": 60,
+		"vibrations": true, "tutorials": true, "power_saving": false,
+		"music_volume": 0.8, "sfx_volume": 0.9 }
 
-@onready var pages: Dictionary = {
-	"General": %PageGeneral, "Audio": %PageAudio, "Other": %PageOther,
+@onready var _navs: Dictionary = {
+	"General": %NavGeneral, "Audio": %NavAudio,
+	"Graphics": %NavGraphics, "Account": %NavAccount,
 }
-@onready var music_slider: HSlider = %MusicSlider
-@onready var sfx_slider: HSlider = %SfxSlider
-@onready var lang_option: OptionButton = %LangOption
-@onready var vibr_check: CheckButton = %VibrCheck
-@onready var tuto_check: CheckButton = %TutoCheck
-@onready var power_check: CheckButton = %PowerCheck
-@onready var reset_btn: Button = %ResetBtn
-@onready var save_btn: Button = %SaveBtn
-@onready var help_btn: Button = %HelpBtn
-@onready var back_btn: Button = %BackBtn
-@onready var info_popup: PanelContainer = %InfoPopup
-
-var _quality: Array[Button] = []
-var _display: Array[Button] = []
-var _fps: Array[Button] = []
-var reset_armed := false
+@onready var _pages: Dictionary = {
+	"General": %PageGeneral, "Audio": %PageAudio,
+	"Graphics": %PageGraphics, "Account": %PageAccount,
+}
 
 
 func _ready() -> void:
-	var s: Dictionary = Game.profile.settings
-	for i in 4:
-		_quality.append(get_node("%%Q%d" % i))
-	for i in 3:
-		_display.append(get_node("%%D%d" % i))
-	for i in 6:
-		_fps.append(get_node("%%F%d" % i))
+	for key in _navs:
+		(_navs[key] as Button).pressed.connect(_show_tab.bind(key))
+		(_navs[key] as Button).pressed.connect(UiTheme._click_sfx)
 
-	# --- segments (radio visuel) ---
-	_wire_segment(_quality, int(s.get("gfx_quality", 3)), func(i: int) -> void:
-		Game.profile.settings.gfx_quality = i)
-	_wire_segment(_display, int(s.get("display_mode", 1)), func(i: int) -> void:
-		Game.set_display_mode(i))
-	var fps_idx := FPS_VALUES.find(int(s.get("max_fps", 60)))
-	_wire_segment(_fps, maxi(fps_idx, 0), func(i: int) -> void:
-		Game.set_max_fps(FPS_VALUES[i]))
+	_fill_options()
+	_load_values()
+	_wire_controls()
 
-	# --- langue / toggles ---
-	lang_option.clear()
-	lang_option.add_item("Français")
-	lang_option.disabled = true      # jeu en français uniquement pour l'instant
-	vibr_check.button_pressed = bool(s.get("vibrations", true))
-	tuto_check.button_pressed = bool(s.get("tutorials", true))
-	power_check.button_pressed = bool(s.get("power_saving", false))
-	vibr_check.toggled.connect(func(on: bool) -> void:
-		Game.profile.settings.vibrations = on)
-	tuto_check.toggled.connect(func(on: bool) -> void:
-		Game.profile.settings.tutorials = on)
-	power_check.toggled.connect(func(on: bool) -> void:
-		Game.profile.settings.power_saving = on
-		Game.set_max_fps(30 if on else int(FPS_VALUES[_selected(_fps)])))
-
-	# --- audio ---
-	music_slider.value = float(s.get("music_volume", 0.8))
-	sfx_slider.value = float(s.get("sfx_volume", 0.9))
-	music_slider.value_changed.connect(func(v: float) -> void:
-		Game.profile.settings.music_volume = v
-		Audio.apply_settings())
-	sfx_slider.value_changed.connect(func(v: float) -> void:
-		Game.profile.settings.sfx_volume = v
-		Audio.apply_settings()
-		Audio.play_sfx("hit"))
-
-	# --- navigation onglets ---
-	for name in NAV:
-		var btn: Button = get_node("%%Nav%s" % name)
-		btn.pressed.connect(_show_tab.bind(name))
-		btn.pressed.connect(UiTheme._click_sfx)
-
-	# --- boutons bas ---
-	reset_btn.pressed.connect(_on_reset)
-	save_btn.pressed.connect(_on_save)
-	help_btn.pressed.connect(func() -> void:
-		_info("ASSISTANCE", "Besoin d'aide ?\nContactez-nous ou consultez le Guide du jeu."))
-	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
-	%InfoCloseBtn.pressed.connect(func() -> void: info_popup.visible = false)
-	for b: Button in [reset_btn, save_btn, help_btn, back_btn]:
+	(%CloseBtn as Button).pressed.connect(_close)
+	(%DefaultsBtn as Button).pressed.connect(_restore_defaults)
+	(%SaveBtn as Button).pressed.connect(func() -> void:
+		Game.save_profile()
+		Audio.play_sfx("levelup")
+		_info("SAUVEGARDÉ", "Vos préférences ont été enregistrées."))
+	(%SupportBtn as Button).pressed.connect(func() -> void:
+		_info("SUPPORT", "Besoin d'aide ?\nConsultez le Guide du jeu depuis le menu principal."))
+	(%CreditsBtn as Button).pressed.connect(func() -> void:
+		_info("CRÉDITS", "Stonebound — un jeu de cartes tactique.\nCode, art et données : projet CardeHeroClone."))
+	(%ResetProfileBtn as Button).pressed.connect(_on_reset_profile)
+	(%InfoCloseBtn as Button).pressed.connect(func() -> void: %InfoPopup.visible = false)
+	for b: Button in [%CloseBtn, %DefaultsBtn, %SaveBtn, %SupportBtn, %CreditsBtn,
+			%ResetProfileBtn, %InfoCloseBtn]:
 		b.pressed.connect(UiTheme._click_sfx)
 
+	%VersionLabel.text = "Version %s" % str(ProjectSettings.get_setting(
+			"application/config/version", "0.1"))
 	_show_tab("General")
 
 
-## Radio visuel : surligne l'option choisie, connecte le changement.
-func _wire_segment(btns: Array[Button], selected: int, on_pick: Callable) -> void:
-	for i in btns.size():
-		var idx := i
-		btns[i].pressed.connect(func() -> void:
-			_highlight(btns, idx)
-			on_pick.call(idx)
-			Audio.play_sfx("move"))
-	_highlight(btns, selected)
+func _fill_options() -> void:
+	var lang := %LangOption as OptionButton
+	lang.clear()
+	lang.add_item("Français")
+	lang.disabled = true             # jeu en français uniquement pour l'instant
+	for label in QUALITY_LABELS:
+		(%QualityOption as OptionButton).add_item(label)
+	for label in DISPLAY_LABELS:
+		(%DisplayOption as OptionButton).add_item(label)
+	for label in FPS_LABELS:
+		(%FpsOption as OptionButton).add_item(label)
 
 
-func _highlight(btns: Array[Button], sel: int) -> void:
-	for i in btns.size():
-		btns[i].modulate = Color(1.35, 1.2, 0.7) if i == sel else Color(0.7, 0.68, 0.62)
+func _load_values() -> void:
+	var s: Dictionary = Game.profile.settings
+	_set_toggle(%TutoCheck, bool(s.get("tutorials", true)))
+	_set_toggle(%VibrCheck, bool(s.get("vibrations", true)))
+	_set_toggle(%PowerCheck, bool(s.get("power_saving", false)))
+	(%QualityOption as OptionButton).selected = int(s.get("gfx_quality", 3))
+	(%DisplayOption as OptionButton).selected = int(s.get("display_mode", 1))
+	(%FpsOption as OptionButton).selected = maxi(FPS_VALUES.find(int(s.get("max_fps", 60))), 0)
+	(%MusicSlider as HSlider).value = float(s.get("music_volume", 0.8))
+	(%SfxSlider as HSlider).value = float(s.get("sfx_volume", 0.9))
+	_update_pcts()
 
 
-func _selected(btns: Array[Button]) -> int:
-	for i in btns.size():
-		if btns[i].modulate.r > 1.0:
-			return i
-	return 0
+## Interrupteur maison (variation ToggleSwitch) : pilule bleue « ON » /
+## sombre « OFF », le texte suit l'état.
+func _set_toggle(btn: Button, on: bool) -> void:
+	btn.set_pressed_no_signal(on)
+	btn.text = "ON" if on else "OFF"
 
 
-func _show_tab(name: String) -> void:
-	# Les onglets sans page dédiée montrent la page « Autres » (espace réservé).
-	var page: String = name if pages.has(name) else "Other"
-	for key in pages:
-		pages[key].visible = key == page
-	for n in NAV:
-		var btn: Button = get_node("%%Nav%s" % n)
-		btn.modulate = Color(1.3, 1.2, 0.85) if n == name else Color.WHITE
+func _wire_toggle(btn: Button, apply: Callable) -> void:
+	btn.toggled.connect(func(on: bool) -> void:
+		btn.text = "ON" if on else "OFF"
+		apply.call(on))
+
+
+func _wire_controls() -> void:
+	_wire_toggle(%TutoCheck, func(on: bool) -> void:
+		Game.profile.settings.tutorials = on)
+	_wire_toggle(%VibrCheck, func(on: bool) -> void:
+		Game.profile.settings.vibrations = on)
+	_wire_toggle(%PowerCheck, func(on: bool) -> void:
+		Game.profile.settings.power_saving = on
+		Game.set_max_fps(30 if on else FPS_VALUES[(%FpsOption as OptionButton).selected]))
+	(%QualityOption as OptionButton).item_selected.connect(func(i: int) -> void:
+		Game.profile.settings.gfx_quality = i)
+	(%DisplayOption as OptionButton).item_selected.connect(func(i: int) -> void:
+		Game.set_display_mode(i))
+	(%FpsOption as OptionButton).item_selected.connect(func(i: int) -> void:
+		Game.set_max_fps(FPS_VALUES[i]))
+	(%MusicSlider as HSlider).value_changed.connect(func(v: float) -> void:
+		Game.profile.settings.music_volume = v
+		Audio.apply_settings()
+		_update_pcts())
+	(%SfxSlider as HSlider).value_changed.connect(func(v: float) -> void:
+		Game.profile.settings.sfx_volume = v
+		Audio.apply_settings()
+		Audio.play_sfx("hit")
+		_update_pcts())
+
+
+func _update_pcts() -> void:
+	%MusicPct.text = "%d%%" % roundi((%MusicSlider as HSlider).value * 100)
+	%SfxPct.text = "%d%%" % roundi((%SfxSlider as HSlider).value * 100)
+
+
+func _show_tab(key: String) -> void:
+	for k in _pages:
+		(_pages[k] as Control).visible = k == key
+		(_navs[k] as Button).button_pressed = k == key
+
+
+## Remet les RÉGLAGES à leurs valeurs par défaut (pas le profil).
+func _restore_defaults() -> void:
+	for k in DEFAULTS:
+		Game.profile.settings[k] = DEFAULTS[k]
+	Game.set_display_mode(int(DEFAULTS.display_mode))
+	Game.set_max_fps(int(DEFAULTS.max_fps))
+	Audio.apply_settings()
+	_load_values()
+	_info("PAR DÉFAUT", "Les réglages ont été rétablis à leurs valeurs d'origine.")
+
+
+var _reset_armed := false
+
+
+func _on_reset_profile() -> void:
+	if not _reset_armed:
+		_reset_armed = true
+		(%ResetProfileBtn as Button).text = "CONFIRMER ?"
+		return
+	Game.reset_profile()
+	_reset_armed = false
+	(%ResetProfileBtn as Button).text = "RÉINITIALISÉ"
+	(%ResetProfileBtn as Button).disabled = true
+
+
+func _close() -> void:
+	Game.save_profile()
+	Game.goto("main_menu")
 
 
 func _info(title: String, text: String) -> void:
 	%InfoTitle.text = title
 	%InfoLabel.text = text
-	info_popup.visible = true
-
-
-func _on_save() -> void:
-	Game.save_profile()
-	Audio.play_sfx("levelup")
-	_info("SAUVEGARDÉ", "Vos préférences ont été enregistrées.")
-
-
-func _on_reset() -> void:
-	if not reset_armed:
-		reset_armed = true
-		reset_btn.text = "CONFIRMER ?"
-		return
-	Game.reset_profile()
-	reset_armed = false
-	reset_btn.text = "RÉINITIALISÉ"
-	reset_btn.disabled = true
+	%InfoPopup.visible = true

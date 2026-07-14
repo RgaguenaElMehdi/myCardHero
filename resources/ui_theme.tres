@@ -334,6 +334,38 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
+[sub_resource type="StyleBoxFlat" id="toggle_off"]
+content_margin_left = 18.0
+content_margin_top = 6.0
+content_margin_right = 18.0
+content_margin_bottom = 6.0
+bg_color = Color(0.07, 0.09, 0.14, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.42, 0.24, 0.6)
+corner_radius_top_left = 17
+corner_radius_top_right = 17
+corner_radius_bottom_right = 17
+corner_radius_bottom_left = 17
+
+[sub_resource type="StyleBoxFlat" id="toggle_on"]
+content_margin_left = 18.0
+content_margin_top = 6.0
+content_margin_right = 18.0
+content_margin_bottom = 6.0
+bg_color = Color(0.14, 0.36, 0.72, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.79, 0.65, 0.31, 0.85)
+corner_radius_top_left = 17
+corner_radius_top_right = 17
+corner_radius_bottom_right = 17
+corner_radius_bottom_left = 17
+
 [sub_resource type="StyleBoxFlat" id="popup_item_hover"]
 content_margin_left = 10.0
 content_margin_top = 4.0
@@ -404,6 +436,17 @@ MenuTabButton/styles/focus = SubResource("navbtn_focus")
 MenuTabButton/styles/hover = SubResource("kit_chip_hover")
 MenuTabButton/styles/normal = SubResource("kit_chip")
 MenuTabButton/styles/pressed = SubResource("kit_btn2_pressed")
+ToggleSwitch/base_type = &"Button"
+ToggleSwitch/colors/font_color = Color(0.62, 0.58, 0.5, 1)
+ToggleSwitch/colors/font_hover_color = Color(0.82, 0.78, 0.7, 1)
+ToggleSwitch/colors/font_pressed_color = Color(1, 1, 1, 1)
+ToggleSwitch/colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+ToggleSwitch/font_sizes/font_size = 17
+ToggleSwitch/styles/focus = SubResource("navbtn_focus")
+ToggleSwitch/styles/hover = SubResource("toggle_off")
+ToggleSwitch/styles/normal = SubResource("toggle_off")
+ToggleSwitch/styles/pressed = SubResource("toggle_on")
+ToggleSwitch/styles/hover_pressed = SubResource("toggle_on")
 NightPanel/base_type = &"PanelContainer"
 NightPanel/styles/panel = SubResource("kit_panel")
 NotifBadge/base_type = &"Panel"
