@@ -167,6 +167,15 @@ ASSETS = {
         "élégantes repliées, centre UNI et sombre (le texte sera affiché "
         "par-dessus), légers reflets dorés. Très allongée et basse, centrée. "
         + STYLE_ICON)),
+    # Blason de rang de l'Arène : UN seul emblème métallique CLAIR (argent
+    # pâle presque blanc), teinté ensuite par palier via modulate dans Godot.
+    "rank_crest": dict(canvas="1024x1024", keyed=True, prompt=(
+        "Emblème de rang de jeu compétitif : blason ailé majestueux en métal "
+        "ARGENT TRÈS PÂLE presque blanc, ailes stylisées dressées de part et "
+        "d'autre d'un grand cristal central taillé, ornements gravés élégants, "
+        "symétrique, imposant. IMPORTANT : métal et cristal en TONS CLAIRS "
+        "NEUTRES (blanc argenté, gris très clair) pour être recoloré, ombres "
+        "douces uniquement. " + STYLE_ICON)),
     # Icônes de la barre latérale des Paramètres (style orfèvrerie dorée).
     "icon_audio": dict(canvas="1024x1024", keyed=True, prompt=(
         "Icône : haut-parleur doré ouvragé avec petites ondes sonores, style "

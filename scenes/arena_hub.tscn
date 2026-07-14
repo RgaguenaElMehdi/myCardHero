@@ -1,70 +1,30 @@
-[gd_scene load_steps=20 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/arena_hub.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
-[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/arena_hall.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/frame_1920.png" id="5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/panel_dark.png" id="6"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/btn_plate.png" id="7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/emblem.png" id="8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_swords.png" id="10"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_shield_q.png" id="11"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_laurel.png" id="12"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_crystal_blue.png" id="14"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_crystal_purple.png" id="15"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_coin.png" id="16"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_chest.png" id="17"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_chart.png" id="18"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_scroll.png" id="19"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_gift.png" id="20"]
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="2"]
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/freeplay_1920.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/panel_night.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_gold.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_shard.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/deck/icon_back.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/rank_crest.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_selection.png" id="10"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_swords.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_helmet.png" id="12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_book_open.png" id="13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_chest.png" id="14"]
 
 [sub_resource type="StyleBoxTexture" id="panel_gold"]
-texture = ExtResource("6")
-texture_margin_left = 14.0
-texture_margin_top = 14.0
-texture_margin_right = 14.0
-texture_margin_bottom = 14.0
+texture = ExtResource("5")
+texture_margin_left = 56.0
+texture_margin_top = 44.0
+texture_margin_right = 56.0
+texture_margin_bottom = 44.0
 content_margin_left = 24.0
 content_margin_top = 16.0
 content_margin_right = 24.0
 content_margin_bottom = 16.0
-
-[sub_resource type="StyleBoxTexture" id="panel_hover"]
-texture = ExtResource("6")
-texture_margin_left = 14.0
-texture_margin_top = 14.0
-texture_margin_right = 14.0
-texture_margin_bottom = 14.0
-content_margin_left = 24.0
-content_margin_top = 16.0
-content_margin_right = 24.0
-content_margin_bottom = 16.0
-modulate_color = Color(1.3, 1.27, 1.15, 1)
-
-[sub_resource type="StyleBoxTexture" id="plate_gold"]
-texture = ExtResource("7")
-content_margin_left = 60.0
-content_margin_right = 60.0
-
-[sub_resource type="StyleBoxFlat" id="bar_bg"]
-bg_color = Color(0, 0, 0, 0.65)
-border_color = Color(0.62, 0.5, 0.3, 0.7)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="fill_gold"]
-bg_color = Color(0.78, 0.62, 0.28, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
 
 [node name="ArenaHub" type="Control"]
 layout_mode = 3
@@ -73,10 +33,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("3")
+theme = ExtResource("2")
 script = ExtResource("1")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="BG" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -87,607 +47,716 @@ texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Frame" type="TextureRect" parent="."]
+[node name="TopBar" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = 84.0
+grow_horizontal = 2
+theme_override_constants/separation = 14
+
+[node name="BackBtn" type="Button" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+theme_type_variation = &"MenuTabButton"
+icon = ExtResource("8")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Title" type="Label" parent="TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("3")
+text = "ARÈNE"
+mouse_filter = 2
+
+[node name="Subtitle" type="Label" parent="TopBar"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_font_sizes/font_size = 15
+text = "Affrontez des joueurs et grimpez dans les rangs !"
+mouse_filter = 2
+
+[node name="Spacer" type="Control" parent="TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="SeasonChip" type="PanelContainer" parent="TopBar"]
+layout_mode = 2
+theme_type_variation = &"CurrencyChip"
+
+[node name="SeasonLabel" type="Label" parent="TopBar/SeasonChip"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Saison — Fin dans …"
+mouse_filter = 2
+
+[node name="GoldChip" type="PanelContainer" parent="TopBar"]
+layout_mode = 2
+theme_type_variation = &"CurrencyChip"
+
+[node name="H" type="HBoxContainer" parent="TopBar/GoldChip"]
+layout_mode = 2
+theme_override_constants/separation = 8
+mouse_filter = 2
+
+[node name="I" type="TextureRect" parent="TopBar/GoldChip/H"]
+layout_mode = 2
+custom_minimum_size = Vector2(30, 30)
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="GoldLabel" type="Label" parent="TopBar/GoldChip/H"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.75, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="ShardChip" type="PanelContainer" parent="TopBar"]
+layout_mode = 2
+theme_type_variation = &"CurrencyChip"
+
+[node name="H" type="HBoxContainer" parent="TopBar/ShardChip"]
+layout_mode = 2
+theme_override_constants/separation = 8
+mouse_filter = 2
+
+[node name="I" type="TextureRect" parent="TopBar/ShardChip/H"]
+layout_mode = 2
+custom_minimum_size = Vector2(30, 30)
+texture = ExtResource("7")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="ShardLabel" type="Label" parent="TopBar/ShardChip/H"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="SideBar" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 104.0
+offset_right = 400.0
+offset_bottom = -20.0
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="NavRanked" type="Button" parent="SideBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 96)
+toggle_mode = true
+theme_override_styles/normal = SubResource("panel_gold")
+theme_override_styles/hover = SubResource("panel_gold")
+theme_override_styles/pressed = SubResource("panel_gold")
+theme_override_styles/focus = SubResource("panel_gold")
+
+[node name="Row" type="HBoxContainer" parent="SideBar/NavRanked"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("5")
-expand_mode = 1
-stretch_mode = 6
-mouse_filter = 2
-
-[node name="LeftShade" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 67.2
-offset_top = 30.0
-offset_right = 508.8
-offset_bottom = 946.0
-theme_override_styles/panel = SubResource("panel_gold")
-mouse_filter = 2
-
-[node name="BackBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 104.0
-offset_top = 44.0
-offset_right = 328.0
-offset_bottom = 104.0
-theme_override_styles/normal = SubResource("panel_gold")
-theme_override_styles/hover = SubResource("panel_hover")
-theme_override_styles/pressed = SubResource("panel_gold")
-theme_override_styles/focus = SubResource("panel_gold")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-text = "← MENU"
-
-[node name="Emblem" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 152.0
-offset_top = 120.0
-offset_right = 424.0
-offset_bottom = 410.0
-texture = ExtResource("8")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="RankTitle" type="Label" parent="."]
-layout_mode = 0
-offset_left = 128.0
-offset_top = 408.0
-offset_right = 448.0
-offset_bottom = 442.0
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "RANG ACTUEL"
-mouse_filter = 2
-
-[node name="RankLabel" type="Label" parent="."]
-unique_name_in_owner = true
-layout_mode = 0
-offset_left = 96.0
-offset_top = 440.0
-offset_right = 480.0
-offset_bottom = 516.0
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 54
-theme_override_fonts/font = ExtResource("2")
-text = "OR I"
-mouse_filter = 2
-
-[node name="Stats" type="HBoxContainer" parent="."]
-layout_mode = 0
-offset_left = 104.0
-offset_top = 540.0
-offset_right = 472.0
-offset_bottom = 660.0
-theme_override_constants/separation = 30
-
-[node name="VCol" type="VBoxContainer" parent="Stats"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="VTitle" type="Label" parent="Stats/VCol"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "VICTOIRES"
-mouse_filter = 2
-
-[node name="WinsLabel" type="Label" parent="Stats/VCol"]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 44
-theme_override_fonts/font = ExtResource("2")
-text = "0"
-mouse_filter = 2
-
-[node name="DCol" type="VBoxContainer" parent="Stats"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="DTitle" type="Label" parent="Stats/DCol"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.62, 0.5, 0.3, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "DÉFAITES"
-mouse_filter = 2
-
-[node name="LossesLabel" type="Label" parent="Stats/DCol"]
-unique_name_in_owner = true
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 44
-theme_override_fonts/font = ExtResource("2")
-text = "0"
-mouse_filter = 2
-
-[node name="RewardsPanel" type="PanelContainer" parent="."]
-layout_mode = 0
-offset_left = 99.2
-offset_top = 690.0
-offset_right = 476.8
-offset_bottom = 936.0
-theme_override_styles/panel = SubResource("panel_gold")
-
-[node name="RBox" type="VBoxContainer" parent="RewardsPanel"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="RTitle" type="Label" parent="RewardsPanel/RBox"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "RÉCOMPENSES DE RANG"
-mouse_filter = 2
-
-[node name="RTiles" type="HBoxContainer" parent="RewardsPanel/RBox"]
-layout_mode = 2
-alignment = 1
+offset_left = 24.0
+offset_right = -16.0
 theme_override_constants/separation = 16
-
-[node name="R0" type="PanelContainer" parent="RewardsPanel/RBox/RTiles"]
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 150)
-theme_override_styles/panel = SubResource("panel_gold")
 mouse_filter = 2
 
-[node name="R0Box" type="VBoxContainer" parent="RewardsPanel/RBox/RTiles/R0"]
+[node name="Icon" type="TextureRect" parent="SideBar/NavRanked/Row"]
 layout_mode = 2
-
-[node name="R0Icon" type="TextureRect" parent="RewardsPanel/RBox/RTiles/R0/R0Box"]
-layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("15")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="R0Lbl" type="Label" parent="RewardsPanel/RBox/RTiles/R0/R0Box"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-text = "×500"
-mouse_filter = 2
-
-[node name="R1" type="PanelContainer" parent="RewardsPanel/RBox/RTiles"]
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 150)
-theme_override_styles/panel = SubResource("panel_gold")
-mouse_filter = 2
-
-[node name="R1Box" type="VBoxContainer" parent="RewardsPanel/RBox/RTiles/R1"]
-layout_mode = 2
-
-[node name="R1Icon" type="TextureRect" parent="RewardsPanel/RBox/RTiles/R1/R1Box"]
-layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("16")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="R1Lbl" type="Label" parent="RewardsPanel/RBox/RTiles/R1/R1Box"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-text = "×2000"
-mouse_filter = 2
-
-[node name="R2" type="PanelContainer" parent="RewardsPanel/RBox/RTiles"]
-layout_mode = 2
-size_flags_horizontal = 3
-custom_minimum_size = Vector2(0, 150)
-theme_override_styles/panel = SubResource("panel_gold")
-mouse_filter = 2
-
-[node name="R2Box" type="VBoxContainer" parent="RewardsPanel/RBox/RTiles/R2"]
-layout_mode = 2
-
-[node name="R2Icon" type="TextureRect" parent="RewardsPanel/RBox/RTiles/R2/R2Box"]
-layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("17")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="R2Lbl" type="Label" parent="RewardsPanel/RBox/RTiles/R2/R2Box"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-text = "×1"
-mouse_filter = 2
-
-[node name="SeasonPanel" type="PanelContainer" parent="."]
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -456.0
-offset_top = 40.0
-offset_right = -40.0
-offset_bottom = 200.0
-theme_override_styles/panel = SubResource("panel_gold")
-
-[node name="SBox" type="VBoxContainer" parent="SeasonPanel"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="STitle" type="Label" parent="SeasonPanel/SBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-text = "SAISON EN COURS"
-mouse_filter = 2
-
-[node name="SeasonLabel" type="Label" parent="SeasonPanel/SBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 24
-mouse_filter = 2
-
-[node name="QuestsPanel" type="PanelContainer" parent="."]
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -456.0
-offset_top = 220.0
-offset_right = -40.0
-offset_bottom = 800.0
-theme_override_styles/panel = SubResource("panel_gold")
-
-[node name="QBox" type="VBoxContainer" parent="QuestsPanel"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="QTitle" type="Label" parent="QuestsPanel/QBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-text = "QUÊTES QUOTIDIENNES"
-mouse_filter = 2
-
-[node name="Quest0" type="HBoxContainer" parent="QuestsPanel/QBox"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="QIcon0" type="TextureRect" parent="QuestsPanel/QBox/Quest0"]
-layout_mode = 2
-custom_minimum_size = Vector2(46, 46)
+custom_minimum_size = Vector2(52, 52)
 size_flags_vertical = 4
 texture = ExtResource("10")
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="QMid0" type="VBoxContainer" parent="QuestsPanel/QBox/Quest0"]
+[node name="Box" type="VBoxContainer" parent="SideBar/NavRanked/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_constants/separation = 6
+theme_override_constants/separation = 2
+mouse_filter = 2
 
-[node name="Quest0Label" type="Label" parent="QuestsPanel/QBox/Quest0/QMid0"]
+[node name="N" type="Label" parent="SideBar/NavRanked/Row/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "CLASSÉ"
+mouse_filter = 2
+
+[node name="D" type="Label" parent="SideBar/NavRanked/Row/Box"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Affrontez des joueurs et gagnez des points."
+mouse_filter = 2
+
+[node name="NavCasual" type="Button" parent="SideBar"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 20
+custom_minimum_size = Vector2(0, 96)
+toggle_mode = true
+theme_override_styles/normal = SubResource("panel_gold")
+theme_override_styles/hover = SubResource("panel_gold")
+theme_override_styles/pressed = SubResource("panel_gold")
+theme_override_styles/focus = SubResource("panel_gold")
+
+[node name="Row" type="HBoxContainer" parent="SideBar/NavCasual"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_right = -16.0
+theme_override_constants/separation = 16
 mouse_filter = 2
 
-[node name="QBarRow0" type="HBoxContainer" parent="QuestsPanel/QBox/Quest0/QMid0"]
+[node name="Icon" type="TextureRect" parent="SideBar/NavCasual/Row"]
 layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Quest0Bar" type="ProgressBar" parent="QuestsPanel/QBox/Quest0/QMid0/QBarRow0"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-custom_minimum_size = Vector2(0, 14)
-show_percentage = false
-theme_override_styles/background = SubResource("bar_bg")
-theme_override_styles/fill = SubResource("fill_gold")
-
-[node name="Quest0Count" type="Label" parent="QuestsPanel/QBox/Quest0/QMid0/QBarRow0"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 20
-mouse_filter = 2
-
-[node name="QReward0" type="PanelContainer" parent="QuestsPanel/QBox/Quest0"]
-layout_mode = 2
-custom_minimum_size = Vector2(74, 88)
-theme_override_styles/panel = SubResource("panel_gold")
-mouse_filter = 2
-
-[node name="QRBox0" type="VBoxContainer" parent="QuestsPanel/QBox/Quest0/QReward0"]
-layout_mode = 2
-
-[node name="QRIcon0" type="TextureRect" parent="QuestsPanel/QBox/Quest0/QReward0/QRBox0"]
-layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("14")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="QRLbl0" type="Label" parent="QuestsPanel/QBox/Quest0/QReward0/QRBox0"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 18
-text = "×50"
-mouse_filter = 2
-
-[node name="Quest1" type="HBoxContainer" parent="QuestsPanel/QBox"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="QIcon1" type="TextureRect" parent="QuestsPanel/QBox/Quest1"]
-layout_mode = 2
-custom_minimum_size = Vector2(46, 46)
+custom_minimum_size = Vector2(52, 52)
 size_flags_vertical = 4
 texture = ExtResource("11")
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="QMid1" type="VBoxContainer" parent="QuestsPanel/QBox/Quest1"]
+[node name="Box" type="VBoxContainer" parent="SideBar/NavCasual/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_constants/separation = 6
+theme_override_constants/separation = 2
+mouse_filter = 2
 
-[node name="Quest1Label" type="Label" parent="QuestsPanel/QBox/Quest1/QMid1"]
+[node name="N" type="Label" parent="SideBar/NavCasual/Row/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "NON CLASSÉ"
+mouse_filter = 2
+
+[node name="D" type="Label" parent="SideBar/NavCasual/Row/Box"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Parties sans enjeu."
+mouse_filter = 2
+
+[node name="NavFriendly" type="Button" parent="SideBar"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 20
+custom_minimum_size = Vector2(0, 96)
+toggle_mode = true
+theme_override_styles/normal = SubResource("panel_gold")
+theme_override_styles/hover = SubResource("panel_gold")
+theme_override_styles/pressed = SubResource("panel_gold")
+theme_override_styles/focus = SubResource("panel_gold")
+
+[node name="Row" type="HBoxContainer" parent="SideBar/NavFriendly"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_right = -16.0
+theme_override_constants/separation = 16
 mouse_filter = 2
 
-[node name="QBarRow1" type="HBoxContainer" parent="QuestsPanel/QBox/Quest1/QMid1"]
+[node name="Icon" type="TextureRect" parent="SideBar/NavFriendly/Row"]
 layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Quest1Bar" type="ProgressBar" parent="QuestsPanel/QBox/Quest1/QMid1/QBarRow1"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-custom_minimum_size = Vector2(0, 14)
-show_percentage = false
-theme_override_styles/background = SubResource("bar_bg")
-theme_override_styles/fill = SubResource("fill_gold")
-
-[node name="Quest1Count" type="Label" parent="QuestsPanel/QBox/Quest1/QMid1/QBarRow1"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 20
-mouse_filter = 2
-
-[node name="QReward1" type="PanelContainer" parent="QuestsPanel/QBox/Quest1"]
-layout_mode = 2
-custom_minimum_size = Vector2(74, 88)
-theme_override_styles/panel = SubResource("panel_gold")
-mouse_filter = 2
-
-[node name="QRBox1" type="VBoxContainer" parent="QuestsPanel/QBox/Quest1/QReward1"]
-layout_mode = 2
-
-[node name="QRIcon1" type="TextureRect" parent="QuestsPanel/QBox/Quest1/QReward1/QRBox1"]
-layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("14")
-expand_mode = 1
-stretch_mode = 5
-mouse_filter = 2
-
-[node name="QRLbl1" type="Label" parent="QuestsPanel/QBox/Quest1/QReward1/QRBox1"]
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 18
-text = "×50"
-mouse_filter = 2
-
-[node name="Quest2" type="HBoxContainer" parent="QuestsPanel/QBox"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="QIcon2" type="TextureRect" parent="QuestsPanel/QBox/Quest2"]
-layout_mode = 2
-custom_minimum_size = Vector2(46, 46)
+custom_minimum_size = Vector2(52, 52)
 size_flags_vertical = 4
 texture = ExtResource("12")
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="QMid2" type="VBoxContainer" parent="QuestsPanel/QBox/Quest2"]
+[node name="Box" type="VBoxContainer" parent="SideBar/NavFriendly/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_constants/separation = 6
-
-[node name="Quest2Label" type="Label" parent="QuestsPanel/QBox/Quest2/QMid2"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 20
+theme_override_constants/separation = 2
 mouse_filter = 2
 
-[node name="QBarRow2" type="HBoxContainer" parent="QuestsPanel/QBox/Quest2/QMid2"]
+[node name="N" type="Label" parent="SideBar/NavFriendly/Row/Box"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "AMICAL"
+mouse_filter = 2
 
-[node name="Quest2Bar" type="ProgressBar" parent="QuestsPanel/QBox/Quest2/QMid2/QBarRow2"]
+[node name="D" type="Label" parent="SideBar/NavFriendly/Row/Box"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Affrontez vos amis en direct."
+mouse_filter = 2
+
+[node name="HistoryBtn" type="Button" parent="SideBar"]
 unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 82)
+theme_override_styles/normal = SubResource("panel_gold")
+theme_override_styles/hover = SubResource("panel_gold")
+theme_override_styles/pressed = SubResource("panel_gold")
+theme_override_styles/focus = SubResource("panel_gold")
+
+[node name="Row" type="HBoxContainer" parent="SideBar/HistoryBtn"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_right = -16.0
+theme_override_constants/separation = 16
+mouse_filter = 2
+
+[node name="Icon" type="TextureRect" parent="SideBar/HistoryBtn/Row"]
+layout_mode = 2
+custom_minimum_size = Vector2(46, 46)
+size_flags_vertical = 4
+texture = ExtResource("13")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="Box" type="VBoxContainer" parent="SideBar/HistoryBtn/Row"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-custom_minimum_size = Vector2(0, 14)
-show_percentage = false
-theme_override_styles/background = SubResource("bar_bg")
-theme_override_styles/fill = SubResource("fill_gold")
+theme_override_constants/separation = 2
+mouse_filter = 2
 
-[node name="Quest2Count" type="Label" parent="QuestsPanel/QBox/Quest2/QMid2/QBarRow2"]
+[node name="N" type="Label" parent="SideBar/HistoryBtn/Row/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "HISTORIQUE"
+mouse_filter = 2
+
+[node name="D" type="Label" parent="SideBar/HistoryBtn/Row/Box"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Consultez vos derniers combats."
+mouse_filter = 2
+
+[node name="RewardsBtn" type="Button" parent="SideBar"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 20
+custom_minimum_size = Vector2(0, 82)
+theme_override_styles/normal = SubResource("panel_gold")
+theme_override_styles/hover = SubResource("panel_gold")
+theme_override_styles/pressed = SubResource("panel_gold")
+theme_override_styles/focus = SubResource("panel_gold")
+
+[node name="Row" type="HBoxContainer" parent="SideBar/RewardsBtn"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_right = -16.0
+theme_override_constants/separation = 16
 mouse_filter = 2
 
-[node name="QReward2" type="PanelContainer" parent="QuestsPanel/QBox/Quest2"]
+[node name="Icon" type="TextureRect" parent="SideBar/RewardsBtn/Row"]
 layout_mode = 2
-custom_minimum_size = Vector2(74, 88)
-theme_override_styles/panel = SubResource("panel_gold")
-mouse_filter = 2
-
-[node name="QRBox2" type="VBoxContainer" parent="QuestsPanel/QBox/Quest2/QReward2"]
-layout_mode = 2
-
-[node name="QRIcon2" type="TextureRect" parent="QuestsPanel/QBox/Quest2/QReward2/QRBox2"]
-layout_mode = 2
-size_flags_vertical = 3
+custom_minimum_size = Vector2(46, 46)
+size_flags_vertical = 4
 texture = ExtResource("14")
 expand_mode = 1
 stretch_mode = 5
 mouse_filter = 2
 
-[node name="QRLbl2" type="Label" parent="QuestsPanel/QBox/Quest2/QReward2/QRBox2"]
+[node name="Box" type="VBoxContainer" parent="SideBar/RewardsBtn/Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+mouse_filter = 2
+
+[node name="N" type="Label" parent="SideBar/RewardsBtn/Row/Box"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "RÉCOMPENSES"
+mouse_filter = 2
+
+[node name="D" type="Label" parent="SideBar/RewardsBtn/Row/Box"]
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_font_sizes/font_size = 14
+text = "Découvrez les récompenses de saison !"
+mouse_filter = 2
+
+[node name="Hero" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 424.0
+offset_top = 104.0
+offset_right = -24.0
+offset_bottom = -518.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="HeroBox" type="VBoxContainer" parent="Hero"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="RankCrest" type="TextureRect" parent="Hero/HeroBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 190)
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="RankLabel" type="Label" parent="Hero/HeroBox"]
+unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="BarRow" type="HBoxContainer" parent="Hero/HeroBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 12
+
+[node name="RankBar" type="ProgressBar" parent="Hero/HeroBox/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(360, 18)
+size_flags_vertical = 4
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="RankPoints" type="Label" parent="Hero/HeroBox/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.94, 0.88, 1)
 theme_override_font_sizes/font_size = 18
-text = "×50"
+theme_override_fonts/font = ExtResource("3")
 mouse_filter = 2
 
-[node name="QSpacer" type="Control" parent="QuestsPanel/QBox"]
+[node name="RankHint" type="Label" parent="Hero/HeroBox"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 16
 mouse_filter = 2
 
-[node name="AllQuestsBtn" type="Button" parent="QuestsPanel/QBox"]
+[node name="LadderBtn" type="Button" parent="Hero"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 64)
-theme_override_styles/normal = SubResource("panel_gold")
-theme_override_styles/hover = SubResource("panel_hover")
-theme_override_styles/pressed = SubResource("panel_gold")
-theme_override_styles/focus = SubResource("panel_gold")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "VOIR TOUTES"
+size_flags_horizontal = 8
+size_flags_vertical = 0
+custom_minimum_size = Vector2(190, 52)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 17
+text = "📊  CLASSEMENT"
 
-[node name="LadderBtn" type="Button" parent="."]
+[node name="TiersRow" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 96.0
-offset_top = 966.0
-offset_right = 448.0
-offset_bottom = 1046.0
-theme_override_styles/normal = SubResource("panel_gold")
-theme_override_styles/hover = SubResource("panel_hover")
-theme_override_styles/pressed = SubResource("panel_gold")
-theme_override_styles/focus = SubResource("panel_gold")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 44
-theme_override_constants/h_separation = 12
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("18")
-icon_alignment = 0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 424.0
+offset_top = 578.0
+offset_right = -24.0
+offset_bottom = -300.0
+grow_horizontal = 2
+grow_vertical = 2
 alignment = 1
-expand_icon = true
-text = "CLASSEMENT"
+theme_override_constants/separation = 14
 
-[node name="HistoryBtn" type="Button" parent="."]
+[node name="Bottom" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 424.0
+offset_top = -284.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 14
+
+[node name="QuestsPanel" type="PanelContainer" parent="Bottom"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="QBox" type="VBoxContainer" parent="Bottom/QuestsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="QTitle" type="Label" parent="Bottom/QuestsPanel/QBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "✦  QUÊTES DU JOUR  ✦"
+mouse_filter = 2
+
+[node name="Quest0" type="VBoxContainer" parent="Bottom/QuestsPanel/QBox"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="R" type="HBoxContainer" parent="Bottom/QuestsPanel/QBox/Quest0"]
+layout_mode = 2
+
+[node name="Quest0Label" type="Label" parent="Bottom/QuestsPanel/QBox/Quest0/R"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1280.0
-offset_top = 966.0
-offset_right = 1576.0
-offset_bottom = 1046.0
-theme_override_styles/normal = SubResource("panel_gold")
-theme_override_styles/hover = SubResource("panel_hover")
-theme_override_styles/pressed = SubResource("panel_gold")
-theme_override_styles/focus = SubResource("panel_gold")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 44
-theme_override_constants/h_separation = 12
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("19")
-icon_alignment = 0
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 16
+mouse_filter = 2
+
+[node name="Quest0Count" type="Label" parent="Bottom/QuestsPanel/QBox/Quest0/R"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 16
+mouse_filter = 2
+
+[node name="Quest0Bar" type="ProgressBar" parent="Bottom/QuestsPanel/QBox/Quest0"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 10)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="Quest1" type="VBoxContainer" parent="Bottom/QuestsPanel/QBox"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="R" type="HBoxContainer" parent="Bottom/QuestsPanel/QBox/Quest1"]
+layout_mode = 2
+
+[node name="Quest1Label" type="Label" parent="Bottom/QuestsPanel/QBox/Quest1/R"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 16
+mouse_filter = 2
+
+[node name="Quest1Count" type="Label" parent="Bottom/QuestsPanel/QBox/Quest1/R"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 16
+mouse_filter = 2
+
+[node name="Quest1Bar" type="ProgressBar" parent="Bottom/QuestsPanel/QBox/Quest1"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 10)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="Quest2" type="VBoxContainer" parent="Bottom/QuestsPanel/QBox"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="R" type="HBoxContainer" parent="Bottom/QuestsPanel/QBox/Quest2"]
+layout_mode = 2
+
+[node name="Quest2Label" type="Label" parent="Bottom/QuestsPanel/QBox/Quest2/R"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 16
+mouse_filter = 2
+
+[node name="Quest2Count" type="Label" parent="Bottom/QuestsPanel/QBox/Quest2/R"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 16
+mouse_filter = 2
+
+[node name="Quest2Bar" type="ProgressBar" parent="Bottom/QuestsPanel/QBox/Quest2"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 10)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="StatsPanel" type="PanelContainer" parent="Bottom"]
+layout_mode = 2
+custom_minimum_size = Vector2(360, 0)
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="SBox" type="VBoxContainer" parent="Bottom/StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="STitle" type="Label" parent="Bottom/StatsPanel/SBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "✦  STATS  ✦"
+mouse_filter = 2
+
+[node name="RowW" type="HBoxContainer" parent="Bottom/StatsPanel/SBox"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Bottom/StatsPanel/SBox/RowW"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 18
+text = "Victoires"
+mouse_filter = 2
+
+[node name="WinsLabel" type="Label" parent="Bottom/StatsPanel/SBox/RowW"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+mouse_filter = 2
+
+[node name="RowL" type="HBoxContainer" parent="Bottom/StatsPanel/SBox"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Bottom/StatsPanel/SBox/RowL"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 18
+text = "Défaites"
+mouse_filter = 2
+
+[node name="LossesLabel" type="Label" parent="Bottom/StatsPanel/SBox/RowL"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+mouse_filter = 2
+
+[node name="RowR" type="HBoxContainer" parent="Bottom/StatsPanel/SBox"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Bottom/StatsPanel/SBox/RowR"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 18
+text = "Ratio"
+mouse_filter = 2
+
+[node name="RatioLabel" type="Label" parent="Bottom/StatsPanel/SBox/RowR"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+mouse_filter = 2
+
+[node name="RowS" type="HBoxContainer" parent="Bottom/StatsPanel/SBox"]
+layout_mode = 2
+
+[node name="L" type="Label" parent="Bottom/StatsPanel/SBox/RowS"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 18
+text = "Série actuelle"
+mouse_filter = 2
+
+[node name="StreakLabel" type="Label" parent="Bottom/StatsPanel/SBox/RowS"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.62, 0.3, 1)
+theme_override_font_sizes/font_size = 18
+mouse_filter = 2
+
+[node name="FightPanel" type="PanelContainer" parent="Bottom"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 0)
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="FBox" type="VBoxContainer" parent="Bottom/FightPanel"]
+layout_mode = 2
 alignment = 1
-expand_icon = true
-text = "HISTORIQUE"
+theme_override_constants/separation = 10
 
-[node name="RewardsBtn" type="Button" parent="."]
+[node name="ModeHint" type="Label" parent="Bottom/FightPanel/FBox"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 1600.0
-offset_top = 966.0
-offset_right = 1896.0
-offset_bottom = 1046.0
-theme_override_styles/normal = SubResource("panel_gold")
-theme_override_styles/hover = SubResource("panel_hover")
-theme_override_styles/pressed = SubResource("panel_gold")
-theme_override_styles/focus = SubResource("panel_gold")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_constants/icon_max_width = 44
-theme_override_constants/h_separation = 12
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("20")
-icon_alignment = 0
-alignment = 1
-expand_icon = true
-text = "RÉCOMPENSES"
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 17
+text = "Mode : Classé"
+mouse_filter = 2
 
-[node name="FightBtn" type="Button" parent="."]
+[node name="FightBtn" type="Button" parent="Bottom/FightPanel/FBox"]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = 752.0
-offset_top = 946.0
-offset_right = 1168.0
-offset_bottom = 1054.0
-theme_override_styles/normal = SubResource("panel_gold")
-theme_override_styles/hover = SubResource("panel_hover")
-theme_override_styles/pressed = SubResource("panel_gold")
-theme_override_styles/focus = SubResource("panel_gold")
-theme_override_colors/font_color = Color(0.93, 0.85, 0.68, 1)
+layout_mode = 2
+custom_minimum_size = Vector2(0, 86)
+theme_type_variation = &"MenuNavFeatured"
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
 theme_override_constants/outline_size = 6
-theme_override_font_sizes/font_size = 40
-theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("3")
 text = "COMBATTRE"
+
+[node name="FightSub" type="Label" parent="Bottom/FightPanel/FBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.62, 0.58, 0.5, 1)
+theme_override_font_sizes/font_size = 14
+text = "Recherche d'adversaire…"
+mouse_filter = 2
 
 [node name="InfoPopup" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -697,45 +766,40 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -380.0
-offset_top = -220.0
-offset_right = 380.0
-offset_bottom = 220.0
-theme_override_styles/panel = SubResource("panel_gold")
+offset_left = -320.0
+offset_top = -180.0
+offset_right = 320.0
+offset_bottom = 180.0
+theme_type_variation = &"NightPanel"
 
 [node name="IBox" type="VBoxContainer" parent="InfoPopup"]
 layout_mode = 2
-theme_override_constants/separation = 18
+alignment = 1
+theme_override_constants/separation = 14
 
 [node name="InfoTitle" type="Label" parent="InfoPopup/IBox"]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_fonts/font = ExtResource("2")
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("3")
 mouse_filter = 2
 
 [node name="InfoLabel" type="Label" parent="InfoPopup/IBox"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 3
 horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
-theme_override_font_sizes/font_size = 26
 autowrap_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 18
 mouse_filter = 2
 
 [node name="InfoCloseBtn" type="Button" parent="InfoPopup/IBox"]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(0, 64)
-theme_override_styles/normal = SubResource("panel_gold")
-theme_override_styles/hover = SubResource("panel_hover")
-theme_override_styles/pressed = SubResource("panel_gold")
-theme_override_styles/focus = SubResource("panel_gold")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_fonts/font = ExtResource("2")
-text = "FERMER"
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(180, 48)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 18
+text = "Fermer"

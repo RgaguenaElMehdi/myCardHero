@@ -1,8 +1,12 @@
-[gd_scene format=3 uid="uid://ce7i3thjglhaa"]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Theme" uid="uid://b8exa286p0qed" path="res://resources/ui_theme.tres" id="1"]
 [ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/Cinzel.ttf" id="2"]
-[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/Cinzel.ttf" id="3"]
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/panel_night.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/rank_crest.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_gold.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_shard.png" id="7"]
 
 [sub_resource type="Gradient" id="vignette_grad"]
 offsets = PackedFloat32Array(0, 0.62, 1)
@@ -15,6 +19,17 @@ height = 288
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, -0.15)
+
+[sub_resource type="StyleBoxTexture" id="panel_gold"]
+texture = ExtResource("4")
+texture_margin_left = 56.0
+texture_margin_top = 44.0
+texture_margin_right = 56.0
+texture_margin_bottom = 44.0
+content_margin_left = 24.0
+content_margin_top = 16.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
 
 [node name="GameOverOverlay" type="Control"]
 layout_mode = 1
@@ -65,14 +80,14 @@ layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
-offset_top = 260.0
-offset_bottom = 400.0
-pivot_offset = Vector2(960, 80)
+offset_top = 48.0
+offset_bottom = 178.0
+pivot_offset = Vector2(960, 65)
 horizontal_alignment = 1
 modulate = Color(1, 1, 1, 0)
-theme_override_font_sizes/font_size = 120
+theme_override_font_sizes/font_size = 104
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
-theme_override_constants/outline_size = 30
+theme_override_constants/outline_size = 26
 theme_override_fonts/font = ExtResource("3")
 
 [node name="SubText" type="Label" parent="."]
@@ -81,23 +96,353 @@ layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
-offset_top = 460.0
-offset_bottom = 560.0
+offset_top = 182.0
+offset_bottom = 232.0
 horizontal_alignment = 1
 modulate = Color(1, 1, 1, 0)
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.910, 0.894, 0.847, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 8
 theme_override_fonts/font = ExtResource("2")
 
+[node name="Panels" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(1, 1, 1, 0)
+mouse_filter = 2
+
+[node name="Left" type="VBoxContainer" parent="Panels"]
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = 256.0
+offset_right = 470.0
+offset_bottom = -190.0
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="RankPanel" type="PanelContainer" parent="Panels/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="RBox" type="VBoxContainer" parent="Panels/Left/RankPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="RTitle" type="Label" parent="Panels/Left/RankPanel/RBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "✦  RANG ACTUEL  ✦"
+mouse_filter = 2
+
+[node name="GoCrest" type="TextureRect" parent="Panels/Left/RankPanel/RBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 110)
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="GoRank" type="Label" parent="Panels/Left/RankPanel/RBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="BarRow" type="HBoxContainer" parent="Panels/Left/RankPanel/RBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+
+[node name="GoRankBar" type="ProgressBar" parent="Panels/Left/RankPanel/RBox/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(220, 14)
+size_flags_vertical = 4
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="GoRankPts" type="Label" parent="Panels/Left/RankPanel/RBox/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.94, 0.88, 1)
+theme_override_font_sizes/font_size = 15
+mouse_filter = 2
+
+[node name="GoRankDelta" type="Label" parent="Panels/Left/RankPanel/RBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="XpPanel" type="PanelContainer" parent="Panels/Left"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="XBox" type="VBoxContainer" parent="Panels/Left/XpPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="XTitle" type="Label" parent="Panels/Left/XpPanel/XBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "✦  PROGRESSION DE MAÎTRE  ✦"
+mouse_filter = 2
+
+[node name="GoLevel" type="Label" parent="Panels/Left/XpPanel/XBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="XBarRow" type="HBoxContainer" parent="Panels/Left/XpPanel/XBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 10
+
+[node name="GoXpBar" type="ProgressBar" parent="Panels/Left/XpPanel/XBox/XBarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(220, 14)
+size_flags_vertical = 4
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="GoXpPts" type="Label" parent="Panels/Left/XpPanel/XBox/XBarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.94, 0.88, 1)
+theme_override_font_sizes/font_size = 15
+mouse_filter = 2
+
+[node name="GoXpDelta" type="Label" parent="Panels/Left/XpPanel/XBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.45, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="Right" type="VBoxContainer" parent="Panels"]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -470.0
+offset_top = 256.0
+offset_right = -48.0
+offset_bottom = -190.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="OppPanel" type="PanelContainer" parent="Panels/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="OBox" type="VBoxContainer" parent="Panels/Right/OppPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="OTitle" type="Label" parent="Panels/Right/OppPanel/OBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "✦  ADVERSAIRE  ✦"
+mouse_filter = 2
+
+[node name="ORow" type="HBoxContainer" parent="Panels/Right/OppPanel/OBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 14
+
+[node name="GoOppPortrait" type="TextureRect" parent="Panels/Right/OppPanel/OBox/ORow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(72, 72)
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="OName" type="VBoxContainer" parent="Panels/Right/OppPanel/OBox/ORow"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+mouse_filter = 2
+
+[node name="GoOppName" type="Label" parent="Panels/Right/OppPanel/OBox/ORow/OName"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="GoOppSub" type="Label" parent="Panels/Right/OppPanel/OBox/ORow/OName"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_font_sizes/font_size = 15
+mouse_filter = 2
+
+[node name="StatsPanel" type="PanelContainer" parent="Panels/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="SBox" type="VBoxContainer" parent="Panels/Right/StatsPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="STitle" type="Label" parent="Panels/Right/StatsPanel/SBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+text = "✦  STATS DU COMBAT  ✦"
+mouse_filter = 2
+
+[node name="GoStats" type="VBoxContainer" parent="Panels/Right/StatsPanel/SBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RewardsPanel" type="PanelContainer" parent="Panels"]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -330.0
+offset_top = -140.0
+offset_right = 330.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="RwBox" type="VBoxContainer" parent="Panels/RewardsPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="RwTitle" type="Label" parent="Panels/RewardsPanel/RwBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "✦  RÉCOMPENSES  ✦"
+mouse_filter = 2
+
+[node name="RwRow" type="HBoxContainer" parent="Panels/RewardsPanel/RwBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 40
+
+[node name="GoldR" type="HBoxContainer" parent="Panels/RewardsPanel/RwBox/RwRow"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="I" type="TextureRect" parent="Panels/RewardsPanel/RwBox/RwRow/GoldR"]
+layout_mode = 2
+custom_minimum_size = Vector2(52, 52)
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="GoGoldDelta" type="Label" parent="Panels/RewardsPanel/RwBox/RwRow/GoldR"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.96, 0.9, 0.75, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="ShardR" type="HBoxContainer" parent="Panels/RewardsPanel/RwBox/RwRow"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="I" type="TextureRect" parent="Panels/RewardsPanel/RwBox/RwRow/ShardR"]
+layout_mode = 2
+custom_minimum_size = Vector2(52, 52)
+texture = ExtResource("7")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="GoShardDelta" type="Label" parent="Panels/RewardsPanel/RwBox/RwRow/ShardR"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="GoRwNote" type="Label" parent="Panels/RewardsPanel/RwBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.72, 0.62, 0.55, 1)
+theme_override_font_sizes/font_size = 14
+text = "ℹ  Les récompenses sont réduites en cas de défaite."
+mouse_filter = 2
+
 [node name="Buttons" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 10
+anchor_top = 0.5
 anchor_right = 1.0
+anchor_bottom = 0.5
 grow_horizontal = 2
-offset_top = 620.0
-offset_bottom = 680.0
+grow_vertical = 2
+offset_top = 72.0
+offset_bottom = 142.0
 alignment = 1
 theme_override_constants/separation = 20

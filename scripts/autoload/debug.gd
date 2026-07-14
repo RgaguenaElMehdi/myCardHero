@@ -21,6 +21,10 @@ func _ready() -> void:
 			_schedule_popup(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--detail="):
 			_schedule_detail(String(arg).split("=", true, 1)[1])
+		elif String(arg) == "--forfeit":
+			_schedule_forfeit()
+		elif String(arg).begins_with("--banner="):
+			_schedule_banner(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--chapter="):
 			# Charge la config de bataille d'un chapitre (tutoriel compris)
 			# sans passer par le dialogue : combiner avec res://scenes/battle.tscn.
@@ -129,6 +133,24 @@ func _schedule_popup(card_id: String) -> void:
 		live = MonsterInst.create(def, 0, 0)
 		live.gain_xp(1)
 	CardPopup.open(get_tree().current_scene, def, live)
+
+
+## Affiche la bannière de tour avec un texte donné : `--banner=<texte>`
+## (combiner avec --screenshot pour vérifier le centrage).
+func _schedule_banner(text: String) -> void:
+	await get_tree().create_timer(1.8, true, false, true).timeout
+	var sc := get_tree().current_scene
+	if sc is Control:
+		BattleFx.banner(sc as Control, text, UiTheme.GOLD)
+
+
+## Abandonne la partie après ~1 s (capture de l'écran de défaite) : `--forfeit`.
+func _schedule_forfeit() -> void:
+	await get_tree().create_timer(1.2, true, false, true).timeout
+	var sc := get_tree().current_scene
+	if sc != null and sc.has_method("_on_abandon"):
+		sc.call("_on_abandon")
+		sc.call("_on_abandon")
 
 
 ## Remplit le panneau « Détail de la carte » de la scène de bataille sur une

@@ -51,6 +51,10 @@ var cells := {}            ## Vector2i -> BoardCell
 var hand_widgets: Array[CardWidget] = []
 ## Monsters destroyed [by player 0, by player 1] (end-screen stats).
 var kills := [0, 0]
+# Stats du combat pour l'écran de fin.
+var _stat_start_ms := 0
+var _stat_cards := 0
+var _stat_summons := 0
 
 var enemy_info: Dictionary = {}
 var player_info: Dictionary = {}
@@ -188,6 +192,7 @@ func _tuto_notify(event: String) -> void:
 # --- Match setup ---------------------------------------------------------
 
 func _setup_match() -> void:
+	_stat_start_ms = Time.get_ticks_msec()
 	var cfg := Game.battle_config
 	if String(cfg.get("mode", "")) == "online":
 		_setup_online()
@@ -817,6 +822,12 @@ func _submit(action: Dictionary) -> void:
 	if not res.ok:
 		_toast(res.error)
 		return
+	match String(action.type):
+		"summon":
+			_stat_cards += 1
+			_stat_summons += 1
+		"cast":
+			_stat_cards += 1
 	busy = true
 	_refresh_buttons()
 	await _play_events(res.events)
@@ -1357,9 +1368,14 @@ func _show_game_over() -> void:
 		Game.quest_bump("wins")            # quêtes quotidiennes « victoires »
 	# Ranked match → update the local MMR (Glicko-2). Opponent rating is neutral
 	# here; a hosted backend would exchange the real rating via the server.
-	if bool(Game.battle_config.get("ranked", false)):
-		LocalBackend.new().report_result(1.0 if won else 0.0,
+	var ranked := bool(Game.battle_config.get("ranked", false))
+	var rank_delta := 0
+	if ranked:
+		var backend := LocalBackend.new()
+		var prev := float(backend.rating().rating)
+		var updated := backend.report_result(1.0 if won else 0.0,
 				{ "rating": 1500.0, "rd": 200.0 })
+		rank_delta = int(round(float(updated.rating) - prev))
 	var end_shot := ""
 	for arg in OS.get_cmdline_user_args():
 		if String(arg).begins_with("--end-shot="):
@@ -1382,6 +1398,8 @@ func _show_game_over() -> void:
 	art.texture = UiTheme.tex(UiTheme.TEX_VICTORY if won else UiTheme.TEX_DEFEAT)
 	art.modulate.a = 0.0
 	create_tween().tween_property(art, "modulate:a", 1.0, 0.8)
+
+	_fill_summary(overlay, won, ranked, rank_delta)
 
 	if won:
 		# Golden confetti raining from the top.
@@ -1415,28 +1433,16 @@ func _show_game_over() -> void:
 			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT).set_delay(0.3)
 	tw.tween_property(title, "modulate:a", 1.0, 0.3).set_delay(0.3)
 
-	# Sub-line + battle stats.
-	var sub := ""
+	# Sous-titre (les stats détaillées vivent dans le panneau de droite).
+	var sub := "Bien joué, Maître !" if won \
+			else "Ne baisse pas les bras, Maître — chaque duel est une leçon."
 	if state.winner == -2:
 		sub = "Égalité — limite de tours atteinte."
-	elif won:
-		sub = "Le Maître adverse est vaincu !"
-	else:
-		sub = "Votre Maître est tombé…"
-	sub += "\nTours joués : %d      Monstres vaincus : %d      Monstres perdus : %d" \
-			% [state.player_turn_count(), int(kills[0]), int(kills[1])]
 	var sub_l: Label = overlay.get_node("%SubText")
 	sub_l.text = sub
 	create_tween().tween_property(sub_l, "modulate:a", 1.0, 0.4).set_delay(0.7)
 
 	var buttons: HBoxContainer = overlay.get_node("%Buttons")
-	if autoplay and end_shot != "":
-		await _wait(1.8)
-		var img := get_viewport().get_texture().get_image()
-		img.save_png(end_shot)
-		print("[end-shot] %s" % end_shot)
-		get_tree().quit(0)
-		return
 	var is_campaign: bool = String(Game.battle_config.get("mode", "free")) == "campaign"
 	if is_campaign:
 		if won:
@@ -1453,15 +1459,118 @@ func _show_game_over() -> void:
 			Game.goto("battle"))
 		_add_btn(buttons, "Menu principal", true, func() -> void:
 			Game.goto("main_menu"))
+	if autoplay and end_shot != "":
+		await _wait(1.8)
+		var img := get_viewport().get_texture().get_image()
+		img.save_png(end_shot)
+		print("[end-shot] %s" % end_shot)
+		get_tree().quit(0)
+		return
+
+
+## Remplit les panneaux de l'écran de fin : rang (classé), progression de
+## Maître (XP réelle), adversaire, stats du combat et récompenses.
+func _fill_summary(overlay: Control, won: bool, ranked: bool, rank_delta: int) -> void:
+	var rewards := Game.grant_battle_rewards(won)
+
+	# Rang actuel : uniquement pour les matchs classés. Sans lui, le panneau XP
+	# reprend sa taille naturelle en haut de colonne (miroir du panneau Adversaire).
+	overlay.get_node("%RankPanel").visible = ranked
+	if not ranked:
+		(overlay.get_node("%XpPanel") as Control).size_flags_vertical = Control.SIZE_FILL
+	var r := LocalBackend.new().rating()
+	var rating := float(r.rating)
+	var tier := LocalBackend.tier_of(rating)
+	(overlay.get_node("%GoCrest") as TextureRect).modulate = \
+			LocalBackend.TIER_COLORS.get(String(tier[0]), Color.WHITE)
+	(overlay.get_node("%GoRank") as Label).text = LocalBackend.rank_name(rating)
+	var lo := maxf(float(tier[1]), 0.0)
+	var hi := float(tier[2])
+	var bar := overlay.get_node("%GoRankBar") as ProgressBar
+	bar.max_value = hi - lo
+	bar.value = clampf(rating - lo, 0.0, hi - lo)
+	(overlay.get_node("%GoRankPts") as Label).text = "%d / %d" % [int(round(rating)), int(hi)]
+	var delta := overlay.get_node("%GoRankDelta") as Label
+	if ranked:
+		delta.text = "%+d POINTS DE LIGUE" % rank_delta
+		delta.add_theme_color_override("font_color",
+				Color(0.45, 0.85, 0.45) if rank_delta >= 0 else Color(0.9, 0.4, 0.35))
+	else:
+		delta.visible = false
+
+	# Progression de Maître (niveau / XP du profil).
+	var p: Dictionary = Game.profile.get("player", {})
+	(overlay.get_node("%GoLevel") as Label).text = "NIVEAU %d" % int(p.get("level", 1))
+	var xp_bar := overlay.get_node("%GoXpBar") as ProgressBar
+	xp_bar.max_value = maxi(1, int(p.get("xp_next", 100)))
+	xp_bar.value = int(p.get("xp", 0))
+	(overlay.get_node("%GoXpPts") as Label).text = \
+			"%d / %d" % [int(p.get("xp", 0)), int(p.get("xp_next", 100))]
+	var xp_txt := "+%d EXP" % int(rewards.xp)
+	if int(rewards.levels) > 0:
+		xp_txt += "  ·  NIVEAU SUPÉRIEUR !"
+	(overlay.get_node("%GoXpDelta") as Label).text = xp_txt
+
+	# Adversaire.
+	var cfg := Game.battle_config
+	(overlay.get_node("%GoOppPortrait") as TextureRect).texture = \
+			UiTheme.tex(Db.portrait_path(String(cfg.get("opponent_portrait", ""))))
+	(overlay.get_node("%GoOppName") as Label).text = String(cfg.get("opponent_name", "Adversaire"))
+	var sub := "Adversaire en ligne" if _online else \
+			"IA — %s" % ["Novice", "Adepte", "Maître"][clampi(int(cfg.get("ai_level", 0)), 0, 2)]
+	(overlay.get_node("%GoOppSub") as Label).text = sub
+
+	# Stats du combat.
+	var secs := (Time.get_ticks_msec() - _stat_start_ms) / 1000
+	var stats := [
+		["Durée de la partie", "%02d:%02d" % [secs / 60, secs % 60]],
+		["Tours joués", str(state.player_turn_count())],
+		["Cartes jouées", str(_stat_cards)],
+		["Gardiens invoqués", str(_stat_summons)],
+		["Monstres vaincus", str(int(kills[0]))],
+		["Monstres perdus", str(int(kills[1]))],
+	]
+	var holder := overlay.get_node("%GoStats") as VBoxContainer
+	for s in stats:
+		var row := HBoxContainer.new()
+		row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var l := UiTheme.label(String(s[0]), 17, Color(0.85, 0.82, 0.74))
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_child(l)
+		row.add_child(UiTheme.label(String(s[1]), 17, Color(0.98, 0.96, 0.9)))
+		holder.add_child(row)
+
+	# Récompenses.
+	(overlay.get_node("%GoGoldDelta") as Label).text = "+%d" % int(rewards.gold)
+	(overlay.get_node("%GoShardDelta") as Label).text = "+%d" % int(rewards.shards)
+
+	# Défaite : accents rouges (titres de panneaux, EXP en bleu) + note.
+	if not won:
+		var red := Color(0.85, 0.38, 0.34)
+		for n in ["%RTitle", "%XTitle", "%OTitle", "%STitle", "%RwTitle"]:
+			(overlay.get_node(n) as Label).add_theme_color_override("font_color", red)
+		(overlay.get_node("%GoXpDelta") as Label).add_theme_color_override(
+				"font_color", Color(0.55, 0.72, 1.0))
+		overlay.get_node("%GoRwNote").visible = true
+
+	# Fondu d'apparition des panneaux.
+	create_tween().tween_property(overlay.get_node("%Panels"), "modulate:a", 1.0, 0.5) \
+			.set_delay(0.55)
 
 
 func _add_btn(parent: Control, text: String, secondary: bool, action: Callable) -> void:
 	var b := Button.new()
-	b.text = text
-	b.custom_minimum_size = Vector2(220, 54)
-	if secondary:
-		b.theme_type_variation = &"ButtonSecondary"
+	b.text = text.to_upper()
+	b.custom_minimum_size = Vector2(280, 64)
+	b.theme_type_variation = &"MenuTabButton" if secondary else &"MenuNavFeatured"
+	var f := UiTheme.title_font()
+	if f != null:
+		b.add_theme_font_override("font", f)
+	b.add_theme_font_size_override("font_size", 22)
+	b.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.8))
+	b.add_theme_constant_override("outline_size", 5)
 	b.pressed.connect(action)
+	b.pressed.connect(UiTheme._click_sfx)
 	parent.add_child(b)
 
 

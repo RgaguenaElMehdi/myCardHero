@@ -306,6 +306,31 @@ func matchmaking_ai_config(ranked: bool) -> Dictionary:
 	}
 
 
+## Récompenses de fin de combat (écran Victoire) : or, cristaux et XP de
+## Maître — le niveau monte quand xp_next est atteint (seuil croissant).
+## Retourne { gold, shards, xp, levels } pour l'affichage.
+func grant_battle_rewards(won: bool) -> Dictionary:
+	var gold := 100 if won else 25
+	var shards := 50 if won else 10
+	var xp := 150 if won else 50
+	var cur: Dictionary = profile.get("currency", {})
+	cur["gold"] = int(cur.get("gold", 0)) + gold
+	cur["shards"] = int(cur.get("shards", 0)) + shards
+	profile["currency"] = cur
+	var p: Dictionary = profile.get("player", {})
+	p["xp"] = int(p.get("xp", 0)) + xp
+	var levels := 0
+	while int(p.xp) >= int(p.get("xp_next", 100)):
+		p["xp"] = int(p.xp) - int(p.get("xp_next", 100))
+		p["level"] = int(p.get("level", 1)) + 1
+		p["xp_next"] = int(int(p.get("xp_next", 100)) * 1.2)
+		levels += 1
+	profile["player"] = p
+	save_profile()
+	profile_changed.emit()
+	return { "gold": gold, "shards": shards, "xp": xp, "levels": levels }
+
+
 func start_free_battle(ai_level: int, opponent_master: String, opponent_deck: Array) -> void:
 	battle_config = {
 		"mode": "free",

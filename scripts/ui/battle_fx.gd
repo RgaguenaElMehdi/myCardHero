@@ -181,7 +181,6 @@ static func banner(layer: Control, text: String, color: Color) -> void:
 		l.set_anchors_preset(Control.PRESET_FULL_RECT)
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		l.offset_top = -26  # optical center of the ribbon strip
 		panel.add_child(l)
 	else:
 		var pc := PanelContainer.new()

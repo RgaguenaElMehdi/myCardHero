@@ -29,12 +29,13 @@ func _ready() -> void:
 
 func _wire_navigation() -> void:
 	_route(%CampaignBtn, "campaign")
+	_route(%ArenaBtn, "arena_hub")
 	_route(%FreeBtn, "free_setup")
 	_route(%DeckBtn, "deck_builder")
 	_route(%QuestsBtn, "arena_hub")
 	_route(%SettingsBtn, "settings")
 	# Écrans pas encore construits : retour visuel au lieu d'une erreur.
-	for btn: Button in [%CollectionBtn, %ShopBtn, %PassBtn, %RankingBtn,
+	for btn: Button in [%ShopBtn, %PassBtn, %RankingBtn,
 			%MailBtn, %GiftBtn, %SocialBtn]:
 		btn.pressed.connect(_toast.bind(COMING_SOON))
 		btn.pressed.connect(UiTheme._click_sfx)

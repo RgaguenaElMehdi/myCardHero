@@ -175,6 +175,14 @@ subtitle = "Le Circuit de Petraheim"
 icon_texture = ExtResource("9")
 featured = true
 
+[node name="ArenaBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(540, 96)
+title = "ARÈNE"
+subtitle = "Classé et parties en ligne"
+icon_texture = ExtResource("16")
+
 [node name="FreeBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
@@ -190,14 +198,6 @@ custom_minimum_size = Vector2(540, 96)
 title = "DECK BUILDER"
 subtitle = "Construisez votre deck"
 icon_texture = ExtResource("11")
-
-[node name="CollectionBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(540, 96)
-title = "COLLECTION"
-subtitle = "Vos cartes et maîtrises"
-icon_texture = ExtResource("12")
 
 [node name="ShopBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
 unique_name_in_owner = true
