@@ -1,114 +1,26 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/campaign_scene.gd" id="1"]
-[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
-[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="3"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/campaign_bg_2400.png" id="4"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/campaign_map.png" id="7"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_selection.png" id="8"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_book_open.png" id="9"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_deck.png" id="10"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_params.png" id="11"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_chest.png" id="12"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_laurel.png" id="13"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/tab_active.png" id="15"]
-[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/tab_dark.png" id="16"]
-[ext_resource type="Script" path="res://scripts/ui/campaign_paths.gd" id="14"]
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="2"]
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/freeplay_2400.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/panel_night.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_gold.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_shard.png" id="7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_book_open.png" id="8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_settings.png" id="9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/deck/icon_back.png" id="10"]
 
-[sub_resource type="StyleBoxFlat" id="panel_flat"]
-bg_color = Color(0.052, 0.047, 0.06, 0.96)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.37, 0.21, 1)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
-content_margin_left = 26.0
-content_margin_top = 22.0
-content_margin_right = 26.0
-content_margin_bottom = 22.0
-
-[sub_resource type="StyleBoxFlat" id="pill"]
-bg_color = Color(0.06, 0.055, 0.07, 0.94)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.48, 0.4, 0.23, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-content_margin_left = 16.0
-content_margin_top = 4.0
-content_margin_right = 16.0
-content_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id="btn_dark"]
-bg_color = Color(0.07, 0.065, 0.08, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.48, 0.4, 0.23, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-content_margin_left = 14.0
-content_margin_top = 8.0
-content_margin_right = 14.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxFlat" id="btn_fight"]
-bg_color = Color(0.28, 0.13, 0.46, 0.97)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.78, 0.63, 0.35, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-content_margin_left = 18.0
-content_margin_top = 12.0
-content_margin_right = 18.0
-content_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxFlat" id="map_border"]
-bg_color = Color(0, 0, 0, 0)
-draw_center = false
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5, 0.41, 0.24, 1)
-
-[sub_resource type="StyleBoxTexture" id="tab_a"]
-texture = ExtResource("15")
-texture_margin_left = 26.0
-texture_margin_top = 26.0
-texture_margin_right = 140.0
-texture_margin_bottom = 26.0
-content_margin_left = 26.0
-content_margin_top = 8.0
-content_margin_right = 110.0
-content_margin_bottom = 8.0
-
-[sub_resource type="StyleBoxTexture" id="tab_d"]
-texture = ExtResource("16")
-texture_margin_left = 26.0
-texture_margin_top = 26.0
-texture_margin_right = 26.0
-texture_margin_bottom = 26.0
-content_margin_left = 16.0
-content_margin_top = 8.0
-content_margin_right = 12.0
-content_margin_bottom = 8.0
+[sub_resource type="StyleBoxTexture" id="panel_gold"]
+texture = ExtResource("5")
+texture_margin_left = 56.0
+texture_margin_top = 44.0
+texture_margin_right = 56.0
+texture_margin_bottom = 44.0
+content_margin_left = 24.0
+content_margin_top = 16.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
 
 [node name="Campaign" type="Control"]
 layout_mode = 3
@@ -117,436 +29,372 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("3")
+theme = ExtResource("2")
 script = ExtResource("1")
-node_scale = 1.0
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="BG" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("4")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Title" type="Label" parent="."]
+[node name="TopBar" type="HBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 0
-offset_left = 100.0
-offset_top = 26.0
-offset_right = 760.0
-offset_bottom = 88.0
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 46
-theme_override_fonts/font = ExtResource("2")
-text = "CAMPAGNE"
-
-[node name="Subtitle" type="Label" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-offset_left = 102.0
-offset_top = 90.0
-offset_right = 1100.0
-offset_bottom = 122.0
-theme_override_colors/font_color = Color(0.6, 0.49, 0.3, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "— CHAPITRE I —"
-
-[node name="ProgPill" type="PanelContainer" parent="."]
-layout_mode = 1
-anchor_left = 1.0
+anchors_preset = 10
 anchor_right = 1.0
-offset_left = -750.0
-offset_top = 30.0
-offset_right = -560.0
-offset_bottom = 92.0
-theme_override_styles/panel = SubResource("pill")
+offset_left = 24.0
+offset_top = 16.0
+offset_right = -24.0
+offset_bottom = 84.0
+grow_horizontal = 2
+theme_override_constants/separation = 14
 
-[node name="HB" type="HBoxContainer" parent="ProgPill"]
-layout_mode = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="Ic" type="TextureRect" parent="ProgPill/HB"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-size_flags_vertical = 4
-texture = ExtResource("13")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="ProgressLabel" type="Label" parent="ProgPill/HB"]
+[node name="BackBtn" type="Button" parent="TopBar"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_fonts/font = ExtResource("2")
-text = "0/10"
-
-[node name="CardsPill" type="PanelContainer" parent="."]
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -540.0
-offset_top = 30.0
-offset_right = -370.0
-offset_bottom = 92.0
-theme_override_styles/panel = SubResource("pill")
-
-[node name="HB" type="HBoxContainer" parent="CardsPill"]
-layout_mode = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="Ic" type="TextureRect" parent="CardsPill/HB"]
-custom_minimum_size = Vector2(40, 40)
-layout_mode = 2
-size_flags_vertical = 4
-texture = ExtResource("10")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="CardsLabel" type="Label" parent="CardsPill/HB"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_fonts/font = ExtResource("2")
-text = "0"
-
-[node name="GearBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -350.0
-offset_top = 28.0
-offset_right = -270.0
-offset_bottom = 94.0
-theme_override_styles/normal = SubResource("btn_dark")
-theme_override_styles/hover = SubResource("btn_dark")
-theme_override_styles/pressed = SubResource("btn_dark")
-theme_override_styles/focus = SubResource("btn_dark")
-icon = ExtResource("11")
-expand_icon = true
-theme_override_constants/icon_max_width = 42
-icon_alignment = 1
-
-[node name="ChestTopBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -250.0
-offset_top = 28.0
-offset_right = -170.0
-offset_bottom = 94.0
-theme_override_styles/normal = SubResource("btn_dark")
-theme_override_styles/hover = SubResource("btn_dark")
-theme_override_styles/pressed = SubResource("btn_dark")
-theme_override_styles/focus = SubResource("btn_dark")
-icon = ExtResource("12")
-expand_icon = true
-theme_override_constants/icon_max_width = 42
-icon_alignment = 1
-
-[node name="CarteBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-offset_left = 30.0
-offset_top = 170.0
-offset_right = 346.0
-offset_bottom = 266.0
-theme_override_styles/normal = SubResource("tab_a")
-theme_override_styles/hover = SubResource("tab_a")
-theme_override_styles/pressed = SubResource("tab_a")
-theme_override_styles/focus = SubResource("tab_a")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_colors/font_hover_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 20
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("8")
-theme_override_constants/icon_max_width = 46
-text = "  CARTE"
-alignment = 0
-
-[node name="JournalBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-offset_left = 30.0
-offset_top = 290.0
-offset_right = 302.0
-offset_bottom = 386.0
-theme_override_styles/normal = SubResource("tab_d")
-theme_override_styles/hover = SubResource("tab_d")
-theme_override_styles/pressed = SubResource("tab_d")
-theme_override_styles/focus = SubResource("tab_d")
-theme_override_colors/font_color = Color(0.62, 0.56, 0.46, 1)
-theme_override_colors/font_hover_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 20
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("9")
-theme_override_constants/icon_max_width = 46
-text = "  JOURNAL"
-alignment = 0
-
-[node name="CollectionBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-offset_left = 30.0
-offset_top = 410.0
-offset_right = 302.0
-offset_bottom = 506.0
-theme_override_styles/normal = SubResource("tab_d")
-theme_override_styles/hover = SubResource("tab_d")
-theme_override_styles/pressed = SubResource("tab_d")
-theme_override_styles/focus = SubResource("tab_d")
-theme_override_colors/font_color = Color(0.62, 0.56, 0.46, 1)
-theme_override_colors/font_hover_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 20
-theme_override_fonts/font = ExtResource("2")
+custom_minimum_size = Vector2(60, 0)
+theme_type_variation = &"MenuTabButton"
 icon = ExtResource("10")
-theme_override_constants/icon_max_width = 46
-text = "  COLLECTION"
-alignment = 0
+icon_alignment = 1
+expand_icon = true
 
-[node name="MapWrap" type="Control" parent="."]
-clip_contents = true
-layout_mode = 1
-anchors_preset = 0
-offset_left = 300.0
-offset_top = 130.0
-offset_right = 1770.0
-offset_bottom = 872.0
+[node name="Title" type="Label" parent="TopBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 40
+theme_override_fonts/font = ExtResource("3")
+text = "CAMPAGNE"
+mouse_filter = 2
 
-[node name="Map" type="TextureRect" parent="MapWrap"]
+[node name="Spacer" type="Control" parent="TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="GoldChip" type="PanelContainer" parent="TopBar"]
+layout_mode = 2
+theme_type_variation = &"CurrencyChip"
+
+[node name="H" type="HBoxContainer" parent="TopBar/GoldChip"]
+layout_mode = 2
+theme_override_constants/separation = 8
+mouse_filter = 2
+
+[node name="I" type="TextureRect" parent="TopBar/GoldChip/H"]
+layout_mode = 2
+custom_minimum_size = Vector2(30, 30)
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 5
+mouse_filter = 2
+
+[node name="GoldLabel" type="Label" parent="TopBar/GoldChip/H"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 2.0
-offset_top = 2.0
-offset_right = -2.0
-offset_bottom = -2.0
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.9, 0.75, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="ShardChip" type="PanelContainer" parent="TopBar"]
+layout_mode = 2
+theme_type_variation = &"CurrencyChip"
+
+[node name="H" type="HBoxContainer" parent="TopBar/ShardChip"]
+layout_mode = 2
+theme_override_constants/separation = 8
+mouse_filter = 2
+
+[node name="I" type="TextureRect" parent="TopBar/ShardChip/H"]
+layout_mode = 2
+custom_minimum_size = Vector2(30, 30)
 texture = ExtResource("7")
 expand_mode = 1
-stretch_mode = 6
+stretch_mode = 5
 mouse_filter = 2
 
-[node name="MapBorder" type="Panel" parent="MapWrap"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-theme_override_styles/panel = SubResource("map_border")
-mouse_filter = 2
-
-[node name="NodeLayer" type="Control" parent="MapWrap"]
+[node name="ShardLabel" type="Label" parent="TopBar/ShardChip/H"]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = 6.0
-offset_right = -6.0
-offset_bottom = -6.0
-mouse_filter = 2
-script = ExtResource("14")
-
-[node name="BannerPlate" type="Panel" parent="MapWrap"]
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -235.0
-offset_top = 16.0
-offset_right = 235.0
-offset_bottom = 66.0
-theme_override_styles/panel = SubResource("pill")
-mouse_filter = 2
-
-[node name="ActBanner" type="Label" parent="MapWrap"]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -230.0
-offset_top = 16.0
-offset_right = 230.0
-offset_bottom = 66.0
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 28
-theme_override_fonts/font = ExtResource("2")
-text = "I. TERRES OUBLIÉES"
-horizontal_alignment = 1
-vertical_alignment = 1
-mouse_filter = 2
-
-[node name="DetailPanel" type="PanelContainer" parent="."]
-layout_mode = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -610.0
-offset_top = 130.0
-offset_right = -30.0
-offset_bottom = 872.0
-theme_override_styles/panel = SubResource("panel_flat")
-
-[node name="DBox" type="VBoxContainer" parent="DetailPanel"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 20
+mouse_filter = 2
+
+[node name="JournalBtn" type="Button" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+theme_type_variation = &"MenuTabButton"
+icon = ExtResource("8")
+icon_alignment = 1
+expand_icon = true
+
+[node name="GearBtn" type="Button" parent="TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+theme_type_variation = &"MenuTabButton"
+icon = ExtResource("9")
+icon_alignment = 1
+expand_icon = true
+
+[node name="ChapterList" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 104.0
+offset_right = 428.0
+offset_bottom = -20.0
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="Center" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 452.0
+offset_top = 100.0
+offset_right = -492.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 10
 
-[node name="DTitle" type="Label" parent="DetailPanel/DBox"]
+[node name="ChKicker" type="Label" parent="Center"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 30
-theme_override_fonts/font = ExtResource("2")
-text = "NIVEAU"
 horizontal_alignment = 1
-autowrap_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("3")
+text = "✦  CHAPITRE I  ✦"
 mouse_filter = 2
 
-[node name="PortraitFrame" type="PanelContainer" parent="DetailPanel/DBox"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("map_border")
-
-[node name="DPortrait" type="TextureRect" parent="DetailPanel/DBox/PortraitFrame"]
+[node name="ChTitle" type="Label" parent="Center"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 52
+theme_override_fonts/font = ExtResource("3")
+text = "LES TERRES BRISÉES"
+mouse_filter = 2
+
+[node name="ArtFrame" type="PanelContainer" parent="Center"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="ChArt" type="TextureRect" parent="Center/ArtFrame"]
+unique_name_in_owner = true
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 6
 mouse_filter = 2
 
-[node name="LDesc" type="Label" parent="DetailPanel/DBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "DESCRIPTION"
-mouse_filter = 2
-
-[node name="DDesc" type="Label" parent="DetailPanel/DBox"]
+[node name="ChDesc" type="Label" parent="Center"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_color = Color(0.8, 0.77, 0.7, 1)
-theme_override_font_sizes/font_size = 19
-text = ""
+horizontal_alignment = 1
 autowrap_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.85, 0.78, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 19
 mouse_filter = 2
 
-[node name="LDiff" type="Label" parent="DetailPanel/DBox"]
+[node name="ProgressPanel" type="PanelContainer" parent="Center"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="PBox" type="VBoxContainer" parent="Center/ProgressPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PTitle" type="Label" parent="Center/ProgressPanel/PBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
 theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "DIFFICULTÉ RECOMMANDÉE"
+theme_override_fonts/font = ExtResource("3")
+text = "—  PROGRESSION DU CHAPITRE  —"
 mouse_filter = 2
 
-[node name="DDiff" type="Label" parent="DetailPanel/DBox"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_color = Color(0.8, 0.77, 0.7, 1)
-theme_override_font_sizes/font_size = 23
-theme_override_fonts/font = ExtResource("2")
-text = "Normale"
-mouse_filter = 2
-
-[node name="LReward" type="Label" parent="DetailPanel/DBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 22
-theme_override_fonts/font = ExtResource("2")
-text = "RÉCOMPENSES"
-mouse_filter = 2
-
-[node name="RewardRow" type="HBoxContainer" parent="DetailPanel/DBox"]
-unique_name_in_owner = true
+[node name="BarRow" type="HBoxContainer" parent="Center/ProgressPanel/PBox"]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="Spacer" type="Control" parent="DetailPanel/DBox"]
+[node name="ChBar" type="ProgressBar" parent="Center/ProgressPanel/PBox/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+custom_minimum_size = Vector2(0, 18)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="ChCount" type="Label" parent="Center/ProgressPanel/PBox/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.94, 0.88, 1)
+theme_override_font_sizes/font_size = 20
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="MilestoneRow" type="HBoxContainer" parent="Center/ProgressPanel/PBox"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="Right" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -468.0
+offset_top = 104.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="InfoPanel" type="PanelContainer" parent="Right"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="IBox" type="VBoxContainer" parent="Right/InfoPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ITitle" type="Label" parent="Right/InfoPanel/IBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "✦  INFORMATIONS  ✦"
+mouse_filter = 2
+
+[node name="InfoText" type="Label" parent="Right/InfoPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.82, 0.74, 1)
+theme_override_font_sizes/font_size = 17
+mouse_filter = 2
+
+[node name="ObjPanel" type="PanelContainer" parent="Right"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="OBox" type="VBoxContainer" parent="Right/ObjPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="OTitle" type="Label" parent="Right/ObjPanel/OBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "✦  OBJECTIFS  ✦"
+mouse_filter = 2
+
+[node name="ObjList" type="VBoxContainer" parent="Right/ObjPanel/OBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="RewardPanel" type="PanelContainer" parent="Right"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("panel_gold")
+
+[node name="RBox" type="VBoxContainer" parent="Right/RewardPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RTitle" type="Label" parent="Right/RewardPanel/RBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("3")
+text = "✦  RÉCOMPENSE FINALE  ✦"
+mouse_filter = 2
+
+[node name="FinalRow" type="HBoxContainer" parent="Right/RewardPanel/RBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="FinalArt" type="TextureRect" parent="Right/RewardPanel/RBox/FinalRow"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(96, 110)
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="FBox" type="VBoxContainer" parent="Right/RewardPanel/RBox/FinalRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 4
+mouse_filter = 2
+
+[node name="FinalKicker" type="Label" parent="Right/RewardPanel/RBox/FinalRow/FBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 16
+mouse_filter = 2
+
+[node name="FinalName" type="Label" parent="Right/RewardPanel/RBox/FinalRow/FBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.96, 0.9, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="FinalSub" type="Label" parent="Right/RewardPanel/RBox/FinalRow/FBox"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.72, 0.64, 1)
+theme_override_font_sizes/font_size = 15
+mouse_filter = 2
+
+[node name="RSpacer" type="Control" parent="Right"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="FightBtn" type="Button" parent="DetailPanel/DBox"]
+[node name="StartBtn" type="Button" parent="Right"]
 unique_name_in_owner = true
 layout_mode = 2
 custom_minimum_size = Vector2(0, 84)
-theme_override_styles/normal = SubResource("btn_fight")
-theme_override_styles/hover = SubResource("btn_fight")
-theme_override_styles/pressed = SubResource("btn_fight")
-theme_override_styles/focus = SubResource("btn_fight")
-theme_override_colors/font_color = Color(0.97, 0.92, 0.78, 1)
+theme_type_variation = &"MenuNavFeatured"
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 32
-theme_override_fonts/font = ExtResource("2")
-text = "AFFRONTER"
-
-[node name="ActTabs" type="HBoxContainer" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 0
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 340.0
-offset_top = -108.0
-offset_right = 2060.0
-offset_bottom = -24.0
-theme_override_constants/separation = 14
-alignment = 1
-
-[node name="BackBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 40.0
-offset_top = -102.0
-offset_right = 300.0
-offset_bottom = -32.0
-theme_override_styles/normal = SubResource("btn_dark")
-theme_override_styles/hover = SubResource("btn_dark")
-theme_override_styles/pressed = SubResource("btn_dark")
-theme_override_styles/focus = SubResource("btn_dark")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-text = "←  RETOUR"
-
-[node name="ShopBtn" type="Button" parent="."]
-unique_name_in_owner = true
-layout_mode = 1
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -330.0
-offset_top = -102.0
-offset_right = -40.0
-offset_bottom = -32.0
-theme_override_styles/normal = SubResource("btn_dark")
-theme_override_styles/hover = SubResource("btn_dark")
-theme_override_styles/pressed = SubResource("btn_dark")
-theme_override_styles/focus = SubResource("btn_dark")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-icon = ExtResource("12")
-theme_override_constants/icon_max_width = 40
-text = "  BOUTIQUE"
+theme_override_fonts/font = ExtResource("3")
+text = "COMMENCER L'ÉTAPE  ❯"
 
 [node name="InfoPopup" type="PanelContainer" parent="."]
 unique_name_in_owner = true
@@ -556,46 +404,40 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -420.0
-offset_top = -260.0
-offset_right = 420.0
-offset_bottom = 260.0
-theme_override_styles/panel = SubResource("panel_flat")
+offset_left = -320.0
+offset_top = -180.0
+offset_right = 320.0
+offset_bottom = 180.0
+theme_type_variation = &"NightPanel"
 
-[node name="IB" type="VBoxContainer" parent="InfoPopup"]
+[node name="IBox" type="VBoxContainer" parent="InfoPopup"]
 layout_mode = 2
-theme_override_constants/separation = 18
+alignment = 1
+theme_override_constants/separation = 14
 
-[node name="InfoTitle" type="Label" parent="InfoPopup/IB"]
+[node name="InfoTitle" type="Label" parent="InfoPopup/IBox"]
 unique_name_in_owner = true
 layout_mode = 2
 horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_fonts/font = ExtResource("2")
-text = "INFO"
-mouse_filter = 2
-
-[node name="InfoLabel" type="Label" parent="InfoPopup/IB"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_colors/font_color = Color(0.8, 0.77, 0.7, 1)
-theme_override_font_sizes/font_size = 24
-autowrap_mode = 2
-mouse_filter = 2
-
-[node name="InfoCloseBtn" type="Button" parent="InfoPopup/IB"]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(0, 66)
-theme_override_styles/normal = SubResource("btn_dark")
-theme_override_styles/hover = SubResource("btn_dark")
-theme_override_styles/pressed = SubResource("btn_dark")
-theme_override_styles/focus = SubResource("btn_dark")
-theme_override_colors/font_color = Color(0.855, 0.71, 0.42, 1)
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
 theme_override_font_sizes/font_size = 26
-theme_override_fonts/font = ExtResource("2")
-text = "FERMER"
+theme_override_fonts/font = ExtResource("3")
+mouse_filter = 2
+
+[node name="InfoLabel" type="Label" parent="InfoPopup/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.82, 0.78, 0.7, 1)
+theme_override_font_sizes/font_size = 18
+mouse_filter = 2
+
+[node name="InfoCloseBtn" type="Button" parent="InfoPopup/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+custom_minimum_size = Vector2(180, 48)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 18
+text = "Fermer"

@@ -2,289 +2,1456 @@
   "hero_name": "Milo",
   "starter": {
 	"master": "kiran",
-	"masters": [ "kiran", "brand", "rowan", "vane", "sol" ],
+	"masters": [
+	  "kiran",
+	  "brand",
+	  "rowan",
+	  "vane",
+      "sol"
+	],
 	"collection": {
-	  "flame_imp": 2, "ember_fox": 2, "fire_archer": 2, "salamander": 2, "lava_golem": 2,
-	  "phoenix": 1, "fireball": 2, "inferno": 1, "squire": 2, "temple_archer": 2, "blessing": 2,
-	  "moss_turtle": 2, "gloom_rat": 2, "forest_wolf": 1,
-	  "cinder_hound": 2, "flame_berserker": 2, "spark_sprite": 2, "meteor": 2,
-	  "bramble_colt": 2, "elder_stag": 2, "verdant_push": 2,
-	  "grave_hound": 2, "night_stalker": 2, "soul_leech": 2, "devouring_shadow": 2,
-	  "dawn_squire": 2, "radiant_griffin": 2, "sanctuary": 2
+	  "flame_imp": 2,
+	  "ember_fox": 2,
+	  "fire_archer": 2,
+	  "salamander": 2,
+	  "lava_golem": 2,
+	  "phoenix": 1,
+	  "fireball": 2,
+	  "inferno": 1,
+	  "squire": 2,
+	  "temple_archer": 2,
+	  "blessing": 2,
+	  "moss_turtle": 2,
+	  "gloom_rat": 2,
+	  "forest_wolf": 1,
+	  "cinder_hound": 2,
+	  "flame_berserker": 2,
+	  "spark_sprite": 2,
+	  "meteor": 2,
+	  "bramble_colt": 2,
+	  "elder_stag": 2,
+	  "verdant_push": 2,
+	  "grave_hound": 2,
+	  "night_stalker": 2,
+	  "soul_leech": 2,
+	  "devouring_shadow": 2,
+	  "dawn_squire": 2,
+	  "radiant_griffin": 2,
+	  "sanctuary": 2
 	},
 	"deck": [
-	  "flame_imp", "flame_imp", "ember_fox", "ember_fox", "fire_archer", "fire_archer",
-	  "salamander", "salamander", "lava_golem", "lava_golem", "phoenix", "fireball", "fireball",
-	  "inferno", "squire", "squire", "temple_archer", "temple_archer", "blessing", "blessing",
-	  "moss_turtle", "moss_turtle", "gloom_rat", "gloom_rat", "forest_wolf"
+	  "flame_imp",
+	  "flame_imp",
+	  "ember_fox",
+	  "ember_fox",
+	  "fire_archer",
+	  "fire_archer",
+	  "salamander",
+	  "salamander",
+	  "lava_golem",
+	  "lava_golem",
+	  "phoenix",
+	  "fireball",
+	  "fireball",
+	  "inferno",
+	  "squire",
+	  "squire",
+	  "temple_archer",
+	  "temple_archer",
+	  "blessing",
+	  "blessing",
+	  "moss_turtle",
+	  "moss_turtle",
+	  "gloom_rat",
+	  "gloom_rat",
+      "forest_wolf"
 	]
   },
+  "lore": "Stonebound est un monde où les Maîtres concluent des liens avec des Gardiens grâce aux Pierres de Lien. Chaque duel dans les Arènes est un affrontement stratégique destiné à prouver la valeur de son royaume et à gravir les rangs du Grand Tournoi.",
+  "acts": [
+	{
+	  "name": "L'Académie des Maîtres",
+	  "description": "Apprenez les bases du duel : invocation, déplacement, pouvoirs de Maître. L'Académie forme les Maîtres de demain — montrez que vous en êtes.",
+	  "steps": 7
+	},
+	{
+	  "name": "Premier Tournoi",
+	  "description": "Vos premiers duels officiels. Un rival se dresse sur votre route — et de nouvelles mécaniques à maîtriser pour le battre.",
+	  "steps": 2
+	},
+	{
+	  "name": "Maîtres Élites",
+	  "description": "Les Maîtres confirmés ne pardonnent rien. La difficulté monte, et de nouvelles cartes rejoignent votre collection.",
+	  "steps": 2
+	},
+	{
+	  "name": "Champion du Royaume",
+	  "description": "Affrontez les champions du royaume. Les récompenses sont à la hauteur des adversaires.",
+	  "steps": 2
+	},
+	{
+	  "name": "Tournoi de Stonebound",
+	  "description": "La grande finale. Remportez le Tournoi de Stonebound et prouvez que vous êtes le plus grand Maître du continent.",
+	  "steps": 2
+	}
+  ],
   "chapters": [
+	{
+	  "id": "tuto_summon",
+	  "title": "Leçon : l'invocation",
+	  "background": "training_yard",
+	  "opponent": {
+		"master": "willow",
+		"name": "Instructrice Willow",
+		"portrait": "willow",
+		"ai_level": 0,
+		"deck": [
+		  "sprout",
+		  "sprout",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sylph",
+		  "sylph",
+		  "druid",
+		  "druid",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "treant",
+		  "treant",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "cleric",
+		  "cleric",
+		  "blessing",
+		  "blessing",
+          "shield_bearer"
+		]
+	  },
+	  "mission": {
+		"player_deck": [
+		  "ember_fox",
+		  "flame_imp",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "flame_imp",
+		  "ember_fox",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "lava_golem",
+		  "lava_golem",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "blessing",
+		  "blessing",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "forest_wolf",
+		  "phoenix",
+          "inferno"
+		],
+		"hand": [
+		  "ember_fox",
+		  "flame_imp",
+		  "fireball",
+		  "salamander",
+          "fire_archer"
+		],
+		"dummy_opponent": true,
+		"goal": {
+		  "type": "summon",
+		  "card": "ember_fox"
+		}
+	  },
+	  "tutorial": [
+		{
+		  "until": "next",
+		  "text": "Bienvenue à l'Académie ! Voici l'Arène : votre moitié est EN BAS (cases bleues), celle de l'adversaire EN HAUT (cases rouges). Le but : réduire les PV du Maître adverse à zéro."
+		},
+		{
+		  "until": "next",
+		  "text": "À gauche, votre panneau : PV et ÉNERGIE. Les pierres d'énergie paient vos cartes et votre pouvoir — elles augmentent au début de chaque tour."
+		},
+		{
+		  "until": "next",
+		  "text": "En bas, votre MAIN. Le chiffre en haut à gauche d'une carte est son coût en pierres. Survolez une carte : son détail s'affiche à droite."
+		},
+		{
+		  "until": "select_hand",
+		  "text": "OBJECTIF : invoquez le RENARD DE CENDRE (la carte qui brille dans votre main). Cliquez dessus."
+		},
+		{
+		  "until": "play",
+		  "text": "Posez-le maintenant sur une case BLEUE en surbrillance de votre moitié du plateau."
+		}
+	  ],
+	  "rewards": {}
+	},
+	{
+	  "id": "tuto_attack",
+	  "title": "Leçon : l'attaque",
+	  "background": "training_yard",
+	  "opponent": {
+		"master": "willow",
+		"name": "Instructrice Willow",
+		"portrait": "willow",
+		"ai_level": 0,
+		"deck": [
+		  "sprout",
+		  "sprout",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sylph",
+		  "sylph",
+		  "druid",
+		  "druid",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "treant",
+		  "treant",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "cleric",
+		  "cleric",
+		  "blessing",
+		  "blessing",
+          "shield_bearer"
+		]
+	  },
+	  "mission": {
+		"player_deck": [
+		  "ember_fox",
+		  "flame_imp",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "flame_imp",
+		  "ember_fox",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "lava_golem",
+		  "lava_golem",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "blessing",
+		  "blessing",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "forest_wolf",
+		  "phoenix",
+          "inferno"
+		],
+		"hand": [
+		  "flame_imp",
+		  "fireball",
+		  "salamander",
+		  "fire_archer",
+          "ember_fox"
+		],
+		"dummy_opponent": true,
+		"board": [
+		  {
+			"side": 0,
+			"card": "ember_fox",
+			"col": 1,
+			"row": "front"
+		  },
+		  {
+			"side": 1,
+			"card": "gloom_rat",
+			"col": 1,
+			"row": "front"
+		  }
+		],
+		"goal": {
+		  "type": "attack"
+		}
+	  },
+	  "tutorial": [
+		{
+		  "until": "next",
+		  "text": "Votre Renard de cendre est déjà en place, face à un Rat des ténèbres. Un monstre ne peut pas agir le tour où il est invoqué — celui-ci est prêt."
+		},
+		{
+		  "until": "attack",
+		  "text": "OBJECTIF : sélectionnez votre RENARD, puis cliquez sur la cible marquée en ROUGE. En mêlée, il frappe le premier ennemi de sa colonne."
+		}
+	  ],
+	  "rewards": {}
+	},
+	{
+	  "id": "tuto_power",
+	  "title": "Leçon : le pouvoir du Maître",
+	  "background": "training_yard",
+	  "opponent": {
+		"master": "willow",
+		"name": "Instructrice Willow",
+		"portrait": "willow",
+		"ai_level": 0,
+		"deck": [
+		  "sprout",
+		  "sprout",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sylph",
+		  "sylph",
+		  "druid",
+		  "druid",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "treant",
+		  "treant",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "cleric",
+		  "cleric",
+		  "blessing",
+		  "blessing",
+          "shield_bearer"
+		]
+	  },
+	  "mission": {
+		"player_deck": [
+		  "ember_fox",
+		  "flame_imp",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "flame_imp",
+		  "ember_fox",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "lava_golem",
+		  "lava_golem",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "blessing",
+		  "blessing",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "forest_wolf",
+		  "phoenix",
+          "inferno"
+		],
+		"hand": [
+		  "flame_imp",
+		  "ember_fox",
+		  "fireball",
+		  "salamander",
+          "fire_archer"
+		],
+		"dummy_opponent": true,
+		"board": [
+		  {
+			"side": 1,
+			"card": "gloom_rat",
+			"col": 1,
+			"row": "front"
+		  }
+		],
+		"goal": {
+		  "type": "master_power"
+		}
+	  },
+	  "tutorial": [
+		{
+		  "until": "next",
+		  "text": "Votre Maître possède un POUVOIR (panneau à droite) : il coûte des pierres et s'utilise une fois par tour. Son passif, lui, est toujours actif."
+		},
+		{
+		  "until": "master_power",
+		  "text": "OBJECTIF : utilisez le pouvoir de votre Maître — cliquez sur le bouton doré à droite, puis sur une cible si nécessaire."
+		}
+	  ],
+	  "rewards": {}
+	},
+	{
+	  "id": "tuto_types",
+	  "title": "Leçon : les types d'attaque",
+	  "background": "training_yard",
+	  "opponent": {
+		"master": "willow",
+		"name": "Instructrice Willow",
+		"portrait": "willow",
+		"ai_level": 0,
+		"deck": [
+		  "sprout",
+		  "sprout",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sylph",
+		  "sylph",
+		  "druid",
+		  "druid",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "treant",
+		  "treant",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "cleric",
+		  "cleric",
+		  "blessing",
+		  "blessing",
+          "shield_bearer"
+		]
+	  },
+	  "mission": {
+		"player_deck": [
+		  "ember_fox",
+		  "flame_imp",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "flame_imp",
+		  "ember_fox",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "lava_golem",
+		  "lava_golem",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "blessing",
+		  "blessing",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "forest_wolf",
+		  "phoenix",
+          "inferno"
+		],
+		"hand": [
+		  "flame_imp",
+		  "ember_fox",
+		  "fireball",
+		  "salamander",
+          "fire_archer"
+		],
+		"dummy_opponent": true,
+		"board": [
+		  {
+			"side": 0,
+			"card": "fire_archer",
+			"col": 0,
+			"row": "back"
+		  },
+		  {
+			"side": 1,
+			"card": "gloom_rat",
+			"col": 1,
+			"row": "front"
+		  },
+		  {
+			"side": 1,
+			"card": "cultist",
+			"col": 2,
+			"row": "back"
+		  }
+		],
+		"goal": {
+		  "type": "attack"
+		}
+	  },
+	  "tutorial": [
+		{
+		  "until": "next",
+		  "text": "Trois TYPES D'ATTAQUE : MÊLÉE frappe le premier monstre non-volant de sa colonne · DISTANCE peut viser n'importe quel monstre ennemi · MAGIE vise n'importe quelle cible et ignore Armure et Bouclier."
+		},
+		{
+		  "until": "attack",
+		  "text": "OBJECTIF : votre ARCHÈRE ARDENTE (Distance) est en ligne arrière. Sélectionnez-la et frappez n'importe quel monstre ennemi — même celui caché derrière !"
+		}
+	  ],
+	  "rewards": {}
+	},
+	{
+	  "id": "tuto_keywords",
+	  "title": "Leçon : les mots-clés",
+	  "background": "training_yard",
+	  "opponent": {
+		"master": "willow",
+		"name": "Instructrice Willow",
+		"portrait": "willow",
+		"ai_level": 0,
+		"deck": [
+		  "sprout",
+		  "sprout",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sylph",
+		  "sylph",
+		  "druid",
+		  "druid",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "treant",
+		  "treant",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "cleric",
+		  "cleric",
+		  "blessing",
+		  "blessing",
+          "shield_bearer"
+		]
+	  },
+	  "mission": {
+		"player_deck": [
+		  "ember_fox",
+		  "flame_imp",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "flame_imp",
+		  "ember_fox",
+		  "fireball",
+		  "fire_archer",
+		  "salamander",
+		  "lava_golem",
+		  "lava_golem",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "blessing",
+		  "blessing",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "forest_wolf",
+		  "phoenix",
+          "inferno"
+		],
+		"hand": [
+		  "gloom_rat",
+		  "flame_imp",
+		  "fireball",
+		  "salamander",
+          "fire_archer"
+		],
+		"highlight": "gloom_rat",
+		"dummy_opponent": true,
+		"board": [
+		  {
+			"side": 1,
+			"card": "lava_golem",
+			"col": 1,
+			"row": "front"
+		  }
+		],
+		"goal": {
+		  "type": "attack"
+		}
+	  },
+	  "tutorial": [
+		{
+		  "until": "next",
+		  "text": "Les monstres portent des MOTS-CLÉS (icônes sur l'unité) : CÉLÉRITÉ — agit dès son invocation · ARMURE — réduit chaque dégât subi (sauf Magie) · VOL — ciblable uniquement à Distance/Magie."
+		},
+		{
+		  "until": "next",
+		  "text": "Et aussi : RIPOSTE — renvoie des dégâts à l'attaquant en mêlée · RÉGÉNÉRATION — se soigne à chaque tour · BOUCLIER — annule la première source de dégâts (sauf Magie). Cliquez sur une unité pour voir ses détails."
+		},
+		{
+		  "until": "play",
+		  "text": "OBJECTIF : invoquez le RAT DES TÉNÈBRES (il brille dans votre main). Il possède CÉLÉRITÉ."
+		},
+		{
+		  "until": "attack",
+		  "text": "CÉLÉRITÉ : il peut agir immédiatement ! Attaquez le Golem de lave — son ARMURE réduira les dégâts, observez bien."
+		}
+	  ],
+	  "rewards": {}
+	},
 	{
 	  "id": "ch1",
 	  "title": "Le vieux champion",
 	  "background": "training_yard",
-	  "opponent": { "name": "Maro", "portrait": "maro", "master": "willow", "ai_level": 0,
+	  "opponent": {
+		"name": "Maro",
+		"portrait": "maro",
+		"master": "willow",
+		"ai_level": 0,
 		"deck": [
-		  "sprout", "sprout", "forest_wolf", "forest_wolf", "moss_turtle", "moss_turtle",
-		  "sylph", "sylph", "druid", "druid", "rejuvenate", "rejuvenate", "wild_growth",
-		  "wild_growth", "treant", "treant", "squire", "squire", "temple_archer", "temple_archer",
-		  "cleric", "cleric", "blessing", "blessing", "shield_bearer"
+		  "sprout",
+		  "sprout",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sylph",
+		  "sylph",
+		  "druid",
+		  "druid",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "treant",
+		  "treant",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "cleric",
+		  "cleric",
+		  "blessing",
+		  "blessing",
+          "shield_bearer"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "Petraheim, veille du Circuit annuel de Stonebound. Dans la cour de Maro, les pierres d'invocation luisent doucement." },
-		{ "speaker": "maro", "text": "Alors c'est décidé, Milo ? Tu t'inscris au Circuit ?" },
-		{ "speaker": "milo", "text": "Je n'ai pas passé l'hiver à perdre contre toi pour rester spectateur." },
-		{ "speaker": "maro", "text": "Ha ! Voyons si tu as retenu quelque chose. Les monstres protègent ton Maître : si ta colonne est vide, c'est TOI qu'on frappe." },
-		{ "speaker": "maro", "text": "Dernière leçon gratuite : garde des pierres pour faire évoluer tes créatures. Allez, montre-moi." }
+		{
+		  "speaker": "narrator",
+		  "text": "Petraheim, veille du Circuit annuel de Stonebound. Dans la cour de Maro, les pierres d'invocation luisent doucement."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Alors c'est décidé, Milo ? Tu t'inscris au Circuit ?"
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Je n'ai pas passé l'hiver à perdre contre toi pour rester spectateur."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Ha ! Voyons si tu as retenu quelque chose. Les monstres protègent ton Maître : si ta colonne est vide, c'est TOI qu'on frappe."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Dernière leçon gratuite : garde des pierres pour faire évoluer tes créatures. Allez, montre-moi."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "maro", "text": "Pas mal. Tu joues encore comme un forgeron — tout dans le marteau — mais ça viendra." },
-		{ "speaker": "milo", "text": "C'est Kiran qui m'a offert mon premier deck. J'assume l'héritage." },
-		{ "speaker": "maro", "text": "Alors va t'inscrire. Et méfie-toi du champion masqué. Personne ne l'a jamais vu perdre... ni sourire." }
+		{
+		  "speaker": "maro",
+		  "text": "Pas mal. Tu joues encore comme un forgeron — tout dans le marteau — mais ça viendra."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "C'est Kiran qui m'a offert mon premier deck. J'assume l'héritage."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Alors va t'inscrire. Et méfie-toi du champion masqué. Personne ne l'a jamais vu perdre... ni sourire."
+		}
 	  ],
-	  "rewards": { "cards": { "forest_wolf": 1, "rejuvenate": 2 } }
+	  "rewards": {
+		"cards": {
+		  "forest_wolf": 1,
+		  "rejuvenate": 2
+		}
+	  },
+	  "tutorial": [
+		{
+		  "until": "next",
+		  "text": "Premier vrai duel ! Rappel : invoquez, positionnez, attaquez — et gardez un œil sur vos pierres."
+		},
+		{
+		  "until": "end_turn",
+		  "text": "Cliquez FIN DU TOUR quand vous avez terminé. Réduisez les PV de Maro à zéro pour l'emporter !"
+		}
+	  ]
 	},
 	{
 	  "id": "ch2",
 	  "title": "Premier tour",
 	  "background": "arena_day",
-	  "opponent": { "name": "Pip", "portrait": "pip", "master": "kiran", "ai_level": 0,
+	  "opponent": {
+		"name": "Pip",
+		"portrait": "pip",
+		"master": "kiran",
+		"ai_level": 0,
 		"deck": [
-		  "flame_imp", "flame_imp", "ember_fox", "ember_fox", "gloom_rat", "gloom_rat",
-		  "fire_archer", "fire_archer", "salamander", "salamander", "moss_turtle", "moss_turtle",
-		  "fireball", "fireball", "squire", "squire", "temple_archer", "temple_archer",
-		  "blessing", "blessing", "sprout", "sprout", "lava_golem", "rejuvenate", "rejuvenate"
+		  "flame_imp",
+		  "flame_imp",
+		  "ember_fox",
+		  "ember_fox",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "fire_archer",
+		  "fire_archer",
+		  "salamander",
+		  "salamander",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "fireball",
+		  "fireball",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+		  "blessing",
+		  "blessing",
+		  "sprout",
+		  "sprout",
+		  "lava_golem",
+		  "rejuvenate",
+          "rejuvenate"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "L'arène de Petraheim bourdonne. Premier adversaire : Pip, le fils du boulanger, champion du quartier des fours." },
-		{ "speaker": "pip", "text": "Milo ! T'es tombé sur moi, pas de chance. J'ai gagné trois parties de suite ce matin." },
-		{ "speaker": "milo", "text": "Contre qui ?" },
-		{ "speaker": "pip", "text": "... Contre ma sœur. Mais elle est TRÈS forte." }
+		{
+		  "speaker": "narrator",
+		  "text": "L'arène de Petraheim bourdonne. Premier adversaire : Pip, le fils du boulanger, champion du quartier des fours."
+		},
+		{
+		  "speaker": "pip",
+		  "text": "Milo ! T'es tombé sur moi, pas de chance. J'ai gagné trois parties de suite ce matin."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Contre qui ?"
+		},
+		{
+		  "speaker": "pip",
+		  "text": "... Contre ma sœur. Mais elle est TRÈS forte."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "pip", "text": "Bon. Quatre parties de suite pour toi. Ma sœur va se moquer de moi pendant un an." },
-		{ "speaker": "milo", "text": "Dis-lui que tu as perdu contre le futur champion, ça passera mieux." },
-		{ "speaker": "narrator", "text": "Dans les gradins, une silhouette masquée observe. Puis s'en va, sans un mot." }
+		{
+		  "speaker": "pip",
+		  "text": "Bon. Quatre parties de suite pour toi. Ma sœur va se moquer de moi pendant un an."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Dis-lui que tu as perdu contre le futur champion, ça passera mieux."
+		},
+		{
+		  "speaker": "narrator",
+		  "text": "Dans les gradins, une silhouette masquée observe. Puis s'en va, sans un mot."
+		}
 	  ],
-	  "rewards": { "cards": { "sprout": 2, "wild_growth": 2 } }
+	  "rewards": {
+		"cards": {
+		  "sprout": 2,
+		  "wild_growth": 2
+		}
+	  },
+	  "tutorial": [
+		{
+		  "until": "next",
+		  "text": "Types d'attaque (icônes sur les unités) : MÊLÉE frappe le premier de la colonne, DISTANCE et MAGIE frappent différemment — consultez le détail des cartes."
+		},
+		{
+		  "until": "next",
+		  "text": "Blesser rapporte 1 XP, vaincre 2. Vos monstres montent de niveau (★) et certains ÉVOLUENT au niveau maximum. Bon duel !"
+		}
+	  ]
 	},
 	{
 	  "id": "ch3",
 	  "title": "Le rival",
 	  "background": "tavern",
-	  "opponent": { "name": "Jasper", "portrait": "jasper", "master": "kiran", "ai_level": 0,
+	  "opponent": {
+		"name": "Jasper",
+		"portrait": "jasper",
+		"master": "kiran",
+		"ai_level": 0,
 		"deck": [
-		  "flame_imp", "flame_imp", "ember_fox", "ember_fox", "fire_archer", "fire_archer",
-		  "salamander", "salamander", "lava_golem", "lava_golem", "fireball", "fireball",
-		  "squire", "squire", "holy_charge", "holy_charge", "temple_archer", "temple_archer",
-		  "phoenix", "inferno", "gloom_rat", "gloom_rat", "moss_turtle", "moss_turtle", "sprout"
+		  "flame_imp",
+		  "flame_imp",
+		  "ember_fox",
+		  "ember_fox",
+		  "fire_archer",
+		  "fire_archer",
+		  "salamander",
+		  "salamander",
+		  "lava_golem",
+		  "lava_golem",
+		  "fireball",
+		  "fireball",
+		  "squire",
+		  "squire",
+		  "holy_charge",
+		  "holy_charge",
+		  "temple_archer",
+		  "temple_archer",
+		  "phoenix",
+		  "inferno",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "moss_turtle",
+		  "moss_turtle",
+          "sprout"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "jasper", "text": "Tiens, tiens. Le protégé de Maro. On dit que tu vises le titre ?" },
-		{ "speaker": "milo", "text": "Jasper. On dit que tu racontes à tout le monde que tu m'as déjà battu." },
-		{ "speaker": "jasper", "text": "Un détail. Ce soir, à la taverne, devant tout le monde — je te bats pour de vrai, et l'histoire devient officielle." },
-		{ "speaker": "milo", "text": "Alors approche. J'ai justement une histoire à corriger." }
+		{
+		  "speaker": "jasper",
+		  "text": "Tiens, tiens. Le protégé de Maro. On dit que tu vises le titre ?"
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Jasper. On dit que tu racontes à tout le monde que tu m'as déjà battu."
+		},
+		{
+		  "speaker": "jasper",
+		  "text": "Un détail. Ce soir, à la taverne, devant tout le monde — je te bats pour de vrai, et l'histoire devient officielle."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Alors approche. J'ai justement une histoire à corriger."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "jasper", "text": "... D'accord. C'est moi qui paie la tournée. NE DIS RIEN." },
-		{ "speaker": "milo", "text": "Je n'ai rien dit." },
-		{ "speaker": "jasper", "text": "La demi-finale sera différente, Milo. Entraîne-toi. Je refuse de perdre deux fois contre toi." },
-		{ "speaker": "narrator", "text": "Willow, qui a tout regardé depuis le comptoir, glisse son emblème dans la main de Milo. « Tu joues avec le cœur. Essaie ma méthode, un jour. »" }
+		{
+		  "speaker": "jasper",
+		  "text": "... D'accord. C'est moi qui paie la tournée. NE DIS RIEN."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Je n'ai rien dit."
+		},
+		{
+		  "speaker": "jasper",
+		  "text": "La demi-finale sera différente, Milo. Entraîne-toi. Je refuse de perdre deux fois contre toi."
+		},
+		{
+		  "speaker": "narrator",
+		  "text": "Willow, qui a tout regardé depuis le comptoir, glisse son emblème dans la main de Milo. « Tu joues avec le cœur. Essaie ma méthode, un jour. »"
+		}
 	  ],
-	  "rewards": { "cards": { "druid": 2, "sylph": 2 }, "masters": [ "willow" ] }
+	  "rewards": {
+		"cards": {
+		  "druid": 2,
+		  "sylph": 2
+		},
+		"masters": [
+          "willow"
+		]
+	  }
 	},
 	{
 	  "id": "ch4",
 	  "title": "Quart de finale",
 	  "background": "arena_day",
-	  "opponent": { "name": "Bruna", "portrait": "bruna", "master": "willow", "ai_level": 1,
+	  "opponent": {
+		"name": "Bruna",
+		"portrait": "bruna",
+		"master": "willow",
+		"ai_level": 1,
 		"deck": [
-		  "moss_turtle", "moss_turtle", "sprout", "sprout", "treant", "treant",
-		  "shield_bearer", "shield_bearer", "forest_wolf", "forest_wolf", "druid", "druid",
-		  "rejuvenate", "rejuvenate", "wild_growth", "wild_growth", "cleric", "cleric",
-		  "blessing", "blessing", "sylph", "sylph", "squire", "squire", "temple_archer"
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sprout",
+		  "sprout",
+		  "treant",
+		  "treant",
+		  "shield_bearer",
+		  "shield_bearer",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "druid",
+		  "druid",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "cleric",
+		  "cleric",
+		  "blessing",
+		  "blessing",
+		  "sylph",
+		  "sylph",
+		  "squire",
+		  "squire",
+          "temple_archer"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "Quart de finale. Face à Milo : Bruna, la charpentière. Sa réputation : aucun adversaire n'a jamais percé son mur." },
-		{ "speaker": "bruna", "text": "Je construis des murs, petit. Des vrais, et des murs de monstres. Devine lesquels tombent le moins." },
-		{ "speaker": "milo", "text": "Tout mur a une porte. Il suffit de la trouver." },
-		{ "speaker": "bruna", "text": "Ha ! Cherche toujours." }
+		{
+		  "speaker": "narrator",
+		  "text": "Quart de finale. Face à Milo : Bruna, la charpentière. Sa réputation : aucun adversaire n'a jamais percé son mur."
+		},
+		{
+		  "speaker": "bruna",
+		  "text": "Je construis des murs, petit. Des vrais, et des murs de monstres. Devine lesquels tombent le moins."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Tout mur a une porte. Il suffit de la trouver."
+		},
+		{
+		  "speaker": "bruna",
+		  "text": "Ha ! Cherche toujours."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "bruna", "text": "... Tu es passé par-dessus. Personne ne passe par-dessus." },
-		{ "speaker": "milo", "text": "Les volants ne lisent pas les panneaux « défense d'entrer »." },
-		{ "speaker": "bruna", "text": "File en demi-finale. Et prends ces cartes — elles mordent, elles t'iront bien." }
+		{
+		  "speaker": "bruna",
+		  "text": "... Tu es passé par-dessus. Personne ne passe par-dessus."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Les volants ne lisent pas les panneaux « défense d'entrer »."
+		},
+		{
+		  "speaker": "bruna",
+		  "text": "File en demi-finale. Et prends ces cartes — elles mordent, elles t'iront bien."
+		}
 	  ],
-	  "rewards": { "cards": { "shade": 2, "cultist": 2, "bat_swarm": 2 } }
+	  "rewards": {
+		"cards": {
+		  "shade": 2,
+		  "cultist": 2,
+		  "bat_swarm": 2
+		}
+	  }
 	},
 	{
 	  "id": "ch5",
 	  "title": "L'ombre de Nox",
 	  "background": "back_alley",
-	  "opponent": { "name": "Vex", "portrait": "vex", "master": "grim", "ai_level": 1,
+	  "opponent": {
+		"name": "Vex",
+		"portrait": "vex",
+		"master": "grim",
+		"ai_level": 1,
 		"deck": [
-		  "shade", "shade", "gloom_rat", "gloom_rat", "bat_swarm", "bat_swarm",
-		  "cultist", "cultist", "wraith", "wraith", "bone_knight", "bone_knight",
-		  "dark_pact", "dark_pact", "life_drain", "life_drain", "lantern_sprite",
-		  "lantern_sprite", "fireball", "fireball", "inferno", "inferno",
-		  "flame_imp", "flame_imp", "ember_fox"
+		  "shade",
+		  "shade",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "bat_swarm",
+		  "bat_swarm",
+		  "cultist",
+		  "cultist",
+		  "wraith",
+		  "wraith",
+		  "bone_knight",
+		  "bone_knight",
+		  "dark_pact",
+		  "dark_pact",
+		  "life_drain",
+		  "life_drain",
+		  "lantern_sprite",
+		  "lantern_sprite",
+		  "fireball",
+		  "fireball",
+		  "inferno",
+		  "inferno",
+		  "flame_imp",
+		  "flame_imp",
+          "ember_fox"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "Une ruelle derrière l'arène. Jasper est assis par terre, ses cartes éparpillées. Au-dessus de lui, un inconnu au sourire huileux." },
-		{ "speaker": "jasper", "text": "Milo... ce type joue pour Nox. Il m'a démoli en cinq tours, puis il a JETÉ mes cartes." },
-		{ "speaker": "vex", "text": "Le maître Nox fait le ménage avant la finale. Les petits joueurs sont priés de rentrer chez eux." },
-		{ "speaker": "milo", "text": "Ramasse les cartes de mon rival. Ensuite, on joue. Et tu vas comprendre pourquoi c'est MON rival." },
-		{ "speaker": "vex", "text": "Oh, un volontaire pour l'humiliation. Nox adore les volontaires." }
+		{
+		  "speaker": "narrator",
+		  "text": "Une ruelle derrière l'arène. Jasper est assis par terre, ses cartes éparpillées. Au-dessus de lui, un inconnu au sourire huileux."
+		},
+		{
+		  "speaker": "jasper",
+		  "text": "Milo... ce type joue pour Nox. Il m'a démoli en cinq tours, puis il a JETÉ mes cartes."
+		},
+		{
+		  "speaker": "vex",
+		  "text": "Le maître Nox fait le ménage avant la finale. Les petits joueurs sont priés de rentrer chez eux."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Ramasse les cartes de mon rival. Ensuite, on joue. Et tu vas comprendre pourquoi c'est MON rival."
+		},
+		{
+		  "speaker": "vex",
+		  "text": "Oh, un volontaire pour l'humiliation. Nox adore les volontaires."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "vex", "text": "Impossible... personne ne bat le style de Nox, même copié !" },
-		{ "speaker": "milo", "text": "Copié, justement. Il te manque l'essentiel : aimer le jeu." },
-		{ "speaker": "jasper", "text": "Milo. Merci. Ne le répète jamais." },
-		{ "speaker": "narrator", "text": "Sur le sol, Vex a laissé tomber un emblème d'Ombre. Le regard de Grim, le fossoyeur, s'illumine : « Il te sera plus utile qu'à lui. »" }
+		{
+		  "speaker": "vex",
+		  "text": "Impossible... personne ne bat le style de Nox, même copié !"
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Copié, justement. Il te manque l'essentiel : aimer le jeu."
+		},
+		{
+		  "speaker": "jasper",
+		  "text": "Milo. Merci. Ne le répète jamais."
+		},
+		{
+		  "speaker": "narrator",
+		  "text": "Sur le sol, Vex a laissé tomber un emblème d'Ombre. Le regard de Grim, le fossoyeur, s'illumine : « Il te sera plus utile qu'à lui. »"
+		}
 	  ],
-	  "rewards": { "cards": { "lantern_sprite": 2, "dark_pact": 2 }, "masters": [ "grim" ] }
+	  "rewards": {
+		"cards": {
+		  "lantern_sprite": 2,
+		  "dark_pact": 2
+		},
+		"masters": [
+          "grim"
+		]
+	  }
 	},
 	{
 	  "id": "ch6",
 	  "title": "Demi-finale",
 	  "background": "arena_day",
-	  "opponent": { "name": "Edda", "portrait": "edda", "master": "aria", "ai_level": 1,
+	  "opponent": {
+		"name": "Edda",
+		"portrait": "edda",
+		"master": "aria",
+		"ai_level": 1,
 		"deck": [
-		  "squire", "squire", "lantern_sprite", "lantern_sprite", "temple_archer",
-		  "temple_archer", "shield_bearer", "shield_bearer", "cleric", "cleric",
-		  "archangel", "archangel", "blessing", "blessing", "holy_charge", "holy_charge",
-		  "sylph", "sylph", "moss_turtle", "moss_turtle", "sprout", "sprout",
-		  "forest_wolf", "forest_wolf", "gloom_rat"
+		  "squire",
+		  "squire",
+		  "lantern_sprite",
+		  "lantern_sprite",
+		  "temple_archer",
+		  "temple_archer",
+		  "shield_bearer",
+		  "shield_bearer",
+		  "cleric",
+		  "cleric",
+		  "archangel",
+		  "archangel",
+		  "blessing",
+		  "blessing",
+		  "holy_charge",
+		  "holy_charge",
+		  "sylph",
+		  "sylph",
+		  "moss_turtle",
+		  "moss_turtle",
+		  "sprout",
+		  "sprout",
+		  "forest_wolf",
+		  "forest_wolf",
+          "gloom_rat"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "Demi-finale. Edda, la bibliothécaire, n'a pas perdu un match depuis trois ans. Elle connaît toutes les cartes par cœur — y compris les tiennes." },
-		{ "speaker": "edda", "text": "Milo, 16 victoires cette saison, préférence pour l'agression précoce colonne gauche, faiblesse : tu gardes trop tes sorts." },
-		{ "speaker": "milo", "text": "... Vous avez un dossier sur moi ?" },
-		{ "speaker": "edda", "text": "J'ai un dossier sur tout le monde. Chapitre 12 : toi. Il est court. Rendons-le intéressant." }
+		{
+		  "speaker": "narrator",
+		  "text": "Demi-finale. Edda, la bibliothécaire, n'a pas perdu un match depuis trois ans. Elle connaît toutes les cartes par cœur — y compris les tiennes."
+		},
+		{
+		  "speaker": "edda",
+		  "text": "Milo, 16 victoires cette saison, préférence pour l'agression précoce colonne gauche, faiblesse : tu gardes trop tes sorts."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "... Vous avez un dossier sur moi ?"
+		},
+		{
+		  "speaker": "edda",
+		  "text": "J'ai un dossier sur tout le monde. Chapitre 12 : toi. Il est court. Rendons-le intéressant."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "edda", "text": "Fascinant. Tu as joué exactement l'inverse de ton profil." },
-		{ "speaker": "milo", "text": "J'ai lu le chapitre 12 par-dessus votre épaule avant le match." },
-		{ "speaker": "edda", "text": "Ha ! Va en finale, tricheur adorable. Et prends garde : le chapitre sur Nox... je n'ai jamais réussi à l'écrire." }
+		{
+		  "speaker": "edda",
+		  "text": "Fascinant. Tu as joué exactement l'inverse de ton profil."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "J'ai lu le chapitre 12 par-dessus votre épaule avant le match."
+		},
+		{
+		  "speaker": "edda",
+		  "text": "Ha ! Va en finale, tricheur adorable. Et prends garde : le chapitre sur Nox... je n'ai jamais réussi à l'écrire."
+		}
 	  ],
-	  "rewards": { "cards": { "treant": 1, "cleric": 2 } }
+	  "rewards": {
+		"cards": {
+		  "treant": 1,
+		  "cleric": 2
+		}
+	  }
 	},
 	{
 	  "id": "ch7",
 	  "title": "La revanche de Jasper",
 	  "background": "rooftop",
-	  "opponent": { "name": "Jasper", "portrait": "jasper", "master": "kiran", "ai_level": 2,
+	  "opponent": {
+		"name": "Jasper",
+		"portrait": "jasper",
+		"master": "kiran",
+		"ai_level": 2,
 		"deck": [
-		  "flame_imp", "flame_imp", "ember_fox", "ember_fox", "fire_archer", "fire_archer",
-		  "lava_golem", "lava_golem", "phoenix", "phoenix", "fireball", "fireball",
-		  "inferno", "inferno", "salamander", "salamander", "holy_charge", "holy_charge",
-		  "squire", "squire", "gloom_rat", "gloom_rat", "temple_archer", "temple_archer",
+		  "flame_imp",
+		  "flame_imp",
+		  "ember_fox",
+		  "ember_fox",
+		  "fire_archer",
+		  "fire_archer",
+		  "lava_golem",
+		  "lava_golem",
+		  "phoenix",
+		  "phoenix",
+		  "fireball",
+		  "fireball",
+		  "inferno",
+		  "inferno",
+		  "salamander",
+		  "salamander",
+		  "holy_charge",
+		  "holy_charge",
+		  "squire",
+		  "squire",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "temple_archer",
+		  "temple_archer",
           "blessing"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "La veille de la finale, sur le toit de la forge. Jasper attend, deux decks posés sur une caisse." },
-		{ "speaker": "jasper", "text": "Tu affrontes Nox demain. Personne ne tient cinq tours contre lui. Alors ce soir, je joue le rôle du monstre : je ne te fais AUCUN cadeau." },
-		{ "speaker": "milo", "text": "Tu as passé la semaine à préparer un deck juste pour m'entraîner ?" },
-		{ "speaker": "jasper", "text": "Pour te BATTRE. L'entraînement, c'est le prétexte." }
+		{
+		  "speaker": "narrator",
+		  "text": "La veille de la finale, sur le toit de la forge. Jasper attend, deux decks posés sur une caisse."
+		},
+		{
+		  "speaker": "jasper",
+		  "text": "Tu affrontes Nox demain. Personne ne tient cinq tours contre lui. Alors ce soir, je joue le rôle du monstre : je ne te fais AUCUN cadeau."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Tu as passé la semaine à préparer un deck juste pour m'entraîner ?"
+		},
+		{
+		  "speaker": "jasper",
+		  "text": "Pour te BATTRE. L'entraînement, c'est le prétexte."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "jasper", "text": "... Tu es prêt. Ça m'énerve profondément, mais tu es prêt." },
-		{ "speaker": "milo", "text": "Sans toi, non. Meilleur rival du monde." },
-		{ "speaker": "jasper", "text": "Évidemment. Maintenant va dormir. Et si tu perds demain, je dirai à tout Petraheim que je t'ai battu deux fois." },
-		{ "speaker": "narrator", "text": "Aria, de passage sur les toits comme à la grande époque de la garde, salue Milo : « Un cœur qui protège frappe deux fois plus fort. »" }
+		{
+		  "speaker": "jasper",
+		  "text": "... Tu es prêt. Ça m'énerve profondément, mais tu es prêt."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Sans toi, non. Meilleur rival du monde."
+		},
+		{
+		  "speaker": "jasper",
+		  "text": "Évidemment. Maintenant va dormir. Et si tu perds demain, je dirai à tout Petraheim que je t'ai battu deux fois."
+		},
+		{
+		  "speaker": "narrator",
+		  "text": "Aria, de passage sur les toits comme à la grande époque de la garde, salue Milo : « Un cœur qui protège frappe deux fois plus fort. »"
+		}
 	  ],
-	  "rewards": { "cards": { "shield_bearer": 2, "holy_charge": 2 }, "masters": [ "aria" ] }
+	  "rewards": {
+		"cards": {
+		  "shield_bearer": 2,
+		  "holy_charge": 2
+		},
+		"masters": [
+          "aria"
+		]
+	  }
 	},
 	{
 	  "id": "ch8",
 	  "title": "Le secret de Maro",
 	  "background": "maro_home",
-	  "opponent": { "name": "Maro", "portrait": "maro", "master": "willow", "ai_level": 2,
+	  "opponent": {
+		"name": "Maro",
+		"portrait": "maro",
+		"master": "willow",
+		"ai_level": 2,
 		"deck": [
-		  "treant", "treant", "druid", "druid", "sylph", "sylph", "forest_wolf", "forest_wolf",
-		  "rejuvenate", "rejuvenate", "wild_growth", "wild_growth", "archangel", "archangel",
-		  "cleric", "cleric", "shield_bearer", "shield_bearer", "blessing", "blessing",
-		  "squire", "squire", "temple_archer", "temple_archer", "moss_turtle"
+		  "treant",
+		  "treant",
+		  "druid",
+		  "druid",
+		  "sylph",
+		  "sylph",
+		  "forest_wolf",
+		  "forest_wolf",
+		  "rejuvenate",
+		  "rejuvenate",
+		  "wild_growth",
+		  "wild_growth",
+		  "archangel",
+		  "archangel",
+		  "cleric",
+		  "cleric",
+		  "shield_bearer",
+		  "shield_bearer",
+		  "blessing",
+		  "blessing",
+		  "squire",
+		  "squire",
+		  "temple_archer",
+		  "temple_archer",
+          "moss_turtle"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "Chez Maro, au milieu de la nuit. Sur la table, une vieille photographie : Maro jeune, en finale... aux côtés d'une femme au sourire éclatant." },
-		{ "speaker": "milo", "text": "Maro... qui est-ce ?" },
-		{ "speaker": "maro", "text": "Sera. Ma partenaire. La meilleure joueuse que ce village ait jamais vue. Il y a vingt ans, on l'a accusée d'avoir triché en finale. À tort." },
-		{ "speaker": "maro", "text": "Je n'ai rien dit pour la défendre. J'ai pris le titre. Elle a disparu. Tu comprends qui se cache sous le masque de Nox, n'est-ce pas ?" },
-		{ "speaker": "milo", "text": "Elle revient prouver que le jeu est vide. Qu'on peut tout gagner sans rien aimer." },
-		{ "speaker": "maro", "text": "Alors bats-moi une dernière fois, gamin. De toutes tes forces. Elle mérite un adversaire complet." }
+		{
+		  "speaker": "narrator",
+		  "text": "Chez Maro, au milieu de la nuit. Sur la table, une vieille photographie : Maro jeune, en finale... aux côtés d'une femme au sourire éclatant."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Maro... qui est-ce ?"
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Sera. Ma partenaire. La meilleure joueuse que ce village ait jamais vue. Il y a vingt ans, on l'a accusée d'avoir triché en finale. À tort."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Je n'ai rien dit pour la défendre. J'ai pris le titre. Elle a disparu. Tu comprends qui se cache sous le masque de Nox, n'est-ce pas ?"
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Elle revient prouver que le jeu est vide. Qu'on peut tout gagner sans rien aimer."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Alors bats-moi une dernière fois, gamin. De toutes tes forces. Elle mérite un adversaire complet."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "maro", "text": "C'est la première fois que tu me bats sans que je te laisse une ouverture." },
-		{ "speaker": "milo", "text": "Vous saviez que c'était elle depuis le début du tournoi ?" },
-		{ "speaker": "maro", "text": "Depuis sa première partie. Elle joue toujours la tour 3 au deuxième tour. Va, Milo. Gagne pour le jeu. Et si tu peux... rends-moi ma partenaire." }
+		{
+		  "speaker": "maro",
+		  "text": "C'est la première fois que tu me bats sans que je te laisse une ouverture."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Vous saviez que c'était elle depuis le début du tournoi ?"
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Depuis sa première partie. Elle joue toujours la tour 3 au deuxième tour. Va, Milo. Gagne pour le jeu. Et si tu peux... rends-moi ma partenaire."
+		}
 	  ],
-	  "rewards": { "cards": { "wraith": 2, "life_drain": 2, "bone_knight": 2 } }
+	  "rewards": {
+		"cards": {
+		  "wraith": 2,
+		  "life_drain": 2,
+		  "bone_knight": 2
+		}
+	  }
 	},
 	{
 	  "id": "ch9",
 	  "title": "Finale — Première manche",
 	  "background": "arena_night",
-	  "opponent": { "name": "Nox", "portrait": "nox", "master": "grim", "ai_level": 2,
+	  "opponent": {
+		"name": "Nox",
+		"portrait": "nox",
+		"master": "grim",
+		"ai_level": 2,
 		"deck": [
-		  "shade", "shade", "bat_swarm", "bat_swarm", "cultist", "cultist", "wraith", "wraith",
-		  "bone_knight", "bone_knight", "gloom_rat", "gloom_rat", "dark_pact", "dark_pact",
-		  "life_drain", "life_drain", "fireball", "fireball", "inferno", "inferno",
-		  "lantern_sprite", "lantern_sprite", "phoenix", "salamander", "salamander"
+		  "shade",
+		  "shade",
+		  "bat_swarm",
+		  "bat_swarm",
+		  "cultist",
+		  "cultist",
+		  "wraith",
+		  "wraith",
+		  "bone_knight",
+		  "bone_knight",
+		  "gloom_rat",
+		  "gloom_rat",
+		  "dark_pact",
+		  "dark_pact",
+		  "life_drain",
+		  "life_drain",
+		  "fireball",
+		  "fireball",
+		  "inferno",
+		  "inferno",
+		  "lantern_sprite",
+		  "lantern_sprite",
+		  "phoenix",
+		  "salamander",
+          "salamander"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "Finale du Circuit. L'arène est comble, silencieuse. Nox entre sans saluer personne. Le masque ne laisse voir que deux yeux fatigués." },
-		{ "speaker": "nox", "text": "Le protégé de Maro. Il t'envoie perdre à sa place, comme c'est courageux." },
-		{ "speaker": "milo", "text": "Il m'envoie jouer, Sera. C'est différent." },
-		{ "speaker": "nox", "text": "... Ce nom ne changera pas l'issue. Le jeu est un mensonge qui récompense les tricheurs. Je vais le démontrer, méthodiquement, devant tout le village." },
-		{ "speaker": "milo", "text": "Alors démonte-moi. Si tu peux." }
+		{
+		  "speaker": "narrator",
+		  "text": "Finale du Circuit. L'arène est comble, silencieuse. Nox entre sans saluer personne. Le masque ne laisse voir que deux yeux fatigués."
+		},
+		{
+		  "speaker": "nox",
+		  "text": "Le protégé de Maro. Il t'envoie perdre à sa place, comme c'est courageux."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Il m'envoie jouer, Sera. C'est différent."
+		},
+		{
+		  "speaker": "nox",
+		  "text": "... Ce nom ne changera pas l'issue. Le jeu est un mensonge qui récompense les tricheurs. Je vais le démontrer, méthodiquement, devant tout le village."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Alors démonte-moi. Si tu peux."
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "nox", "text": "Une manche. Tu as gagné UNE manche. Personne n'avait pris une manche à Nox." },
-		{ "speaker": "milo", "text": "Sera l'aurait fait. Elle jouait la tour 3 au deuxième tour, paraît-il." },
-		{ "speaker": "nox", "text": "... Qui t'a dit ça ?" },
-		{ "speaker": "narrator", "text": "Pour la première fois, la voix derrière le masque a tremblé." }
+		{
+		  "speaker": "nox",
+		  "text": "Une manche. Tu as gagné UNE manche. Personne n'avait pris une manche à Nox."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Sera l'aurait fait. Elle jouait la tour 3 au deuxième tour, paraît-il."
+		},
+		{
+		  "speaker": "nox",
+		  "text": "... Qui t'a dit ça ?"
+		},
+		{
+		  "speaker": "narrator",
+		  "text": "Pour la première fois, la voix derrière le masque a tremblé."
+		}
 	  ],
-	  "rewards": { "cards": { "phoenix": 1, "inferno": 1, "archangel": 1 } }
+	  "rewards": {
+		"cards": {
+		  "phoenix": 1,
+		  "inferno": 1,
+		  "archangel": 1
+		}
+	  }
 	},
 	{
 	  "id": "ch10",
 	  "title": "Finale — Dernière manche",
 	  "background": "arena_night",
-	  "opponent": { "name": "Sera", "portrait": "sera", "master": "grim", "ai_level": 2,
+	  "opponent": {
+		"name": "Sera",
+		"portrait": "sera",
+		"master": "grim",
+		"ai_level": 2,
 		"deck": [
-		  "wraith", "wraith", "bone_knight", "bone_knight", "shade", "shade",
-		  "bat_swarm", "bat_swarm", "phoenix", "phoenix", "archangel", "archangel",
-		  "dark_pact", "dark_pact", "life_drain", "life_drain", "inferno", "inferno",
-		  "fireball", "fireball", "cultist", "cultist", "gloom_rat", "gloom_rat",
+		  "wraith",
+		  "wraith",
+		  "bone_knight",
+		  "bone_knight",
+		  "shade",
+		  "shade",
+		  "bat_swarm",
+		  "bat_swarm",
+		  "phoenix",
+		  "phoenix",
+		  "archangel",
+		  "archangel",
+		  "dark_pact",
+		  "dark_pact",
+		  "life_drain",
+		  "life_drain",
+		  "inferno",
+		  "inferno",
+		  "fireball",
+		  "fireball",
+		  "cultist",
+		  "cultist",
+		  "gloom_rat",
+		  "gloom_rat",
           "lantern_sprite"
 		]
 	  },
 	  "pre_dialogue": [
-		{ "speaker": "narrator", "text": "Dernière manche. Nox s'avance... puis s'arrête. Lentement, elle retire son masque. Un murmure parcourt l'arène : « Sera. »" },
-		{ "speaker": "sera", "text": "Puisque tu connais mon nom, tu joueras contre lui. Vingt ans que je perfectionne le jeu parfait — sans joie, sans erreur, sans pitié." },
-		{ "speaker": "maro", "text": "Sera ! C'est moi qui aurais dû porter l'accusation à ta place. Bats-le s'il le faut — mais reviens." },
-		{ "speaker": "sera", "text": "Tu parles ENFIN, vieil homme. Vingt ans trop tard. Petit... montre-moi ce que son silence t'a appris." },
-		{ "speaker": "milo", "text": "Il m'a appris le jeu. Et le jeu, Sera, ce n'est pas prouver. C'est partager. Dernière manche !" }
+		{
+		  "speaker": "narrator",
+		  "text": "Dernière manche. Nox s'avance... puis s'arrête. Lentement, elle retire son masque. Un murmure parcourt l'arène : « Sera. »"
+		},
+		{
+		  "speaker": "sera",
+		  "text": "Puisque tu connais mon nom, tu joueras contre lui. Vingt ans que je perfectionne le jeu parfait — sans joie, sans erreur, sans pitié."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Sera ! C'est moi qui aurais dû porter l'accusation à ta place. Bats-le s'il le faut — mais reviens."
+		},
+		{
+		  "speaker": "sera",
+		  "text": "Tu parles ENFIN, vieil homme. Vingt ans trop tard. Petit... montre-moi ce que son silence t'a appris."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "Il m'a appris le jeu. Et le jeu, Sera, ce n'est pas prouver. C'est partager. Dernière manche !"
+		}
 	  ],
 	  "post_dialogue": [
-		{ "speaker": "sera", "text": "... J'avais oublié cette sensation. Perdre... et avoir envie de rejouer." },
-		{ "speaker": "milo", "text": "C'est ça, le jeu parfait. Il ne se gagne pas, il se joue." },
-		{ "speaker": "maro", "text": "Le titre est à toi, Milo. Champion de Petraheim !" },
-		{ "speaker": "sera", "text": "Champion... la revanche aura lieu. Chez Maro. Il paraît qu'on y donne encore des leçons gratuites." },
-		{ "speaker": "narrator", "text": "Et sous les lanternes de l'arène, Petraheim découvre son nouveau champion — et retrouve sa légende perdue. FIN." }
+		{
+		  "speaker": "sera",
+		  "text": "... J'avais oublié cette sensation. Perdre... et avoir envie de rejouer."
+		},
+		{
+		  "speaker": "milo",
+		  "text": "C'est ça, le jeu parfait. Il ne se gagne pas, il se joue."
+		},
+		{
+		  "speaker": "maro",
+		  "text": "Le titre est à toi, Milo. Champion de Petraheim !"
+		},
+		{
+		  "speaker": "sera",
+		  "text": "Champion... la revanche aura lieu. Chez Maro. Il paraît qu'on y donne encore des leçons gratuites."
+		},
+		{
+		  "speaker": "narrator",
+		  "text": "Et sous les lanternes de l'arène, Petraheim découvre son nouveau champion — et retrouve sa légende perdue. FIN."
+		}
 	  ],
-	  "rewards": { "cards": { "treant": 1, "archangel": 1 } }
+	  "rewards": {
+		"cards": {
+		  "treant": 1,
+		  "archangel": 1
+		}
+	  }
 	}
   ]
 }

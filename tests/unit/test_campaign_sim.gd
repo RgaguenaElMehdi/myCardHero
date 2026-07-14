@@ -17,15 +17,18 @@ func test_campaign_is_winnable() -> void:
 	var deck: Array = data.campaign.starter.deck.duplicate()
 	var chapters: Array = data.campaign.chapters
 
-	for i in chapters.size():
-		var ch: Dictionary = chapters[i]
+	var real_i := 0                     # index parmi les vraies batailles :
+	for i in chapters.size():           # les seeds restent stables quand on
+		var ch: Dictionary = chapters[i]  # insère des leçons scriptées.
+		if ch.has("mission"):
+			continue      # leçon scriptée : gagnée par objectif, pas simulable ici
 		var opp: Dictionary = ch.opponent
 		var wins := 0
 		var turns_total := 0
 		for g in GAMES_PER_CHAPTER:
 			var state := Rules.setup(cards,
 					[data.masters[StringName("kiran")], data.masters[StringName(String(opp.master))]],
-					[deck, opp.deck], 1000 * i + g)
+					[deck, opp.deck], 1000 * real_i + g)
 			var player_ai := AiPlayer.new(AiPlayer.Level.MASTER, 100 + g)
 			var enemy_ai := AiPlayer.new(int(opp.ai_level), 200 + g)
 			var steps := 0
@@ -49,6 +52,7 @@ func test_campaign_is_winnable() -> void:
 		deck = _build_deck(cards, collection)
 		var err := Rules.validate_deck(cards, deck)
 		eq(err, "", "deck simulé valide après %s" % ch.id)
+		real_i += 1
 
 
 ## Curve-aware deck: ~13 monsters split cheap/mid/big, damage spells first,

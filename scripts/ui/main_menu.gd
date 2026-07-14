@@ -28,7 +28,7 @@ func _ready() -> void:
 
 
 func _wire_navigation() -> void:
-	_route(%CampaignBtn, "selection")
+	_route(%CampaignBtn, "campaign")
 	_route(%FreeBtn, "free_setup")
 	_route(%DeckBtn, "deck_builder")
 	_route(%QuestsBtn, "arena_hub")

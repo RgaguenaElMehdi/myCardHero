@@ -103,13 +103,25 @@ func _advance() -> void:
 func _finish() -> void:
 	if Game.dialogue_phase == "pre":
 		Game.goto("battle")
-	else:
-		var granted := Game.complete_chapter(int(Game.battle_config.chapter))
-		_show_rewards(granted)
+		return
+	var granted := Game.complete_chapter(int(Game.battle_config.chapter))
+	if granted.get("cards", {}).is_empty() and granted.get("masters", []).is_empty():
+		# Leçon ou étape rejouée : rien de nouveau à remettre — retour direct
+		# à la carte (l'écran de victoire a déjà été montré en bataille).
+		Game.goto("campaign")
+		return
+	_show_rewards(granted)
 
 
 func _show_rewards(granted: Dictionary) -> void:
 	set_process(false)
+	# Masque l'habillage du dialogue : seul le panneau de récompenses compte.
+	skip_btn.visible = false
+	portrait_frame.visible = false
+	portrait.visible = false
+	name_label.visible = false
+	text_label.visible = false
+	hint_label.visible = false
 	var overlay := Control.new()
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	var dim := ColorRect.new()
@@ -126,15 +138,11 @@ func _show_rewards(granted: Dictionary) -> void:
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 16)
 	panel.add_child(vbox)
+	var cards: Dictionary = granted.get("cards", {})
+	var masters: Array = granted.get("masters", [])
 	var title := UiTheme.label("Récompenses", 32, UiTheme.GOLD)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(title)
-
-	var cards: Dictionary = granted.get("cards", {})
-	var masters: Array = granted.get("masters", [])
-	if cards.is_empty() and masters.is_empty():
-		vbox.add_child(UiTheme.label("Aucune nouvelle récompense (chapitre déjà terminé).",
-				18, UiTheme.TEXT_DIM))
 	if not cards.is_empty():
 		var row := HBoxContainer.new()
 		row.alignment = BoxContainer.ALIGNMENT_CENTER

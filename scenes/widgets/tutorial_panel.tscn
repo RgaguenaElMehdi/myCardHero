@@ -1,0 +1,77 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/kit/panel_night.png" id="2"]
+
+[sub_resource type="StyleBoxTexture" id="panel_night"]
+texture = ExtResource("2")
+texture_margin_left = 56.0
+texture_margin_top = 44.0
+texture_margin_right = 56.0
+texture_margin_bottom = 44.0
+content_margin_left = 22.0
+content_margin_top = 12.0
+content_margin_right = 22.0
+content_margin_bottom = 12.0
+
+[node name="TutorialPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 96)
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 10.0
+offset_right = 400.0
+offset_bottom = 106.0
+theme_override_styles/panel = SubResource("panel_night")
+
+[node name="Row" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Box" type="VBoxContainer" parent="Row"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 4
+mouse_filter = 2
+
+[node name="TutoStep" type="Label" parent="Row/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_fonts/font = ExtResource("1")
+text = "✦  TUTORIEL — 1/4  ✦"
+mouse_filter = 2
+
+[node name="TutoText" type="Label" parent="Row/Box"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.9, 0.84, 1)
+theme_override_font_sizes/font_size = 17
+mouse_filter = 2
+
+[node name="TutoNext" type="Button" parent="Row"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+custom_minimum_size = Vector2(150, 48)
+theme_type_variation = &"MenuNavFeatured"
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+theme_override_fonts/font = ExtResource("1")
+text = "SUIVANT ❯"
+
+[node name="TutoClose" type="Button" parent="Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+custom_minimum_size = Vector2(44, 44)
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 18
+text = "✕"

@@ -21,6 +21,20 @@ func _ready() -> void:
 			_schedule_popup(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--detail="):
 			_schedule_detail(String(arg).split("=", true, 1)[1])
+		elif String(arg).begins_with("--chapter="):
+			# Charge la config de bataille d'un chapitre (tutoriel compris)
+			# sans passer par le dialogue : combiner avec res://scenes/battle.tscn.
+			var idx := int(String(arg).split("=", true, 1)[1])
+			var ch := Db.chapter(idx)
+			Game.battle_config = {
+				"mode": "campaign", "chapter": idx,
+				"ai_level": int(ch.opponent.ai_level),
+				"opponent_master": String(ch.opponent.master),
+				"opponent_deck": ch.opponent.deck,
+				"opponent_name": String(ch.opponent.name),
+				"opponent_portrait": String(ch.opponent.portrait),
+				"background": String(ch.get("background", "arena_day")),
+			}
 		elif String(arg).begins_with("--nettest="):
 			_schedule_nettest(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--serve"):

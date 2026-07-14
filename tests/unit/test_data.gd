@@ -28,7 +28,15 @@ func test_content_counts() -> void:
 	eq(tokens, 8, "8 formes évoluées")
 	eq(spells, 12, "12 sorts")
 	eq(result.masters.size(), 8, "8 maîtres")
-	eq(result.campaign.get("chapters", []).size(), 10, "10 chapitres")
+	var real := 0
+	var lessons := 0
+	for ch in result.campaign.get("chapters", []):
+		if (ch as Dictionary).has("mission"):
+			lessons += 1
+		else:
+			real += 1
+	eq(real, 10, "10 vraies batailles de campagne")
+	eq(lessons, 5, "5 leçons scriptées (Académie)")
 
 
 func test_full_collection_reachable() -> void:

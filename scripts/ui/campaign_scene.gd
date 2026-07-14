@@ -1,367 +1,305 @@
 extends Control
-## Carte de campagne (design "or baroque", mockup utilisateur) : les chapitres
-## sont des blasons posés sur une carte peinte, reliés par des chemins en
-## pointillés. Panneau droit = détail du niveau sélectionné (portrait, récompenses,
-## AFFRONTER). Onglets d'actes en bas. Structure dans campaign[_mobile].tscn.
+## Campagne (mockup utilisateur, style bleu nuit/doré) : chapitres (actes de
+## 5 étapes) en cartes illustrées à gauche, aperçu du chapitre au centre
+## (illustration, description, progression + jalons), panneau droit
+## informations / objectifs / récompense finale. « COMMENCER L'ÉTAPE » lance
+## la prochaine bataille du chapitre. Structure dans campaign[_mobile].tscn.
 
-const NODE_SCENE := preload("res://scenes/widgets/campaign_node.tscn")
-const PER := 5                                   # niveaux par acte
-const GOLD := Color(0.855, 0.71, 0.42)
-
-## Position de chaque blason en fractions de la carte (chemin sinueux du mockup).
-const ANCHORS := [
-	Vector2(0.16, 0.24), Vector2(0.44, 0.17), Vector2(0.76, 0.26),
-	Vector2(0.32, 0.50), Vector2(0.58, 0.64),
-	Vector2(0.82, 0.78), Vector2(0.13, 0.72),
-]
-## Noms d'actes (habillage) ; repli "Acte N" si dépassé.
-const ACT_NAMES := ["Terres oubliées", "Royaumes brisés", "Désert éternel",
-	"Empire des ténèbres", "Cité céleste", "Abîme final"]
+const CARD_SCENE: PackedScene = preload("res://scenes/widgets/chapter_card.tscn")
 const ROMANS := ["I", "II", "III", "IV", "V", "VI"]
-const NODE_ICONS := ["icon_swords", "icon_skull", "icon_helmet", "icon_skull",
-	"icon_swords"]
-
-@export var node_scale := 1.0
-
-@onready var map: TextureRect = %Map
-@onready var node_layer: CampaignPaths = %NodeLayer
-@onready var act_banner: Label = %ActBanner
-@onready var subtitle: Label = %Subtitle
-@onready var act_tabs: HBoxContainer = %ActTabs
-@onready var back_btn: Button = %BackBtn
-@onready var shop_btn: Button = %ShopBtn
-@onready var chest_top_btn: Button = %ChestTopBtn
-@onready var gear_btn: Button = %GearBtn
-@onready var journal_btn: Button = %JournalBtn
-@onready var collection_btn: Button = %CollectionBtn
-@onready var progress_label: Label = %ProgressLabel
-@onready var cards_label: Label = %CardsLabel
-@onready var info_popup: PanelContainer = %InfoPopup
-
-# panneau de détail
-@onready var d_title: Label = %DTitle
-@onready var d_portrait: TextureRect = %DPortrait
-@onready var d_desc: Label = %DDesc
-@onready var d_diff: Label = %DDiff
-@onready var reward_row: HBoxContainer = %RewardRow
-@onready var fight_btn: Button = %FightBtn
+const GOLD := Color(0.902, 0.765, 0.353)
+const DIM := Color(0.55, 0.52, 0.46)
 
 var _act := 0
-var _sel := -1
-var _nodes: Array[CampaignNode] = []
+var _cards: Array[Button] = []
 
 
 func _ready() -> void:
-	var mtex := UiTheme.tex("res://assets/backgrounds/campaign_map.png")
-	if mtex != null:
-		map.texture = mtex
-
-	back_btn.pressed.connect(func() -> void: Game.goto("main_menu"))
-	collection_btn.pressed.connect(func() -> void: Game.goto("deck_builder"))
-	gear_btn.pressed.connect(func() -> void: Game.goto("settings"))
-	journal_btn.pressed.connect(_open_journal)
-	var shop := func() -> void:
-		_popup("BOUTIQUE", "La boutique arrive bientôt !\nRevenez plus tard.")
-	shop_btn.pressed.connect(shop)
-	chest_top_btn.pressed.connect(shop)
-	%InfoCloseBtn.pressed.connect(func() -> void: info_popup.visible = false)
-	fight_btn.pressed.connect(func() -> void:
-		if _sel >= 0:
-			Game.start_chapter(_sel))
-	for b: Button in [back_btn, fight_btn, collection_btn, journal_btn,
-			shop_btn, chest_top_btn]:
+	(%BackBtn as Button).pressed.connect(func() -> void: Game.goto("main_menu"))
+	(%GearBtn as Button).pressed.connect(func() -> void: Game.goto("settings"))
+	(%JournalBtn as Button).pressed.connect(_open_journal)
+	(%StartBtn as Button).pressed.connect(_start_step)
+	(%InfoCloseBtn as Button).pressed.connect(func() -> void: %InfoPopup.visible = false)
+	for b: Button in [%BackBtn, %GearBtn, %JournalBtn, %StartBtn, %InfoCloseBtn]:
 		b.pressed.connect(UiTheme._click_sfx)
 
-	_update_topbar()
-	_build_act_tabs()
-	# ouvre l'acte du chapitre courant
+	var cur: Dictionary = Game.profile.get("currency", {})
+	%GoldLabel.text = UiTheme.fmt_thousands(int(cur.get("gold", 0)))
+	%ShardLabel.text = UiTheme.fmt_thousands(int(cur.get("shards", 0)))
+
+	for a in _act_count():
+		_cards.append(_make_card(a))
 	var prog: int = clampi(int(Game.profile.campaign_progress), 0,
 			Db.chapters().size() - 1)
-	_show_act(prog / PER)
+	_select_act(_act_of(prog))
 	Audio.play_music("menu")
 
 
+# ---- découpage en chapitres (actes) -----------------------------------------
+# Chaque acte déclare son nombre d'étapes dans campaign.json (acts[i].steps) ;
+# repli : répartition égale.
+
+func _acts_meta() -> Array:
+	return Db.campaign.get("acts", [])
+
+
 func _act_count() -> int:
-	return int(ceil(float(Db.chapters().size()) / PER))
+	var n := _acts_meta().size()
+	return n if n > 0 else 1
+
+
+func _act_steps(a: int) -> int:
+	var meta := _acts_meta()
+	var fallback := int(ceil(float(Db.chapters().size()) / _act_count()))
+	if a < meta.size():
+		return int(meta[a].get("steps", fallback))
+	return fallback
 
 
 func _act_range(a: int) -> Array[int]:
-	var start := a * PER
-	return [start, mini(start + PER, Db.chapters().size())]
+	var start := 0
+	for i in a:
+		start += _act_steps(i)
+	return [mini(start, Db.chapters().size()),
+			mini(start + _act_steps(a), Db.chapters().size())]
 
 
-# ---- onglets d'actes (bas) --------------------------------------------------
-
-func _build_act_tabs() -> void:
-	for c in act_tabs.get_children():
-		c.queue_free()
+func _act_of(chapter_idx: int) -> int:
 	for a in _act_count():
-		var unlocked := Game.is_chapter_unlocked(a * PER)
-		var b := Button.new()
-		b.custom_minimum_size = Vector2(310, 82) * node_scale
-		b.disabled = not unlocked
-		_style_tab(b, false)
-		b.add_child(_act_tab_content(a, unlocked))
-		b.pressed.connect(func() -> void:
-			Audio.play_sfx("move")
-			_show_act(a))
-		act_tabs.add_child(b)
+		var rng := _act_range(a)
+		if chapter_idx < rng[1]:
+			return a
+	return _act_count() - 1
 
 
-## Badge romain + nom sur deux lignes (+ cadenas si verrouillé), comme le mockup.
-func _act_tab_content(a: int, unlocked: bool) -> Control:
+func _act_name(a: int) -> String:
+	var meta := _acts_meta()
+	if a < meta.size():
+		return String(meta[a].get("name", ""))
+	return "Chapitre %d" % (a + 1)
+
+
+func _act_desc(a: int) -> String:
+	var meta := _acts_meta()
+	return String(meta[a].get("description", "")) if a < meta.size() else ""
+
+
+func _act_unlocked(a: int) -> bool:
+	var first: int = _act_range(a)[0]
+	return Game.is_chapter_unlocked(first) or Game.is_chapter_done(first)
+
+
+func _done_count(a: int) -> int:
+	var rng := _act_range(a)
+	var n := 0
+	for k in range(rng[0], rng[1]):
+		if Game.is_chapter_done(k):
+			n += 1
+	return n
+
+
+## Prochaine étape jouable du chapitre ; -1 si tout est terminé.
+func _next_step(a: int) -> int:
+	var rng := _act_range(a)
+	for k in range(rng[0], rng[1]):
+		if not Game.is_chapter_done(k) and Game.is_chapter_unlocked(k):
+			return k
+	return -1
+
+
+func _roman(a: int) -> String:
+	return ROMANS[a] if a < ROMANS.size() else str(a + 1)
+
+
+# ---- liste de gauche ---------------------------------------------------------
+
+func _make_card(a: int) -> Button:
+	var card: Button = CARD_SCENE.instantiate()
+	%ChapterList.add_child(card)
+	var rng := _act_range(a)
+	var bg := String(Db.chapter(rng[0]).get("background", ""))
+	(card.get_node("%Art") as TextureRect).texture = UiTheme.tex(Db.background_path(bg))
+	(card.get_node("%Kicker") as Label).text = "CHAPITRE %s" % _roman(a)
+	(card.get_node("%Name") as Label).text = _act_name(a).to_upper()
+	var unlocked := _act_unlocked(a)
+	(card.get_node("%Badge") as Control).visible = unlocked
+	(card.get_node("%Count") as Label).text = "%d/%d" % [_done_count(a), rng[1] - rng[0]]
+	(card.get_node("%Lock") as Control).visible = not unlocked
+	(card.get_node("%Art") as TextureRect).modulate = \
+			Color.WHITE if unlocked else Color(0.45, 0.45, 0.5)
+	card.disabled = not unlocked
+	card.pressed.connect(_select_act.bind(a))
+	card.pressed.connect(UiTheme._click_sfx)
+	return card
+
+
+# ---- aperçu central + panneau droit ------------------------------------------
+
+func _select_act(a: int) -> void:
+	_act = clampi(a, 0, _act_count() - 1)
+	for i in _cards.size():
+		_cards[i].set_pressed_no_signal(i == _act)
+	var rng := _act_range(_act)
+	var steps: int = rng[1] - rng[0]
+	var done := _done_count(_act)
+	var next := _next_step(_act)
+	var shown: int = next if next >= 0 else rng[1] - 1   # illustration : étape en cours
+
+	%ChKicker.text = "✦  CHAPITRE %s  ✦" % _roman(_act)
+	%ChTitle.text = _act_name(_act).to_upper()
+	(%ChArt as TextureRect).texture = UiTheme.tex(
+			Db.background_path(String(Db.chapter(shown).get("background", ""))))
+	%ChDesc.text = _act_desc(_act)
+	(%ChBar as ProgressBar).max_value = steps
+	(%ChBar as ProgressBar).value = done
+	%ChCount.text = "%d / %d" % [done, steps]
+	_build_milestones(rng)
+	_fill_right(rng, done, steps, next)
+
+
+func _build_milestones(rng: Array[int]) -> void:
+	for c in %MilestoneRow.get_children():
+		c.queue_free()
+	for k in range(rng[0], rng[1]):
+		%MilestoneRow.add_child(_milestone(k))
+
+
+## Jalon d'étape : icône de la récompense (portrait de Maître ou cartes),
+## nimbé si l'étape est terminée. CLIQUABLE quand l'étape est jouable —
+## y compris pour REJOUER une étape déjà terminée.
+func _milestone(k: int) -> Control:
+	var ch := Db.chapter(k)
+	var rewards: Dictionary = ch.get("rewards", {})
+	var masters: Array = rewards.get("masters", [])
+	var done := Game.is_chapter_done(k)
+	var playable := done or Game.is_chapter_unlocked(k)
+
+	var vb := VBoxContainer.new()
+	vb.alignment = BoxContainer.ALIGNMENT_CENTER
+	vb.add_theme_constant_override("separation", 4)
+	vb.tooltip_text = "Étape %d — %s%s" % [k + 1, String(ch.title),
+			"\nCliquez pour rejouer." if done else ""]
+
+	var frame := Button.new()
+	frame.disabled = not playable
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.06, 0.08, 0.13, 0.95)
+	sb.set_border_width_all(2)
+	sb.border_color = GOLD if done else Color(0.35, 0.3, 0.18)
+	sb.set_corner_radius_all(10)
+	sb.set_content_margin_all(8)
+	for st in ["normal", "pressed", "focus", "disabled"]:
+		frame.add_theme_stylebox_override(st, sb)
+	var sb_hover: StyleBoxFlat = sb.duplicate()
+	sb_hover.border_color = Color(1, 0.9, 0.55)
+	sb_hover.bg_color = Color(0.1, 0.13, 0.2, 0.95)
+	frame.add_theme_stylebox_override("hover", sb_hover)
+	if playable:
+		frame.pressed.connect(func() -> void:
+			UiTheme._click_sfx()
+			Game.start_chapter(k))
+	frame.custom_minimum_size = Vector2(74, 74)
+	var ic := TextureRect.new()
+	ic.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ic.offset_left = 8
+	ic.offset_top = 8
+	ic.offset_right = -8
+	ic.offset_bottom = -8
+	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	if masters.size() > 0:
+		ic.texture = UiTheme.tex(Db.portrait_path(String(masters[0])))
+	else:
+		ic.texture = UiTheme.tex("res://assets/sprites/ui/gold/icon_scroll.png")
+	ic.modulate = Color.WHITE if done or masters.size() > 0 else Color(0.8, 0.75, 0.6)
+	if not done:
+		ic.modulate = ic.modulate.darkened(0.25)
+	ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(ic)
+	vb.add_child(frame)
+
+	var cap := UiTheme.label("✔ Étape %d" % (k + 1) if done else "Étape %d" % (k + 1),
+			13, GOLD if done else DIM)
+	cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vb.add_child(cap)
+	return vb
+
+
+func _fill_right(rng: Array[int], done: int, steps: int, next: int) -> void:
+	# Informations : le lore du monde tant qu'aucune étape n'est jouée,
+	# ensuite la prochaine étape à jouer.
+	if next == 0 and done == 0:
+		%InfoText.text = String(Db.campaign.get("lore", ""))
+	elif next >= 0:
+		var ch := Db.chapter(next)
+		var opp: Dictionary = ch.opponent
+		var m: MasterDef = Db.master(StringName(String(opp.master)))
+		%InfoText.text = "Étape %d — %s\nAffrontez %s, qui manie la guilde %s." % [
+			next + 1, String(ch.title), String(opp.get("name", "?")),
+			GameConst.GUILD_NAMES.get(m.guild, "?") if m != null else "?"]
+	else:
+		%InfoText.text = "Chapitre terminé ! Vous pouvez rejouer la dernière étape pour la gloire."
+
+	# Objectifs : progression réelle du chapitre.
+	for c in %ObjList.get_children():
+		c.queue_free()
+	var boss_done := Game.is_chapter_done(rng[1] - 1)
+	%ObjList.add_child(_objective("Terminez toutes les étapes du chapitre.", done >= steps))
+	%ObjList.add_child(_objective("Vainquez %s (étape finale)."
+			% String(Db.chapter(rng[1] - 1).opponent.get("name", "?")), boss_done))
+	var final_master := _final_master(rng)
+	if final_master != null:
+		%ObjList.add_child(_objective("Recrutez %s." % final_master.display_name,
+				Game.profile.masters.has(String(final_master.id))))
+
+	# Récompense finale : le Maître débloqué dans le chapitre, sinon les cartes.
+	if final_master != null:
+		(%FinalArt as TextureRect).texture = UiTheme.tex(final_master.portrait)
+		%FinalKicker.text = "Nouveau Maître"
+		%FinalName.text = final_master.display_name
+		%FinalSub.text = final_master.title
+	else:
+		(%FinalArt as TextureRect).texture = UiTheme.tex(
+				"res://assets/sprites/ui/gold/icon_scroll.png")
+		%FinalKicker.text = "Butin du chapitre"
+		%FinalName.text = "Cartes rares"
+		%FinalSub.text = "De nouvelles cartes à chaque étape."
+
+	var btn := %StartBtn as Button
+	if next >= 0:
+		btn.text = "COMMENCER L'ÉTAPE %d  ❯" % (next + 1)
+	else:
+		btn.text = "REJOUER LA FINALE  ❯"
+
+
+func _objective(text: String, done: bool) -> Control:
 	var hb := HBoxContainer.new()
-	hb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	hb.add_theme_constant_override("separation", 12)
-	hb.alignment = BoxContainer.ALIGNMENT_CENTER
+	hb.add_theme_constant_override("separation", 10)
 	hb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	var badge := PanelContainer.new()
-	var bs := StyleBoxFlat.new()
-	bs.bg_color = Color(0.08, 0.1, 0.17, 0.95)
-	bs.set_border_width_all(1)
-	bs.border_color = Color(0.55, 0.45, 0.26)
-	bs.set_corner_radius_all(8)
-	bs.content_margin_left = 12
-	bs.content_margin_right = 12
-	bs.content_margin_top = 4
-	bs.content_margin_bottom = 4
-	badge.add_theme_stylebox_override("panel", bs)
-	badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var rom := UiTheme.label(ROMANS[a] if a < ROMANS.size() else str(a + 1),
-			int(24 * node_scale), GOLD)
-	var f := UiTheme.title_font()
-	if f != null:
-		rom.add_theme_font_override("font", f)
-	badge.add_child(rom)
-	hb.add_child(badge)
-
-	var nm: String = ACT_NAMES[a] if a < ACT_NAMES.size() else "Acte %d" % (a + 1)
-	var nl := UiTheme.label(nm.to_upper(), int(18 * node_scale),
-			GOLD if unlocked else Color(0.5, 0.47, 0.42))
-	if f != null:
-		nl.add_theme_font_override("font", f)
-	nl.autowrap_mode = TextServer.AUTOWRAP_WORD
-	nl.custom_minimum_size = Vector2(150 * node_scale, 0)
-	nl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	hb.add_child(nl)
-
-	if not unlocked:
-		var lk := TextureRect.new()
-		lk.texture = UiTheme.tex("res://assets/sprites/ui/gold/icon_lock.png")
-		lk.custom_minimum_size = Vector2(30, 30) * node_scale
-		lk.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		lk.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		lk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		lk.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		hb.add_child(lk)
+	var star := UiTheme.label("★" if done else "☆", 20, GOLD if done else DIM)
+	hb.add_child(star)
+	var l := UiTheme.label(text, 16, Color(0.85, 0.82, 0.74) if done else DIM)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	hb.add_child(l)
 	return hb
 
 
-## Panneau plat sombre à liseré or (mockup), variante bleue si actif.
-func _style_tab(b: Button, active: bool) -> void:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.12, 0.17, 0.3, 0.97) if active else Color(0.07, 0.065, 0.08, 0.94)
-	sb.set_border_width_all(2)
-	sb.border_color = Color(0.76, 0.62, 0.35) if active else Color(0.34, 0.28, 0.17)
-	sb.set_corner_radius_all(8)
-	sb.content_margin_left = 14
-	sb.content_margin_right = 14
-	sb.content_margin_top = 8
-	sb.content_margin_bottom = 8
-	for s in ["normal", "hover", "pressed", "focus", "disabled"]:
-		b.add_theme_stylebox_override(s, sb)
+## Dernier Maître offert dans le chapitre (récompense phare), null sinon.
+func _final_master(rng: Array[int]) -> MasterDef:
+	var found: MasterDef = null
+	for k in range(rng[0], rng[1]):
+		for mid in Db.chapter(k).get("rewards", {}).get("masters", []):
+			var m: MasterDef = Db.master(StringName(String(mid)))
+			if m != null:
+				found = m
+	return found
 
 
-func _show_act(a: int) -> void:
-	_act = clampi(a, 0, _act_count() - 1)
-	var rom: String = ROMANS[_act] if _act < ROMANS.size() else str(_act + 1)
-	var nm: String = ACT_NAMES[_act] if _act < ACT_NAMES.size() else "Acte %d" % (_act + 1)
-	act_banner.text = "%s. %s" % [rom, nm.to_upper()]
-	subtitle.text = "— CHAPITRE %s : %s —" % [rom, nm.to_upper()]
-	for i in act_tabs.get_child_count():
-		_style_tab(act_tabs.get_child(i) as Button, i == _act)
-	_place_nodes()
-
-
-func _place_nodes() -> void:
-	for n in _nodes:
-		n.queue_free()
-	_nodes.clear()
-	await get_tree().process_frame            # taille de node_layer connue
-	var size := node_layer.size
-	var rng := _act_range(_act)
-	var start: int = rng[0]
-	var end: int = rng[1]
-	var centers := PackedVector2Array()
-	var done_upto := -1
-	var first_selectable := -1
-	for k in range(start, end):
-		var local_i: int = k - start
-		var anchor: Vector2 = ANCHORS[local_i % ANCHORS.size()]
-		var center := Vector2(anchor.x * size.x, anchor.y * size.y)
-		centers.append(center)
-
-		var node: CampaignNode = NODE_SCENE.instantiate()
-		node.base_scale = node_scale
-		node.scale = Vector2(node_scale, node_scale)
-		node_layer.add_child(node)
-		var ch := Db.chapter(k)
-		var state := "locked"
-		if Game.is_chapter_done(k):
-			state = "done"
-			done_upto = local_i
-		elif Game.is_chapter_unlocked(k):
-			state = "current"
-		if state != "locked" and first_selectable < 0:
-			first_selectable = k
-		var col := _guild_color(ch)
-		node.setup(k, "%d. %s" % [k + 1, String(ch.title).to_upper()],
-				_icon_for(local_i), state, col)
-		node.position = center - CampaignNode.SHIELD_CENTER * node_scale
-		node.chosen.connect(_select_node)
-		_nodes.append(node)
-
-	node_layer.set_points(centers, done_upto + 1)
-	# sélection par défaut : chapitre courant s'il est dans l'acte, sinon 1er
-	var default := clampi(int(Game.profile.campaign_progress), start, end - 1)
-	if not (Game.is_chapter_unlocked(default) or Game.is_chapter_done(default)):
-		default = first_selectable if first_selectable >= 0 else start
-	_select_node(default)
-
-
-func _select_node(idx: int) -> void:
-	_sel = idx
-	for n in _nodes:
-		n.set_selected(n.index == idx)
-	_fill_detail(idx)
-	Audio.play_sfx("move")
-
-
-# ---- panneau de détail (droite) --------------------------------------------
-
-func _fill_detail(idx: int) -> void:
-	var ch := Db.chapter(idx)
-	var opp: Dictionary = ch.opponent
-	var locked := not (Game.is_chapter_unlocked(idx) or Game.is_chapter_done(idx))
-	d_title.text = "%d. %s" % [idx + 1, String(ch.title).to_upper()]
-	# titre teinté par la guilde de l'adversaire (mockup : titre violet nécro)
-	d_title.add_theme_color_override("font_color",
-			Color(0.6, 0.57, 0.52) if locked
-			else _guild_color(ch).lerp(Color.WHITE, 0.45))
-	d_portrait.texture = UiTheme.tex(Db.portrait_path(String(opp.portrait)))
-	d_portrait.modulate = Color(0.25, 0.25, 0.3) if locked else Color.WHITE
-	d_desc.text = _description(ch, opp) if not locked \
-			else "Niveau verrouillé. Terminez le niveau précédent pour le débloquer."
-	var diff := _diff_name(int(opp.get("ai_level", 0)))
-	d_diff.text = diff[0]
-	d_diff.add_theme_color_override("font_color", diff[1])
-	_build_rewards(ch)
-	fight_btn.visible = not locked
-	fight_btn.text = "REJOUER" if Game.is_chapter_done(idx) else "AFFRONTER"
-
-
-func _description(ch: Dictionary, opp: Dictionary) -> String:
-	var pre: Array = ch.get("pre_dialogue", [])
-	for line in pre:
-		var t := String(line.get("text", "")).strip_edges()
-		if t.length() > 20:
-			return t if t.length() <= 170 else t.substr(0, 167) + "…"
-	var m: MasterDef = Db.master(StringName(String(opp.master)))
-	var g: String = GameConst.GUILD_NAMES.get(m.guild, "") if m != null else ""
-	return "Affrontez %s, qui manie la guilde %s." % [String(opp.name), g]
-
-
-func _build_rewards(ch: Dictionary) -> void:
-	for c in reward_row.get_children():
-		c.queue_free()
-	var rewards: Dictionary = ch.get("rewards", {})
-	var cards: Dictionary = rewards.get("cards", {})
-	var total := 0
-	for id in cards:
-		total += int(cards[id])
-	if total > 0:
-		reward_row.add_child(_reward_slot(
-				"res://assets/sprites/ui/gold/icon_scroll.png", "×%d" % total,
-				"Cartes", Color.WHITE))
-	for mid in rewards.get("masters", []):
-		var m: MasterDef = Db.master(StringName(String(mid)))
-		reward_row.add_child(_reward_slot(
-				"res://assets/sprites/ui/gold/medallion.png", "×1",
-				"Maître : %s" % (m.display_name if m != null else "?"),
-				UiTheme.guild_color(m.guild) if m != null else GOLD))
-	if reward_row.get_child_count() == 0:
-		reward_row.add_child(_reward_slot(
-				"res://assets/sprites/ui/gold/icon_laurel.png", "", "Gloire", GOLD))
-
-
-## Case de récompense (mockup) : cadre sombre à liseré or, icône + quantité DANS
-## la case. Le libellé complet reste en infobulle.
-func _reward_slot(icon_path: String, qty: String, caption: String,
-		tint: Color) -> Control:
-	var frame := PanelContainer.new()
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.075, 0.068, 0.09, 0.95)
-	sb.set_border_width_all(2)
-	sb.border_color = Color(0.42, 0.35, 0.2)
-	sb.set_corner_radius_all(10)
-	sb.content_margin_left = 10
-	sb.content_margin_right = 10
-	sb.content_margin_top = 10
-	sb.content_margin_bottom = 8
-	frame.add_theme_stylebox_override("panel", sb)
-	frame.custom_minimum_size = Vector2(118, 128) * node_scale
-	frame.tooltip_text = caption
-	var vb := VBoxContainer.new()
-	vb.add_theme_constant_override("separation", 2)
-	vb.alignment = BoxContainer.ALIGNMENT_CENTER
-	vb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var ic := TextureRect.new()
-	ic.texture = UiTheme.tex(icon_path)
-	ic.custom_minimum_size = Vector2(72, 72) * node_scale
-	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	ic.modulate = tint
-	vb.add_child(ic)
-	if qty != "":
-		var q := UiTheme.label(qty, int(20 * node_scale), GOLD)
-		q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		vb.add_child(q)
-	frame.add_child(vb)
-	return frame
-
-
-# ---- divers ----------------------------------------------------------------
-
-func _diff_name(ai: int) -> Array:
-	match ai:
-		0: return ["Facile", Color(0.45, 0.75, 0.4)]
-		1: return ["Normale", Color(0.92, 0.88, 0.8)]
-		2: return ["Difficile", Color(0.85, 0.35, 0.28)]
-	return ["Extrême", Color(0.7, 0.4, 0.85)]
-
-
-func _icon_for(local_i: int) -> Texture2D:
-	var boss := local_i == PER - 1
-	var icon_name: String = "icon_skull" if boss else NODE_ICONS[local_i % NODE_ICONS.size()]
-	return UiTheme.tex("res://assets/sprites/ui/gold/%s.png" % icon_name)
-
-
-func _guild_color(ch: Dictionary) -> Color:
-	var m: MasterDef = Db.master(StringName(String(ch.opponent.master)))
-	return UiTheme.guild_color(m.guild) if m != null else GOLD
-
-
-func _update_topbar() -> void:
-	var total := Db.chapters().size()
-	var done: int = clampi(int(Game.profile.campaign_progress), 0, total)
-	progress_label.text = "%d/%d" % [done, total]
-	var owned := 0
-	for def in Db.constructible_cards():
-		if Game.owned_count(String(def.id)) > 0:
-			owned += 1
-	cards_label.text = str(owned)
+func _start_step() -> void:
+	var next := _next_step(_act)
+	var idx: int = next if next >= 0 else _act_range(_act)[1] - 1
+	Game.start_chapter(idx)
 
 
 func _open_journal() -> void:
@@ -371,11 +309,7 @@ func _open_journal() -> void:
 	for i in done:
 		txt += "✔ %d. %s\n" % [i + 1, Db.chapter(i).title]
 	if done == 0:
-		txt = "Aucun niveau terminé pour l'instant.\nVotre légende commence ici."
-	_popup("JOURNAL DE CAMPAGNE", txt.strip_edges())
-
-
-func _popup(title: String, body: String) -> void:
-	%InfoTitle.text = title
-	%InfoLabel.text = body
-	info_popup.visible = true
+		txt = "Aucune étape terminée pour l'instant.\nVotre légende commence ici."
+	%InfoTitle.text = "JOURNAL DE CAMPAGNE"
+	%InfoLabel.text = txt.strip_edges()
+	%InfoPopup.visible = true

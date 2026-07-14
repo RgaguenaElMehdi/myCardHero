@@ -1,10 +1,8 @@
 extends Control
 ## Partie libre (mockup utilisateur) : choix du MAÎTRE ADVERSAIRE (cartes
 ## portrait au centre), choix de la difficulté (3 pastilles), « Commencer
-## le combat ». Structure dans free_setup.tscn — logique ici.
+## le combat » lance directement la bataille. Structure dans free_setup.tscn.
 ## Le deck du joueur est son deck actif (géré dans le deck builder).
-
-signal launched(opponent_master: String, opponent_deck: Array, level: int)
 
 const OPPONENT_CARD: PackedScene = preload("res://scenes/widgets/opponent_card.tscn")
 
@@ -40,23 +38,13 @@ func _ready() -> void:
 		_diffs[i].pressed.connect(_pick_diff.bind(i, int(levels[i])))
 		_diffs[i].pressed.connect(UiTheme._click_sfx)
 
-	# Scène de destination (menu « Partie libre ») OU overlay (écran Sélection) :
-	# en scène autonome on lance/quitte soi-même, en overlay on émet le signal.
-	var standalone := get_tree().current_scene == self
 	(%LaunchBtn as Button).pressed.connect(func() -> void:
 		UiTheme._click_sfx()
 		var opp := _opponents[_sel_opp]
-		if standalone:
-			Game.start_free_battle(_level, String(opp.master), opp.deck)
-		else:
-			launched.emit(String(opp.master), opp.deck, _level)
-			queue_free())
+		Game.start_free_battle(_level, String(opp.master), opp.deck))
 	(%BackBtn as Button).pressed.connect(func() -> void:
 		UiTheme._click_sfx()
-		if standalone:
-			Game.goto("main_menu")
-		else:
-			queue_free())
+		Game.goto("main_menu"))
 
 	# Flèches de défilement (remplacent la barre de scroll, masquée) : ne
 	# s'affichent que si la rangée déborde.

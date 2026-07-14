@@ -70,6 +70,7 @@ func _ready() -> void:
 	autoplay = OS.get_cmdline_user_args().has("--autoplay")
 	_init_ui()
 	_setup_match()
+	_init_tutorial()
 	Audio.play_music("battle")
 	if autoplay:
 		Engine.time_scale = 20.0
@@ -118,6 +119,72 @@ func _run_autoplay() -> void:
 		get_tree().quit(1)
 
 
+# --- Tutoriel guidé (chapitres « Académie ») -------------------------------
+# Étapes déclarées dans campaign.json (chapter.tutorial : [{text, until}]) :
+# le panneau avance quand le joueur réalise l'action attendue.
+
+const TUTORIAL_PANEL: PackedScene = preload("res://scenes/widgets/tutorial_panel.tscn")
+
+var _tuto_steps: Array = []
+var _tuto_i := 0
+var _tuto_panel: Control
+## Leçon scriptée (chapter.mission dans campaign.json) : main forcée,
+## adversaire passif, la partie se gagne en atteignant l'objectif.
+var _mission: Dictionary = {}
+var _mission_done := false
+
+
+func _init_tutorial() -> void:
+	if autoplay or not bool(Game.profile.settings.get("tutorials", true)):
+		return
+	var idx := int(Game.battle_config.get("chapter", -1))
+	if idx < 0:
+		return
+	_tuto_steps = Db.chapter(idx).get("tutorial", [])
+	if _tuto_steps.is_empty():
+		return
+	_tuto_panel = TUTORIAL_PANEL.instantiate()
+	add_child(_tuto_panel)
+	(_tuto_panel.get_node("%TutoClose") as Button).pressed.connect(_end_tutorial)
+	# Étapes de présentation (until == "next") : on avance avec le bouton.
+	(_tuto_panel.get_node("%TutoNext") as Button).pressed.connect(func() -> void:
+		UiTheme._click_sfx()
+		_tuto_i += 1
+		_show_tuto_step())
+	_show_tuto_step()
+
+
+func _show_tuto_step() -> void:
+	if _tuto_panel == null:
+		return
+	if _tuto_i >= _tuto_steps.size():
+		_end_tutorial()
+		return
+	(_tuto_panel.get_node("%TutoStep") as Label).text = \
+			"✦  TUTORIEL — %d/%d  ✦" % [_tuto_i + 1, _tuto_steps.size()]
+	(_tuto_panel.get_node("%TutoText") as Label).text = \
+			String(_tuto_steps[_tuto_i].get("text", ""))
+	(_tuto_panel.get_node("%TutoNext") as Button).visible = \
+			String(_tuto_steps[_tuto_i].get("until", "")) == "next"
+
+
+func _end_tutorial() -> void:
+	if _tuto_panel != null:
+		_tuto_panel.queue_free()
+		_tuto_panel = null
+	_tuto_steps = []
+
+
+## Signale une action du joueur ; « play » accepte invocation ET sort.
+func _tuto_notify(event: String) -> void:
+	if _tuto_panel == null or _tuto_i >= _tuto_steps.size():
+		return
+	var until := String(_tuto_steps[_tuto_i].get("until", ""))
+	if until == event or (until == "play" and (event == "summon" or event == "cast")):
+		_tuto_i += 1
+		_show_tuto_step()
+
+
 # --- Match setup ---------------------------------------------------------
 
 func _setup_match() -> void:
@@ -126,13 +193,53 @@ func _setup_match() -> void:
 		_setup_online()
 		return
 	var my_deck := Game.active_deck()
+	_mission = Db.chapter(int(cfg.get("chapter", -1))).get("mission", {}) \
+			if int(cfg.get("chapter", -1)) >= 0 else {}
+	var player_deck: Array = _mission.get("player_deck", my_deck.cards)
 	var m0: MasterDef = Db.master(StringName(String(my_deck.master)))
 	var m1: MasterDef = Db.master(StringName(String(cfg.opponent_master)))
 	state = _match.setup(Db.cards, [m0, m1],
-			[my_deck.cards, cfg.opponent_deck], randi())
+			[player_deck, cfg.opponent_deck], randi())
 	ai = AiPlayer.new(int(cfg.ai_level), randi())
+	if _mission.is_empty():
+		_refresh_all()
+		_show_mulligan()
+		return
+	# Leçon scriptée : pas de mulligan, main et plateau imposés.
+	_match.apply({ "type": "mulligan", "redraw": false })
+	_match.apply(ai.choose_action(state))
+	_apply_mission_setup()
 	_refresh_all()
-	_show_mulligan()
+
+
+## Impose la main du joueur et les monstres pré-placés d'une leçon.
+func _apply_mission_setup() -> void:
+	var p: PlayerState = state.players[0]
+	var want: Array = _mission.get("hand", [])
+	for i in mini(want.size(), p.hand.size()):
+		var id := StringName(String(want[i]))
+		if String(p.hand[i]) == String(id):
+			continue
+		var di := -1
+		for j in p.deck.size():
+			if String(p.deck[j]) == String(id):
+				di = j
+				break
+		if di >= 0:
+			p.deck[di] = p.hand[i]
+			p.hand[i] = id
+	for entry in _mission.get("board", []):
+		var side := int(entry.get("side", 0))
+		var def := Db.card(StringName(String(entry.get("card", ""))))
+		if def == null:
+			continue
+		var row: int = Board.front_row(side) \
+				if String(entry.get("row", "front")) == "front" else Board.back_row(side)
+		var cell := Vector2i(int(entry.get("col", 0)), row)
+		var mcell := Board.master_cell(side, state.players[side].master_col)
+		if cell != mcell and state.board.at(cell) == null:
+			# turn -1 : pas de mal d'invocation, le monstre peut agir tout de suite
+			state.board.place(cell, MonsterInst.create(def, side, -1))
 
 
 ## Online: the authoritative server drives everything. `state` is Net.controller's
@@ -237,6 +344,8 @@ func _init_ui() -> void:
 	%BookBtn.pressed.connect(func() -> void:
 		%LogPanel.visible = not %LogPanel.visible)
 	%GearBtn.pressed.connect(func() -> void: Game.goto("main_menu"))
+	(%AbandonBtn as Button).pressed.connect(_on_abandon)
+	(%AbandonBtn as Button).pressed.connect(UiTheme._click_sfx)
 
 	# Right-click a side panel = inspect that master.
 	for side in 2:
@@ -397,6 +506,16 @@ func _refresh_hand() -> void:
 				create_tween().tween_property(w, "position:y", base_y, 0.12))
 		hand_area.add_child(w)
 		hand_widgets.append(w)
+		# Leçon : la carte à jouer clignote en doré (mission.highlight, ou la
+		# carte de l'objectif d'invocation).
+		var hi := String(_mission.get("highlight", ""))
+		if hi == "" and String(_mission.get("goal", {}).get("type", "")) == "summon":
+			hi = String(_mission.goal.get("card", ""))
+		if not _mission_done and hi != "" and String(hand[i]) == hi:
+			var tw := w.create_tween().set_loops()
+			tw.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+			tw.tween_property(w, "modulate", Color(1.45, 1.3, 0.9), 0.5)
+			tw.tween_property(w, "modulate", Color.WHITE, 0.5)
 
 
 func _refresh_panels() -> void:
@@ -583,6 +702,7 @@ func _on_hand_card_pressed(_w: CardWidget, i: int) -> void:
 		sel_hand = -1
 	else:
 		sel_hand = i
+		_tuto_notify("select_hand")
 		if def.is_spell() and def.target_kind() == "":
 			var idx := i
 			sel_hand = -1
@@ -683,6 +803,7 @@ func _on_evolve_pressed() -> void:
 func _submit(action: Dictionary) -> void:
 	if busy or state.is_over():
 		return
+	_tuto_notify(String(action.get("type", "")))
 	if String(action.get("type", "")) == "master_power":
 		Game.quest_bump("powers")          # quête quotidienne « compétences »
 	if _online:
@@ -704,8 +825,42 @@ func _submit(action: Dictionary) -> void:
 	if state.is_over():
 		_show_game_over()
 		return
+	if _check_mission_goal(action):
+		return
 	if String(action.type) == "end_turn":
 		await _ai_turn()
+
+
+## Leçon : l'objectif atteint termine la partie sur une victoire.
+func _check_mission_goal(action: Dictionary) -> bool:
+	if _mission.is_empty() or _mission_done:
+		return false
+	var goal: Dictionary = _mission.get("goal", {})
+	var kind := String(action.get("type", ""))
+	var hit := false
+	match String(goal.get("type", "")):
+		"summon":
+			var card := String(goal.get("card", ""))
+			for cell in state.board.monster_cells_of(0):
+				if String(state.board.at(cell).def.id) == card:
+					hit = true
+		"attack":
+			hit = kind == "attack"
+		"master_power":
+			hit = kind == "master_power"
+		"cast":
+			hit = kind == "cast"
+		"move":
+			hit = kind == "move"
+	if not hit:
+		return false
+	_mission_done = true
+	_end_tutorial()
+	_toast("Objectif atteint !")
+	state.winner = 0
+	state.phase = GameState.Phase.OVER
+	_show_game_over()
+	return true
 
 
 func _ai_turn() -> void:
@@ -715,7 +870,9 @@ func _ai_turn() -> void:
 	var guard := 0
 	while not state.is_over() and state.current == 1 and guard < 200:
 		guard += 1
-		var action := ai.choose_action(state)
+		# Leçon : l'instructeur reste passif, il rend simplement la main.
+		var action := { "type": "end_turn" } if bool(_mission.get("dummy_opponent", false)) \
+				else ai.choose_action(state)
 		var res := _match.apply(action)
 		if not res.ok:
 			push_error("Action IA illégale : %s (%s)" % [action, res.error])
@@ -1164,6 +1321,34 @@ func _toast(text: String) -> void:
 
 
 # --- Game over ---------------------------------------------------------------
+
+var _abandon_armed := false
+
+
+## Abandonner : première pression = demande de confirmation (désarmée après
+## 3 s), seconde = défaite immédiate (ou déconnexion propre en ligne).
+func _on_abandon() -> void:
+	var btn := %AbandonBtn as Button
+	if state == null or state.is_over():
+		return
+	if not _abandon_armed:
+		_abandon_armed = true
+		btn.text = "CONFIRMER ?"
+		get_tree().create_timer(3.0).timeout.connect(func() -> void:
+			if _abandon_armed:
+				_abandon_armed = false
+				btn.text = "ABANDONNER")
+		return
+	_abandon_armed = false
+	btn.text = "ABANDONNER"
+	if _online:
+		Net.reset()                     # le serveur signalera notre forfait
+		Game.goto("main_menu")
+		return
+	state.winner = 1
+	state.phase = GameState.Phase.OVER
+	_show_game_over()
+
 
 func _show_game_over() -> void:
 	var won := state.winner == 0
