@@ -23,3 +23,4 @@ tools/raw_ui/
 
 # Modèle de build Android Godot + sorties gradle (régénérable via l'éditeur)
 android/
+build/
