@@ -1,7 +1,7 @@
-[gd_scene format=3 uid="uid://ccn1tkfxkpmpq"]
+[gd_scene format=3 uid="uid://b4oikynuflxmo"]
 
-[ext_resource type="Script" uid="uid://bpki6d4hl0tnk" path="res://scripts/ui/mode_select.gd" id="1"]
-[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/Cinzel.ttf" id="2"]
+[ext_resource type="Script" path="res://scripts/ui/mode_select.gd" id="1"]
+[ext_resource type="FontFile" uid="uid://bk7htjxubq6wq" path="res://assets/fonts/BoldPixels.ttf" id="2"]
 [ext_resource type="Theme" uid="uid://b8exa286p0qed" path="res://resources/ui_theme.tres" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="panel"]

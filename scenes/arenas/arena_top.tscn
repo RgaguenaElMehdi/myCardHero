@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene format=3 uid="uid://l6jxi7xggpkr"]
 
-[ext_resource type="Script" path="res://scripts/ui/arena.gd" id="1"]
+[ext_resource type="Script" uid="uid://be5mqbd1oxf2b" path="res://scripts/ui/arena.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/arena_top_1920.png" id="2"]
 
-[node name="Arena" type="Control"]
+[node name="Arena" type="Control" unique_id=1625223715]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,15 +12,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1")
-board_pos = Vector2(0, 0)
-board_scale = 1.0
 grid_seps_y = Array[float]([83.8, 249.4, 415.0, 590.6, 766.3])
 grid_xl_top = 670.0
 grid_xl_bot = 670.0
 grid_xr_top = 1248.8
 grid_xr_bot = 1248.8
+board_pos = Vector2(0, 0)
+board_scale = 1.0
 
-[node name="Environment" type="TextureRect" parent="."]
+[node name="Environment" type="TextureRect" parent="." unique_id=1347733924]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

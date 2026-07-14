@@ -1,6 +1,6 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b40le218mli3c"]
 
-[node name="MasterPickBtn" type="Button"]
+[node name="MasterPickBtn" type="Button" unique_id=846136668]
 custom_minimum_size = Vector2(104, 124)
 toggle_mode = true
 expand_icon = true

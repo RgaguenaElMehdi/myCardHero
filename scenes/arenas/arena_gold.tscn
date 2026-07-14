@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://do7j7ataft45q"]
 
-[ext_resource type="Script" path="res://scripts/ui/arena.gd" id="1"]
+[ext_resource type="Script" uid="uid://be5mqbd1oxf2b" path="res://scripts/ui/arena.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/arena_bg.png" id="2"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/cell_red.png" id="3"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/cell_blue.png" id="4"]
 
-[node name="Arena" type="Control"]
+[node name="Arena" type="Control" unique_id=602428082]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,15 +14,15 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1")
-board_pos = Vector2(0, 0)
-board_scale = 1.0
 grid_seps_y = Array[float]([120.0, 290.0, 460.0, 630.0, 800.0])
 grid_xl_top = 528.0
 grid_xl_bot = 528.0
 grid_xr_top = 1392.0
 grid_xr_bot = 1392.0
+board_pos = Vector2(0, 0)
+board_scale = 1.0
 
-[node name="Environment" type="TextureRect" parent="."]
+[node name="Environment" type="TextureRect" parent="." unique_id=1001376104]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,156 +34,144 @@ texture = ExtResource("2")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="Cell_0_0" type="NinePatchRect" parent="."]
+[node name="Cell_0_0" type="NinePatchRect" parent="." unique_id=582797742]
 layout_mode = 0
 offset_left = 533.6
 offset_top = 127.0
 offset_right = 810.4
 offset_bottom = 283.0
-mouse_filter = 2
 texture = ExtResource("3")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_0_1" type="NinePatchRect" parent="."]
+[node name="Cell_0_1" type="NinePatchRect" parent="." unique_id=19406638]
 layout_mode = 0
 offset_left = 821.6
 offset_top = 127.0
 offset_right = 1098.4
 offset_bottom = 283.0
-mouse_filter = 2
 texture = ExtResource("3")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_0_2" type="NinePatchRect" parent="."]
+[node name="Cell_0_2" type="NinePatchRect" parent="." unique_id=611616195]
 layout_mode = 0
 offset_left = 1109.6
 offset_top = 127.0
 offset_right = 1386.4
 offset_bottom = 283.0
-mouse_filter = 2
 texture = ExtResource("3")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_1_0" type="NinePatchRect" parent="."]
+[node name="Cell_1_0" type="NinePatchRect" parent="." unique_id=2007060628]
 layout_mode = 0
 offset_left = 533.6
 offset_top = 297.0
 offset_right = 810.4
 offset_bottom = 453.0
-mouse_filter = 2
 texture = ExtResource("3")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_1_1" type="NinePatchRect" parent="."]
+[node name="Cell_1_1" type="NinePatchRect" parent="." unique_id=1967347731]
 layout_mode = 0
 offset_left = 821.6
 offset_top = 297.0
 offset_right = 1098.4
 offset_bottom = 453.0
-mouse_filter = 2
 texture = ExtResource("3")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_1_2" type="NinePatchRect" parent="."]
+[node name="Cell_1_2" type="NinePatchRect" parent="." unique_id=1407191204]
 layout_mode = 0
 offset_left = 1109.6
 offset_top = 297.0
 offset_right = 1386.4
 offset_bottom = 453.0
-mouse_filter = 2
 texture = ExtResource("3")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_2_0" type="NinePatchRect" parent="."]
+[node name="Cell_2_0" type="NinePatchRect" parent="." unique_id=666334986]
 layout_mode = 0
 offset_left = 533.6
 offset_top = 467.0
 offset_right = 810.4
 offset_bottom = 623.0
-mouse_filter = 2
 texture = ExtResource("4")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_2_1" type="NinePatchRect" parent="."]
+[node name="Cell_2_1" type="NinePatchRect" parent="." unique_id=719874089]
 layout_mode = 0
 offset_left = 821.6
 offset_top = 467.0
 offset_right = 1098.4
 offset_bottom = 623.0
-mouse_filter = 2
 texture = ExtResource("4")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_2_2" type="NinePatchRect" parent="."]
+[node name="Cell_2_2" type="NinePatchRect" parent="." unique_id=740643598]
 layout_mode = 0
 offset_left = 1109.6
 offset_top = 467.0
 offset_right = 1386.4
 offset_bottom = 623.0
-mouse_filter = 2
 texture = ExtResource("4")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_3_0" type="NinePatchRect" parent="."]
+[node name="Cell_3_0" type="NinePatchRect" parent="." unique_id=1728351918]
 layout_mode = 0
 offset_left = 533.6
 offset_top = 637.0
 offset_right = 810.4
 offset_bottom = 793.0
-mouse_filter = 2
 texture = ExtResource("4")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_3_1" type="NinePatchRect" parent="."]
+[node name="Cell_3_1" type="NinePatchRect" parent="." unique_id=1706441299]
 layout_mode = 0
 offset_left = 821.6
 offset_top = 637.0
 offset_right = 1098.4
 offset_bottom = 793.0
-mouse_filter = 2
 texture = ExtResource("4")
 patch_margin_left = 44
 patch_margin_top = 44
 patch_margin_right = 44
 patch_margin_bottom = 44
 
-[node name="Cell_3_2" type="NinePatchRect" parent="."]
+[node name="Cell_3_2" type="NinePatchRect" parent="." unique_id=1489943945]
 layout_mode = 0
 offset_left = 1109.6
 offset_top = 637.0
 offset_right = 1386.4
 offset_bottom = 793.0
-mouse_filter = 2
 texture = ExtResource("4")
 patch_margin_left = 44
 patch_margin_top = 44
