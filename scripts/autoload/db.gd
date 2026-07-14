@@ -179,6 +179,7 @@ static func _load_masters(path: String, errors: Array[String]) -> Dictionary:
 		var m := MasterDef.new()
 		m.id = StringName(entry.get("id", ""))
 		m.display_name = entry.get("name", "")
+		m.title = entry.get("title", "")
 		m.guild = GUILDS.get(entry.get("guild", ""), GameConst.Guild.FLAME)
 		m.hp = int(entry.get("hp", GameConst.MASTER_HP))
 		m.lore = entry.get("lore", "")

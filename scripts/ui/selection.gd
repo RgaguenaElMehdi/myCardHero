@@ -25,12 +25,11 @@ func _ready() -> void:
 		b.pressed.connect(UiTheme._click_sfx)
 
 
-## Solo : choisir un maître/niveau puis affronter une IA.
+## Solo : choisir le maître adversaire et la difficulté, puis affronter l'IA.
 func _show_free_setup() -> void:
 	var setup: Control = FREE_SETUP.instantiate()
-	setup.launched.connect(func(_master_id: String, level: int) -> void:
-		var ch := _random_chapter()
-		Game.start_free_battle(level, String(ch.opponent.master), ch.opponent.deck))
+	setup.launched.connect(func(master: String, deck: Array, level: int) -> void:
+		Game.start_free_battle(level, master, deck))
 	add_child(setup)
 
 

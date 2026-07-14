@@ -5,6 +5,8 @@ extends Resource
 
 @export var id: StringName
 @export var display_name: String
+## Épithète affichée sous le nom (« Gardienne du Vieux Chêne »).
+@export var title: String
 @export var guild: GameConst.Guild
 @export var hp: int = GameConst.MASTER_HP
 @export_multiline var lore: String

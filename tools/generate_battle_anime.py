@@ -135,6 +135,24 @@ ASSETS = {
         "cloud ocean. Blue ambient light, warm golden highlights, "
         "cinematic, ultra detailed, hand painted, Legends of Runeterra / "
         "Genshin Impact quality.")),
+    # Fond de l'écran « Partie libre » (choix adversaire + difficulté) :
+    # parvis nocturne, centre sombre et dégagé pour les panneaux UI.
+    "freeplay_bg": dict(canvas="1536x1024", keyed=False, prompt=(
+        "AAA anime fantasy game background concept art, night scene, ONLY "
+        "scenery, NO interface, NO characters, NO text, NO icons. A wide "
+        "ceremonial stone plaza at night seen from eye level: ancient "
+        "paved ground engraved with a huge faint rune circle, elegant "
+        "stone balustrades and staircases on both sides, tall glowing "
+        "BLUE magical crystals on carved pedestals, warm stone lanterns "
+        "and candles, ancient statues overgrown with ivy, decorative "
+        "night-blue banners with golden compass stars. Sky: deep blue "
+        "night, bright full moon, and a gigantic luminous fantasy castle "
+        "with tall spires on the horizon, floating islands, subtle "
+        "Milky Way. The CENTER of the image stays darker, empty and "
+        "uncluttered (large interface panels will be displayed over it); "
+        "all the detailed scenery lives on the edges. Blue ambient light "
+        "with warm golden highlights, cinematic, ultra detailed, hand "
+        "painted, Legends of Runeterra / Genshin Impact quality.")),
     # Orbe FIN DU TOUR : disque de cristal bleu cerclé d'or.
     "orb_endturn": dict(canvas="1024x1024", keyed=True, prompt=(
         "Grand bouton rond de jeu : disque de CRISTAL BLEU profond lumineux "
@@ -228,6 +246,11 @@ def post() -> None:
             cover_crop(img, 1920, 1080).save(BG_OUT / "arena_ruins_1920.png")
             cover_crop(img, 2400, 1080).save(BG_OUT / "arena_ruins_2400.png")
             print("  [ok] arena_ruins_1920/2400")
+            continue
+        if name == "freeplay_bg":
+            cover_crop(img, 1920, 1080).save(BG_OUT / "freeplay_1920.png")
+            cover_crop(img, 2400, 1080).save(BG_OUT / "freeplay_2400.png")
+            print("  [ok] freeplay_1920/2400")
             continue
         if name == "arena_iso":
             # biais bas : la rangée 4 doit finir au-dessus de la main (y=842)
