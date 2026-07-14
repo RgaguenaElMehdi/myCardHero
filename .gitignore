@@ -20,3 +20,6 @@ tools/.cache/
 # Graphe de connaissance local (regenerable via /graphify)
 graphify-out/
 tools/raw_ui/
+
+# Modèle de build Android Godot + sorties gradle (régénérable via l'éditeur)
+android/
