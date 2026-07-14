@@ -1,0 +1,17 @@
+{
+	"levels": 100,
+	"xp_per_level": 100,
+	"battle_xp": { "win": 60, "loss": 30 },
+	"rewards": {
+		"default": { "gold": 40 },
+		"every_5": { "shards": 60 },
+		"every_10": { "gems": 15 },
+		"milestones": {
+			"1": { "gold": 100 },
+			"25": { "gems": 40 },
+			"50": { "gems": 60 },
+			"75": { "shards": 400 },
+			"100": { "gems": 150 }
+		}
+	}
+}

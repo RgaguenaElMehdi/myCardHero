@@ -139,8 +139,10 @@ func load_profile() -> void:
 		var text := FileAccess.get_file_as_string(SAVE_PATH)
 		var data = JSON.parse_string(text)
 		if data is Dictionary and int(data.get("save_version", 0)) == SAVE_VERSION:
-			for key in profile:
-				if data.has(key):
+			# Toutes les clés sauvegardées sont reprises (pas seulement celles du
+			# profil par défaut) : quêtes, stats à vie, succès réclamés…
+			for key in data:
+				if key != "save_version":
 					profile[key] = data[key]
 			_migrate_legacy_deck(data)
 	_sanitize_profile()
@@ -177,6 +179,12 @@ func reset_profile() -> void:
 
 ## Repairs anything inconsistent (deck not owned/invalid, unknown master...).
 func _sanitize_profile() -> void:
+	# Date d'inscription (affichée sur l'écran Profil) : posée à la première
+	# ouverture, persistée à la prochaine sauvegarde.
+	var pl: Dictionary = profile.get("player", {})
+	if not pl.has("created"):
+		pl["created"] = Time.get_date_string_from_system()
+		profile["player"] = pl
 	# Grant any starter content added since this profile was created (new
 	# masters/cards from a content update). Idempotent, never removes anything.
 	var starter: Dictionary = Db.campaign.get("starter", {})
@@ -310,9 +318,10 @@ func matchmaking_ai_config(ranked: bool) -> Dictionary:
 ## Maître — le niveau monte quand xp_next est atteint (seuil croissant).
 ## Retourne { gold, shards, xp, levels } pour l'affichage.
 func grant_battle_rewards(won: bool) -> Dictionary:
-	var gold := 100 if won else 25
+	var mult := event_multipliers()   # bonus d'événement actif (Double XP…)
+	var gold := int((100 if won else 25) * float(mult.gold))
 	var shards := 50 if won else 10
-	var xp := 150 if won else 50
+	var xp := int((150 if won else 50) * float(mult.xp))
 	var cur: Dictionary = profile.get("currency", {})
 	cur["gold"] = int(cur.get("gold", 0)) + gold
 	cur["shards"] = int(cur.get("shards", 0)) + shards
@@ -331,6 +340,80 @@ func grant_battle_rewards(won: bool) -> Dictionary:
 	return { "gold": gold, "shards": shards, "xp": xp, "levels": levels }
 
 
+## --- Défis PvE (modificateurs de règles, resources/data/challenges.json) -----
+
+const CHALLENGES_PATH := "res://resources/data/challenges.json"
+const GUILD_BY_NAME := {
+	"flame": GameConst.Guild.FLAME, "sylvan": GameConst.Guild.SYLVAN,
+	"shadow": GameConst.Guild.SHADOW, "light": GameConst.Guild.LIGHT,
+}
+
+var _challenges_data: Array = []
+
+
+func challenges() -> Array:
+	if _challenges_data.is_empty():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(CHALLENGES_PATH))
+		if data is Array:
+			_challenges_data = data
+	return _challenges_data
+
+
+## Le défi mis en avant cette semaine (récompense doublée), en rotation.
+func weekly_challenge() -> Dictionary:
+	var all := challenges()
+	if all.is_empty():
+		return {}
+	return all[int(Time.get_unix_time_from_system() / 604800.0) % all.size()]
+
+
+func challenge_done(id: String) -> bool:
+	return profile.get("challenges_done", []).has(id)
+
+
+func start_challenge(ch: Dictionary) -> void:
+	var m: MasterDef = Db.master(StringName(String(ch.opponent.master)))
+	var mod: Dictionary = ch.get("mod", {})
+	battle_config = {
+		"mode": "challenge",
+		"chapter": -1,
+		"challenge": ch,
+		"ai_level": int(ch.opponent.get("ai_level", 1)),
+		"opponent_master": String(m.id),
+		"opponent_deck": Db.guild_deck(m.guild),
+		"opponent_name": m.display_name,
+		"opponent_portrait": String(m.id),
+		"background": "arena_day",
+	}
+	if mod.has("deck_guild"):
+		battle_config["player_deck"] = \
+				Db.guild_deck(GUILD_BY_NAME.get(String(mod.deck_guild), GameConst.Guild.FLAME))
+	goto("battle")
+
+
+## Victoire d'un défi : récompense versée une seule fois (x2 le défi de la
+## semaine, suivi séparément par semaine).
+func complete_challenge(ch: Dictionary) -> Dictionary:
+	var id := String(ch.get("id", ""))
+	var granted := {}
+	if not challenge_done(id):
+		var done: Array = profile.get("challenges_done", [])
+		done.append(id)
+		profile["challenges_done"] = done
+		granted = ch.get("reward", {}).duplicate()
+	var week := int(Time.get_unix_time_from_system() / 604800.0)
+	if String(weekly_challenge().get("id", "")) == id \
+			and int(profile.get("weekly_challenge_week", -1)) != week:
+		profile["weekly_challenge_week"] = week
+		for kind in ch.get("reward", {}):
+			granted[kind] = int(granted.get(kind, 0)) + int(ch.reward[kind])
+	if not granted.is_empty():
+		_grant_reward(granted)
+	else:
+		save_profile()
+	return granted
+
+
 func start_free_battle(ai_level: int, opponent_master: String, opponent_deck: Array) -> void:
 	battle_config = {
 		"mode": "free",
@@ -345,23 +428,348 @@ func start_free_battle(ai_level: int, opponent_master: String, opponent_deck: Ar
 	goto("battle")
 
 
-## --- Quêtes quotidiennes (hub Arène) ---------------------------------------
-## Compteurs remis à zéro chaque jour ; incrémentés par la scène de bataille.
+## --- Économie (boosters, recyclage, fabrication) -----------------------------
+## Monnaies affichées : gold = Or, gems = Cristaux, shards = Essence.
+
+func currency(kind: String) -> int:
+	return int(profile.get("currency", {}).get(kind, 0))
+
+
+func spend(kind: String, amount: int) -> bool:
+	if currency(kind) < amount:
+		return false
+	profile.currency[kind] = currency(kind) - amount
+	save_profile()
+	profile_changed.emit()
+	return true
+
+
+func gain(kind: String, amount: int) -> void:
+	profile.currency[kind] = currency(kind) + amount
+	save_profile()
+	profile_changed.emit()
+
+
+## Achète et ouvre un booster (spec de resources/data/shop.json). Retourne les
+## ids tirés, ou [] si l'Or manque. Les cartes rejoignent la collection.
+func open_booster(spec: Dictionary) -> Array:
+	if not spend("gold", int(spec.get("price", 0))):
+		return []
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var ids: Array = Economy.roll_booster(Economy.pools_of(Db.constructible_cards()),
+			int(spec.get("cards", 5)), StringName(String(spec.get("min_rarity", "commune"))), rng)
+	for id in ids:
+		profile.collection[id] = owned_count(String(id)) + 1
+	save_profile()
+	profile_changed.emit()
+	return ids
+
+
+## Exemplaires de la carte utilisés par le deck qui en joue le plus
+## (on ne peut pas recycler une carte dont un deck a besoin).
+func max_deck_use(id: String) -> int:
+	var used := 0
+	for deck in profile.get("decks", []):
+		used = maxi(used, deck.get("cards", []).count(id))
+	return used
+
+
+## Recycle un exemplaire contre de l'Essence. -1 si impossible.
+func recycle_card(id: String) -> int:
+	var def: CardDef = Db.card(StringName(id))
+	if def == null or owned_count(id) <= max_deck_use(id):
+		return -1
+	var value := int(Economy.RECYCLE_VALUE.get(def.rarity, 5))
+	profile.collection[id] = owned_count(id) - 1
+	profile.currency["shards"] = currency("shards") + value
+	save_profile()
+	profile_changed.emit()
+	return value
+
+
+## Fabrique un exemplaire contre de l'Essence (plafonné à la limite de deck).
+func craft_card(id: String) -> bool:
+	var def: CardDef = Db.card(StringName(id))
+	if def == null or owned_count(id) >= GameConst.MAX_COPIES:
+		return false
+	if not spend("shards", int(Economy.CRAFT_COST.get(def.rarity, 25))):
+		return false
+	profile.collection[id] = owned_count(id) + 1
+	save_profile()
+	profile_changed.emit()
+	return true
+
+
+## --- Quêtes (quotidiennes / hebdomadaires) et succès --------------------------
+## Définitions déclaratives dans resources/data/quests.json ; compteurs du jour
+## ("d"), de la semaine ("w") et à vie (profile.stats) + réclamations dans le
+## profil. Équilibrage / nouveau contenu = éditer le JSON.
+
+const QUESTS_PATH := "res://resources/data/quests.json"
+
+var _quests_data: Dictionary = {}
+
+
+func _quests() -> Dictionary:
+	if _quests_data.is_empty():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(QUESTS_PATH))
+		if data is Dictionary:
+			_quests_data = data
+	return _quests_data
+
+
+func daily_quests() -> Array:
+	return _quests().get("daily", [])
+
+
+func weekly_quests() -> Array:
+	return _quests().get("weekly", [])
+
+
+func achievements() -> Array:
+	return _quests().get("achievements", [])
+
+
+## Compteurs remis à zéro chaque jour ("d") / chaque semaine ("w").
 func quest_state() -> Dictionary:
 	var today := Time.get_date_string_from_system()
+	var week := int(Time.get_unix_time_from_system() / 604800.0)
 	var q: Dictionary = profile.get("quests", {})
 	if String(q.get("date", "")) != today:
-		q = { "date": today, "wins": 0, "powers": 0 }
-		profile["quests"] = q
-		save_profile()
+		q["date"] = today
+		q["d"] = {}
+		q["dclaimed"] = []
+	if int(q.get("week", -1)) != week:
+		q["week"] = week
+		q["w"] = {}
+		q["wclaimed"] = []
+	profile["quests"] = q
 	return q
 
 
-func quest_bump(key: String) -> void:
+## Incrémente un compteur du jour, de la semaine et à vie (succès).
+func quest_bump(key: String, n: int = 1) -> void:
 	var q := quest_state()
-	q[key] = int(q.get(key, 0)) + 1
+	for scope in ["d", "w"]:
+		var c: Dictionary = q.get(scope, {})
+		c[key] = int(c.get(key, 0)) + n
+		q[scope] = c
 	profile["quests"] = q
+	var st: Dictionary = profile.get("stats", {})
+	st[key] = int(st.get(key, 0)) + n
+	profile["stats"] = st
 	save_profile()
+
+
+## Bilan de fin de partie → compteurs de quêtes, de succès et XP du passe.
+func report_battle(won: bool, cards: int, summons: int, kills: int) -> void:
+	quest_bump("games")
+	if won:
+		quest_bump("wins")
+	if cards > 0:
+		quest_bump("cards", cards)
+	if summons > 0:
+		quest_bump("summons", summons)
+	if kills > 0:
+		quest_bump("kills", kills)
+	var bxp: Dictionary = season_config().get("battle_xp", {})
+	season_add_xp(int((int(bxp.get("win", 60)) if won else int(bxp.get("loss", 30)))
+			* float(event_multipliers().xp)))
+
+
+## --- Événements (resources/data/events.json) ---------------------------------
+## Sans serveur : planification locale honnête. "week" = un événement en
+## rotation par semaine ; "weekend" = actifs du vendredi au dimanche.
+
+const EVENTS_PATH := "res://resources/data/events.json"
+
+var _events_data: Array = []
+
+
+func events_data() -> Array:
+	if _events_data.is_empty():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(EVENTS_PATH))
+		if data is Array:
+			_events_data = data
+	return _events_data
+
+
+func _is_weekend() -> bool:
+	return Time.get_datetime_dict_from_system().weekday in [0, 5, 6]  # dim, ven, sam
+
+
+func active_events() -> Array:
+	var week_events: Array = []
+	var weekend_events: Array = []
+	for ev in events_data():
+		(weekend_events if String(ev.get("schedule", "")) == "weekend"
+				else week_events).append(ev)
+	var active: Array = []
+	if not week_events.is_empty():
+		active.append(week_events[int(Time.get_unix_time_from_system() / 604800.0)
+				% week_events.size()])
+	if _is_weekend():
+		active.append_array(weekend_events)
+	return active
+
+
+## Événements à venir (affichés grisés) : ceux du week-end hors week-end.
+func upcoming_events() -> Array:
+	if _is_weekend():
+		return []
+	return events_data().filter(func(ev) -> bool:
+		return String(ev.get("schedule", "")) == "weekend")
+
+
+## Multiplicateurs des bonus actifs (appliqués aux gains de fin de partie).
+func event_multipliers() -> Dictionary:
+	var mult := { "gold": 1.0, "xp": 1.0 }
+	for ev in active_events():
+		for kind in ev.get("bonus", {}):
+			mult[kind] = float(mult.get(kind, 1.0)) * float(ev.bonus[kind])
+	return mult
+
+
+## Lance le mode spécial d'un événement "battle" (même moteur que les défis).
+func start_event_battle(ev: Dictionary) -> void:
+	var m: MasterDef = Db.master(StringName(String(ev.opponent.master)))
+	var mod: Dictionary = ev.get("mod", {})
+	battle_config = {
+		"mode": "event",
+		"chapter": -1,
+		"event": ev,
+		"challenge": { "mod": mod },   # mêmes modificateurs que les défis
+		"ai_level": int(ev.opponent.get("ai_level", 1)),
+		"opponent_master": String(m.id),
+		"opponent_deck": Db.guild_deck(m.guild),
+		"opponent_name": m.display_name,
+		"opponent_portrait": String(m.id),
+		"background": "arena_day",
+	}
+	if mod.has("deck_guild"):
+		battle_config["player_deck"] = \
+				Db.guild_deck(GUILD_BY_NAME.get(String(mod.deck_guild), GameConst.Guild.FLAME))
+	goto("battle")
+
+
+## Victoire d'un mode événement : récompense à chaque victoire.
+func event_win(ev: Dictionary) -> void:
+	_grant_reward(ev.get("win_reward", {}))
+
+
+## --- Passe de saison (resources/data/season_pass.json) -----------------------
+## Saison = mois calendaire ; XP gagnée en jouant ; récompenses par niveau.
+
+const SEASON_PATH := "res://resources/data/season_pass.json"
+
+var _season_config: Dictionary = {}
+
+
+func season_config() -> Dictionary:
+	if _season_config.is_empty():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(SEASON_PATH))
+		if data is Dictionary:
+			_season_config = data
+	return _season_config
+
+
+## État persistant de la saison courante (remise à zéro au changement de mois).
+func season_state() -> Dictionary:
+	var month := Time.get_date_string_from_system().substr(0, 7)  # AAAA-MM
+	var s: Dictionary = profile.get("season", {})
+	if String(s.get("id", "")) != month:
+		s = { "id": month, "xp": 0, "claimed": [] }
+		profile["season"] = s
+	return s
+
+
+func season_add_xp(xp: int) -> void:
+	var s := season_state()
+	s["xp"] = int(s.get("xp", 0)) + xp
+	profile["season"] = s
+	save_profile()
+
+
+func season_level() -> int:
+	return Season.level_of(int(season_state().get("xp", 0)), season_config())
+
+
+## Réclame la récompense d'un niveau atteint. {} si pas prête ou déjà prise.
+func claim_season_level(level: int) -> Dictionary:
+	var s := season_state()
+	var claimed: Array = s.get("claimed", [])
+	if level < 1 or level > season_level() or claimed.has(level):
+		return {}
+	var reward := Season.reward_for(level, season_config())
+	if reward.is_empty():
+		return {}
+	claimed.append(level)
+	s["claimed"] = claimed
+	profile["season"] = s
+	_grant_reward(reward)
+	return reward
+
+
+func quest_progress(scope: String, key: String) -> int:
+	return int(quest_state().get(scope, {}).get(key, 0))
+
+
+## Réclame la récompense de la quête n° idx ("d" ou "w"). {} si pas prête.
+func claim_quest(scope: String, idx: int) -> Dictionary:
+	var defs := daily_quests() if scope == "d" else weekly_quests()
+	if idx < 0 or idx >= defs.size():
+		return {}
+	var quest: Dictionary = defs[idx]
+	var q := quest_state()
+	var claimed: Array = q.get(scope + "claimed", [])
+	if claimed.has(idx) or quest_progress(scope, String(quest.key)) < int(quest.goal):
+		return {}
+	claimed.append(idx)
+	q[scope + "claimed"] = claimed
+	profile["quests"] = q
+	_grant_reward(quest.get("reward", {}))
+	return quest.get("reward", {})
+
+
+## Valeur d'une statistique de succès (à vie ou dérivée du profil).
+func achievement_stat(key: String) -> int:
+	match key:
+		"level":
+			return int(profile.get("player", {}).get("level", 1))
+		"campaign":
+			return int(profile.get("campaign_progress", 0))
+		"collection":
+			var distinct := 0
+			for id in profile.get("collection", {}):
+				if owned_count(String(id)) > 0:
+					distinct += 1
+			return distinct
+		"rating":
+			return int(round(float(LocalBackend.new().rating().rating)))
+		_:
+			return int(profile.get("stats", {}).get(key, 0))
+
+
+func achievement_unlocked(a: Dictionary) -> bool:
+	return achievement_stat(String(a.stat)) >= int(a.goal)
+
+
+func claim_achievement(a: Dictionary) -> Dictionary:
+	var claimed: Array = profile.get("ach_claimed", [])
+	if claimed.has(String(a.id)) or not achievement_unlocked(a):
+		return {}
+	claimed.append(String(a.id))
+	profile["ach_claimed"] = claimed
+	_grant_reward(a.get("reward", {}))
+	return a.get("reward", {})
+
+
+func _grant_reward(reward: Dictionary) -> void:
+	for kind in reward:
+		profile.currency[kind] = currency(String(kind)) + int(reward[kind])
+	save_profile()
+	profile_changed.emit()
 
 
 func goto(scene_name: String) -> void:

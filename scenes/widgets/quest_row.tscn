@@ -1,0 +1,94 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="1"]
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="2"]
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_gold.png" id="4"]
+
+[node name="QuestRow" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 96)
+theme = ExtResource("1")
+theme_type_variation = &"CurrencyChip"
+
+[node name="H" type="HBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="Icon" type="TextureRect" parent="H"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(52, 52)
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Mid" type="VBoxContainer" parent="H"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="QLabel" type="Label" parent="H/Mid"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.95, 0.92, 0.84, 1)
+theme_override_constants/outline_size = 0
+
+[node name="QDesc" type="Label" parent="H/Mid"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.7, 0.64, 1)
+theme_override_constants/outline_size = 0
+
+[node name="BarRow" type="HBoxContainer" parent="H/Mid"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="QBar" type="ProgressBar" parent="H/Mid/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 12)
+size_flags_vertical = 4
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="QCount" type="Label" parent="H/Mid/BarRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.85, 0.74, 0.5, 1)
+theme_override_constants/outline_size = 0
+
+[node name="RewardIcon" type="TextureRect" parent="H"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(30, 30)
+size_flags_vertical = 4
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RewardLabel" type="Label" parent="H"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.96, 0.9, 0.75, 1)
+theme_override_constants/outline_size = 0
+
+[node name="ClaimBtn" type="Button" parent="H"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(190, 56)
+size_flags_vertical = 4
+theme_type_variation = &"MenuNavFeatured"
+theme_override_font_sizes/font_size = 17
+text = "RÉCLAMER"

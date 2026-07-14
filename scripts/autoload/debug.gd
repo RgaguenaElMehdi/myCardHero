@@ -25,6 +25,24 @@ func _ready() -> void:
 			_schedule_forfeit()
 		elif String(arg).begins_with("--banner="):
 			_schedule_banner(String(arg).split("=", true, 1)[1])
+		elif String(arg).begins_with("--buy="):
+			_schedule_buy(String(arg).split("=", true, 1)[1])
+		elif String(arg).begins_with("--press="):
+			# Clique un bouton visible par son texte (combiner avec --screenshot).
+			var txt := String(arg).split("=", true, 1)[1]
+			get_tree().create_timer(1.5, true, false, true).timeout.connect(func() -> void:
+				var b := _find_button(get_tree().root, txt)
+				if b != null:
+					_synth_click(b.get_global_rect().get_center())
+				else:
+					print("[press] bouton introuvable : %s" % txt))
+		elif String(arg).begins_with("--select="):
+			# Sélectionne une carte dans la Collection (barre recyclage/craft).
+			var cid := String(arg).split("=", true, 1)[1]
+			get_tree().create_timer(1.2, true, false, true).timeout.connect(func() -> void:
+				var sc := get_tree().current_scene
+				if sc != null and sc.has_method("_select"):
+					sc.call("_select", cid))
 		elif String(arg).begins_with("--chapter="):
 			# Charge la config de bataille d'un chapitre (tutoriel compris)
 			# sans passer par le dialogue : combiner avec res://scenes/battle.tscn.
@@ -39,6 +57,13 @@ func _ready() -> void:
 				"opponent_portrait": String(ch.opponent.portrait),
 				"background": String(ch.get("background", "arena_day")),
 			}
+		elif String(arg).begins_with("--challenge="):
+			# Configure la bataille d'un défi (combiner avec res://scenes/battle.tscn).
+			var cid := String(arg).split("=", true, 1)[1]
+			for ch in Game.challenges():
+				if String(ch.get("id", "")) == cid:
+					Game.start_challenge(ch)
+					break
 		elif String(arg).begins_with("--nettest="):
 			_schedule_nettest(String(arg).split("=", true, 1)[1])
 		elif String(arg).begins_with("--serve"):
@@ -142,6 +167,23 @@ func _schedule_banner(text: String) -> void:
 	var sc := get_tree().current_scene
 	if sc is Control:
 		BattleFx.banner(sc as Control, text, UiTheme.GOLD)
+
+
+## Achète un booster sur la scène Boutique : `--buy=<booster_id>`
+## (combiner avec --screenshot pour capturer la révélation).
+func _schedule_buy(booster_id: String) -> void:
+	await get_tree().create_timer(1.2, true, false, true).timeout
+	var sc := get_tree().current_scene
+	if sc == null or not sc.has_method("_buy"):
+		print("[buy] la scène courante n'est pas la boutique")
+		return
+	var data = JSON.parse_string(
+			FileAccess.get_file_as_string("res://resources/data/shop.json"))
+	for spec in data.get("boosters", []):
+		if String(spec.get("id", "")) == booster_id:
+			sc.call("_buy", spec)
+			return
+	print("[buy] booster inconnu : %s" % booster_id)
 
 
 ## Abandonne la partie après ~1 s (capture de l'écran de défaite) : `--forfeit`.

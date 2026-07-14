@@ -1,0 +1,50 @@
+[
+	{
+		"id": "last_breath",
+		"name": "À un souffle",
+		"desc": "Commencez le duel avec 10 PV seulement. Chaque erreur peut être la dernière.",
+		"mod": { "player_hp": 10 },
+		"opponent": { "master": "brand", "ai_level": 1 },
+		"reward": { "gold": 150 }
+	},
+	{
+		"id": "sylvan_soul",
+		"name": "Âme sylvestre",
+		"desc": "Jouez le deck de guilde Sylve imposé, quelles que soient vos cartes.",
+		"mod": { "deck_guild": "sylvan" },
+		"opponent": { "master": "grim", "ai_level": 1 },
+		"reward": { "gold": 150 }
+	},
+	{
+		"id": "glass_duel",
+		"name": "Duel de verre",
+		"desc": "Les deux Maîtres n'ont que 10 PV. Le premier qui frappe l'emporte.",
+		"mod": { "player_hp": 10, "opponent_hp": 10 },
+		"opponent": { "master": "vane", "ai_level": 1 },
+		"reward": { "gold": 120 }
+	},
+	{
+		"id": "boss_kiran",
+		"name": "Boss : Kiran l'Ardent",
+		"desc": "Le Forgeron des Braises entre dans la Fosse avec 35 PV et une IA redoutable.",
+		"mod": { "opponent_hp": 35 },
+		"opponent": { "master": "kiran", "ai_level": 2 },
+		"reward": { "shards": 120 }
+	},
+	{
+		"id": "boss_willow",
+		"name": "Boss : Willow l'Ancienne",
+		"desc": "La Gardienne du Vieux Chêne — 35 PV, racines profondes, patience infinie.",
+		"mod": { "opponent_hp": 35 },
+		"opponent": { "master": "willow", "ai_level": 2 },
+		"reward": { "shards": 150 }
+	},
+	{
+		"id": "flame_soul",
+		"name": "Cœur de braise",
+		"desc": "Jouez le deck de guilde Flamme imposé contre le Bouclier du Temple.",
+		"mod": { "deck_guild": "flame" },
+		"opponent": { "master": "aria", "ai_level": 1 },
+		"reward": { "gold": 150 }
+	}
+]

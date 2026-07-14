@@ -1,0 +1,53 @@
+[
+	{
+		"id": "gold_rush",
+		"name": "Ruée vers l'Or",
+		"desc": "Toute la semaine : +50 % d'Or gagné à chaque partie.",
+		"schedule": "week",
+		"kind": "bonus",
+		"bonus": { "gold": 1.5 },
+		"icon": "res://assets/sprites/ui/menu/icon_gold.png"
+	},
+	{
+		"id": "festival_sylve",
+		"name": "Festival de la Sylve",
+		"desc": "Mode spécial : les deux camps jouent le deck de guilde Sylve. Chaque victoire rapporte 60 Or.",
+		"schedule": "week",
+		"kind": "battle",
+		"mod": { "deck_guild": "sylvan" },
+		"opponent": { "master": "rowan", "ai_level": 1 },
+		"win_reward": { "gold": 60 },
+		"icon": "res://assets/sprites/ui/deck/guild_sylvan.png"
+	},
+	{
+		"id": "festival_flamme",
+		"name": "Festival de la Flamme",
+		"desc": "Mode spécial : les deux camps jouent le deck de guilde Flamme. Chaque victoire rapporte 60 Or.",
+		"schedule": "week",
+		"kind": "battle",
+		"mod": { "deck_guild": "flame" },
+		"opponent": { "master": "kiran", "ai_level": 1 },
+		"win_reward": { "gold": 60 },
+		"icon": "res://assets/sprites/ui/deck/guild_flame.png"
+	},
+	{
+		"id": "double_xp",
+		"name": "Week-end Double XP",
+		"desc": "Du vendredi au dimanche : l'XP de Maître et l'XP de passe sont doublées.",
+		"schedule": "weekend",
+		"kind": "bonus",
+		"bonus": { "xp": 2.0 },
+		"icon": "res://assets/sprites/ui/menu/icon_pass.png"
+	},
+	{
+		"id": "duel_eclair",
+		"name": "Duel éclair",
+		"desc": "Mode spécial du week-end : 10 PV chacun, le premier qui frappe l'emporte. 40 Or par victoire.",
+		"schedule": "weekend",
+		"kind": "battle",
+		"mod": { "player_hp": 10, "opponent_hp": 10 },
+		"opponent": { "master": "vane", "ai_level": 1 },
+		"win_reward": { "gold": 40 },
+		"icon": "res://assets/sprites/ui/menu/icon_free.png"
+	}
+]

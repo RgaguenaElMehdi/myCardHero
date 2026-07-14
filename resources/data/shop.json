@@ -1,0 +1,22 @@
+{
+	"boosters": [
+		{
+			"id": "booster_standard",
+			"name": "Booster standard",
+			"desc": "5 cartes aléatoires, dont au moins une Rare.",
+			"price": 100,
+			"cards": 5,
+			"min_rarity": "rare",
+			"featured": false
+		},
+		{
+			"id": "booster_grand",
+			"name": "Grand booster",
+			"desc": "12 cartes aléatoires, dont au moins une Épique.",
+			"price": 250,
+			"cards": 12,
+			"min_rarity": "epique",
+			"featured": true
+		}
+	]
+}

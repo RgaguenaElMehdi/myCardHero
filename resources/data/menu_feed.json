@@ -1,12 +1,7 @@
 {
-	"event": {
-		"kicker": "ÉVÉNEMENT",
-		"title": "FESTIVAL DE PETRAHEIM",
-		"ends": "Fin dans 6j 14h"
-	},
 	"news": [
-		"Mise à jour 1.1 : nouvelles cartes et équilibrages",
-		"L'événement Double XP est en cours !",
-		"Rejoignez notre Discord pour plus d'infos."
+		"Boutique ouverte : boosters contre de l'Or !",
+		"Recyclez vos doublons en Essence dans la Collection.",
+		"Le défi de la semaine double sa récompense."
 	]
 }

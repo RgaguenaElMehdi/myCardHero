@@ -26,6 +26,11 @@ const SUB_FEATURED := Color(0.35, 0.25, 0.1)
 	set(v):
 		featured = v
 		_apply()
+## Taille de police du titre (0 = valeur de la scène) — tuiles compactes du hub.
+@export var title_size := 0:
+	set(v):
+		title_size = v
+		_apply()
 
 
 func _ready() -> void:
@@ -43,5 +48,7 @@ func _apply() -> void:
 	%Icon.texture = icon_texture
 	%Title.add_theme_color_override("font_color",
 			TITLE_FEATURED if featured else TITLE_COLOR)
+	if title_size > 0:
+		%Title.add_theme_font_size_override("font_size", title_size)
 	%Subtitle.add_theme_color_override("font_color",
 			SUB_FEATURED if featured else SUB_COLOR)

@@ -28,7 +28,7 @@ func _ready() -> void:
 		var m: MasterDef = Db.masters[id]
 		var mid := String(m.id)
 		_opponents.append({ "master": mid,
-				"deck": campaign_decks.get(mid, _guild_deck(m)) })
+				"deck": campaign_decks.get(mid, Db.guild_deck(m.guild)) })
 	for i in _opponents.size():
 		_cards.append(_make_card(i))
 
@@ -73,27 +73,6 @@ func _make_card(i: int) -> Button:
 	card.pressed.connect(_pick_opp.bind(i))
 	card.pressed.connect(UiTheme._click_sfx)
 	return card
-
-
-## Deck d'un maître sans deck de campagne : ses cartes de guilde en double,
-## complété avec les cartes les moins chères des autres guildes.
-func _guild_deck(m: MasterDef) -> Array:
-	var own: Array[CardDef] = []
-	var rest: Array[CardDef] = []
-	for c in Db.constructible_cards():
-		(own if c.guild == m.guild else rest).append(c)
-	var by_cost := func(a: CardDef, b: CardDef) -> bool: return a.cost < b.cost
-	own.sort_custom(by_cost)
-	rest.sort_custom(by_cost)
-	var deck: Array = []
-	for c in own:
-		deck.append(String(c.id))
-		deck.append(String(c.id))
-	for c in rest:
-		if deck.size() >= GameConst.DECK_SIZE:
-			break
-		deck.append(String(c.id))
-	return deck.slice(0, GameConst.DECK_SIZE)
 
 
 func _pick_opp(i: int) -> void:

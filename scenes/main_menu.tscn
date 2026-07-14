@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3]
+[gd_scene load_steps=36 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="2"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_campaign.png" id="9"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_free.png" id="10"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_deck.png" id="11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_collection.png" id="12"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_shop.png" id="13"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_quests.png" id="14"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_pass.png" id="15"]
@@ -27,6 +28,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/avatar_player.png" id="26"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/rank_badge.png" id="27"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_quit.png" id="28"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/gold/icon_book_open.png" id="29"]
 
 [sub_resource type="Gradient" id="bg_grad"]
 offsets = PackedFloat32Array(0, 0.55, 1)
@@ -178,63 +180,106 @@ theme_override_constants/outline_size = 6
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.6)
 text = "LE JEU DE CARTES TACTIQUE"
 
-[node name="NavColumn" type="VBoxContainer" parent="SafeArea/Layout"]
+[node name="PlayBtn" type="Button" parent="SafeArea/Layout"]
 unique_name_in_owner = true
 layout_mode = 1
 offset_left = 4.0
-offset_top = 268.0
+offset_top = 262.0
 offset_right = 474.0
-offset_bottom = 880.0
-theme_override_constants/separation = 12
+offset_bottom = 386.0
+theme_type_variation = &"MenuNavFeatured"
+theme_override_fonts/font = ExtResource("4")
+theme_override_font_sizes/font_size = 52
+theme_override_colors/font_color = Color(0.16, 0.11, 0.04, 1)
+theme_override_colors/font_outline_color = Color(1, 0.95, 0.8, 0.35)
+theme_override_constants/outline_size = 2
+text = "JOUER"
+
+[node name="PlayHint" type="Label" parent="SafeArea/Layout"]
+layout_mode = 1
+offset_left = 4.0
+offset_top = 390.0
+offset_right = 474.0
+offset_bottom = 414.0
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.78, 0.76, 0.7, 1)
+theme_override_constants/outline_size = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.6)
+horizontal_alignment = 1
+text = "Partie rapide — trouvez un adversaire"
+mouse_filter = 2
+
+[node name="FreeBtn" parent="SafeArea/Layout" instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 4.0
+offset_top = 424.0
+offset_right = 474.0
+offset_bottom = 498.0
+title = "PARTIE LIBRE"
+title_size = 21
+subtitle = "Affrontez l'IA de votre choix"
+icon_texture = ExtResource("10")
+
+[node name="NavColumn" type="GridContainer" parent="SafeArea/Layout"]
+unique_name_in_owner = true
+layout_mode = 1
+offset_left = 4.0
+offset_top = 530.0
+offset_right = 474.0
+offset_bottom = 790.0
+columns = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
 
 [node name="CampaignBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(470, 106)
+custom_minimum_size = Vector2(230, 110)
 title = "CAMPAGNE"
-subtitle = "Le Circuit de Petraheim"
+title_size = 19
 icon_texture = ExtResource("9")
-featured = true
 
 [node name="ArenaBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(470, 88)
+custom_minimum_size = Vector2(230, 110)
 title = "ARÈNE"
-subtitle = "Classé et parties en ligne"
-icon_texture = ExtResource("16")
+title_size = 19
+icon_texture = ExtResource("10")
 
-[node name="FreeBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
+[node name="ChallengesBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(470, 88)
-title = "PARTIE LIBRE"
-subtitle = "Affrontez l'IA"
-icon_texture = ExtResource("10")
+custom_minimum_size = Vector2(230, 110)
+title = "DÉFIS"
+title_size = 19
+icon_texture = ExtResource("14")
+
+[node name="CollectionBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(230, 110)
+title = "COLLECTION"
+title_size = 19
+icon_texture = ExtResource("12")
 
 [node name="DeckBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(470, 88)
+custom_minimum_size = Vector2(230, 110)
 title = "DECK BUILDER"
-subtitle = "Construisez votre deck"
+title_size = 19
 icon_texture = ExtResource("11")
 
 [node name="ShopBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
 unique_name_in_owner = true
 layout_mode = 2
-custom_minimum_size = Vector2(470, 88)
+custom_minimum_size = Vector2(230, 110)
 title = "BOUTIQUE"
-subtitle = "Paquets et cosmétiques"
+title_size = 19
 icon_texture = ExtResource("13")
-
-[node name="QuitBtn" parent="SafeArea/Layout/NavColumn" instance=ExtResource("5")]
-unique_name_in_owner = true
-layout_mode = 2
-custom_minimum_size = Vector2(470, 88)
-title = "QUITTER"
-subtitle = "Fermer le jeu"
-icon_texture = ExtResource("28")
 
 [node name="TopBar" type="HBoxContainer" parent="SafeArea/Layout"]
 unique_name_in_owner = true
@@ -249,6 +294,7 @@ theme_override_constants/separation = 12
 
 [node name="GoldChip" type="PanelContainer" parent="SafeArea/Layout/TopBar"]
 layout_mode = 2
+tooltip_text = "Or — gagné en jouant"
 theme_type_variation = &"CurrencyChip"
 
 [node name="Row" type="HBoxContainer" parent="SafeArea/Layout/TopBar/GoldChip"]
@@ -275,6 +321,7 @@ text = "0"
 
 [node name="ShardChip" type="PanelContainer" parent="SafeArea/Layout/TopBar"]
 layout_mode = 2
+tooltip_text = "Essence — recyclage et fabrication de cartes"
 theme_type_variation = &"CurrencyChip"
 
 [node name="Row" type="HBoxContainer" parent="SafeArea/Layout/TopBar/ShardChip"]
@@ -301,6 +348,7 @@ text = "0"
 
 [node name="GemChip" type="PanelContainer" parent="SafeArea/Layout/TopBar"]
 layout_mode = 2
+tooltip_text = "Cristaux — monnaie premium"
 theme_type_variation = &"CurrencyChip"
 
 [node name="Row" type="HBoxContainer" parent="SafeArea/Layout/TopBar/GemChip"]
@@ -390,6 +438,7 @@ mouse_filter = 2
 
 [node name="EventBanner" type="PanelContainer" parent="SafeArea/Layout"]
 unique_name_in_owner = true
+mouse_default_cursor_shape = 2
 layout_mode = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -448,28 +497,288 @@ theme_override_constants/outline_size = 0
 text = "Fin dans 6j 14h"
 horizontal_alignment = 1
 
-[node name="Dots" type="HBoxContainer" parent="SafeArea/Layout/EventBanner/Row/Infos"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 8
+[node name="QuestsPanel" type="PanelContainer" parent="SafeArea/Layout"]
+unique_name_in_owner = true
+mouse_default_cursor_shape = 2
+tooltip_text = "Voir toutes les quêtes et les succès"
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -470.0
+offset_top = 268.0
+offset_bottom = 520.0
+grow_horizontal = 0
+theme_type_variation = &"NightPanel"
 
-[node name="Dot1" type="Panel" parent="SafeArea/Layout/EventBanner/Row/Infos/Dots"]
+[node name="QBox" type="VBoxContainer" parent="SafeArea/Layout/QuestsPanel"]
 layout_mode = 2
-custom_minimum_size = Vector2(10, 10)
-theme_override_styles/panel = SubResource("dot_on")
+theme_override_constants/separation = 10
 
-[node name="Dot2" type="Panel" parent="SafeArea/Layout/EventBanner/Row/Infos/Dots"]
+[node name="QHead" type="HBoxContainer" parent="SafeArea/Layout/QuestsPanel/QBox"]
 layout_mode = 2
-custom_minimum_size = Vector2(10, 10)
-theme_override_styles/panel = SubResource("dot_off")
 
-[node name="Dot3" type="Panel" parent="SafeArea/Layout/EventBanner/Row/Infos/Dots"]
+[node name="QTitle" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/QHead"]
 layout_mode = 2
-custom_minimum_size = Vector2(10, 10)
-theme_override_styles/panel = SubResource("dot_off")
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.85, 0.74, 0.5, 1)
+theme_override_constants/outline_size = 0
+text = "QUÊTES DU JOUR"
+
+[node name="QHint" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/QHead"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.95, 0.88, 0.72, 1)
+theme_override_constants/outline_size = 0
+text = "Tout voir  ❯"
+
+[node name="Quest0" type="VBoxContainer" parent="SafeArea/Layout/QuestsPanel/QBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Row" type="HBoxContainer" parent="SafeArea/Layout/QuestsPanel/QBox/Quest0"]
+layout_mode = 2
+
+[node name="Quest0Label" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/Quest0/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.9, 0.87, 0.8, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Quest0Count" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/Quest0/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.85, 0.74, 0.5, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Quest0Bar" type="ProgressBar" parent="SafeArea/Layout/QuestsPanel/QBox/Quest0"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="Quest1" type="VBoxContainer" parent="SafeArea/Layout/QuestsPanel/QBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Row" type="HBoxContainer" parent="SafeArea/Layout/QuestsPanel/QBox/Quest1"]
+layout_mode = 2
+
+[node name="Quest1Label" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/Quest1/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.9, 0.87, 0.8, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Quest1Count" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/Quest1/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.85, 0.74, 0.5, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Quest1Bar" type="ProgressBar" parent="SafeArea/Layout/QuestsPanel/QBox/Quest1"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="Quest2" type="VBoxContainer" parent="SafeArea/Layout/QuestsPanel/QBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Row" type="HBoxContainer" parent="SafeArea/Layout/QuestsPanel/QBox/Quest2"]
+layout_mode = 2
+
+[node name="Quest2Label" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/Quest2/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.9, 0.87, 0.8, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Quest2Count" type="Label" parent="SafeArea/Layout/QuestsPanel/QBox/Quest2/Row"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.85, 0.74, 0.5, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Quest2Bar" type="ProgressBar" parent="SafeArea/Layout/QuestsPanel/QBox/Quest2"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 12)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="OffersPanel" type="PanelContainer" parent="SafeArea/Layout"]
+unique_name_in_owner = true
+mouse_default_cursor_shape = 2
+tooltip_text = "Ouvrir la boutique"
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -470.0
+offset_top = 536.0
+offset_bottom = 730.0
+grow_horizontal = 0
+theme_type_variation = &"NightPanel"
+
+[node name="OBox" type="VBoxContainer" parent="SafeArea/Layout/OffersPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="OHead" type="HBoxContainer" parent="SafeArea/Layout/OffersPanel/OBox"]
+layout_mode = 2
+
+[node name="OTitle" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OHead"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.85, 0.74, 0.5, 1)
+theme_override_constants/outline_size = 0
+text = "OFFRES DU JOUR"
+
+[node name="OHint" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OHead"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.95, 0.88, 0.72, 1)
+theme_override_constants/outline_size = 0
+text = "Boutique  ❯"
+
+[node name="OffersRow" type="HBoxContainer" parent="SafeArea/Layout/OffersPanel/OBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="Offer1" type="PanelContainer" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CurrencyChip"
+
+[node name="V" type="VBoxContainer" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer1"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="I" type="TextureRect" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer1/V"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+texture = ExtResource("13")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="N" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer1/V"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.9, 0.87, 0.8, 1)
+theme_override_constants/outline_size = 0
+text = "Booster du jour"
+
+[node name="S" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer1/V"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.62, 0.6, 0.55, 1)
+theme_override_constants/outline_size = 0
+text = "Bientôt"
+
+[node name="Offer2" type="PanelContainer" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CurrencyChip"
+
+[node name="V" type="VBoxContainer" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer2"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="I" type="TextureRect" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer2/V"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+texture = ExtResource("19")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="N" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer2/V"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.9, 0.87, 0.8, 1)
+theme_override_constants/outline_size = 0
+text = "Pack débutant"
+
+[node name="S" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer2/V"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.62, 0.6, 0.55, 1)
+theme_override_constants/outline_size = 0
+text = "Bientôt"
+
+[node name="Offer3" type="PanelContainer" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CurrencyChip"
+
+[node name="V" type="VBoxContainer" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer3"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="I" type="TextureRect" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer3/V"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 44)
+texture = ExtResource("23")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="N" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer3/V"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.9, 0.87, 0.8, 1)
+theme_override_constants/outline_size = 0
+text = "Offre cristaux"
+
+[node name="S" type="Label" parent="SafeArea/Layout/OffersPanel/OBox/OffersRow/Offer3/V"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.62, 0.6, 0.55, 1)
+theme_override_constants/outline_size = 0
+text = "Bientôt"
 
 [node name="ProfilePanel" type="PanelContainer" parent="SafeArea/Layout"]
 unique_name_in_owner = true
+mouse_default_cursor_shape = 2
 layout_mode = 1
 anchor_top = 1.0
 anchor_bottom = 1.0
@@ -561,32 +870,32 @@ offset_top = -268.0
 offset_bottom = -168.0
 grow_horizontal = 0
 grow_vertical = 0
+alignment = 2
 theme_override_constants/separation = 14
 
-[node name="QuestsBtn" parent="SafeArea/Layout/SecondaryNav" instance=ExtResource("6")]
+[node name="CodexBtn" parent="SafeArea/Layout/SecondaryNav" instance=ExtResource("6")]
 unique_name_in_owner = true
 layout_mode = 2
-title = "QUÊTES"
-icon_texture = ExtResource("14")
+title = "CODEX"
+icon_texture = ExtResource("29")
 
 [node name="PassBtn" parent="SafeArea/Layout/SecondaryNav" instance=ExtResource("6")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "PASSE"
 icon_texture = ExtResource("15")
-badge_count = 2
-
-[node name="RankingBtn" parent="SafeArea/Layout/SecondaryNav" instance=ExtResource("6")]
-unique_name_in_owner = true
-layout_mode = 2
-title = "CLASSEMENT"
-icon_texture = ExtResource("16")
 
 [node name="SettingsBtn" parent="SafeArea/Layout/SecondaryNav" instance=ExtResource("6")]
 unique_name_in_owner = true
 layout_mode = 2
 title = "PARAMÈTRES"
 icon_texture = ExtResource("17")
+
+[node name="QuitBtn" parent="SafeArea/Layout/SecondaryNav" instance=ExtResource("6")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "QUITTER"
+icon_texture = ExtResource("28")
 
 [node name="NewsPanel" type="PanelContainer" parent="SafeArea/Layout"]
 unique_name_in_owner = true

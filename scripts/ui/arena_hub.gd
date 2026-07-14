@@ -5,13 +5,6 @@ extends Control
 ## paliers, puis quêtes du jour, stats et COMBATTRE en bas.
 ## Structure dans arena_hub[_mobile].tscn — logique seulement ici.
 
-## Quêtes du jour : [compteur profil, objectif, libellé]
-const QUESTS := [
-	["wins", 3, "Gagner 3 combats"],
-	["powers", 10, "Utiliser 10 pouvoirs"],
-	["wins", 1, "Remporter 1 victoire"],
-]
-
 const GOLD := Color(0.902, 0.765, 0.353)
 const DIM := Color(0.55, 0.52, 0.46)
 
@@ -146,11 +139,11 @@ func _fill_stats(r: Dictionary) -> void:
 
 
 func _fill_quests() -> void:
-	var q := Game.quest_state()
-	for i in QUESTS.size():
-		var done: int = mini(int(q.get(QUESTS[i][0], 0)), int(QUESTS[i][1]))
-		var goal: int = QUESTS[i][1]
-		(get_node("%%Quest%dLabel" % i) as Label).text = QUESTS[i][2]
+	var defs := Game.daily_quests()
+	for i in mini(3, defs.size()):
+		var goal := int(defs[i].goal)
+		var done := mini(Game.quest_progress("d", String(defs[i].key)), goal)
+		(get_node("%%Quest%dLabel" % i) as Label).text = String(defs[i].label)
 		(get_node("%%Quest%dCount" % i) as Label).text = "%d/%d" % [done, goal]
 		var bar := get_node("%%Quest%dBar" % i) as ProgressBar
 		bar.max_value = goal

@@ -55,6 +55,8 @@ var kills := [0, 0]
 var _stat_start_ms := 0
 var _stat_cards := 0
 var _stat_summons := 0
+## PV de départ des Maîtres (max des barres de vie — un défi peut les modifier).
+var _start_hp := [0, 0]
 
 var enemy_info: Dictionary = {}
 var player_info: Dictionary = {}
@@ -201,11 +203,20 @@ func _setup_match() -> void:
 	_mission = Db.chapter(int(cfg.get("chapter", -1))).get("mission", {}) \
 			if int(cfg.get("chapter", -1)) >= 0 else {}
 	var player_deck: Array = _mission.get("player_deck", my_deck.cards)
+	if cfg.has("player_deck"):
+		player_deck = cfg.player_deck        # deck imposé par un défi
 	var m0: MasterDef = Db.master(StringName(String(my_deck.master)))
 	var m1: MasterDef = Db.master(StringName(String(cfg.opponent_master)))
 	state = _match.setup(Db.cards, [m0, m1],
 			[player_deck, cfg.opponent_deck], randi())
 	ai = AiPlayer.new(int(cfg.ai_level), randi())
+	# Modificateurs de règles d'un défi : PV de départ des Maîtres.
+	var mod: Dictionary = cfg.get("challenge", {}).get("mod", {})
+	if mod.has("player_hp"):
+		state.players[0].master_hp = int(mod.player_hp)
+	if mod.has("opponent_hp"):
+		state.players[1].master_hp = int(mod.opponent_hp)
+	_start_hp = [state.players[0].master_hp, state.players[1].master_hp]
 	if _mission.is_empty():
 		_refresh_all()
 		_show_mulligan()
@@ -534,9 +545,11 @@ func _refresh_panels() -> void:
 		info.portrait.texture = UiTheme.tex(portraits[side])
 		info.name.text = names[side]
 		info.master.text = "Maître : %s" % p.master.display_name
-		info.hp_bar.max_value = p.master.hp
+		var hp_max: int = maxi(int(_start_hp[side]), p.master.hp) \
+				if int(_start_hp[side]) > 0 else p.master.hp
+		info.hp_bar.max_value = hp_max
 		info.hp_bar.value = maxi(p.master_hp, 0)
-		info.hp.text = "%d / %d" % [maxi(p.master_hp, 0), p.master.hp]
+		info.hp.text = "%d / %d" % [maxi(p.master_hp, 0), hp_max]
 		info.stones.text = "%d / %d" % [p.stones, GameConst.MAX_STONES]
 		# Barre d'énergie (scènes or) — optionnelle, les anciennes scènes n'en ont pas.
 		var ebar := get_node_or_null("%EnemyEnergyBar" if side == 1 else "%PlayerEnergyBar")
@@ -1364,8 +1377,12 @@ func _on_abandon() -> void:
 func _show_game_over() -> void:
 	var won := state.winner == 0
 	Game.last_battle_won = won
-	if won:
-		Game.quest_bump("wins")            # quêtes quotidiennes « victoires »
+	# Compteurs de quêtes (jour/semaine) et de succès (à vie).
+	Game.report_battle(won, _stat_cards, _stat_summons, int(kills[0]))
+	if won and String(Game.battle_config.get("mode", "")) == "challenge":
+		Game.complete_challenge(Game.battle_config.get("challenge", {}))
+	if won and String(Game.battle_config.get("mode", "")) == "event":
+		Game.event_win(Game.battle_config.get("event", {}))
 	# Ranked match → update the local MMR (Glicko-2). Opponent rating is neutral
 	# here; a hosted backend would exchange the real rating via the server.
 	var ranked := bool(Game.battle_config.get("ranked", false))

@@ -1,0 +1,462 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/profile_scene.gd" id="1"]
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="2"]
+[ext_resource type="FontVariation" path="res://resources/cinzel_bold.tres" id="3"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/freeplay_1920.png" id="4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/avatar_player.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/ui/battle/rank_crest.png" id="6"]
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="7"]
+
+[node name="ProfileScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2")
+script = ExtResource("1")
+
+[node name="BG" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BackBtn" type="Button" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 28.0
+offset_top = 26.0
+offset_right = 196.0
+offset_bottom = 78.0
+theme_type_variation = &"MenuTabButton"
+theme_override_font_sizes/font_size = 20
+text = "✕  Retour"
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -400.0
+offset_top = 52.0
+offset_right = 400.0
+offset_bottom = 104.0
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.85)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 38
+theme_override_fonts/font = ExtResource("3")
+text = "—  PROFIL  —"
+mouse_filter = 2
+
+[node name="IdentityPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 140.0
+offset_right = 560.0
+offset_bottom = 940.0
+theme_type_variation = &"NightPanel"
+
+[node name="IBox" type="VBoxContainer" parent="IdentityPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="AvatarFrame" type="PanelContainer" parent="IdentityPanel/IBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"CurrencyChip"
+
+[node name="Avatar" type="TextureRect" parent="IdentityPanel/IBox/AvatarFrame"]
+layout_mode = 2
+custom_minimum_size = Vector2(170, 170)
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="NameEdit" type="LineEdit" parent="IdentityPanel/IBox"]
+tooltip_text = "Cliquez pour changer votre nom"
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 1
+flat = true
+max_length = 20
+caret_blink = true
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+
+[node name="TitleLabel" type="Label" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.85, 0.74, 0.5, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Sep1" type="HSeparator" parent="IdentityPanel/IBox"]
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.95, 0.88, 0.72, 1)
+theme_override_constants/outline_size = 0
+
+[node name="XpBar" type="ProgressBar" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 16)
+theme_type_variation = &"XpBar"
+show_percentage = false
+
+[node name="XpPts" type="Label" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.78, 0.76, 0.7, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Sep2" type="HSeparator" parent="IdentityPanel/IBox"]
+layout_mode = 2
+
+[node name="RankCrest" type="TextureRect" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 120)
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RankName" type="Label" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="RankPts" type="Label" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.78, 0.76, 0.7, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Sep3" type="HSeparator" parent="IdentityPanel/IBox"]
+layout_mode = 2
+
+[node name="CreatedLabel" type="Label" parent="IdentityPanel/IBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.68, 0.66, 0.6, 1)
+theme_override_constants/outline_size = 0
+
+[node name="StatsPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 580.0
+offset_top = 140.0
+offset_right = 1360.0
+offset_bottom = 520.0
+theme_type_variation = &"NightPanel"
+
+[node name="SBox" type="VBoxContainer" parent="StatsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="STitle" type="Label" parent="StatsPanel/SBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_constants/outline_size = 0
+text = "✦  STATISTIQUES  ✦"
+
+[node name="Grid" type="GridContainer" parent="StatsPanel/SBox"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 4
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 18
+
+[node name="C0" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatWins" type="Label" parent="StatsPanel/SBox/Grid/C0"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L0" type="Label" parent="StatsPanel/SBox/Grid/C0"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Victoires"
+
+[node name="C1" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatLosses" type="Label" parent="StatsPanel/SBox/Grid/C1"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L1" type="Label" parent="StatsPanel/SBox/Grid/C1"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Défaites"
+
+[node name="C2" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatRatio" type="Label" parent="StatsPanel/SBox/Grid/C2"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L2" type="Label" parent="StatsPanel/SBox/Grid/C2"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Taux de victoire"
+
+[node name="C3" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatStreak" type="Label" parent="StatsPanel/SBox/Grid/C3"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L3" type="Label" parent="StatsPanel/SBox/Grid/C3"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Série en cours"
+
+[node name="C4" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatGames" type="Label" parent="StatsPanel/SBox/Grid/C4"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L4" type="Label" parent="StatsPanel/SBox/Grid/C4"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Parties jouées"
+
+[node name="C5" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatCards" type="Label" parent="StatsPanel/SBox/Grid/C5"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L5" type="Label" parent="StatsPanel/SBox/Grid/C5"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Cartes possédées"
+
+[node name="C6" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatMasters" type="Label" parent="StatsPanel/SBox/Grid/C6"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L6" type="Label" parent="StatsPanel/SBox/Grid/C6"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Maîtres débloqués"
+
+[node name="C7" type="VBoxContainer" parent="StatsPanel/SBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatChapters" type="Label" parent="StatsPanel/SBox/Grid/C7"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="L7" type="Label" parent="StatsPanel/SBox/Grid/C7"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.72, 0.68, 0.6, 1)
+theme_override_constants/outline_size = 0
+text = "Étapes de campagne"
+
+[node name="FavPanel" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 1380.0
+offset_top = 140.0
+offset_right = 1872.0
+offset_bottom = 520.0
+theme_type_variation = &"NightPanel"
+
+[node name="FBox" type="VBoxContainer" parent="FavPanel"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 8
+
+[node name="FTitle" type="Label" parent="FavPanel/FBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_constants/outline_size = 0
+text = "MAÎTRE FAVORI"
+
+[node name="FavPortrait" type="TextureRect" parent="FavPanel/FBox"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 200)
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FavName" type="Label" parent="FavPanel/FBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(0.97, 0.94, 0.86, 1)
+theme_override_constants/outline_size = 0
+
+[node name="FavTitle" type="Label" parent="FavPanel/FBox"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("7")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.78, 0.76, 0.7, 1)
+theme_override_constants/outline_size = 0
+
+[node name="BadgesPanel" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 580.0
+offset_top = 540.0
+offset_right = 1872.0
+offset_bottom = 940.0
+theme_type_variation = &"NightPanel"
+
+[node name="BBox" type="VBoxContainer" parent="BadgesPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BTitle" type="Label" parent="BadgesPanel/BBox"]
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("3")
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.902, 0.765, 0.353, 1)
+theme_override_constants/outline_size = 0
+text = "✦  BADGES  ✦"
+
+[node name="BadgeGrid" type="GridContainer" parent="BadgesPanel/BBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+columns = 4
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12

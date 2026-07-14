@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Theme" path="res://resources/ui_theme.tres" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/Cinzel.ttf" id="2"]
+
+[node name="BadgeChip" type="PanelContainer"]
+custom_minimum_size = Vector2(0, 128)
+theme = ExtResource("1")
+theme_type_variation = &"CurrencyChip"
+
+[node name="V" type="VBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+custom_minimum_size = Vector2(0, 46)
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Name" type="Label" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.95, 0.88, 0.72, 1)
+theme_override_constants/outline_size = 0
+
+[node name="Desc" type="Label" parent="V"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.68, 0.66, 0.6, 1)
+theme_override_constants/outline_size = 0

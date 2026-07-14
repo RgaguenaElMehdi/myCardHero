@@ -69,6 +69,30 @@ func constructible_cards() -> Array[CardDef]:
 	return result
 
 
+## Deck générique dominé par une guilde : ses cartes en double, complété avec
+## les cartes les moins chères des autres guildes (partie libre, défis).
+func guild_deck(guild: GameConst.Guild) -> Array:
+	var own: Array[CardDef] = []
+	var rest: Array[CardDef] = []
+	for c in constructible_cards():
+		(own if c.guild == guild else rest).append(c)
+	var by_cost := func(a: CardDef, b: CardDef) -> bool: return a.cost < b.cost
+	own.sort_custom(by_cost)
+	rest.sort_custom(by_cost)
+	var deck: Array = []
+	for c in own:
+		deck.append(String(c.id))
+		deck.append(String(c.id))
+	for c in rest:
+		if deck.size() >= GameConst.DECK_SIZE:
+			break
+		deck.append(String(c.id))
+		if deck.size() >= GameConst.DECK_SIZE:
+			break
+		deck.append(String(c.id))
+	return deck.slice(0, GameConst.DECK_SIZE)
+
+
 # --- Asset path conventions (all visuals live under assets/) -----------
 
 static func card_art_path(id: StringName) -> String:

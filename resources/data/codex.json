@@ -1,0 +1,30 @@
+{
+	"story": [
+		"Aux origines, le monde de Stonebound n'était qu'un archipel de royaumes dispersés, séparés par des mers de brume. C'est la découverte des Pierres de Lien — des cristaux nés du cœur du monde — qui changea tout : quiconque scelle un pacte avec une Pierre peut appeler à ses côtés des Gardiens, créatures liées aux forces primordiales.",
+		"Ceux qui maîtrisent cet art portent le nom de Maîtres. Plutôt que de laisser les royaumes s'entre-déchirer, les premiers Maîtres fondèrent les Arènes : des lieux sacrés où les différends se règlent en duels codifiés, Gardien contre Gardien, sans qu'aucun sang de royaume ne soit versé.",
+		"Chaque année, le Grand Tournoi de Petraheim rassemble les meilleurs Maîtres de toutes les guildes. Y triompher, c'est prouver la valeur de son royaume, de sa guilde — et de son lien. Les Pierres, dit-on, choisissent leurs porteurs autant qu'elles sont choisies.",
+		"On raconte enfin que les Pierres de Lien murmureraient entre elles, et que le jour où toutes parleront d'une seule voix, les Arènes elles-mêmes révéleront pourquoi le cœur du monde a voulu être partagé."
+	],
+	"guilds": {
+		"flame": {
+			"name": "La Flamme",
+			"realm": "Les Forges de Pyra",
+			"desc": "Royaume de volcans et de cités-forges. Ses Gardiens frappent vite et fort : agression, dégâts directs et sacrifices calculés. La devise des forgerons : « Ce qui ne brûle pas s'éteint. »"
+		},
+		"sylvan": {
+			"name": "La Sylve",
+			"realm": "Le Bois Profond",
+			"desc": "Forêt-monde plus ancienne que les royaumes. Ses Gardiens croissent, soignent et régénèrent : la Sylve gagne les longues parties. Rien n'y meurt vraiment — tout y devient racine."
+		},
+		"shadow": {
+			"name": "L'Ombre",
+			"realm": "Le Bas-Royaume de Noxfell",
+			"desc": "Cryptes, dettes et pactes murmurés. Ses Gardiens drainent la vie et reviennent de la tombe : chaque perte adverse est un profit. Les Comptables des Âmes tiennent des registres que nul ne veut lire."
+		},
+		"light": {
+			"name": "La Lumière",
+			"realm": "La Citadelle d'Aubargent",
+			"desc": "Temples suspendus au-dessus des nuages. Ses Gardiens protègent, bénissent et ressuscitent : boucliers, soins et justice patiente. La Lumière ne se hâte jamais — elle finit toujours par se lever."
+		}
+	}
+}
