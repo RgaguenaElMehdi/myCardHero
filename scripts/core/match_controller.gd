@@ -15,8 +15,9 @@ var state: GameState
 
 ## Build the match. Local: the seed lives here; online, the server owns it and
 ## the client rebuilds `state` from the events it is sent.
-func setup(cards: Dictionary, masters: Array, decks: Array, seed_value: int) -> GameState:
-	state = Rules.setup(cards, masters, decks, seed_value)
+func setup(cards: Dictionary, masters: Array, decks: Array, seed_value: int,
+		first_player: int = 0) -> GameState:
+	state = Rules.setup(cards, masters, decks, seed_value, first_player)
 	return state
 
 

@@ -69,27 +69,103 @@ func constructible_cards() -> Array[CardDef]:
 	return result
 
 
-## Deck générique dominé par une guilde : ses cartes en double, complété avec
-## les cartes les moins chères des autres guildes (partie libre, défis).
+## Deck IA dominé par une guilde, avec une vraie courbe de mana (bon marché /
+## milieu / gros), des monstres efficaces d'abord et quelques sorts de retrait.
+## Utilisé par le matchmaking, les défis, les événements et la partie libre.
 func guild_deck(guild: GameConst.Guild) -> Array:
-	var own: Array[CardDef] = []
-	var rest: Array[CardDef] = []
-	for c in constructible_cards():
-		(own if c.guild == guild else rest).append(c)
-	var by_cost := func(a: CardDef, b: CardDef) -> bool: return a.cost < b.cost
-	own.sort_custom(by_cost)
-	rest.sort_custom(by_cost)
+	return build_guild_deck(cards, guild)
+
+
+## Efficacité d'un monstre : stats par coût, bonus évolution / mots-clés agressifs.
+static func _monster_eff(c: CardDef) -> float:
+	if c.levels.is_empty():
+		return 0.0  # sorts (pas de stats) — non pertinent
+	var lv: Dictionary = c.levels[0]
+	var s := (int(lv.atk) + int(lv.hp) * 0.6) / maxf(c.cost, 1.0)
+	if c.evolves_to != &"":
+		s += 0.5
+	if c.has_keyword(GameConst.KW_HASTE) or c.has_keyword(GameConst.KW_FLYING):
+		s += 0.3
+	return s
+
+
+## Ajoute des cartes de `pool` (dans l'ordre) jusqu'à ce que `deck` atteigne
+## `target`, sans dépasser MAX_COPIES par carte. S'arrête si un passage complet
+## n'ajoute rien (pool épuisé).
+static func _fill(deck: Array, counts: Dictionary, pool: Array, target: int) -> void:
+	while deck.size() < target:
+		var added := false
+		for c in pool:
+			if deck.size() >= target:
+				break
+			var id := String(c.id)
+			if int(counts.get(id, 0)) >= GameConst.MAX_COPIES:
+				continue
+			deck.append(id)
+			counts[id] = int(counts.get(id, 0)) + 1
+			added = true
+		if not added:
+			break
+
+
+## Générateur statique (testable sans arbre) : voir guild_deck.
+static func build_guild_deck(all_cards: Dictionary, guild: GameConst.Guild) -> Array:
+	var cheap: Array = []   # monstres coût <= 2
+	var mid: Array = []     # monstres coût 3-4
+	var big: Array = []     # monstres coût >= 5
+	var dmg_spells: Array = []
+	var util_spells: Array = []
+	for id in all_cards:
+		var c: CardDef = all_cards[id]
+		if c.token:
+			continue
+		if c.is_monster():
+			var bucket := cheap if c.cost <= 2 else (mid if c.cost <= 4 else big)
+			bucket.append(c)
+		else:
+			var has_dmg := false
+			for op in c.effect:
+				if String(op.get("op", "")).begins_with("damage"):
+					has_dmg = true
+			(dmg_spells if has_dmg else util_spells).append(c)
+
+	# Cartes de la guilde d'abord, puis les plus efficaces (splash sinon).
+	var by_pref := func(a: CardDef, b: CardDef) -> bool:
+		var ga := a.guild == guild
+		var gb := b.guild == guild
+		if ga != gb:
+			return ga
+		return _monster_eff(a) > _monster_eff(b)
+	cheap.sort_custom(by_pref)
+	mid.sort_custom(by_pref)
+	big.sort_custom(by_pref)
+	# Sorts : guilde d'abord, puis les moins chers (retrait tôt).
+	var spell_pref := func(a: CardDef, b: CardDef) -> bool:
+		var ga := a.guild == guild
+		var gb := b.guild == guild
+		if ga != gb:
+			return ga
+		return a.cost < b.cost
+	dmg_spells.sort_custom(spell_pref)
+	util_spells.sort_custom(spell_pref)
+
+	# Courbe cible pour 25 cartes : 8 bon marché, 8 milieu, 3 gros, 4 dégâts,
+	# 2 utilitaires — puis complément depuis tout le pool si un seau manque.
 	var deck: Array = []
-	for c in own:
-		deck.append(String(c.id))
-		deck.append(String(c.id))
-	for c in rest:
-		if deck.size() >= GameConst.DECK_SIZE:
-			break
-		deck.append(String(c.id))
-		if deck.size() >= GameConst.DECK_SIZE:
-			break
-		deck.append(String(c.id))
+	var counts := {}
+	_fill(deck, counts, cheap, 8)
+	_fill(deck, counts, mid, 16)
+	_fill(deck, counts, big, 19)
+	_fill(deck, counts, dmg_spells, 23)
+	_fill(deck, counts, util_spells, 25)
+	var everything: Array = []
+	everything.append_array(cheap)
+	everything.append_array(mid)
+	everything.append_array(big)
+	everything.append_array(dmg_spells)
+	everything.append_array(util_spells)
+	everything.sort_custom(by_pref)
+	_fill(deck, counts, everything, GameConst.DECK_SIZE)
 	return deck.slice(0, GameConst.DECK_SIZE)
 
 

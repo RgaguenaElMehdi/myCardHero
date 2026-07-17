@@ -1,167 +1,166 @@
 {
-  "masters": [
-	{
-	  "id": "kiran",
-	  "name": "Kiran",
-	  "title": "Forgeron des Braises",
-	  "guild": "flame",
-	  "hp": 20,
-	  "lore": "Forgeron de Petraheim au tempérament volcanique, Kiran joue comme il forge : vite, fort, et sans regarder les étincelles.",
-	  "passive_id": "spell_damage_plus",
-	  "passive_desc": "Ses sorts infligent +1 dégât.",
-	  "power_name": "Boule de feu mineure",
-	  "power_cost": 3,
-	  "power_effect": [
+	"masters": [
 		{
-		  "op": "damage",
-		  "amount": 2,
-		  "target": "any_monster"
-		}
-	  ],
-	  "power_desc": "Inflige 2 dégâts à un monstre."
-	},
-	{
-	  "id": "willow",
-	  "name": "Willow",
-	  "title": "Gardienne du Vieux Chêne",
-	  "guild": "sylvan",
-	  "hp": 20,
-	  "lore": "Herboriste et gardienne du vieux chêne, Willow ne perd jamais : elle laisse simplement l'adversaire s'épuiser.",
-	  "passive_id": "summon_hp_plus",
-	  "passive_desc": "Ses monstres gagnent +1 PV max à l'invocation.",
-	  "power_name": "Sève",
-	  "power_cost": 3,
-	  "power_effect": [
-		{
-		  "op": "heal",
-		  "amount": 3,
-		  "target": "ally_monster"
-		}
-	  ],
-	  "power_desc": "Soigne 3 PV à un monstre allié."
-	},
-	{
-	  "id": "grim",
-	  "name": "Grim",
-	  "title": "Collecteur de Dettes",
-	  "guild": "shadow",
-	  "hp": 20,
-	  "lore": "Fossoyeur du village et collectionneur de dettes, Grim considère chaque perte comme un investissement.",
-	  "passive_id": "kill_bonus_stone",
-	  "passive_desc": "+1 pierre quand il détruit un monstre ennemi.",
-	  "power_name": "Pacte",
-	  "power_cost": 1,
-	  "power_effect": [
-		{
-		  "op": "sacrifice",
-		  "target": "ally_monster"
+			"id": "kiran",
+			"name": "Kiran",
+			"title": "Forgeron des Braises",
+			"guild": "flame",
+			"hp": 20,
+			"lore": "Forgeron de Petraheim au tempérament volcanique, Kiran joue comme il forge : vite, fort, et sans regarder les étincelles.",
+			"passive_id": "spell_damage_plus",
+			"passive_desc": "Ses sorts infligent +1 dégât.",
+			"power_name": "Boule de feu mineure",
+			"power_cost": 3,
+			"power_effect": [
+				{
+					"op": "damage",
+					"amount": 2,
+					"target": "any_monster"
+				}
+			],
+			"power_desc": "Inflige 2 dégâts à un monstre."
 		},
 		{
-		  "op": "draw",
-		  "count": 2
-		}
-	  ],
-	  "power_desc": "Sacrifie un monstre allié, pioche 2 cartes."
-	},
-	{
-	  "id": "aria",
-	  "name": "Aria",
-	  "title": "Bouclier du Temple",
-	  "guild": "light",
-	  "hp": 20,
-	  "lore": "Ancienne garde du temple, Aria protège d'abord et gagne ensuite. Personne ne l'a jamais vue reculer.",
-	  "passive_id": "ranged_resist",
-	  "passive_desc": "Subit -1 dégât des attaques à distance.",
-	  "power_name": "Égide",
-	  "power_cost": 2,
-	  "power_effect": [
+			"id": "willow",
+			"name": "Willow",
+			"title": "Gardienne du Vieux Chêne",
+			"guild": "sylvan",
+			"hp": 20,
+			"lore": "Herboriste et gardienne du vieux chêne, Willow ne perd jamais : elle laisse simplement l'adversaire s'épuiser.",
+			"passive_id": "summon_hp_plus",
+			"passive_desc": "Ses monstres gagnent +1 PV max à l'invocation.",
+			"power_name": "Sève",
+			"power_cost": 3,
+			"power_effect": [
+				{
+					"op": "heal",
+					"amount": 3,
+					"target": "ally_monster"
+				}
+			],
+			"power_desc": "Soigne 3 PV à un monstre allié."
+		},
 		{
-		  "op": "shield",
-		  "target": "ally_monster"
-		}
-	  ],
-	  "power_desc": "Donne un Bouclier à un monstre allié."
-	},
-	{
-	  "id": "brand",
-	  "name": "Brand",
-	  "title": "Maître d’Armes de la Fosse",
-	  "guild": "flame",
-	  "hp": 20,
-	  "lore": "Maître d'armes de la fosse aux braises, Brand n'a qu'une doctrine : frappe le premier, frappe le plus fort.",
-	  "passive_id": "melee_damage_plus",
-	  "passive_desc": "Les attaques de mêlée de ses monstres infligent +1 dégât.",
-	  "power_name": "Furie",
-	  "power_cost": 2,
-	  "power_effect": [
+			"id": "grim",
+			"name": "Grim",
+			"title": "Collecteur de Dettes",
+			"guild": "shadow",
+			"hp": 20,
+			"lore": "Fossoyeur du village et collectionneur de dettes, Grim considère chaque perte comme un investissement.",
+			"passive_id": "kill_bonus_stone",
+			"passive_desc": "+1 pierre quand il détruit un monstre ennemi.",
+			"power_name": "Pacte",
+			"power_cost": 1,
+			"power_effect": [
+				{
+					"op": "sacrifice",
+					"target": "ally_monster"
+				},
+				{
+					"op": "draw",
+					"count": 2
+				}
+			],
+			"power_desc": "Sacrifie un monstre allié, pioche 2 cartes."
+		},
 		{
-		  "op": "buff",
-		  "atk": 2,
-		  "hp": 0,
-		  "target": "ally_monster"
-		}
-	  ],
-	  "power_desc": "Donne +2 ATQ à un monstre allié."
-	},
-	{
-	  "id": "rowan",
-	  "name": "Rowan",
-	  "title": "Berger du Bois Profond",
-	  "guild": "sylvan",
-	  "hp": 20,
-	  "lore": "Berger du bois profond, Rowan ne soigne pas ses bêtes : il les laisse guérir seules, encore et encore.",
-	  "passive_id": "turn_start_regen",
-	  "passive_desc": "Vos monstres récupèrent 1 PV au début de chaque tour.",
-	  "power_name": "Vigueur",
-	  "power_cost": 2,
-	  "power_effect": [
+			"id": "aria",
+			"name": "Aria",
+			"title": "Bouclier du Temple",
+			"guild": "light",
+			"hp": 20,
+			"lore": "Ancienne garde du temple, Aria protège d'abord et gagne ensuite. Personne ne l'a jamais vue reculer.",
+			"passive_id": "ranged_resist",
+			"passive_desc": "Subit -1 dégât des attaques à distance.",
+			"power_name": "Égide",
+			"power_cost": 2,
+			"power_effect": [
+				{
+					"op": "shield",
+					"target": "ally_monster"
+				}
+			],
+			"power_desc": "Donne un Bouclier à un monstre allié."
+		},
 		{
-		  "op": "buff",
-		  "atk": 0,
-		  "hp": 3,
-		  "target": "ally_monster"
-		}
-	  ],
-	  "power_desc": "Donne +3 PV à un monstre allié."
-	},
-	{
-	  "id": "vane",
-	  "name": "Vane",
-	  "title": "Comptable des Âmes",
-	  "guild": "shadow",
-	  "hp": 20,
-	  "lore": "Nécromancienne comptable, Vane tient un registre : chaque mort de son camp est une ligne de crédit en savoir.",
-	  "passive_id": "ally_death_draw",
-	  "passive_desc": "Quand un de vos monstres est détruit, vous piochez une carte.",
-	  "power_name": "Malédiction",
-	  "power_cost": 2,
-	  "power_effect": [
+			"id": "brand",
+			"name": "Brand",
+			"title": "Maître d’Armes de la Fosse",
+			"guild": "flame",
+			"hp": 20,
+			"lore": "Maître d'armes de la fosse aux braises, Brand n'a qu'une doctrine : frappe le premier, frappe le plus fort.",
+			"passive_id": "melee_damage_plus",
+			"passive_desc": "Les attaques de mêlée de ses monstres infligent +1 dégât.",
+			"power_name": "Furie",
+			"power_cost": 2,
+			"power_effect": [
+				{
+					"op": "buff",
+					"atk": 2,
+					"hp": 0,
+					"target": "ally_monster"
+				}
+			],
+			"power_desc": "Donne +2 ATQ à un monstre allié."
+		},
 		{
-		  "op": "damage",
-		  "amount": 2,
-		  "target": "enemy_monster"
-		}
-	  ],
-	  "power_desc": "Inflige 2 dégâts à un monstre ennemi."
-	},
-	{
-	  "id": "sol",
-	  "name": "Sol",
-	  "title": "Porte-Lanterne de l’Aube",
-	  "guild": "light",
-	  "hp": 20,
-	  "lore": "Porte-lanterne du temple d'aube, Sol pose un halo sur chaque nouveau venu avant même de connaître son nom.",
-	  "passive_id": "first_summon_shield",
-	  "passive_desc": "Le premier monstre que vous invoquez à chaque tour gagne un Bouclier.",
-	  "power_name": "Aube dorée",
-	  "power_cost": 3,
-	  "power_effect": [
+			"id": "rowan",
+			"name": "Rowan",
+			"title": "Berger du Bois Profond",
+			"guild": "sylvan",
+			"hp": 20,
+			"lore": "Berger du bois profond, Rowan ne soigne pas ses bêtes : il les laisse guérir seules, encore et encore.",
+			"passive_id": "turn_start_regen",
+			"passive_desc": "Vos monstres récupèrent 1 PV au début de chaque tour.",
+			"power_name": "Épines",
+			"power_cost": 2,
+			"power_effect": [
+				{
+					"op": "damage",
+					"amount": 2,
+					"target": "enemy_monster"
+				}
+			],
+			"power_desc": "Inflige 2 dégâts à un monstre ennemi."
+		},
 		{
-		  "op": "heal_master",
-		  "amount": 3
+			"id": "vane",
+			"name": "Vane",
+			"title": "Comptable des Âmes",
+			"guild": "shadow",
+			"hp": 20,
+			"lore": "Nécromancienne comptable, Vane tient un registre : chaque mort de son camp est une ligne de crédit en savoir.",
+			"passive_id": "ally_death_draw",
+			"passive_desc": "Quand un de vos monstres est détruit, vous piochez une carte.",
+			"power_name": "Malédiction",
+			"power_cost": 2,
+			"power_effect": [
+				{
+					"op": "damage",
+					"amount": 3,
+					"target": "enemy_monster"
+				}
+			],
+			"power_desc": "Inflige 3 dégâts à un monstre ennemi."
+		},
+		{
+			"id": "sol",
+			"name": "Sol",
+			"title": "Porte-Lanterne de l’Aube",
+			"guild": "light",
+			"hp": 20,
+			"lore": "Porte-lanterne du temple d'aube, Sol pose un halo sur chaque nouveau venu avant même de connaître son nom.",
+			"passive_id": "first_summon_shield",
+			"passive_desc": "Le premier monstre que vous invoquez à chaque tour gagne un Bouclier.",
+			"power_name": "Aube dorée",
+			"power_cost": 3,
+			"power_effect": [
+				{
+					"op": "heal_master",
+					"amount": 2
+				}
+			],
+			"power_desc": "Soigne 3 PV à votre Maître."
 		}
-	  ],
-	  "power_desc": "Soigne 3 PV à votre Maître."
-	}
-  ]
+	]
 }

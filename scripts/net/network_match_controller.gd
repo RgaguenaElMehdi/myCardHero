@@ -25,7 +25,8 @@ func configure(player_idx: int, cards: Dictionary, masters: Dictionary) -> void:
 
 ## Online setup is server-driven: the client's state is built from the first
 ## server snapshot, not from Rules. Returns null until ingest() fires.
-func setup(_cards2: Dictionary, _masters2: Array, _decks: Array, _seed: int) -> GameState:
+func setup(_cards2: Dictionary, _masters2: Array, _decks: Array, _seed: int,
+		_first_player: int = 0) -> GameState:
 	return state
 
 

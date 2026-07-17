@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3]
+[gd_scene load_steps=36 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_menu.gd" id="1"]
 [ext_resource type="Theme" path="res://resources/ui_theme.tres" id="2"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/widgets/menu_nav_button.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/widgets/menu_tab_button.tscn" id="6"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/menu_anime_2400.png" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/widgets/gold_motes.tscn" id="60"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/emblem_crystal.png" id="8"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_campaign.png" id="9"]
 [ext_resource type="Texture2D" path="res://assets/sprites/ui/menu/icon_free.png" id="10"]
@@ -101,6 +102,9 @@ texture_filter = 2
 texture = SubResource("scrim_tex")
 expand_mode = 1
 mouse_filter = 2
+
+[node name="GoldMotes" parent="." instance=ExtResource("60")]
+position = Vector2(1200, 540)
 
 [node name="SafeArea" type="MarginContainer" parent="."]
 layout_mode = 1

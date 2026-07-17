@@ -8,7 +8,10 @@ var players: Array[PlayerState] = []
 var board: Board = Board.new()
 var phase: Phase = Phase.MULLIGAN
 var current: int = 0
-## Half-turn counter, starts at 1 on player 0's first turn.
+## Player who takes the first turn (chosen at setup — a coin flip in real
+## matches). The other player is compensated: the starter skips their first draw.
+var first_player: int = 0
+## Half-turn counter, starts at 1 on the first player's first turn.
 var turn: int = 1
 var rng := RandomNumberGenerator.new()
 var winner: int = -1
@@ -27,7 +30,7 @@ func to_dict(include_rng := true) -> Dictionary:
 		pl.append(p.to_dict())
 	var d := {
 		"phase": phase, "current": current, "turn": turn, "winner": winner,
-		"players": pl, "board": board.to_dict(),
+		"first_player": first_player, "players": pl, "board": board.to_dict(),
 	}
 	if include_rng:
 		d["rng_seed"] = rng.seed
@@ -42,6 +45,7 @@ static func from_dict(d: Dictionary, card_index: Dictionary, master_index: Dicti
 	s.current = int(d.get("current", 0))
 	s.turn = int(d.get("turn", 1))
 	s.winner = int(d.get("winner", -1))
+	s.first_player = int(d.get("first_player", 0))
 	if d.has("rng_seed"):
 		s.rng.seed = int(d["rng_seed"])
 	if d.has("rng_state"):

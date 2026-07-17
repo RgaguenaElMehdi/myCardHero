@@ -299,17 +299,21 @@ const _PSEUDOS := ["Kael", "Nyx", "Ronin", "Vex", "Astra", "Drake", "Luna", "Cyr
 ## Battle config for a match vs a random AI, dressed up as a real online opponent
 ## (player-like name, no difficulty shown). Used when matchmaking finds nobody.
 func matchmaking_ai_config(ranked: bool) -> Dictionary:
-	var chapters := Db.chapters()
-	var opp: Dictionary = chapters[randi() % chapters.size()].opponent
-	var levels := [AiPlayer.Level.NOVICE, AiPlayer.Level.ADEPT, AiPlayer.Level.MASTER]
+	# Adversaire « joueur » : un maître au hasard avec un deck cohérent généré
+	# pour sa guilde (courbe de mana), pas un vieux deck de chapitre parfois
+	# faible. En classé, jamais de Novice — la ladder doit être compétitive.
+	var pool: Array = Db.masters.values()
+	var m: MasterDef = pool[randi() % pool.size()]
+	var levels := ([AiPlayer.Level.ADEPT, AiPlayer.Level.MASTER] if ranked
+			else [AiPlayer.Level.NOVICE, AiPlayer.Level.ADEPT, AiPlayer.Level.MASTER])
 	return {
 		"mode": "free",
 		"ranked": ranked,
 		"ai_level": int(levels[randi() % levels.size()]),
-		"opponent_master": String(opp.master),
-		"opponent_deck": opp.deck,
+		"opponent_master": String(m.id),
+		"opponent_deck": Db.guild_deck(m.guild),
 		"opponent_name": "%s%d" % [_PSEUDOS[randi() % _PSEUDOS.size()], randi() % 900 + 100],
-		"opponent_portrait": String(opp.master),
+		"opponent_portrait": String(m.id),
 		"background": "arena_day",
 	}
 

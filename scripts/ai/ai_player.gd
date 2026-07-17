@@ -5,8 +5,20 @@ extends RefCounted
 ## result until it returns end_turn. Turn termination is guaranteed because
 ## every non-end action consumes a finite resource (monster action, card,
 ## stones, once-per-turn flags).
+##
+## Les trois niveaux sont trois personnalités (spec
+## docs/superpowers/specs/2026-07-17-ai-levels-redesign-design.md) :
+## - NOVICE : valeur immédiate seule, ignore la défense du maître et les
+##   menaces adverses, gros bruit, oublie souvent évolution / pouvoir. Fonce.
+## - ADEPT  : heuristiques complètes (couverture, riposte, tempo), bruit modéré.
+## - MASTER : anticipation réelle à 1 coup — chaque action légale est jouée via
+##   Rules.apply sur un clone de l'état, la position résultante est notée par
+##   _evaluate (PV maîtres, matériel ajusté au danger, menaces, position, tempo).
+##   Mesuré (tools/ai_arena.gd, 40 duels miroirs) : ~78 % vs Novice et Adepte.
 
 enum Level { NOVICE, ADEPT, MASTER }
+
+const NOISE := { Level.NOVICE: 3.0, Level.ADEPT: 1.0, Level.MASTER: 0.1 }
 
 var level: int = Level.ADEPT
 var rng := RandomNumberGenerator.new()
@@ -19,29 +31,95 @@ func _init(p_level: int = Level.ADEPT, seed_value: int = 0) -> void:
 
 func choose_action(state: GameState) -> Dictionary:
 	if state.phase == GameState.Phase.MULLIGAN:
-		return { "type": "mulligan", "redraw": _wants_mulligan(state) }
+		# Le novice garde n'importe quelle main ; les autres réfléchissent.
+		var redraw := false if level == Level.NOVICE else _wants_mulligan(state)
+		return { "type": "mulligan", "redraw": redraw }
+	if level == Level.MASTER:
+		return _choose_master(state)
 	var actions := Rules.legal_actions(state)
 	var best := { "type": "end_turn" }
 	var best_score := 0.0
 	for a in actions:
 		if a.type == "end_turn":
 			continue
+		if level == Level.NOVICE:
+			# Oublie ses options avancées la moitié du temps, et ne pense
+			# jamais à déplacer son maître.
+			if a.type == "master_move":
+				continue
+			if (a.type == "evolve" or a.type == "master_power") and rng.randf() < 0.5:
+				continue
 		var score := _score(state, a)
-		# Novices misjudge a lot, adepts a little, masters barely.
-		match level:
-			Level.NOVICE:
-				score += rng.randf_range(-3.0, 3.0)
-				if a.type == "evolve" or a.type == "master_power":
-					if rng.randf() < 0.5:
-						continue  # forgets its advanced options half the time
-			Level.ADEPT:
-				score += rng.randf_range(-1.0, 1.0)
-			Level.MASTER:
-				score += rng.randf_range(-0.2, 0.2)
+		score += rng.randf_range(-NOISE[level], NOISE[level])
 		if score > best_score:
 			best_score = score
 			best = a
 	return best
+
+
+## Niveau Maître : anticipation réelle à 1 coup. Chaque action légale est jouée
+## avec les VRAIES règles sur un clone de l'état (kills, XP, récompenses, morts,
+## effets — rien d'estimé), puis la position résultante est notée par
+## _evaluate(). On garde la meilleure ; end_turn sert de référence.
+func _choose_master(state: GameState) -> Dictionary:
+	var master_index := {}
+	for p in state.players:
+		master_index[p.master.id] = p.master
+	var snapshot := state.to_dict()
+	var best := { "type": "end_turn" }
+	var best_eval := -INF
+	for a in Rules.legal_actions(state):
+		var sim := GameState.from_dict(snapshot, state.card_index, master_index)
+		var res: Dictionary = Rules.apply(sim, a)
+		if not res.ok:
+			continue
+		var e := _evaluate(sim, state.current)
+		if a.type == "end_turn":
+			e -= 0.01  # à valeur égale, préférer agir
+		e += rng.randf_range(-NOISE[level], NOISE[level])
+		if e > best_eval:
+			best_eval = e
+			best = a
+	return best
+
+
+## Note une position pour le joueur `me` : différentiel de PV des maîtres,
+## matériel, menaces réciproques sur les maîtres, position et tempo.
+func _evaluate(state: GameState, me: int) -> float:
+	if state.phase == GameState.Phase.OVER:
+		return 10000.0 if state.winner == me else -10000.0
+	var foe := 1 - me
+	var e := (state.players[me].master_hp - state.players[foe].master_hp) * 3.0
+	for cell in state.board.monster_cells_of(me):
+		var m := state.board.at(cell)
+		# Matériel ajusté au danger : un monstre tuable au prochain tour adverse
+		# ne vaut que la moitié — le glouton apprend ainsi à ne pas nourrir
+		# l'ennemi et à préférer les échanges où les siens survivent.
+		var w := 1.0 if _doomed(state, cell, foe) else 2.0
+		e += _monster_value(m) * w + m.xp * 0.3
+		# Position : une mêlée ne menace que SA colonne ; un tireur veut l'arrière.
+		if m.def.attack_type == GameConst.AttackType.MELEE:
+			var lane_live := cell.x == state.players[foe].master_col
+			for c in state.board.defender_column_cells(foe, cell.x):
+				if state.board.at(c) != null:
+					lane_live = true
+			if lane_live:
+				e += 1.2
+			if cell.y == Board.front_row(me):
+				e += 0.6
+		elif cell.y == Board.back_row(me):
+			e += 0.6
+	for cell in state.board.monster_cells_of(foe):
+		var m := state.board.at(cell)
+		var w := 1.0 if _doomed(state, cell, me) else 2.0
+		e -= _monster_value(m) * w
+	var threat := _incoming_master_damage(state, me)
+	e -= threat * 1.2
+	if threat >= state.players[me].master_hp:
+		e -= 300.0  # exposé à un létal : à éviter à tout prix (sauf victoire)
+	e += _incoming_master_damage(state, foe) * 0.8
+	e += state.players[me].stones * 0.3 + state.players[me].hand.size() * 0.5
+	return e
 
 
 ## Redraw when the hand has fewer than two playable early monsters.
@@ -108,7 +186,7 @@ func _score_attack(state: GameState, a: Dictionary) -> float:
 	var score := dmg * 1.5
 	if dmg >= defender.hp:
 		score += 6.0 + _monster_value(defender) + defender.level  # kill + stone reward
-	if attacker.def.attack_type == GameConst.AttackType.MELEE:
+	if level >= Level.ADEPT and attacker.def.attack_type == GameConst.AttackType.MELEE:
 		var rip := defender.keyword_value(GameConst.KW_RIPOSTE)
 		if rip >= attacker.hp and dmg < defender.hp:
 			score -= 8.0  # suicide into riposte
@@ -131,16 +209,17 @@ func _score_summon(state: GameState, a: Dictionary) -> float:
 		score += 1.5 if front else -1.0
 	else:
 		score += 1.5 if not front else -1.0
-	# Cover the master's column when it is exposed.
-	var p := state.me()
-	if cell.x == p.master_col and state.board.column_cover(me, p.master_col, false) == 0:
-		score += 5.0
-	# Threaten the enemy master's column.
-	if cell.x == state.players[1 - me].master_col:
-		score += 1.0
-	# Don't dump the whole hand when the board is already strong.
-	if state.board.monsters_of(me).size() >= 4:
-		score -= 3.0
+	if level >= Level.ADEPT:
+		# Cover the master's column when it is exposed (le novice n'y pense pas).
+		var p := state.me()
+		if cell.x == p.master_col and state.board.column_cover(me, p.master_col, false) == 0:
+			score += 5.0
+		# Threaten the enemy master's column.
+		if cell.x == state.players[1 - me].master_col:
+			score += 1.0
+		# Don't dump the whole hand when the board is already strong.
+		if state.board.monsters_of(me).size() >= 4:
+			score -= 3.0
 	return score
 
 
@@ -214,11 +293,12 @@ func _score_move(state: GameState, a: Dictionary) -> float:
 	state.board.cells = saved_cells
 	if not had_targets and gains_targets:
 		score += 4.0
-	if covers_master and from.x != state.me().master_col:
-		score += 5.0
-	# Pull a wounded blocker back home.
-	if m.hp <= 2 and to.y == Board.back_row(state.current):
-		score += 1.5
+	if level >= Level.ADEPT:
+		if covers_master and from.x != state.me().master_col:
+			score += 5.0
+		# Pull a wounded blocker back home.
+		if m.hp <= 2 and to.y == Board.back_row(state.current):
+			score += 1.5
 	return score
 
 
@@ -246,3 +326,62 @@ func _master_column_danger(state: GameState, col: int) -> float:
 			if m.def.attack_type == GameConst.AttackType.MELEE and c.x == col:
 				danger += m.atk() * 0.7
 	return danger
+
+
+## Le monstre en `cell` peut-il être tué par UN coup de `hunter` (un des
+## monstres du joueur adverse) à son prochain tour ? Portée approximée :
+## distance/magie touchent tout ; une mêlée touche le premier non-volant de
+## SA colonne.
+func _doomed(state: GameState, cell: Vector2i, hunter: int) -> bool:
+	var prey := state.board.at(cell)
+	if prey == null:
+		return false
+	for hcell in state.board.monster_cells_of(hunter):
+		var h := state.board.at(hcell)
+		if h.def.attack_type == GameConst.AttackType.MELEE:
+			if hcell.x != cell.x or prey.has_keyword(GameConst.KW_FLYING):
+				continue
+			# La mêlée frappe le premier non-volant de la colonne : notre proie
+			# doit être ce premier (rangée de front, ou arrière sans écran).
+			var front := Vector2i(cell.x, Board.front_row(prey.owner_idx))
+			if cell != front:
+				var screen := state.board.at(front)
+				if screen != null and not screen.has_keyword(GameConst.KW_FLYING):
+					continue
+		if _expected_damage(h, prey) >= prey.hp:
+			return true
+	return false
+
+
+# --- Anticipation défensive (niveau Maître) ------------------------------
+
+## Dégâts que le joueur `1 - me` peut infliger au maître de `me` dès son
+## prochain tour, sur l'état courant du plateau.
+func _incoming_master_damage(state: GameState, me: int) -> int:
+	var my := state.players[me]
+	var col := my.master_col
+	var foe := 1 - me
+	var dmg := 0
+	var cover_ranged := state.board.column_cover(me, col, false)
+	var cover_melee := state.board.column_cover(me, col, true)
+	for cell in state.board.monster_cells_of(foe):
+		var m := state.board.at(cell)
+		match m.def.attack_type:
+			GameConst.AttackType.RANGED:
+				if cover_ranged == 0:
+					var hit := m.atk()
+					if my.has_passive(GameConst.PASSIVE_RANGED_RESIST):
+						hit = maxi(0, hit - 1)
+					dmg += hit
+			GameConst.AttackType.MAGIC:
+				if cover_ranged == 0:
+					dmg += m.atk()
+			GameConst.AttackType.MELEE:
+				# Un corps-à-corps ne frappe le maître que depuis sa ligne de
+				# front, dans la colonne du maître, colonne non couverte.
+				if cell.x == col and cell.y == Board.front_row(foe) \
+						and cover_melee == 0:
+					dmg += m.atk()
+	return dmg
+
+

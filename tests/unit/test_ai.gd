@@ -59,3 +59,62 @@ func test_ai_mulligan_logic() -> void:
 	var action := ai.choose_action(state)
 	eq(action.get("type"), "mulligan", "phase mulligan respectée")
 	eq(action.get("redraw"), false, "main jouable conservée")
+
+
+## Miroir parfait (mêmes maîtres, mêmes decks, sièges alternés) : le niveau
+## haut doit dominer le niveau bas. Retourne les victoires du niveau `level_hi`.
+func _mirror_wins(level_hi: int, level_lo: int, games: int) -> int:
+	var DbScript := load("res://scripts/autoload/db.gd")
+	var data: Dictionary = DbScript.load_all()
+	var deck: Array = data.campaign.chapters[3].opponent.deck
+	var wins := 0
+	for g in games:
+		var hi_seat := g % 2  # alterner qui commence
+		var state := Rules.setup(data.cards,
+				[data.masters[&"kiran"], data.masters[&"kiran"]], [deck, deck], 9000 + g)
+		var ais := [null, null]
+		ais[hi_seat] = AiPlayer.new(level_hi, 300 + g)
+		ais[1 - hi_seat] = AiPlayer.new(level_lo, 600 + g)
+		var steps := 0
+		while not state.is_over() and steps < 4000:
+			steps += 1
+			var res := Rules.apply(state, ais[state.current].choose_action(state))
+			if not res.ok:
+				failures.append("action illégale en duel miroir (partie %d) : %s" % [g, res.error])
+				return -1
+		if state.winner == hi_seat:
+			wins += 1
+	return wins
+
+
+func test_ai_master_beats_novice() -> void:
+	var games := 20
+	var wins := _mirror_wins(AiPlayer.Level.MASTER, AiPlayer.Level.NOVICE, games)
+	if wins < 0:
+		return
+	print("      [ia] Maître vs Novice : %d/%d" % [wins, games])
+	ok(wins >= int(games * 0.7), "le Maître domine le Novice (%d/%d)" % [wins, games])
+
+
+func test_ai_master_beats_adept() -> void:
+	var games := 20
+	var wins := _mirror_wins(AiPlayer.Level.MASTER, AiPlayer.Level.ADEPT, games)
+	if wins < 0:
+		return
+	print("      [ia] Maître vs Adepte : %d/%d" % [wins, games])
+	ok(wins >= int(ceil(games * 0.55)), "le Maître bat l'Adepte (%d/%d)" % [wins, games])
+
+
+func test_ai_master_covers_exposed_master() -> void:
+	# Maître à 3 PV, colonne du maître sans couverture, deux archers ennemis en
+	# vue (2+2 = létal au prochain tour). Le Maître doit invoquer DANS la colonne
+	# du maître pour faire écran, pas ailleurs.
+	var state := TestUtil.fresh_game(7)
+	state.players[0].master_hp = 3
+	TestUtil.put(state, Vector2i(0, 2), "archer", 1)
+	TestUtil.put(state, Vector2i(2, 2), "archer", 1)
+	state.me().stones = 3
+	var ai := AiPlayer.new(AiPlayer.Level.MASTER, 5)
+	var action := ai.choose_action(state)
+	eq(action.get("type"), "summon", "le Maître invoque pour se protéger")
+	eq(action.get("cell"), Vector2i(1, 1), "l'invocation couvre la colonne du maître")

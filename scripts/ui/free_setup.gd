@@ -17,18 +17,12 @@ var _level := int(AiPlayer.Level.ADEPT)
 
 
 func _ready() -> void:
-	# Tous les maîtres du jeu : deck de campagne s'il existe, sinon un deck
-	# construit sur les cartes de leur guilde.
-	var campaign_decks := {}
-	for ch in Db.chapters():
-		var opp: Dictionary = ch.get("opponent", {})
-		if opp.has("master") and not campaign_decks.has(String(opp.master)):
-			campaign_decks[String(opp.master)] = opp.deck
+	# Tous les maîtres du jeu, avec un deck cohérent généré pour leur guilde
+	# (courbe de mana) — comme le matchmaking. On n'utilise plus les decks de
+	# campagne écrits à la main ici : certains (tuto) étaient trop faibles.
 	for id in Db.masters:
 		var m: MasterDef = Db.masters[id]
-		var mid := String(m.id)
-		_opponents.append({ "master": mid,
-				"deck": campaign_decks.get(mid, Db.guild_deck(m.guild)) })
+		_opponents.append({ "master": String(m.id), "deck": Db.guild_deck(m.guild) })
 	for i in _opponents.size():
 		_cards.append(_make_card(i))
 

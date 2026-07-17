@@ -14,6 +14,28 @@ func _valid_deck() -> Array:
 	return deck
 
 
+func test_first_player_opens_and_second_is_compensated() -> void:
+	var index := TestUtil.std_index()
+	var deck: Array[StringName] = []
+	for i in GameConst.DECK_SIZE:
+		deck.append(&"grunt")
+	for fp in [0, 1]:
+		var s := Rules.setup(index, [TestUtil.master("a"), TestUtil.master("b")],
+				[deck, deck], 5, fp)
+		eq(s.first_player, fp, "first_player mémorisé")
+		Rules.apply(s, { "type": "mulligan", "redraw": false })   # joueur 0 (ordre d'UI)
+		Rules.apply(s, { "type": "mulligan", "redraw": false })   # joueur 1
+		eq(s.phase, GameState.Phase.MAIN, "phase principale après les 2 mulligans")
+		eq(s.current, fp, "le joueur tiré au sort ouvre (fp=%d)" % fp)
+		# Compensation : l'ouvreur saute sa 1ʳᵉ pioche → 5 cartes chacun à l'ouverture.
+		eq(s.players[fp].hand.size(), GameConst.START_HAND, "l'ouvreur ne pioche pas au tour 1")
+		eq(s.players[1 - fp].hand.size(), GameConst.START_HAND, "l'autre a encore 5 cartes")
+		Rules.apply(s, { "type": "end_turn" })                    # l'ouvreur passe
+		eq(s.current, 1 - fp, "la main passe au second joueur")
+		eq(s.players[1 - fp].hand.size(), GameConst.START_HAND + 1,
+				"le second joueur pioche à son 1er tour (+1 carte de compensation)")
+
+
 func test_deck_validation() -> void:
 	var index := TestUtil.std_index()
 	eq(Rules.validate_deck(index, _valid_deck()), "", "deck valide")

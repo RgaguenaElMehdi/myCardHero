@@ -593,18 +593,18 @@
 			"guild": "shadow",
 			"kind": "monster",
 			"rarity": "rare",
-			"cost": 4.0,
+			"cost": 5,
 			"attack_type": "melee",
 			"levels": [
 				{
-					"xp": 0.0,
-					"atk": 3.0,
-					"hp": 5.0
+					"xp": 0,
+					"atk": 5,
+					"hp": 7
 				},
 				{
-					"xp": 3.0,
-					"atk": 4.0,
-					"hp": 6.0
+					"xp": 4,
+					"atk": 6,
+					"hp": 8
 				}
 			],
 			"keywords": {
@@ -885,20 +885,19 @@
 		},
 		{
 			"id": "wild_growth",
-			"name": "Croissance sauvage",
+			"name": "Ronces vives",
 			"guild": "sylvan",
 			"kind": "spell",
 			"rarity": "commune",
-			"cost": 2.0,
+			"cost": 3.0,
 			"effect": [
 				{
-					"op": "buff",
-					"atk": 1.0,
-					"hp": 2.0,
-					"target": "ally_monster"
+					"op": "damage",
+					"amount": 3,
+					"target": "enemy_monster"
 				}
 			],
-			"flavor": "Les jardiniers détestent cette astuce."
+			"flavor": "Les ronces n'attendent pas la permission."
 		},
 		{
 			"id": "dark_pact",
@@ -945,7 +944,7 @@
 			"guild": "light",
 			"kind": "spell",
 			"rarity": "commune",
-			"cost": 1.0,
+			"cost": 2.0,
 			"effect": [
 				{
 					"op": "shield",
@@ -1075,7 +1074,7 @@
 			"guild": "sylvan",
 			"kind": "monster",
 			"rarity": "commune",
-			"cost": 2.0,
+			"cost": 1.0,
 			"attack_type": "melee",
 			"levels": [
 				{
@@ -1299,10 +1298,6 @@
 					"op": "heal",
 					"amount": 3.0,
 					"target": "ally_monster"
-				},
-				{
-					"op": "shield",
-					"target": "ally_monster"
 				}
 			],
 			"flavor": "Un cercle de lumière où rien ne meurt."
@@ -1484,7 +1479,7 @@
 			"effect": [
 				{
 					"op": "heal_master",
-					"amount": 4.0
+					"amount": 3
 				},
 				{
 					"op": "draw",
@@ -2037,18 +2032,18 @@
 			"guild": "shadow",
 			"kind": "monster",
 			"rarity": "epique",
-			"cost": 4,
+			"cost": 5,
 			"attack_type": "melee",
 			"levels": [
 				{
 					"xp": 0,
-					"atk": 4,
-					"hp": 4
+					"atk": 6,
+					"hp": 5
 				},
 				{
 					"xp": 4,
-					"atk": 5,
-					"hp": 5
+					"atk": 7,
+					"hp": 6
 				}
 			],
 			"on_death": [
@@ -2394,8 +2389,8 @@
 					"target": "enemy_monster"
 				},
 				{
-					"op": "shield",
-					"target": "ally_monster"
+					"op": "draw",
+					"count": 1
 				}
 			],
 			"flavor": "La lumiere frappe, puis couvre les siens."

@@ -207,8 +207,11 @@ func _setup_match() -> void:
 		player_deck = cfg.player_deck        # deck imposé par un défi
 	var m0: MasterDef = Db.master(StringName(String(my_deck.master)))
 	var m1: MasterDef = Db.master(StringName(String(cfg.opponent_master)))
+	# Tirage au sort du premier joueur (équité) ; les tutoriels gardent le joueur
+	# en premier. Le second joueur est compensé (le starter saute sa 1ʳᵉ pioche).
+	var first := 0 if not _mission.is_empty() else randi() % 2
 	state = _match.setup(Db.cards, [m0, m1],
-			[player_deck, cfg.opponent_deck], randi())
+			[player_deck, cfg.opponent_deck], randi(), first)
 	ai = AiPlayer.new(int(cfg.ai_level), randi())
 	# Modificateurs de règles d'un défi : PV de départ des Maîtres.
 	var mod: Dictionary = cfg.get("challenge", {}).get("mod", {})
@@ -314,7 +317,7 @@ func _on_mulligan_choice(redraw: bool) -> void:
 		busy = true                    # wait for the server push (opponent + start)
 		return
 	_match.apply({ "type": "mulligan", "redraw": redraw })
-	var res := _match.apply(ai.choose_action(state))  # AI mulligan → starts turn 1
+	var res := _match.apply(ai.choose_action(state))  # AI mulligan → main phase starts
 	mulligan_overlay.queue_free()
 	mulligan_overlay = null
 	_log("La partie commence !")
@@ -323,6 +326,12 @@ func _on_mulligan_choice(redraw: bool) -> void:
 	await _play_events(res.events)
 	busy = false
 	_refresh_all()
+	if state.is_over():
+		_show_game_over()
+		return
+	if state.current == 1:              # l'adversaire a gagné le tirage : il ouvre
+		_log("L'adversaire commence.")
+		await _ai_turn()
 
 
 # --- UI wiring (structure lives in battle.tscn) -----------------------------

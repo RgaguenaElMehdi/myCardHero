@@ -36,10 +36,15 @@ static func validate_deck(card_index: Dictionary, deck: Array) -> String:
 
 
 ## masters: [MasterDef, MasterDef] — decks: [Array of card ids, Array of card ids]
-static func setup(card_index: Dictionary, masters: Array, decks: Array, seed_value: int) -> GameState:
+## first_player: qui prend le premier tour (défaut 0 ; les vraies parties tirent
+## au sort). Le joueur 0 fait toujours son mulligan en premier (ordre d'UI) ;
+## first_player ne décide que du tour d'ouverture.
+static func setup(card_index: Dictionary, masters: Array, decks: Array, seed_value: int,
+		first_player: int = 0) -> GameState:
 	var state := GameState.new()
 	state.card_index = card_index
 	state.rng.seed = seed_value
+	state.first_player = clampi(first_player, 0, 1)
 	for i in 2:
 		var typed: Array[StringName] = []
 		for id in decks[i]:
@@ -117,7 +122,7 @@ static func _apply_mulligan(state: GameState, action: Dictionary, events: Array)
 	if not state.players[1].mulligan_done:
 		state.current = 1
 	else:
-		state.current = 0
+		state.current = state.first_player   # le tour d'ouverture va au joueur tiré au sort
 		state.phase = GameState.Phase.MAIN
 		_start_turn(state, events)
 	return ""
