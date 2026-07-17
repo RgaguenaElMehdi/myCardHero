@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 """Generate creature/portrait art for new cards & masters via gpt-image-2,
-matching the existing 1024x1024 pixel-art-on-dungeon-background style
+matching the existing pixel-art-on-dungeon-background style
 (assets/sprites/cards/*.png, assets/portraits/*.png). No transparency, no
 pixel-collapse: build_cards.py crops these into the ornate card frames.
+
+CADRAGE — voir tools/card_art_framing.md (la fenêtre de carte est PAYSAGE
+1.75:1, donc le format de l'art doit suivre la forme du sujet) :
+  - humanoïde → portrait 1024x1536, PLAN TAILLE (tête en haut, jusqu'à la taille) ;
+  - quadrupède / créature large → PAYSAGE 1536x1024, corps entier ;
+  - sort → portrait 1024x1536, élément central dans la moitié haute.
+Sans ça : têtes coupées (portrait trop serré) ou sujet minuscule.
 
 Reuses the API call from generate_ui_pack. Idempotent (skips existing unless
 --force). Usage: python tools/generate_content_art.py [--force] [--only <id>]

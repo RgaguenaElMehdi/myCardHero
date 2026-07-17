@@ -431,9 +431,12 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
                          Image.LANCZOS)
         cx = (art.width - bw) // 2
         # Bias the vertical crop toward the top (~10% margin) so full-body
-        # subjects keep their heads: the window is landscape but the art is
-        # portrait 2:3, and //3 was clipping faces. ponytail: //6 tuned on the
-        # roster; if a future art frames its subject lower, add a _crop_y override.
+        # subjects keep their heads: the window is landscape (~1.75:1) but a
+        # portrait art is tall, and //3 was clipping faces. ponytail: //6 tuned on
+        # the roster; if a future art frames its subject lower, add a _crop_y
+        # override. Source format should match the subject — see
+        # tools/card_art_framing.md (portrait plan-taille for humanoids, LANDSCAPE
+        # 1536x1024 for quadrupeds/wide creatures, centered for spells).
         cy = max(0, (art.height - bh) // 6)
         art = art.crop((cx, cy, cx + bw, cy + bh))
         img.paste(art, (ax0, ay0))
