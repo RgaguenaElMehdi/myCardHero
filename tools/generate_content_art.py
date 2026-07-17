@@ -47,6 +47,30 @@ UNITS_ART = {
     "temple_archer": "une archère elfe aux longs cheveux blancs en queue de cheval, oreilles pointues, robe blanche et or à motifs avec écharpe bleue, tenant un grand arc doré ouvragé avec une flèche encochée, pose de tir",
 }
 
+
+UNITS_ART.update({
+    "ember_sentinel": "un gardien de forge en armure noire, marteau incandescent, plein pied, pose d?fensive",
+    "lava_skirmisher": "un ?claireur agile glissant sur des plaques de lave, dague ardente, plein pied, pr?t ? bondir",
+    "cinder_alchemist": "un alchimiste flamboyant tenant des fioles de braise, plein pied, posture concentr?e",
+    "pyre_colossus": "un colosse de pierre et de flammes au torse volcanique, plein pied, masse titanesque",
+    "smoke_duelist": "un duelliste masqu? envelopp? de fum?e rouge, sabre enflamm?, plein pied, garde basse",
+    "mosswarden": "un gardien couvert de mousse et d'?corce, plein pied, cornes de racine, pose protectrice",
+    "thorn_whisperer": "une magicienne sylvestre murmurant aux ronces, plein pied, capuche de feuilles, b?ton vivant",
+    "canopy_hunter": "un chasseur agile de la canop?e, plein pied, arc de bois vivant, silhouette f?line",
+    "root_titan": "un g?ant racinaire au corps de tronc massif, plein pied, longues racines ancr?es au sol",
+    "bloom_vanguard": "une avant-garde florale en armure de feuilles, plein pied, bouclier de p?tales lev?",
+    "void_hound": "un molosse du vide maigre et rapide, plein pied, yeux violets et crocs sombres",
+    "umbra_knight": "un chevalier d'ombre aux plaques d'armure noires, plein pied, ?p?e courbe d?gain?e",
+    "grave_sibyl": "une sibylle s?pulcrale tenant un cr?ne et des cartes fun?raires, plein pied, brume violette",
+    "dusk_reaver": "un moissonneur cr?pusculaire avec grande faux noire et manteau d'ombres, plein pied",
+    "sunward_lancer": "un lancier sacr? en armure claire avec lance et bouclier solaire, plein pied, posture d'assaut",
+    "halo_medic": "une gu?risseuse aur?ol?e tenant un b?ton de lumi?re, plein pied, bandage flottant",
+    "prism_archon": "un archonte prismatique en manteau de lumi?re portant un sceptre cristallin, plein pied",
+    "dawn_paladin": "un paladin de l'aube en armure d'or blanc, plein pied, grande ?p?e lev?e",
+    "temple_sentinel": "une sentinelle du temple avec ?norme bouclier grav? et cape ivoire, plein pied",
+    "auric_phoenix": "un ph?nix d'or et d'ivoire ? l'aube, plein pied, ailes d?ploy?es, halo brillant",
+})
+
 # Per-guild dungeon ambiance for the background (matches the existing set).
 AMBIANCE = {
     "flame": "dans un donjon de pierre sombre veiné de lave, lueur orange et braises",
@@ -76,6 +100,48 @@ CARDS_ART = {
     "radiant_griffin": ("un griffon radieux doré aux larges ailes déployées, plumes éclatantes, serres en avant", "light"),
     "sanctuary": ("un dôme de lumière dorée protecteur au-dessus d'un cercle runique sacré, aucun personnage", "light"),
 }
+
+
+CARDS_ART.update({
+    "ember_sentinel": ("un gardien de forge en armure noire, marteau incandescent, devant un four volcanique", "flame"),
+    "lava_skirmisher": ("un ?claireur agile glissant sur des plaques de lave, dague ardente, posture de charge", "flame"),
+    "cinder_alchemist": ("un alchimiste flamboyant m?langeant des fioles de braise et de m?tal fondu", "flame"),
+    "pyre_colossus": ("un colosse de pierre et de flammes avec un torse volcanique et des runes de four", "flame"),
+    "smoke_duelist": ("un duelliste masqu? envelopp? de fum?e rouge, sabre enflamm? en garde", "flame"),
+    "molten_surge": ("une vague de roche en fusion et d'?tincelles qui d?ferle vers l'avant", "flame"),
+    "forge_rite": ("un rituel de forge autour d'enclumes, ?tincelles, cha?nes et sceaux de feu", "flame"),
+    "wildfire_burst": ("une explosion de broussailles embras?es, tourbillon de flammes et de cendres", "flame"),
+    "ember_reckoning": ("un pacte de braises sur un parchemin br?l?, pi?ces de pierre rouge et main spectrale", "flame"),
+    "mosswarden": ("un gardien couvert de mousse et d'?corce, masse v?g?tale, cornes de racine", "sylvan"),
+    "thorn_whisperer": ("une magicienne sylvestre murmurant aux ronces, capuche de feuilles, baguette vivante", "sylvan"),
+    "canopy_hunter": ("un chasseur agile dans la canop?e, arc de bois vivant, silhouette de f?lin", "sylvan"),
+    "root_titan": ("un g?ant racinaire au corps de tronc massif et de longues racines enserrant la terre", "sylvan"),
+    "bloom_vanguard": ("une avant-garde florale en armure de feuilles, bouclier de p?tales, posture protectrice", "sylvan"),
+    "seed_surge": ("une pluie de graines lumineuses et de jeunes pousses jaillissant d'une main ouverte", "sylvan"),
+    "verdant_blessing": ("un faisceau de s?ve verte gu?rissant une blessure et faisant ?clore des fleurs", "sylvan"),
+    "canopy_shield": ("un d?me de branches et de feuilles formant une barri?re protectrice", "sylvan"),
+    "moonbloom": ("une fleur lunaire brillante qui s'ouvre sur une ros?e argent?e", "sylvan"),
+    "living_grove": ("un bosquet miniature qui s'?veille, arbres et lianes sortant d'un cercle de runes", "sylvan"),
+    "void_hound": ("un molosse du vide maigre et rapide, yeux violets, crocs sombres", "shadow"),
+    "umbra_knight": ("un chevalier d'ombre aux plaques d'armure noires et ? l'?p?e courbe", "shadow"),
+    "grave_sibyl": ("une sibylle s?pulcrale tenant un cr?ne et des cartes fun?raires, brume violette", "shadow"),
+    "dusk_reaver": ("un moissonneur cr?pusculaire avec grande faux noire et manteau d'ombres", "shadow"),
+    "sepulchral_mark": ("une marque fun?bre grav?e sur une pierre tombale, lueur violette et brume", "shadow"),
+    "night_veil": ("un voile d'obscurit? et de poussi?re d'?toiles couvrant une silhouette", "shadow"),
+    "black_tribute": ("un rituel de tribut noir avec main spectrale, bougie ?teinte et pi?ces d'obsidienne", "shadow"),
+    "abyssal_hex": ("un sceau d'ab?me ouvert sous une fissure noire et des tentacules de brume", "shadow"),
+    "grave_fog": ("un brouillard de tombe dense avec silhouettes fantomatiques et corbeaux", "shadow"),
+    "sunward_lancer": ("un lancier sacr? en armure claire avec lance et bouclier solaire", "light"),
+    "halo_medic": ("une gu?risseuse aur?ol?e tenant un b?ton de lumi?re et un bandage flottant", "light"),
+    "prism_archon": ("un archonte prismatique en manteau de lumi?re portant un sceptre cristallin", "light"),
+    "dawn_paladin": ("un paladin de l'aube en armure d'or blanc, grande ?p?e lev?e au lever du soleil", "light"),
+    "temple_sentinel": ("une sentinelle du temple avec ?norme bouclier grav? et cape ivoire", "light"),
+    "auric_phoenix": ("un ph?nix d'or et d'ivoire ? l'aube, ailes d?ploy?es, halo brillant", "light"),
+    "blessing_ray": ("un rayon de b?n?diction descendant comme une colonne de lumi?re et de particules", "light"),
+    "sanctified_aegis": ("un ?cu sacr? baign? d'or, runes de protection et halo radial", "light"),
+    "sunrise_liturgy": ("une liturgie ? l'aube avec livre ouvert, lumi?re dor?e et pri?res en spirale", "light"),
+    "radiant_pulse": ("une onde radieuse circulaire jaillissant d'un noyau solaire", "light"),
+})
 
 PORTRAITS_ART = {
     "brand": ("le portrait en buste de Brand, maître d'armes féroce au visage balafré, armure de braise, regard dur, face au joueur", "flame"),

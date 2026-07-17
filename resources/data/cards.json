@@ -1306,6 +1306,1099 @@
 				}
 			],
 			"flavor": "Un cercle de lumière où rien ne meurt."
+		},
+		{
+			"id": "volcano_oracle",
+			"name": "Oracle du volcan",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 4.0,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0.0,
+					"atk": 2.0,
+					"hp": 5.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 3.0,
+					"hp": 6.0
+				}
+			],
+			"on_summon": [
+				{
+					"op": "stones",
+					"amount": 1.0
+				}
+			],
+			"flavor": "Elle écoute la montagne compter les secondes avant l'éruption."
+		},
+		{
+			"id": "volcanic_insight",
+			"name": "Vision volcanique",
+			"guild": "flame",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2.0,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 1.0,
+					"target": "enemy_monster"
+				},
+				{
+					"op": "draw",
+					"count": 1.0
+				}
+			],
+			"flavor": "Dans chaque braise dort une réponse brûlante."
+		},
+		{
+			"id": "mycelium_warden",
+			"name": "Gardienne mycélienne",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3.0,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0.0,
+					"atk": 1.0,
+					"hp": 6.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 2.0,
+					"hp": 7.0
+				}
+			],
+			"keywords": {
+				"regen": 1.0
+			},
+			"flavor": "Sous chaque pas, son réseau sait déjà qui approche."
+		},
+		{
+			"id": "bark_renewal",
+			"name": "Renouveau d'écorce",
+			"guild": "sylvan",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2.0,
+			"effect": [
+				{
+					"op": "heal",
+					"amount": 2.0,
+					"target": "ally_monster"
+				},
+				{
+					"op": "buff",
+					"atk": 0.0,
+					"hp": 1.0,
+					"target": "ally_monster"
+				}
+			],
+			"flavor": "La cicatrice devient une nouvelle branche."
+		},
+		{
+			"id": "veil_executioner",
+			"name": "Exécuteur du voile",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3.0,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0.0,
+					"atk": 4.0,
+					"hp": 2.0
+				},
+				{
+					"xp": 3.0,
+					"atk": 5.0,
+					"hp": 3.0
+				}
+			],
+			"on_death": [
+				{
+					"op": "draw",
+					"count": 1.0
+				}
+			],
+			"flavor": "Sa dernière lame est toujours une information."
+		},
+		{
+			"id": "grave_bargain",
+			"name": "Marché sépulcral",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2.0,
+			"effect": [
+				{
+					"op": "sacrifice",
+					"target": "ally_monster"
+				},
+				{
+					"op": "stones",
+					"amount": 3.0
+				}
+			],
+			"flavor": "La tombe accepte les paiements anticipés."
+		},
+		{
+			"id": "solar_vigil",
+			"name": "Vigile solaire",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 4.0,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0.0,
+					"atk": 3.0,
+					"hp": 4.0
+				},
+				{
+					"xp": 4.0,
+					"atk": 4.0,
+					"hp": 5.0
+				}
+			],
+			"keywords": {
+				"shield": true
+			},
+			"flavor": "Son bouclier renvoie la nuit d'où elle vient."
+		},
+		{
+			"id": "dawn_psalm",
+			"name": "Psaume de l'aube",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3.0,
+			"effect": [
+				{
+					"op": "heal_master",
+					"amount": 4.0
+				},
+				{
+					"op": "draw",
+					"count": 1.0
+				}
+			],
+			"flavor": "Le premier vers suffit à rallumer le jour."
+		},
+		{
+			"id": "ember_sentinel",
+			"name": "Sentinelle de braise",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 2,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 5
+				}
+			],
+			"on_summon": [
+				{
+					"op": "stones",
+					"amount": 1
+				}
+			],
+			"flavor": "Il garde la porte du four comme un serment."
+		},
+		{
+			"id": "lava_skirmisher",
+			"name": "Escarmoucheur de lave",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 1,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 1,
+					"hp": 2
+				},
+				{
+					"xp": 2,
+					"atk": 2,
+					"hp": 3
+				},
+				{
+					"xp": 5,
+					"atk": 3,
+					"hp": 4
+				}
+			],
+			"keywords": {
+				"haste": true
+			},
+			"flavor": "Il bondit de dalle en dalle avant que la lave ne refroidisse."
+		},
+		{
+			"id": "cinder_alchemist",
+			"name": "Alchimiste cendreux",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 5
+				}
+			],
+			"on_summon": [
+				{
+					"op": "damage",
+					"amount": 1,
+					"target": "enemy_monster"
+				}
+			],
+			"flavor": "Ses fioles brillent plus fort que ses convictions."
+		},
+		{
+			"id": "pyre_colossus",
+			"name": "Colosse du bucher",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 7
+				},
+				{
+					"xp": 4,
+					"atk": 5,
+					"hp": 8
+				},
+				{
+					"xp": 8,
+					"atk": 6,
+					"hp": 9
+				}
+			],
+			"keywords": {
+				"armor": 1
+			},
+			"on_death": [
+				{
+					"op": "damage_all_enemies",
+					"amount": 1
+				}
+			],
+			"flavor": "Quand il tombe, les braises tombent avec lui."
+		},
+		{
+			"id": "smoke_duelist",
+			"name": "Duelliste de fumee",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 4,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"riposte": true
+			},
+			"on_summon": [
+				{
+					"op": "buff",
+					"target": "ally_monster",
+					"atk": 1,
+					"hp": 1
+				}
+			],
+			"flavor": "On ne voit son coup qu'une fois la fumee dissipee."
+		},
+		{
+			"id": "molten_surge",
+			"name": "Deferlante de lave",
+			"guild": "flame",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 2,
+					"target": "enemy_monster"
+				}
+			],
+			"flavor": "Le sol cede avant meme que la chaleur n'arrive."
+		},
+		{
+			"id": "forge_rite",
+			"name": "Rite de forge",
+			"guild": "flame",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "stones",
+					"amount": 2
+				},
+				{
+					"op": "buff",
+					"target": "ally_monster",
+					"atk": 1,
+					"hp": 1
+				}
+			],
+			"flavor": "Le marteau chante, puis l'acier obeit."
+		},
+		{
+			"id": "wildfire_burst",
+			"name": "Explosion sauvage",
+			"guild": "flame",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "damage_all_enemies",
+					"amount": 1
+				}
+			],
+			"flavor": "Une seule etincelle suffit a faire courir l'incendie."
+		},
+		{
+			"id": "ember_reckoning",
+			"name": "Revanche des braises",
+			"guild": "flame",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 1,
+			"effect": [
+				{
+					"op": "stones",
+					"amount": 1
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Meme les cendres gardent une memoire."
+		},
+		{
+			"id": "mosswarden",
+			"name": "Gardien de mousse",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 2,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"regen": 1
+			},
+			"flavor": "Sous sa mousse pousse toujours une autre vie."
+		},
+		{
+			"id": "thorn_whisperer",
+			"name": "Murmure-ronces",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 4
+				}
+			],
+			"on_summon": [
+				{
+					"op": "buff",
+					"target": "ally_monster",
+					"hp": 1
+				}
+			],
+			"flavor": "Elle parle aux epines comme a de vieilles amies."
+		},
+		{
+			"id": "canopy_hunter",
+			"name": "Chasseur de canopee",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 3,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 3
+				},
+				{
+					"xp": 2,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 5,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"flying": true
+			},
+			"flavor": "Il connait les hauteurs comme d'autres connaissent les sentiers."
+		},
+		{
+			"id": "root_titan",
+			"name": "Titan racinaire",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 8
+				},
+				{
+					"xp": 4,
+					"atk": 5,
+					"hp": 10
+				},
+				{
+					"xp": 8,
+					"atk": 6,
+					"hp": 11
+				}
+			],
+			"keywords": {
+				"armor": 2
+			},
+			"flavor": "Les racines ceden t rarement quand elles ont deja traverse un siecle."
+		},
+		{
+			"id": "bloom_vanguard",
+			"name": "Avant-garde florale",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 5
+				},
+				{
+					"xp": 4,
+					"atk": 4,
+					"hp": 6
+				}
+			],
+			"keywords": {
+				"shield": true
+			},
+			"on_attack": [
+				{
+					"op": "heal",
+					"target": "ally_monster",
+					"amount": 1
+				}
+			],
+			"flavor": "Elle avance en premiere ligne, mais tout le bosquet avance avec elle."
+		},
+		{
+			"id": "seed_surge",
+			"name": "Impulsion de graines",
+			"guild": "sylvan",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "buff",
+					"target": "ally_monster",
+					"hp": 2
+				}
+			],
+			"flavor": "Une poignee de graines peut deja changer un terrain."
+		},
+		{
+			"id": "verdant_blessing",
+			"name": "Benediction verdoyante",
+			"guild": "sylvan",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "heal",
+					"target": "ally_monster",
+					"amount": 3
+				}
+			],
+			"flavor": "La seve douce ferme les blessures et les hesitations."
+		},
+		{
+			"id": "canopy_shield",
+			"name": "Bouclier de canopee",
+			"guild": "sylvan",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "shield",
+					"target": "ally_monster"
+				},
+				{
+					"op": "buff",
+					"target": "ally_monster",
+					"hp": 1
+				}
+			],
+			"flavor": "Les feuilles savent etre une armure tres convaincante."
+		},
+		{
+			"id": "moonbloom",
+			"name": "Floraison lunaire",
+			"guild": "sylvan",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 1,
+			"effect": [
+				{
+					"op": "heal",
+					"target": "ally_monster",
+					"amount": 1
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Sous la lune, meme les petales apprennent a reparer."
+		},
+		{
+			"id": "living_grove",
+			"name": "Bosquet vivant",
+			"guild": "sylvan",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "draw",
+					"count": 2
+				}
+			],
+			"flavor": "Le bosquet repond, puis les cartes aussi."
+		},
+		{
+			"id": "void_hound",
+			"name": "Molosse du vide",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 2,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 2
+				},
+				{
+					"xp": 2,
+					"atk": 4,
+					"hp": 3
+				}
+			],
+			"keywords": {
+				"haste": true
+			},
+			"flavor": "Sa course laisse des traces que la lumiere deteste."
+		},
+		{
+			"id": "umbra_knight",
+			"name": "Chevalier d'ombre",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"riposte": true
+			},
+			"flavor": "Il ne quitte jamais vraiment le duel."
+		},
+		{
+			"id": "grave_sibyl",
+			"name": "Sibylle sepulcrale",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 2,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 1,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 2,
+					"hp": 5
+				}
+			],
+			"on_summon": [
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Elle lit les vivants comme des prieres inachevees."
+		},
+		{
+			"id": "dusk_reaver",
+			"name": "Moissonneur du crepuscule",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 4
+				},
+				{
+					"xp": 4,
+					"atk": 5,
+					"hp": 5
+				}
+			],
+			"on_death": [
+				{
+					"op": "damage",
+					"amount": 1,
+					"target": "enemy_monster"
+				}
+			],
+			"flavor": "Meme tombe, il sait encore entamer la chair du soir."
+		},
+		{
+			"id": "sepulchral_mark",
+			"name": "Marque sepulcrale",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 1,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 1,
+					"target": "enemy_monster"
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Une signature funebre suffit a faire vaciller un sort."
+		},
+		{
+			"id": "night_veil",
+			"name": "Voile de nuit",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "shield",
+					"target": "ally_monster"
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "La nuit protege mieux qu'un mur quand elle le decide."
+		},
+		{
+			"id": "black_tribute",
+			"name": "Tribut noir",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "sacrifice",
+					"target": "ally_monster"
+				},
+				{
+					"op": "stones",
+					"amount": 4
+				}
+			],
+			"flavor": "L'obscurite n'achete rien, elle exige."
+		},
+		{
+			"id": "abyssal_hex",
+			"name": "Malefice abyssal",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 2,
+					"target": "enemy_monster"
+				}
+			],
+			"flavor": "Le vide ne hurle pas; il etouffe."
+		},
+		{
+			"id": "grave_fog",
+			"name": "Brume des tombes",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "damage_all_enemies",
+					"amount": 1
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Chaque tombe degage un peu de savoir quand le brouillard monte."
+		},
+		{
+			"id": "sunward_lancer",
+			"name": "Lancier solaire",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 3,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 3
+				},
+				{
+					"xp": 2,
+					"atk": 4,
+					"hp": 4
+				}
+			],
+			"keywords": {
+				"shield": true
+			},
+			"flavor": "Il avance comme une aube qui refuse d'attendre."
+		},
+		{
+			"id": "halo_medic",
+			"name": "Medic halo",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 2,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 1,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 2,
+					"hp": 4
+				}
+			],
+			"on_summon": [
+				{
+					"op": "heal",
+					"target": "ally_monster",
+					"amount": 2
+				}
+			],
+			"flavor": "Ses soins arrivent avant meme qu'on se pense blesse."
+		},
+		{
+			"id": "prism_archon",
+			"name": "Archonte prismatique",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 4,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 5
+				},
+				{
+					"xp": 4,
+					"atk": 4,
+					"hp": 6
+				}
+			],
+			"on_attack": [
+				{
+					"op": "shield",
+					"target": "ally_monster"
+				}
+			],
+			"flavor": "Chaque rayon qu'il brise devient une garde de plus."
+		},
+		{
+			"id": "dawn_paladin",
+			"name": "Paladin de l'aube",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 7
+				},
+				{
+					"xp": 4,
+					"atk": 5,
+					"hp": 8
+				}
+			],
+			"keywords": {
+				"armor": 1
+			},
+			"flavor": "Sa foi tient bon meme quand le ciel hesite."
+		},
+		{
+			"id": "temple_sentinel",
+			"name": "Sentinelle du temple",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 4,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 4,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"shield": true
+			},
+			"flavor": "Elle veille sur les marches comme un serment de marbre."
+		},
+		{
+			"id": "auric_phoenix",
+			"name": "Phenix aurique",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "legendaire",
+			"cost": 6,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 6
+				},
+				{
+					"xp": 5,
+					"atk": 6,
+					"hp": 7
+				},
+				{
+					"xp": 9,
+					"atk": 7,
+					"hp": 8
+				}
+			],
+			"keywords": {
+				"flying": true
+			},
+			"on_death": [
+				{
+					"op": "heal_master",
+					"amount": 4
+				}
+			],
+			"flavor": "Quand il brule, l'aube renait plus forte."
+		},
+		{
+			"id": "blessing_ray",
+			"name": "Rayon de benediction",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "heal_master",
+					"amount": 3
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Un trait de lumiere suffit parfois a remettre le monde d'aplomb."
+		},
+		{
+			"id": "sanctified_aegis",
+			"name": "Egide consacree",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "shield",
+					"target": "ally_monster"
+				},
+				{
+					"op": "buff",
+					"target": "ally_monster",
+					"hp": 1
+				}
+			],
+			"flavor": "La protection devient plus lourde quand la foi s'y grave."
+		},
+		{
+			"id": "sunrise_liturgy",
+			"name": "Liturgie de l'aube",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "heal",
+					"target": "ally_monster",
+					"amount": 3
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Chaque chant souleve un peu plus le jour."
+		},
+		{
+			"id": "radiant_pulse",
+			"name": "Impulsion radieuse",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 2,
+					"target": "enemy_monster"
+				},
+				{
+					"op": "shield",
+					"target": "ally_monster"
+				}
+			],
+			"flavor": "La lumiere frappe, puis couvre les siens."
 		}
 	]
 }

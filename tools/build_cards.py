@@ -272,14 +272,21 @@ def auto_trim(img: Image.Image) -> Image.Image:
     return img.crop((x0 + pad, y0 + pad, x1 - pad + 1, y1 - pad + 1))
 
 
-def strip_black_margin(img: Image.Image, thresh: int = 30) -> Image.Image:
+def strip_black_margin(img: Image.Image, thresh: int = 30,
+                       protect: tuple | None = None) -> Image.Image:
     """Rend transparente la marge noire du gabarit autour du cadre (les frames
     Ombre/Maître sont peints sur fond noir plus étroit que le canevas — sans ça
     le noir reste cuit dans la carte : bandes visibles en jeu). Flood fill du
     quasi-noir depuis les bords ; on garde un liséré de 2 px pour préserver le
-    contour sombre du cadre."""
+    contour sombre du cadre.
+    `protect` (x0,y0,x1,y1) : rectangle jamais considéré « sombre » — barrière
+    qui empêche le flood d'entrer dans la fenêtre d'art (les illustrations à fond
+    sombre touchant le bord du cadre étaient trouées, cf. fire_archer)."""
     a = np.array(img)
     dark = (a[..., :3].max(axis=2) < thresh) | (a[..., 3] < 30)
+    if protect is not None:
+        x0, y0, x1, y1 = protect
+        dark[max(0, y0):y1, max(0, x0):x1] = False
     reach = np.zeros_like(dark)
     reach[0, :] = dark[0, :]
     reach[-1, :] = dark[-1, :]
@@ -423,7 +430,11 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
         art = art.resize((int(art.width * scale) + 1, int(art.height * scale) + 1),
                          Image.LANCZOS)
         cx = (art.width - bw) // 2
-        cy = max(0, (art.height - bh) // 3)
+        # Bias the vertical crop toward the top (~10% margin) so full-body
+        # subjects keep their heads: the window is landscape but the art is
+        # portrait 2:3, and //3 was clipping faces. ponytail: //6 tuned on the
+        # roster; if a future art frames its subject lower, add a _crop_y override.
+        cy = max(0, (art.height - bh) // 6)
         art = art.crop((cx, cy, cx + bw, cy + bh))
         img.paste(art, (ax0, ay0))
 
@@ -532,6 +543,15 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
             kws.append(n if val is True else "%s %d" % (n, val))
         if kws:
             block.append(", ".join(kws) + ".")
+        trigger_labels = (
+            ("on_summon", "À l'invocation"),
+            ("on_attack", "À l'attaque"),
+            ("on_death", "À la mort"),
+        )
+        for trigger, label in trigger_labels:
+            ops = card.get(trigger, [])
+            if ops:
+                block.append("%s : %s" % (label, describe_effect(ops)))
         if block:
             sections.append(block)
         block2 = []
@@ -604,6 +624,9 @@ def compose_card(card: dict, tpl: Image.Image, box: tuple, gem: tuple) -> Image.
             draw.ellipse((gx - ir, gy - ir, gx + ir, gy + ir), fill=metal)
             hr = max(1, int(gr * 0.3))
             draw.ellipse((gx - hr - 1, gy - hr - 1, gx + hr - 1, gy + hr - 1), fill=light)
+    # Strip the template's black canvas margin, protecting the art window so a
+    # dark illustration touching the window edge is never flood-filled through.
+    img = strip_black_margin(img, protect=(ax0, ay0, ax1, ay1))
     return img
 
 
@@ -651,7 +674,6 @@ def main() -> int:
         tpl, box, gem = get_template(kind, card.get("guild", "flame"), rarity)
         img = compose_card(card, tpl, box, gem)
         img = auto_trim(img)
-        img = strip_black_margin(img)
         bbox = img.getchannel("A").getbbox()
         if bbox:
             img = img.crop(bbox)

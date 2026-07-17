@@ -13,6 +13,9 @@ export_credentials.cfg
 Thumbs.db
 *.tmp
 
+# Playwright MCP (captures/logs temporaires)
+.playwright-mcp/
+
 # Asset pipeline intermediates
 tools/__pycache__/
 tools/.cache/
