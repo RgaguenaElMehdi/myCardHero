@@ -1,0 +1,456 @@
+{
+	"cards": [
+		{
+			"id": "dawn_acolyte",
+			"name": "Acolyte de l'aube",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 1,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 2
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 3
+				}
+			],
+			"on_summon": [
+				{
+					"op": "heal_master",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "lightwing",
+			"name": "Aile-lumière",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 1,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 1,
+					"hp": 2
+				},
+				{
+					"xp": 3,
+					"atk": 2,
+					"hp": 3
+				}
+			],
+			"keywords": {
+				"flying": true
+			}
+		},
+		{
+			"id": "temple_page",
+			"name": "Page du temple",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 1,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 1,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 2,
+					"hp": 4
+				}
+			],
+			"keywords": {
+				"armor": 1
+			}
+		},
+		{
+			"id": "shield_maiden",
+			"name": "Vierge au bouclier",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 2,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 1,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 2,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"armor": 1
+			}
+		},
+		{
+			"id": "cleric_guard",
+			"name": "Garde-clerc",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 2,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"regen": 1
+			}
+		},
+		{
+			"id": "sunpriest",
+			"name": "Prêtre solaire",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 5
+				}
+			],
+			"on_summon": [
+				{
+					"op": "heal",
+					"amount": 2,
+					"target": "ally_monster"
+				}
+			],
+			"evolves_to": "high_sunpriest",
+			"evolve_cost": 2
+		},
+		{
+			"id": "radiant_knight",
+			"name": "Chevalier radieux",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"evolves_to": "radiant_champion",
+			"evolve_cost": 2
+		},
+		{
+			"id": "gryphon_rider",
+			"name": "Chevaucheuse de griffon",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 3,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 5,
+					"hp": 4
+				}
+			],
+			"keywords": {
+				"flying": true
+			}
+		},
+		{
+			"id": "vanguard_paladin",
+			"name": "Paladin d'avant-garde",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 6
+				},
+				{
+					"xp": 3,
+					"atk": 5,
+					"hp": 7
+				}
+			],
+			"keywords": {
+				"armor": 1
+			},
+			"evolves_to": "high_paladin",
+			"evolve_cost": 2
+		},
+		{
+			"id": "seraphim",
+			"name": "Séraphin gardien",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 5
+				},
+				{
+					"xp": 3,
+					"atk": 6,
+					"hp": 6
+				}
+			],
+			"keywords": {
+				"flying": true
+			},
+			"evolves_to": "archseraph",
+			"evolve_cost": 2
+		},
+		{
+			"id": "solar_titan",
+			"name": "Titan solaire",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 6,
+					"hp": 7
+				},
+				{
+					"xp": 3,
+					"atk": 7,
+					"hp": 8
+				}
+			],
+			"keywords": {
+				"regen": 1
+			}
+		},
+		{
+			"id": "high_sunpriest",
+			"name": "Grand prêtre solaire",
+			"guild": "light",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 6
+				}
+			],
+			"on_summon": [
+				{
+					"op": "heal",
+					"amount": 2,
+					"target": "ally_monster"
+				}
+			],
+			"token": true
+		},
+		{
+			"id": "radiant_champion",
+			"name": "Champion radieux",
+			"guild": "light",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 6,
+					"hp": 6
+				}
+			],
+			"token": true
+		},
+		{
+			"id": "high_paladin",
+			"name": "Grand paladin",
+			"guild": "light",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 6,
+					"hp": 9
+				}
+			],
+			"keywords": {
+				"armor": 1
+			},
+			"token": true
+		},
+		{
+			"id": "archseraph",
+			"name": "Archséraphin",
+			"guild": "light",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 7,
+					"hp": 7
+				}
+			],
+			"keywords": {
+				"flying": true
+			},
+			"token": true
+		},
+		{
+			"id": "smite",
+			"name": "Châtiment",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 2,
+					"target": "enemy_monster"
+				},
+				{
+					"op": "heal_master",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "searing_light",
+			"name": "Lumière incendiaire",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 4,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 3,
+					"target": "enemy_monster"
+				}
+			]
+		},
+		{
+			"id": "dawns_wrath",
+			"name": "Courroux de l'aube",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "epique",
+			"cost": 5,
+			"effect": [
+				{
+					"op": "damage_all_enemies",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"id": "mend_light",
+			"name": "Baume de lumière",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 1,
+			"effect": [
+				{
+					"op": "heal",
+					"amount": 2,
+					"target": "ally_monster"
+				}
+			]
+		},
+		{
+			"id": "consecrate",
+			"name": "Consécration",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "heal",
+					"amount": 3,
+					"target": "ally_monster"
+				},
+				{
+					"op": "buff",
+					"hp": 1,
+					"target": "ally_monster"
+				}
+			]
+		},
+		{
+			"id": "crusade",
+			"name": "Croisade",
+			"guild": "light",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "buff",
+					"atk": 2,
+					"hp": 2,
+					"target": "ally_monster"
+				}
+			]
+		}
+	]
+}

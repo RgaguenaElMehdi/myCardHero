@@ -1,0 +1,447 @@
+{
+	"cards": [
+		{
+			"id": "grave_imp",
+			"name": "Diablotin des tombes",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 1,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 1,
+					"hp": 1
+				},
+				{
+					"xp": 3,
+					"atk": 2,
+					"hp": 2
+				}
+			],
+			"flavor": "Chair à sacrifice."
+		},
+		{
+			"id": "crypt_bat",
+			"name": "Chauve-souris des cryptes",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 2,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 2
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 3
+				}
+			],
+			"keywords": {
+				"flying": true
+			}
+		},
+		{
+			"id": "soul_harvester",
+			"name": "Moissonneur d'âmes",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 4
+				}
+			],
+			"on_death": [
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"evolves_to": "soul_reaper",
+			"evolve_cost": 2
+		},
+		{
+			"id": "gloom_stalker",
+			"name": "Traqueur des ombres",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 3,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 5,
+					"hp": 4
+				}
+			],
+			"keywords": {
+				"haste": true
+			}
+		},
+		{
+			"id": "wight",
+			"name": "Spectre-liche",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 5,
+					"hp": 5
+				}
+			]
+		},
+		{
+			"id": "grave_golem",
+			"name": "Golem funéraire",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 6
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 7
+				}
+			],
+			"keywords": {
+				"armor": 1
+			}
+		},
+		{
+			"id": "bone_colossus",
+			"name": "Colosse d'ossements",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 5
+				},
+				{
+					"xp": 3,
+					"atk": 6,
+					"hp": 6
+				}
+			],
+			"evolves_to": "bone_leviathan",
+			"evolve_cost": 2
+		},
+		{
+			"id": "plague_bearer",
+			"name": "Porte-peste",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 4,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"on_death": [
+				{
+					"op": "damage_all_enemies",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "dread_knight",
+			"name": "Chevalier d'effroi",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 6
+				},
+				{
+					"xp": 3,
+					"atk": 6,
+					"hp": 7
+				}
+			],
+			"keywords": {
+				"riposte": 1
+			}
+		},
+		{
+			"id": "void_wraith",
+			"name": "Spectre du vide",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 6,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 7,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"flying": true
+			},
+			"evolves_to": "void_devourer",
+			"evolve_cost": 2
+		},
+		{
+			"id": "nightmare_lord",
+			"name": "Seigneur cauchemar",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "legendaire",
+			"cost": 6,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 7,
+					"hp": 7
+				},
+				{
+					"xp": 3,
+					"atk": 8,
+					"hp": 8
+				}
+			],
+			"evolves_to": "dread_sovereign",
+			"evolve_cost": 2
+		},
+		{
+			"id": "abyssal_horror",
+			"name": "Horreur abyssale",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 6,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 6,
+					"hp": 9
+				}
+			],
+			"keywords": {
+				"armor": 1
+			}
+		},
+		{
+			"id": "soul_reaper",
+			"name": "Faucheur d'âmes",
+			"guild": "shadow",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 5
+				}
+			],
+			"on_death": [
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"token": true
+		},
+		{
+			"id": "bone_leviathan",
+			"name": "Léviathan d'os",
+			"guild": "shadow",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 7,
+					"hp": 9
+				}
+			],
+			"token": true
+		},
+		{
+			"id": "void_devourer",
+			"name": "Dévoreur du vide",
+			"guild": "shadow",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 8,
+					"hp": 6
+				}
+			],
+			"keywords": {
+				"flying": true
+			},
+			"token": true
+		},
+		{
+			"id": "dread_sovereign",
+			"name": "Souverain d'effroi",
+			"guild": "shadow",
+			"kind": "monster",
+			"cost": 0,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 9,
+					"hp": 9
+				}
+			],
+			"token": true
+		},
+		{
+			"id": "dark_bolt",
+			"name": "Trait ténébreux",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 2,
+					"target": "enemy_monster"
+				},
+				{
+					"op": "draw",
+					"count": 1
+				}
+			]
+		},
+		{
+			"id": "oblivion",
+			"name": "Oubli",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "epique",
+			"cost": 5,
+			"effect": [
+				{
+					"op": "damage_all_enemies",
+					"amount": 3
+				}
+			]
+		},
+		{
+			"id": "soul_siphon",
+			"name": "Siphon d'âme",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 4,
+			"effect": [
+				{
+					"op": "damage",
+					"amount": 3,
+					"target": "enemy_monster"
+				},
+				{
+					"op": "heal_master",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"id": "black_market",
+			"name": "Marché noir",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "commune",
+			"cost": 2,
+			"effect": [
+				{
+					"op": "sacrifice",
+					"target": "ally_monster"
+				},
+				{
+					"op": "stones",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"id": "grim_tutor",
+			"name": "Tuteur funeste",
+			"guild": "shadow",
+			"kind": "spell",
+			"rarity": "rare",
+			"cost": 3,
+			"effect": [
+				{
+					"op": "draw",
+					"count": 3
+				}
+			]
+		}
+	]
+}
