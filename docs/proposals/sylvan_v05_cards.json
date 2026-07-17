@@ -11,15 +11,18 @@
 			"levels": [
 				{
 					"xp": 0,
-					"atk": 2,
-					"hp": 2
+					"atk": 1,
+					"hp": 3
 				},
 				{
 					"xp": 3,
-					"atk": 3,
-					"hp": 3
+					"atk": 2,
+					"hp": 4
 				}
 			],
+			"keywords": {
+				"riposte": 1
+			},
 			"flavor": "Petit, piquant, tenace."
 		},
 		{

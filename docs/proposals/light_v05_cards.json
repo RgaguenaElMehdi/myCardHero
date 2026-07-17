@@ -38,13 +38,13 @@
 			"levels": [
 				{
 					"xp": 0,
-					"atk": 1,
-					"hp": 2
+					"atk": 2,
+					"hp": 1
 				},
 				{
 					"xp": 3,
-					"atk": 2,
-					"hp": 3
+					"atk": 3,
+					"hp": 2
 				}
 			],
 			"keywords": {
@@ -62,18 +62,16 @@
 			"levels": [
 				{
 					"xp": 0,
-					"atk": 1,
-					"hp": 3
+					"atk": 2,
+					"hp": 2
 				},
 				{
 					"xp": 3,
-					"atk": 2,
-					"hp": 4
+					"atk": 3,
+					"hp": 3
 				}
 			],
-			"keywords": {
-				"armor": 1
-			}
+			"flavor": "Même les novices portent l'aube au front."
 		},
 		{
 			"id": "shield_maiden",

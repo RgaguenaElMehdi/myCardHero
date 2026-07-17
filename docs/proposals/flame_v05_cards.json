@@ -46,12 +46,11 @@
 			],
 			"on_death": [
 				{
-					"op": "damage",
-					"amount": 1,
-					"target": "enemy_monster"
+					"op": "damage_all_enemies",
+					"amount": 1
 				}
 			],
-			"flavor": "Il pète en partant."
+			"flavor": "Il explose en partant."
 		},
 		{
 			"id": "ash_zealot",
@@ -184,21 +183,22 @@
 			"name": "Lancier ardent",
 			"guild": "flame",
 			"kind": "monster",
-			"rarity": "commune",
-			"cost": 4,
+			"rarity": "epique",
+			"cost": 6,
 			"attack_type": "melee",
 			"levels": [
 				{
 					"xp": 0,
-					"atk": 5,
-					"hp": 3
+					"atk": 8,
+					"hp": 5
 				},
 				{
 					"xp": 3,
-					"atk": 6,
-					"hp": 4
+					"atk": 9,
+					"hp": 6
 				}
-			]
+			],
+			"flavor": "Sa charge ouvre la voie au brasier final."
 		},
 		{
 			"id": "cinder_wyrm",

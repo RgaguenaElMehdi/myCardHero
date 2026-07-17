@@ -16,12 +16,12 @@ const EXPANSION_IDS := [
 	"blessing_ray", "sanctified_aegis", "sunrise_liturgy", "radiant_pulse",
 ]
 
-const EXPECTED_TOTAL_CARDS := 100
+const EXPECTED_TOTAL_CARDS := 184
 const EXPECTED_GUILD_COUNTS := {
-	"flame": 25,
-	"sylvan": 25,
-	"shadow": 25,
-	"light": 25,
+	"flame": 46,
+	"sylvan": 46,
+	"shadow": 46,
+	"light": 46,
 }
 
 
@@ -67,7 +67,7 @@ func test_catalog_has_no_duplicate_ids_or_names() -> void:
 
 func test_catalog_reaches_one_hundred_and_stays_balanced() -> void:
 	var cards := _cards()
-	eq(cards.size(), EXPECTED_TOTAL_CARDS, "le catalogue doit atteindre 100 cartes")
+	eq(cards.size(), EXPECTED_TOTAL_CARDS, "le catalogue doit atteindre 184 cartes")
 	var guild_counts := {
 		"flame": 0,
 		"sylvan": 0,
@@ -87,8 +87,8 @@ func test_catalog_reaches_one_hundred_and_stays_balanced() -> void:
 			kind_counts[kind] += 1
 	for guild in EXPECTED_GUILD_COUNTS:
 		eq(guild_counts[guild], EXPECTED_GUILD_COUNTS[guild], "répartition de guilde %s" % guild)
-	eq(kind_counts["monster"], 66, "répartition des monstres")
-	eq(kind_counts["spell"], 34, "répartition des sorts")
+	eq(kind_counts["monster"], 128, "répartition des monstres")
+	eq(kind_counts["spell"], 56, "répartition des sorts")
 
 
 func test_expansion_has_no_gameplay_duplicates() -> void:

@@ -126,7 +126,7 @@ for c in new:
 out_dir = ROOT / "docs/proposals"
 out_dir.mkdir(parents=True, exist_ok=True)
 out = out_dir / "sylvan_v05_cards.json"
-out.write_text(json.dumps({"cards": new}, ensure_ascii=False, indent="\t") + "\n", encoding="utf-8")
+out.write_bytes((json.dumps({"cards": new}, ensure_ascii=False, indent="\t") + "\n").encode("utf-8"))
 
 mon = [c for c in new if c["kind"] == "monster" and not c.get("token")]
 tok = [c for c in new if c.get("token")]
@@ -134,7 +134,7 @@ sp = [c for c in new if c["kind"] == "spell"]
 print(f"Proposition écrite : docs/proposals/sylvan_v05_cards.json")
 print(f"  {len(mon)} monstres, {len(sp)} sorts, {len(tok)} tokens, "
       f"{len([c for c in mon if c.get('evolves_to')])} évoluteurs")
-print("COLLISIONS :", "AUCUNE ✓" if not collisions else "")
+print("COLLISIONS :", "AUCUNE" if not collisions else "")
 for x in collisions:
     print("  ✗", x)
 if collisions:

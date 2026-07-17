@@ -158,7 +158,7 @@ for guild, lst in pools.items():
 for guild, lst in pools.items():
     out = ROOT / f"docs/proposals/{guild}_v05_cards.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({"cards": lst}, ensure_ascii=False, indent="\t") + "\n", encoding="utf-8")
+    out.write_bytes((json.dumps({"cards": lst}, ensure_ascii=False, indent="\t") + "\n").encode("utf-8"))
     mon = [c for c in lst if c["kind"] == "monster" and not c.get("token")]
     sp = [c for c in lst if c["kind"] == "spell"]
     tok = [c for c in lst if c.get("token")]
