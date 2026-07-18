@@ -33,9 +33,11 @@ func apply_settings() -> void:
 
 
 func play_sfx(name: String) -> void:
-	var path := "%s/%s.wav" % [SFX_DIR, name]
+	var path := "%s/%s.ogg" % [SFX_DIR, name]
 	if not ResourceLoader.exists(path):
-		return
+		path = "%s/%s.wav" % [SFX_DIR, name]
+		if not ResourceLoader.exists(path):
+			return
 	for p in _pool:
 		if not p.playing:
 			p.stream = load(path)
@@ -56,6 +58,8 @@ func play_music(name: String) -> void:
 	_music.stream = load(path)
 	if _music.stream is AudioStreamWAV:
 		(_music.stream as AudioStreamWAV).loop_mode = AudioStreamWAV.LOOP_FORWARD
+	elif _music.stream is AudioStreamOggVorbis:
+		(_music.stream as AudioStreamOggVorbis).loop = true
 	_music.play()
 
 
