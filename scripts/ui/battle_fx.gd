@@ -215,6 +215,106 @@ static func banner(layer: Control, text: String, color: Color) -> void:
 	tw.chain().tween_callback(panel.queue_free)
 
 
+## Lancer de PILE ou FACE du début de partie : une pièce à deux faces (côté
+## joueur bleu / côté adverse rouge, chacune frappée du portrait du duelliste)
+## tournoie, décélère et retombe sur le camp qui ouvre, puis une bannière annonce
+## le résultat. Bloque l'entrée pendant l'animation. `await`-able.
+static func coin_flip(layer: Control, winner_is_player: bool,
+		player_tex: Texture2D = null, enemy_tex: Texture2D = null) -> void:
+	var backdrop := ColorRect.new()
+	backdrop.color = Color(0, 0, 0, 0.0)
+	# Taille/position explicites (comme la pièce) : les presets d'ancrage laissent
+	# un rect 0×0 sur un enfant tout juste ajouté → aucun assombrissement.
+	backdrop.size = layer.size
+	backdrop.position = Vector2.ZERO
+	backdrop.z_index = 100                              # au-dessus du plateau et des panneaux
+	backdrop.mouse_filter = Control.MOUSE_FILTER_STOP   # gèle les clics pendant le tirage
+	layer.add_child(backdrop)
+	layer.create_tween().tween_property(backdrop, "color", Color(0, 0, 0, 0.62), 0.2)
+
+	const SIZE := 208.0
+	var win_color := UiTheme.GOLD if winner_is_player else UiTheme.DANGER
+
+	var coin := Control.new()
+	coin.size = Vector2(SIZE, SIZE)
+	coin.pivot_offset = Vector2(SIZE / 2.0, SIZE / 2.0)
+	coin.position = Vector2((layer.size.x - SIZE) / 2.0, (layer.size.y - SIZE) / 2.0 - 40.0)
+	coin.z_index = 101                                  # au-dessus du voile
+	coin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	coin.modulate = Color(1, 1, 1, 0)
+	layer.add_child(coin)
+
+	# Les deux faces superposées : on n'en montre qu'une à la fois (l'autre est
+	# masquée), on bascule à chaque tranche du flip → illusion pile/face.
+	var face_player := _coin_face(SIZE, Color("22406e"), player_tex)   # bleu = joueur
+	var face_enemy := _coin_face(SIZE, Color("6e2323"), enemy_tex)     # rouge = adversaire
+	coin.add_child(face_player)
+	coin.add_child(face_enemy)
+	face_enemy.visible = false
+
+	var durs := [0.09, 0.10, 0.12, 0.14, 0.17, 0.20, 0.24]
+	var flip := layer.create_tween()
+	flip.tween_property(coin, "modulate:a", 1.0, 0.12)
+	for i in durs.size():
+		var d: float = durs[i]
+		flip.tween_property(coin, "scale:x", 0.05, d).set_ease(Tween.EASE_IN)
+		var show_enemy := (i % 2 == 0)   # tranche invisible : on retourne la pièce
+		flip.tween_callback(func() -> void: face_enemy.set_visible(show_enemy); face_player.set_visible(not show_enemy))
+		flip.tween_property(coin, "scale:x", 1.0, d).set_ease(Tween.EASE_OUT)
+	# atterrissage garanti sur le gagnant
+	flip.tween_callback(func() -> void: face_player.set_visible(winner_is_player); face_enemy.set_visible(not winner_is_player))
+	flip.tween_property(coin, "scale", Vector2(1.22, 1.22), 0.14) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	flip.tween_property(coin, "scale", Vector2.ONE, 0.1)
+	await flip.finished
+
+	banner(layer, "VOUS COMMENCEZ" if winner_is_player else "L'ADVERSAIRE COMMENCE", win_color)
+	await layer.get_tree().create_timer(1.05).timeout
+
+	var out := layer.create_tween()
+	out.tween_property(coin, "modulate:a", 0.0, 0.22)
+	out.parallel().tween_property(backdrop, "color", Color(0, 0, 0, 0.0), 0.22)
+	await out.finished
+	coin.queue_free()
+	backdrop.queue_free()
+
+
+## Une face de la pièce : disque coloré + portrait du duelliste révélé par
+## l'ouverture ovale du médaillon (dont le cadre gravé masque les bords carrés).
+static func _coin_face(size: float, disc_col: Color, portrait: Texture2D) -> Control:
+	var face := Control.new()
+	face.size = Vector2(size, size)
+	face.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var disc := Panel.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = disc_col
+	sb.set_corner_radius_all(999)
+	sb.border_color = Color("d8b24e")   # liséré doré
+	sb.set_border_width_all(6)
+	disc.add_theme_stylebox_override("panel", sb)
+	disc.size = Vector2(size, size)
+	disc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	face.add_child(disc)
+	if portrait != null:
+		var inset := size * 0.22
+		var pr := TextureRect.new()
+		pr.texture = portrait
+		pr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		pr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		pr.position = Vector2(inset, inset)
+		pr.size = Vector2(size - 2.0 * inset, size - 2.0 * inset)
+		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		face.add_child(pr)
+	var orn := TextureRect.new()                        # médaillon gravé par-dessus
+	orn.texture = UiTheme.tex("res://assets/sprites/ui/gold/medallion.png")
+	orn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	orn.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	orn.size = Vector2(size, size)
+	orn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	face.add_child(orn)
+	return face
+
+
 static func _circle(color: Color, diameter: float) -> Panel:
 	var panel := Panel.new()
 	var sb := StyleBoxFlat.new()

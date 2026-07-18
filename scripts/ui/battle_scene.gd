@@ -222,7 +222,7 @@ func _setup_match() -> void:
 	_start_hp = [state.players[0].master_hp, state.players[1].master_hp]
 	if _mission.is_empty():
 		_refresh_all()
-		_show_mulligan()
+		_intro_coin_flip()   # tirage au sort animé, PUIS le mulligan
 		return
 	# Leçon scriptée : pas de mulligan, main et plateau imposés.
 	_match.apply({ "type": "mulligan", "redraw": false })
@@ -295,6 +295,19 @@ func _on_remote_events(events: Array, over: bool, _winner: int) -> void:
 		return
 	if state.phase == GameState.Phase.MULLIGAN and state.current == 0 and mulligan_overlay == null:
 		_show_mulligan()
+
+
+## Tirage au sort animé AVANT tout : le jeton retombe sur le camp qui ouvre,
+## puis la main de départ (mulligan) s'affiche. Le premier joueur est déjà fixé
+## au setup ; ici on ne fait que le révéler.
+func _intro_coin_flip() -> void:
+	busy = true
+	var cfg := Game.battle_config
+	var p_tex := UiTheme.tex(Db.portrait_path("milo"))
+	var e_tex := UiTheme.tex(Db.portrait_path(String(cfg.get("opponent_portrait", ""))))
+	await BattleFx.coin_flip(fx_layer, state.first_player == 0, p_tex, e_tex)
+	busy = false
+	_show_mulligan()
 
 
 func _show_mulligan() -> void:
@@ -1219,37 +1232,42 @@ func _draw_anim(player: int) -> void:
 # --- Detail panel / log / toast ---------------------------------------------
 
 ## Largeur de la mini-carte : tout le panneau doit tenir SANS scroll.
-const DETAIL_CARD_W := 235.0
+const DETAIL_CARD_W := 210.0
 
 
 func _show_detail_card(def: CardDef) -> void:
 	_clear_detail()
-	if not def.is_monster():
-		# Sorts : l'effet en clair (le texte de la mini-carte est illisible).
-		_add_detail_text(GameText.describe_effect(def.effect))
+	# Description lisible EN HAUT (le texte imprimé sur la mini-carte est trop petit),
+	# la carte EN BAS.
+	if def.is_spell():
+		_add_detail_title(GameText.describe_effect(def.effect))
+	else:
+		# Stats de base bien lisibles : le chiffre ATQ/PV cuit sur la mini-carte
+		# est trop petit à cette taille.
+		var lv0: Dictionary = def.levels[0]
+		_add_detail_title("ATQ %d  ·  PV %d  ·  %s" % [int(lv0.atk), int(lv0.hp),
+				GameText.ATTACK_TYPE_NAMES[def.attack_type]])
+		_add_detail_text(_keyword_explanations(def))
 	var w := CardWidget.create(def, DETAIL_CARD_W)
 	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	w.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	detail_holder.add_child(w)
-	_add_detail_text(_keyword_explanations(def))
 
 
 func _show_detail_monster(m: MonsterInst) -> void:
 	_clear_detail()
-	var w := CardWidget.create(m.def, DETAIL_CARD_W)
-	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	w.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	detail_holder.add_child(w)
-	# Une seule ligne compacte : le panneau doit tenir sans scroll.
+	# Statut + description EN HAUT, la carte EN BAS.
 	var status := "Niv %d — ATQ %d, PV %d/%d" % [m.level, m.atk(), m.hp, m.max_hp()]
 	if not m.at_max_level():
 		status += " · XP %d/%d" % [m.xp, m.next_level_xp()]
 	if m.shield:
 		status += " · Bouclier"
-	var l := UiTheme.label(status, 16, UiTheme.TEXT)
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	detail_holder.add_child(l)
+	_add_detail_title(status)
 	_add_detail_text(_keyword_explanations(m.def))
+	var w := CardWidget.create(m.def, DETAIL_CARD_W)
+	w.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	w.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	detail_holder.add_child(w)
 
 
 func _keyword_explanations(def: CardDef) -> String:
@@ -1268,6 +1286,18 @@ func _add_detail_text(text: String) -> void:
 		return
 	var info := UiTheme.label(text, 15, UiTheme.TEXT_DIM)
 	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	info.custom_minimum_size = Vector2(280, 0)
+	detail_holder.add_child(info)
+
+
+## Description proéminente en tête du panneau (effet du sort, statut du monstre) :
+## lumineuse et plus grande que le texte d'appoint, pour être lisible d'un coup d'œil.
+func _add_detail_title(text: String) -> void:
+	if text == "":
+		return
+	var info := UiTheme.label(text, 18, UiTheme.TEXT)
+	info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	info.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	info.custom_minimum_size = Vector2(280, 0)
 	detail_holder.add_child(info)
 
