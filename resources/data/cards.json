@@ -4189,6 +4189,214 @@
 					"target": "ally_monster"
 				}
 			]
+		},
+		{
+			"id": "ember_elemental",
+			"name": "Élémentaire de braise",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"on_death": [
+				{
+					"op": "damage",
+					"amount": 1,
+					"target": "enemy_monster"
+				}
+			],
+			"flavor": "Né d'un feu qui a oublié sa forme."
+		},
+		{
+			"id": "kindlemaw",
+			"name": "Gueule-braise",
+			"guild": "flame",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 4,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 6,
+					"hp": 5
+				}
+			],
+			"keywords": {
+				"haste": true
+			},
+			"flavor": "Elle mord la mèche."
+		},
+		{
+			"id": "canopy_watcher",
+			"name": "Guetteuse de la canopée",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 3,
+			"attack_type": "ranged",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 5,
+					"hp": 4
+				}
+			],
+			"flavor": "Perchée, patiente, précise."
+		},
+		{
+			"id": "thornmother",
+			"name": "Ronce-mère",
+			"guild": "sylvan",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 4,
+					"hp": 8
+				},
+				{
+					"xp": 3,
+					"atk": 5,
+					"hp": 9
+				}
+			],
+			"keywords": {
+				"armor": 1
+			},
+			"flavor": "Toutes les ronces sont ses filles."
+		},
+		{
+			"id": "shadow_wolf",
+			"name": "Loup des ténèbres",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 3,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 6,
+					"hp": 4
+				}
+			],
+			"keywords": {
+				"haste": true
+			},
+			"flavor": "Il chasse ce qui a peur du noir."
+		},
+		{
+			"id": "mourning_witch",
+			"name": "Sorcière du deuil",
+			"guild": "shadow",
+			"kind": "monster",
+			"rarity": "rare",
+			"cost": 4,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 3,
+					"hp": 4
+				},
+				{
+					"xp": 3,
+					"atk": 4,
+					"hp": 5
+				}
+			],
+			"on_summon": [
+				{
+					"op": "draw",
+					"count": 1
+				}
+			],
+			"flavor": "Chaque nom qu'elle oublie devient un sort."
+		},
+		{
+			"id": "dawn_cantor",
+			"name": "Chantre de l'aube",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "commune",
+			"cost": 2,
+			"attack_type": "magic",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 2,
+					"hp": 3
+				},
+				{
+					"xp": 3,
+					"atk": 3,
+					"hp": 4
+				}
+			],
+			"on_summon": [
+				{
+					"op": "heal",
+					"amount": 2,
+					"target": "ally_monster"
+				}
+			],
+			"flavor": "Son chant recoud les blessures."
+		},
+		{
+			"id": "celestial_guard",
+			"name": "Gardien céleste",
+			"guild": "light",
+			"kind": "monster",
+			"rarity": "epique",
+			"cost": 5,
+			"attack_type": "melee",
+			"levels": [
+				{
+					"xp": 0,
+					"atk": 5,
+					"hp": 6
+				},
+				{
+					"xp": 3,
+					"atk": 6,
+					"hp": 7
+				}
+			],
+			"keywords": {
+				"flying": true
+			},
+			"flavor": "Il veille au sommet des nuées."
 		}
 	]
 }

@@ -24,7 +24,7 @@ func test_content_counts() -> void:
 			constructible += 1
 		else:
 			constructible += 1
-	eq(constructible, 160, "160 cartes constructibles (40/faction)")
+	eq(constructible, 168, "168 cartes constructibles (42/faction)")
 	eq(tokens, 24, "24 formes évoluées")
 	eq(spells, 56, "56 sorts")
 	eq(result.masters.size(), 8, "8 maîtres")

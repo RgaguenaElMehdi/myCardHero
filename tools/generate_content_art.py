@@ -147,6 +147,20 @@ UNITS_ART.update({
     "archseraph": "un archséraphin aux multiples ailes éclatantes, forme divine, plein pied",
 })
 
+# --- Bonus v0.5 + correctifs (8 unités) : 4 nouvelles cartes neuves + 4 anciennes
+# cartes dont l'unité a été réassignée à une carte bonus (on les régénère au look
+# de leur art de carte).
+UNITS_ART.update({
+    "ember_fox": "un renard de feu élancé au pelage de flammes et à la queue ardente, plein pied",
+    "canopy_hunter": "un chasseur agile de la canopée à silhouette féline, arc de bois vivant, cape de feuilles, plein pied",
+    "shade": "une ombre vivante compacte, petit spectre noir aux yeux blancs nimbé de brume sombre, plein pied",
+    "grave_sibyl": "une sibylle sépulcrale en robe rouge sombre tenant un crâne et des cartes funéraires, brume violette, plein pied",
+    "kindlemaw": "une bête de braise trapue à la gueule incandescente pleine de crocs de feu, plein pied",
+    "thornmother": "une gardienne-mère de ronces, grande silhouette de bois et d'épines couronnée de roses, plein pied",
+    "dawn_cantor": "un jeune chantre de l'aube en robe blanche et or, bouche ouverte en plein chant, notes de lumière, plein pied",
+    "celestial_guard": "un gardien céleste ailé en armure d'argent et d'or tenant une lance de lumière, halo, plein pied",
+})
+
 # Per-guild dungeon ambiance for the background (matches the existing set).
 AMBIANCE = {
     "flame": "dans un donjon de pierre sombre veiné de lave, lueur orange et braises",
