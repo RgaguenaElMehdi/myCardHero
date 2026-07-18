@@ -60,7 +60,7 @@ UNITS_ART.update({
     "lava_skirmisher": "un ?claireur agile glissant sur des plaques de lave, dague ardente, plein pied, pr?t ? bondir",
     "cinder_alchemist": "un alchimiste flamboyant tenant des fioles de braise, plein pied, posture concentr?e",
     "pyre_colossus": "un colosse de pierre et de flammes au torse volcanique, plein pied, masse titanesque",
-    "smoke_duelist": "un duelliste masqu? envelopp? de fum?e rouge, sabre enflamm?, plein pied, garde basse",
+    "smoke_duelist": "un duelliste masqué et encapuchonné en tenue de cuir sombre à liserés rouges, enveloppé de volutes de fumée rouge, tenant un fin sabre incandescent, posture d'escrime élégante de trois-quarts, plein pied",
     "mosswarden": "un gardien couvert de mousse et d'?corce, plein pied, cornes de racine, pose protectrice",
     "thorn_whisperer": "une magicienne sylvestre murmurant aux ronces, plein pied, capuche de feuilles, b?ton vivant",
     "canopy_hunter": "un chasseur agile de la canop?e, plein pied, arc de bois vivant, silhouette f?line",
